@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "Ootab",
+    "in_progress": "Pooleli",
+    "issue_detected": "Tuvastati probleem",
+    "cancelled": "Tühistatud",
+    "completed": "Lõpetatud"
+  },
+  "headers": {
+    "recipientId": "Saaja ID",
+    "recipientName": "Saaja nimi",
+    "identifier": "Identifikaator",
+    "note": "Märkus",
+    "when": "Millal",
+    "itemQty": "Kauba kogus",
+    "status": "Olek",
+    "actions": "Tegevused"
+  },
+  "actions": {
+    "view": "Vaade",
+    "payTitle": "Makske see arve",
+    "pay": "Maksa",
+    "copied": "Kopeeritud",
+    "copy": "Kopeeri",
+    "delete": "Kustuta",
+    "update": "Värskenda"
+  },
+  "toggle": {
+    "generated": "Loodud arved",
+    "received": "Tasumisele kuuluvad arved"
+  },
+  "title": {
+    "generated": "Teie loodud arved",
+    "received": "Maksmiseks salvestatud arved"
+  },
+  "description": {
+    "generated": "Teie loodud ja salvestatud arved; ",
+    "received": "Arved, mille olete nende tasumiseks valmistudes salvestanud"
+  },
+  "empty": {
+    "title": "Salvestatud arveid pole",
+    "description": "Looge ja salvestage arveid, et neid siin näha"
+  },
+  "details": {
+    "title": "Arve üksikasjad",
+    "description": "Vaadake valitud arve üle"
+  },
+  "recipientAccount": {
+    "info": "Saaja konto ID",
+    "header": "Saaja konto"
+  },
+  "recipientName": {
+    "info": "Saaja nimi",
+    "header": "Saaja nimi"
+  },
+  "identifier": {
+    "info": "Arve identifikaator",
+    "header": "Identifikaator"
+  },
+  "timeSince": {
+    "info": "Aeg alates arve koostamisest",
+    "header": "Millal"
+  },
+  "note": {
+    "info": "Looja esitatud märkus",
+    "header": "Märkus"
+  },
+  "items": {
+    "title": "Arve kirjed",
+    "headers": {
+      "name": "Üksus",
+      "quantity": "Kogus"
+    }
+  },
+  "deleteDialog": {
+    "title": "Kustuta arve",
+    "description": "Kas olete kindel, et soovite selle salvestatud arve jäädavalt eemaldada?",
+    "cancel": "Tühista",
+    "confirm": "Kustuta"
+  },
+  "itemDetails": {
+    "title": "Üksuse üksikasjad",
+    "description": "Üksikasjalik teave selle arve artikli kohta",
+    "fields": {
+      "name": "Nimi",
+      "barcode": "Vöötkood",
+      "category": "Kategooria",
+      "quantity": "Kogus",
+      "location": "Asukoht",
+      "unitPrice": "Ühiku hind",
+      "reorderLevel": "Ümbertellimuse tase",
+      "supplier": "Tarnija",
+      "unit": "Üksus",
+      "description": "Kirjeldus",
+      "prices": "Hinnad"
+    }
+  },
+  "meta": {
+    "title": "Värskenda arve olekut",
+    "description": "Säilitage makse-, tarne- ja üldise oleku märkmed (ei jagata arve koodis).",
+    "paymentStatus": "Makse olek",
+    "payment": {
+      "waiting": "Makse ootamine",
+      "issue": "Probleem maksega",
+      "received": "Makse laekunud"
+    },
+    "paymentNotes": {
+      "ph": "Maksearved (tx-id, ploki numbrid, varad, summad...)"
+    },
+    "deliveryStatus": "Kohaletoimetamise olek",
+    "delivery": {
+      "sent": "Saadetud",
+      "issue": "Probleem kohaletoimetamisega",
+      "received": "Kaup vastu võetud"
+    },
+    "deliveryNotes": {
+      "ph": "Saatelehed (jälgimise ID-d, viited...)"
+    },
+    "overallStatus": "Üldine staatus",
+    "cancel": "Tühista",
+    "save": "Salvesta"
+  }
+}

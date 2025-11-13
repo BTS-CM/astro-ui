@@ -128,6 +128,10 @@ export default function AppSidebar() {
       title: "Home:pay_invoice.title",
       href: "/pay_invoice/index.html",
     },
+    {
+      title: "Home:stored_invoices.title",
+      href: "/stored_invoices/index.html",
+    },
   ];
 
   const sections = [

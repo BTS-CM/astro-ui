@@ -52,6 +52,7 @@
   "portuguese": "portugués (pt)",
   "thai": "tailandés (th)",
   "descText": {
+    "stored_invoices": "Realice un seguimiento de las facturas generadas y recibidas para facilitar la gestión y el pago.",
     "vote": "La votación es una parte integral de la Prueba de participación delegada, así que vote por los miembros del comité, los testigos y los trabajadores para ayudar a gobernar la cadena de bloques.",
     "htlc": "Utilice el formulario a continuación para crear, ampliar y canjear contratos bloqueados por tiempo en hash.",
     "timed_transfer": "Utilice el formulario a continuación para crear una transferencia programada de activos a otra cuenta.",

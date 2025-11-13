@@ -52,6 +52,7 @@
   "portuguese": "Portoghese (pt)",
   "thai": "Tailandese (th)",
   "descText": {
+    "stored_invoices": "Tieni traccia delle fatture generate e ricevute per semplificare la gestione e il pagamento.",
     "vote": "Il voto è parte integrante della Proof of Stake delegata, quindi vota i membri del comitato, i testimoni e i lavoratori per aiutare a governare la blockchain!",
     "htlc": "Utilizza il modulo sottostante per creare, estendere e riscattare contratti con hash e blocco temporale.",
     "timed_transfer": "Utilizza il modulo sottostante per creare un trasferimento temporizzato di asset su un altro account.",

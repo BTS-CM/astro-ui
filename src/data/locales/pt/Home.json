@@ -301,6 +301,13 @@
     "hover1": "Pague uma fatura inserindo o código da fatura fornecido pelo criador da fatura.",
     "hover2": "Opcionalmente, pague com ativos diferentes para cada item adquirido."
   },
+  "stored_invoices": {
+    "title": "💾 Faturas armazenadas",
+    "subtitle": "Visualize e gerencie suas faturas salvas",
+    "hover1": "Navegue pelas suas faturas salvas, geradas e recebidas.",
+    "hover2": "Visualize detalhes da fatura e exclua faturas indesejadas.",
+    "hover3": "Armazene dados sobre o andamento das faturas sendo cumpridas."
+  },
   "tfund_user": {
     "title": "🚀 Comércio de fundos do mesmo T",
     "subtitle": "Pedir emprestado, comércio, reembolso, simples!",

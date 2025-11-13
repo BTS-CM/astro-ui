@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "Warten",
+    "in_progress": "Im Gange",
+    "issue_detected": "Problem erkannt",
+    "cancelled": "Abgesagt",
+    "completed": "Vollendet"
+  },
+  "headers": {
+    "recipientId": "Empfänger-ID",
+    "recipientName": "Empfängername",
+    "identifier": "Kennung",
+    "note": "Notiz",
+    "when": "Wann",
+    "itemQty": "Artikelmenge",
+    "status": "Status",
+    "actions": "Aktionen"
+  },
+  "actions": {
+    "view": "Sicht",
+    "payTitle": "Bezahlen Sie diese Rechnung",
+    "pay": "Zahlen",
+    "copied": "Kopiert",
+    "copy": "Kopie",
+    "delete": "Löschen",
+    "update": "Aktualisieren"
+  },
+  "toggle": {
+    "generated": "Erstellte Rechnungen",
+    "received": "Zu bezahlende Rechnungen"
+  },
+  "title": {
+    "generated": "Ihre generierten Rechnungen",
+    "received": "Zur Zahlung gespeicherte Rechnungen"
+  },
+  "description": {
+    "generated": "Von Ihnen erstellte und gespeicherte Rechnungen; ",
+    "received": "Rechnungen, die Sie gespeichert haben, während Sie sich auf die Zahlung vorbereitet haben"
+  },
+  "empty": {
+    "title": "Keine gespeicherten Rechnungen",
+    "description": "Erstellen und speichern Sie Rechnungen, um sie hier anzuzeigen"
+  },
+  "details": {
+    "title": "Rechnungsdetails",
+    "description": "Überprüfen Sie die von Ihnen ausgewählte Rechnung"
+  },
+  "recipientAccount": {
+    "info": "Empfängerkonto-ID",
+    "header": "Empfängerkonto"
+  },
+  "recipientName": {
+    "info": "Name des Empfängers",
+    "header": "Empfängername"
+  },
+  "identifier": {
+    "info": "Rechnungskennung",
+    "header": "Kennung"
+  },
+  "timeSince": {
+    "info": "Zeit seit Rechnungserstellung",
+    "header": "Wann"
+  },
+  "note": {
+    "info": "Hinweis des Erstellers",
+    "header": "Notiz"
+  },
+  "items": {
+    "title": "Rechnungspositionen",
+    "headers": {
+      "name": "Artikel",
+      "quantity": "Menge"
+    }
+  },
+  "deleteDialog": {
+    "title": "Rechnung löschen",
+    "description": "Sind Sie sicher, dass Sie diese gespeicherte Rechnung dauerhaft entfernen möchten?",
+    "cancel": "Stornieren",
+    "confirm": "Löschen"
+  },
+  "itemDetails": {
+    "title": "Artikeldetails",
+    "description": "Detaillierte Informationen zu dieser Rechnungsposition",
+    "fields": {
+      "name": "Name",
+      "barcode": "Barcode",
+      "category": "Kategorie",
+      "quantity": "Menge",
+      "location": "Standort",
+      "unitPrice": "Stückpreis",
+      "reorderLevel": "Nachbestellungsebene",
+      "supplier": "Anbieter",
+      "unit": "Einheit",
+      "description": "Beschreibung",
+      "prices": "Preise"
+    }
+  },
+  "meta": {
+    "title": "Rechnungsstatus aktualisieren",
+    "description": "Pflegen Sie Zahlungs-, Liefer- und Gesamtstatusnotizen (nicht im Rechnungscode enthalten).",
+    "paymentStatus": "Zahlungsstatus",
+    "payment": {
+      "waiting": "Warten auf Zahlung",
+      "issue": "Problem mit der Zahlung",
+      "received": "Zahlung erhalten"
+    },
+    "paymentNotes": {
+      "ph": "Zahlungshinweise (Sende-IDs, Blocknummern, Vermögenswerte, Beträge ...)"
+    },
+    "deliveryStatus": "Lieferstatus",
+    "delivery": {
+      "sent": "Gesendet",
+      "issue": "Problem mit der Lieferung",
+      "received": "Artikel erhalten"
+    },
+    "deliveryNotes": {
+      "ph": "Lieferscheine (Tracking-IDs, Referenzen...)"
+    },
+    "overallStatus": "Gesamtstatus",
+    "cancel": "Stornieren",
+    "save": "Speichern"
+  }
+}

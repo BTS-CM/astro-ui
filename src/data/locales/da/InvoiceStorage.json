@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "Venter",
+    "in_progress": "I gang",
+    "issue_detected": "Problem opdaget",
+    "cancelled": "Annulleret",
+    "completed": "Afsluttet"
+  },
+  "headers": {
+    "recipientId": "Modtager-id",
+    "recipientName": "Modtagers navn",
+    "identifier": "Identifikator",
+    "note": "Note",
+    "when": "Når",
+    "itemQty": "Vareantal",
+    "status": "Status",
+    "actions": "Handlinger"
+  },
+  "actions": {
+    "view": "Udsigt",
+    "payTitle": "Betal denne faktura",
+    "pay": "Betale",
+    "copied": "Kopieret",
+    "copy": "Kopi",
+    "delete": "Slet",
+    "update": "Opdatering"
+  },
+  "toggle": {
+    "generated": "Genererede fakturaer",
+    "received": "Fakturaer der skal betales"
+  },
+  "title": {
+    "generated": "Dine genererede fakturaer",
+    "received": "Fakturaer gemt til at betale"
+  },
+  "description": {
+    "generated": "Fakturaer du har oprettet og gemt; ",
+    "received": "Fakturaer, du har gemt, mens du forberedte dig på at betale dem"
+  },
+  "empty": {
+    "title": "Ingen gemte fakturaer",
+    "description": "Generer og gem fakturaer for at se dem her"
+  },
+  "details": {
+    "title": "Fakturadetaljer",
+    "description": "Gennemgå den valgte faktura"
+  },
+  "recipientAccount": {
+    "info": "Modtagerens konto-id",
+    "header": "Modtagerkonto"
+  },
+  "recipientName": {
+    "info": "Navn på modtager",
+    "header": "Modtagerens navn"
+  },
+  "identifier": {
+    "info": "Faktura-id",
+    "header": "Identifikator"
+  },
+  "timeSince": {
+    "info": "Tid siden faktura blev oprettet",
+    "header": "Når"
+  },
+  "note": {
+    "info": "Notat leveret af skaberen",
+    "header": "Note"
+  },
+  "items": {
+    "title": "Fakturavarer",
+    "headers": {
+      "name": "Punkt",
+      "quantity": "Antal"
+    }
+  },
+  "deleteDialog": {
+    "title": "Slet faktura",
+    "description": "Er du sikker på, at du vil fjerne denne gemte faktura permanent?",
+    "cancel": "Ophæve",
+    "confirm": "Slet"
+  },
+  "itemDetails": {
+    "title": "Varedetaljer",
+    "description": "Detaljerede oplysninger om denne fakturavare",
+    "fields": {
+      "name": "Navn",
+      "barcode": "Stregkode",
+      "category": "Kategori",
+      "quantity": "Mængde",
+      "location": "Beliggenhed",
+      "unitPrice": "Enhedspris",
+      "reorderLevel": "Genbestil niveau",
+      "supplier": "Leverandør",
+      "unit": "Enhed",
+      "description": "Beskrivelse",
+      "prices": "Priser"
+    }
+  },
+  "meta": {
+    "title": "Opdater fakturastatus",
+    "description": "Vedligeholde betalings-, leverings- og overordnede statusnotater (ikke delt i fakturakode).",
+    "paymentStatus": "Betalingsstatus",
+    "payment": {
+      "waiting": "Venter på betaling",
+      "issue": "Problem med betaling",
+      "received": "Betaling modtaget"
+    },
+    "paymentNotes": {
+      "ph": "Betalingsnotaer (tx-id'er, bloknumre, aktiver, beløb...)"
+    },
+    "deliveryStatus": "Leveringsstatus",
+    "delivery": {
+      "sent": "Sendt",
+      "issue": "Problem med levering",
+      "received": "Modtaget vare"
+    },
+    "deliveryNotes": {
+      "ph": "Følgesedler (sporings-id'er, referencer...)"
+    },
+    "overallStatus": "Overordnet status",
+    "cancel": "Ophæve",
+    "save": "Spare"
+  }
+}

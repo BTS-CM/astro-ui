@@ -73,7 +73,10 @@
   "generatedInvoice": {
     "dialogTitle": "Generated Invoice",
     "dialogDescription": "Provide the customer the following invoice code to pay the invoice.",
-    "copyButton": "Copy invoice code to clipboard"
+    "copyButton": "Copy invoice code to clipboard",
+    "copiedButton": "Copied invoice code to clipboard!",
+    "invoiceSaved": "Invoice saved!",
+    "saveInvoice": "Save invoice"
   },
   "scanner": {
     "scan": "Scan",

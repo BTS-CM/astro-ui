@@ -301,6 +301,13 @@
     "hover1": "Tasuge arve sisestades arve koostaja antud arve koodi.",
     "hover2": "Soovi korral makske iga ostetava kauba eest erinevate varadega."
   },
+  "stored_invoices": {
+    "title": "💾 Salvestatud arved",
+    "subtitle": "Saate vaadata ja hallata oma salvestatud arveid",
+    "hover1": "Sirvige oma salvestatud arveid, nii loodud kui ka vastu võetud.",
+    "hover2": "Vaadake arve üksikasju ja kustutage soovimatud arved.",
+    "hover3": "Salvestage andmeid täitmisel olevate arvete edenemise kohta."
+  },
   "tfund_user": {
     "title": "🚀 SAMA-T Fondi kaubandus",
     "subtitle": "Laenake, kaubelda, tagasi maksta, lihtne!",

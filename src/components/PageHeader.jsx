@@ -420,6 +420,11 @@ export default function PageHeader(properties) {
       href: "/pay_invoice/index.html",
       description: "Home:pay_invoice.subtitle",
     },
+    {
+      title: "Home:stored_invoices.title",
+      href: "/stored_invoices/index.html",
+      description: "Home:stored_invoices.subtitle",
+    },
   ];
 
   return (

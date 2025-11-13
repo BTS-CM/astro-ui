@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "En attendant",
+    "in_progress": "En cours",
+    "issue_detected": "Problème détecté",
+    "cancelled": "Annulé",
+    "completed": "Complété"
+  },
+  "headers": {
+    "recipientId": "ID du destinataire",
+    "recipientName": "Nom du destinataire",
+    "identifier": "Identifiant",
+    "note": "Note",
+    "when": "Quand",
+    "itemQty": "Quantité d'article",
+    "status": "Statut",
+    "actions": "Actes"
+  },
+  "actions": {
+    "view": "Voir",
+    "payTitle": "Payer cette facture",
+    "pay": "Payer",
+    "copied": "Copié",
+    "copy": "Copie",
+    "delete": "Supprimer",
+    "update": "Mise à jour"
+  },
+  "toggle": {
+    "generated": "Factures générées",
+    "received": "Factures à payer"
+  },
+  "title": {
+    "generated": "Vos factures générées",
+    "received": "Factures enregistrées pour payer"
+  },
+  "description": {
+    "generated": "Factures que vous avez créées et enregistrées ; ",
+    "received": "Factures que vous avez enregistrées en vous préparant à les payer"
+  },
+  "empty": {
+    "title": "Aucune facture enregistrée",
+    "description": "Générez et enregistrez des factures pour les voir ici"
+  },
+  "details": {
+    "title": "Détails de la facture",
+    "description": "Vérifiez la facture que vous avez sélectionnée"
+  },
+  "recipientAccount": {
+    "info": "Identifiant du compte du destinataire",
+    "header": "Compte destinataire"
+  },
+  "recipientName": {
+    "info": "Nom du destinataire",
+    "header": "Nom du destinataire"
+  },
+  "identifier": {
+    "info": "Identifiant de la facture",
+    "header": "Identifiant"
+  },
+  "timeSince": {
+    "info": "Temps écoulé depuis la création de la facture",
+    "header": "Quand"
+  },
+  "note": {
+    "info": "Note fournie par le créateur",
+    "header": "Note"
+  },
+  "items": {
+    "title": "Postes de facture",
+    "headers": {
+      "name": "Article",
+      "quantity": "Quantité"
+    }
+  },
+  "deleteDialog": {
+    "title": "Supprimer la facture",
+    "description": "Êtes-vous sûr de vouloir supprimer définitivement cette facture enregistrée ?",
+    "cancel": "Annuler",
+    "confirm": "Supprimer"
+  },
+  "itemDetails": {
+    "title": "Détails de l'article",
+    "description": "Informations détaillées sur ce poste de facture",
+    "fields": {
+      "name": "Nom",
+      "barcode": "Code à barres",
+      "category": "Catégorie",
+      "quantity": "Quantité",
+      "location": "Emplacement",
+      "unitPrice": "Prix ​​unitaire",
+      "reorderLevel": "Niveau de réapprovisionnement",
+      "supplier": "Fournisseur",
+      "unit": "Unité",
+      "description": "Description",
+      "prices": "Tarifs"
+    }
+  },
+  "meta": {
+    "title": "Mettre à jour le statut de la facture",
+    "description": "Conserver les notes de paiement, de livraison et de statut global (non partagées dans le code de facture).",
+    "paymentStatus": "Statut du paiement",
+    "payment": {
+      "waiting": "En attente de paiement",
+      "issue": "Problème de paiement",
+      "received": "Paiement reçu"
+    },
+    "paymentNotes": {
+      "ph": "Notes de paiement (identifiants de transmission, numéros de bloc, actifs, montants...)"
+    },
+    "deliveryStatus": "Statut de livraison",
+    "delivery": {
+      "sent": "Envoyé",
+      "issue": "Problème de livraison",
+      "received": "Article reçu"
+    },
+    "deliveryNotes": {
+      "ph": "Bons de livraison (identifiants de suivi, références...)"
+    },
+    "overallStatus": "Statut général",
+    "cancel": "Annuler",
+    "save": "Sauvegarder"
+  }
+}

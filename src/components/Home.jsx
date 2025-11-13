@@ -570,6 +570,17 @@ export default function Home(properties) {
           subtitleKey: "Home:pay_invoice.subtitle",
           hoverKeys: ["Home:pay_invoice.hover1", "Home:pay_invoice.hover2"],
         },
+        {
+          key: "stored_invoices",
+          href: "/stored_invoices/index.html",
+          titleKey: "Home:stored_invoices.title",
+          subtitleKey: "Home:stored_invoices.subtitle",
+          hoverKeys: [
+            "Home:stored_invoices.hover1",
+            "Home:stored_invoices.hover2",
+            "Home:stored_invoices.hover3",
+          ],
+        },
       ],
     },
     {

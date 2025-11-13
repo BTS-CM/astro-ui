@@ -62,6 +62,11 @@ import {
   humanReadableFloat,
   blockchainFloat,
 } from "@/lib/common";
+import {
+  $receivedInvoiceStorage,
+  hasReceivedInvoice,
+  saveReceivedInvoice,
+} from "@/stores/invoices";
 
 /**
  * Decompresses the data and decodes it back into the original JSON object.
@@ -137,6 +142,9 @@ export default function PayInvoice(properties) {
     fetchBalances();
   }, [usr, assets, currentNode]);
 
+  // subscribe to received invoice store so the save button reflects state
+  useStore($receivedInvoiceStorage);
+
   const [invoiceCode, setInvoiceCode] = useState("");
   const [processedInvoiceCode, setProcessedInvoiceCode] = useState(null);
 
@@ -156,6 +164,33 @@ export default function PayInvoice(properties) {
 
     setProcessedInvoiceCode(processedCode ?? true);
   }, [invoiceCode]);
+
+  // Allow passing encoded invoice via prop `id` or URL query param `?id=...`
+  const urlProvidedCode = useMemo(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const sp = new URLSearchParams(window.location.search);
+        const q = sp.get("id");
+        return q ? String(q) : "";
+      }
+    } catch (_) {}
+    return "";
+  }, []);
+
+  useEffect(() => {
+    // If URL or prop provides an encoded invoice, auto-fill and process
+    if (urlProvidedCode && urlProvidedCode.length && !invoiceCode) {
+      setInvoiceCode(urlProvidedCode);
+      (async () => {
+        try {
+          const processed = await decompressAndGetJson(urlProvidedCode);
+          setProcessedInvoiceCode(processed ?? true);
+        } catch (e) {
+          console.error("Error processing urlProvidedCode:", e);
+        }
+      })();
+    }
+  }, [urlProvidedCode, invoiceCode]);
 
   const [identifier, setIdentifier] = useState("");
   const [recipientId, setRecipientId] = useState("");
@@ -565,16 +600,44 @@ export default function PayInvoice(properties) {
                       </div>
                     </CardContent>
                     <CardFooter>
-                      <Button
-                        onClick={() => setShowInvoicePaymentDialog(true)}
-                        disabled={
-                          !isValid ||
-                          !transactionJSON ||
-                          !transactionJSON.length
-                        }
-                      >
-                        {t("PayInvoice:payButton")}
-                      </Button>
+                      <div className="flex items-center gap-3">
+                        <Button
+                          onClick={() => setShowInvoicePaymentDialog(true)}
+                          disabled={
+                            !isValid ||
+                            !transactionJSON ||
+                            !transactionJSON.length
+                          }
+                        >
+                          {t("PayInvoice:payButton")}
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            if (!invoiceCode) return;
+                            if (!hasReceivedInvoice(invoiceCode)) {
+                              saveReceivedInvoice(invoiceCode);
+                            }
+                          }}
+                          disabled={
+                            !invoiceCode || hasReceivedInvoice(invoiceCode)
+                          }
+                          variant={
+                            hasReceivedInvoice(invoiceCode)
+                              ? "outline"
+                              : "secondary"
+                          }
+                        >
+                          {hasReceivedInvoice(invoiceCode)
+                            ? t(
+                                "PayInvoice:saveForLater.saved",
+                                "Invoice saved"
+                              )
+                            : t(
+                                "PayInvoice:saveForLater.button",
+                                "Save invoice for later payment"
+                              )}
+                        </Button>
+                      </div>
                     </CardFooter>
                     {showInvoicePaymentDialog ? (
                       <DeepLinkDialog
