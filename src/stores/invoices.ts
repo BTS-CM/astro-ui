@@ -4,6 +4,25 @@ type StoredInvoices = {
   invoices: string[];
 };
 
+// Metadata for generated invoices (not encoded in invoice string)
+export interface GeneratedInvoiceMeta {
+  paymentStatus: "waiting_payment" | "payment_issue" | "payment_received";
+  paymentNotes: string;
+  deliveryStatus: "sent" | "delivery_issue" | "received_item";
+  deliveryNotes: string;
+  overallStatus:
+    | "waiting"
+    | "in_progress"
+    | "issue_detected"
+    | "cancelled"
+    | "completed";
+  updatedAt: number;
+}
+
+interface GeneratedInvoiceMetaStoreShape {
+  meta: Record<string, GeneratedInvoiceMeta>;
+}
+
 // Generated invoices (created by me)
 const $generatedInvoiceStorage = persistentMap<StoredInvoices>(
   "storedInvoices:generated",
@@ -42,6 +61,26 @@ const $receivedInvoiceStorage = persistentMap<StoredInvoices>(
   }
 );
 
+// Separate persistent storage for metadata about generated invoices
+const $generatedInvoiceMetaStorage =
+  persistentMap<GeneratedInvoiceMetaStoreShape>(
+    "storedInvoices:generatedMeta",
+    { meta: {} },
+    {
+      encode(value) {
+        return JSON.stringify(value);
+      },
+      decode(value) {
+        try {
+          return JSON.parse(value);
+        } catch (e) {
+          console.error("Failed to decode storedInvoices:generatedMeta:", e);
+          return { meta: {} } as GeneratedInvoiceMetaStoreShape;
+        }
+      },
+    }
+  );
+
 function normalize(code: string): string {
   return (code || "").trim();
 }
@@ -75,6 +114,46 @@ function removeGeneratedInvoice(code: string): boolean {
 
 function clearGeneratedInvoices() {
   $generatedInvoiceStorage.set({ invoices: [] });
+}
+
+// Metadata helpers (generated invoices only)
+function getGeneratedInvoiceMeta(
+  code: string
+): GeneratedInvoiceMeta | undefined {
+  const c = normalize(code);
+  if (!c) return undefined;
+  const store = $generatedInvoiceMetaStorage.get();
+  return store.meta[c];
+}
+
+function updateGeneratedInvoiceMeta(
+  code: string,
+  partial: Partial<Omit<GeneratedInvoiceMeta, "updatedAt">>
+): GeneratedInvoiceMeta | undefined {
+  const c = normalize(code);
+  if (!c) return undefined;
+  // Ensure invoice exists (only allow meta for stored generated invoices)
+  if (!hasGeneratedInvoice(c)) return undefined;
+  const current = getGeneratedInvoiceMeta(c) || {
+    paymentStatus: "waiting_payment",
+    paymentNotes: "",
+    deliveryStatus: "sent",
+    deliveryNotes: "",
+    overallStatus: "waiting",
+    updatedAt: Date.now(),
+  };
+  const next: GeneratedInvoiceMeta = {
+    ...current,
+    ...partial,
+    updatedAt: Date.now(),
+  };
+  const root = $generatedInvoiceMetaStorage.get();
+  $generatedInvoiceMetaStorage.set({ meta: { ...root.meta, [c]: next } });
+  return next;
+}
+
+function clearAllGeneratedInvoiceMeta() {
+  $generatedInvoiceMetaStorage.set({ meta: {} });
 }
 
 // Received helpers
@@ -114,6 +193,10 @@ export {
   saveGeneratedInvoice,
   removeGeneratedInvoice,
   clearGeneratedInvoices,
+  $generatedInvoiceMetaStorage,
+  getGeneratedInvoiceMeta,
+  updateGeneratedInvoiceMeta,
+  clearAllGeneratedInvoiceMeta,
   $receivedInvoiceStorage,
   hasReceivedInvoice,
   saveReceivedInvoice,

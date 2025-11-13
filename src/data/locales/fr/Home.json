@@ -301,6 +301,13 @@
     "hover1": "Payez une facture en saisissant le code de facture fourni par le créateur de la facture.",
     "hover2": "Payez éventuellement avec différents actifs pour chaque article acheté."
   },
+  "stored_invoices": {
+    "title": "💾 Factures stockées",
+    "subtitle": "Consultez et gérez vos factures enregistrées",
+    "hover1": "Parcourez vos factures enregistrées, générées et reçues.",
+    "hover2": "Affichez les détails de la facture et supprimez les factures indésirables.",
+    "hover3": "Stockez des données sur la progression de l’exécution des factures."
+  },
   "tfund_user": {
     "title": "🚀 Trade de fonds Same-T",
     "subtitle": "Emprunter, échanger, rembourser, simple!",

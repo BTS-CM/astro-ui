@@ -301,6 +301,13 @@
     "hover1": "Bezahlen Sie eine Rechnung, indem Sie den vom Rechnungsersteller bereitgestellten Rechnungscode eingeben.",
     "hover2": "Bezahlen Sie optional für jeden gekauften Artikel mit unterschiedlichen Vermögenswerten."
   },
+  "stored_invoices": {
+    "title": "💾 Gespeicherte Rechnungen",
+    "subtitle": "Sehen und verwalten Sie Ihre gespeicherten Rechnungen",
+    "hover1": "Durchsuchen Sie Ihre gespeicherten Rechnungen, sowohl generierte als auch empfangene.",
+    "hover2": "Rechnungsdetails anzeigen und unerwünschte Rechnungen löschen.",
+    "hover3": "Speichern Sie Daten über den Fortschritt der Rechnungserfüllung."
+  },
   "tfund_user": {
     "title": "🚀 Handel mit gleichem T-Fonds",
     "subtitle": "Leihen, handeln, zurückzahlen, einfach!",

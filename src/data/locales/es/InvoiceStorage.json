@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "Espera",
+    "in_progress": "En curso",
+    "issue_detected": "Problema detectado",
+    "cancelled": "Cancelado",
+    "completed": "Terminado"
+  },
+  "headers": {
+    "recipientId": "ID del destinatario",
+    "recipientName": "Nombre del destinatario",
+    "identifier": "Identificador",
+    "note": "Nota",
+    "when": "Cuando",
+    "itemQty": "Cantidad de artículo",
+    "status": "Estado",
+    "actions": "Comportamiento"
+  },
+  "actions": {
+    "view": "Vista",
+    "payTitle": "Pagar esta factura",
+    "pay": "Pagar",
+    "copied": "Copiado",
+    "copy": "Copiar",
+    "delete": "Borrar",
+    "update": "Actualizar"
+  },
+  "toggle": {
+    "generated": "Facturas Generadas",
+    "received": "Facturas a pagar"
+  },
+  "title": {
+    "generated": "Tus facturas generadas",
+    "received": "Facturas guardadas para pagar"
+  },
+  "description": {
+    "generated": "Facturas que creó y guardó; ",
+    "received": "Facturas que has guardado mientras te preparabas para pagarlas"
+  },
+  "empty": {
+    "title": "No hay facturas guardadas",
+    "description": "Genera y guarda facturas para verlas aquí"
+  },
+  "details": {
+    "title": "Detalles de la factura",
+    "description": "Revisa la factura que seleccionaste"
+  },
+  "recipientAccount": {
+    "info": "ID de cuenta del destinatario",
+    "header": "Cuenta del destinatario"
+  },
+  "recipientName": {
+    "info": "Nombre del destinatario",
+    "header": "Nombre del destinatario"
+  },
+  "identifier": {
+    "info": "Identificador de factura",
+    "header": "Identificador"
+  },
+  "timeSince": {
+    "info": "Tiempo desde que se creó la factura",
+    "header": "Cuando"
+  },
+  "note": {
+    "info": "Nota proporcionada por el creador.",
+    "header": "Nota"
+  },
+  "items": {
+    "title": "Artículos de factura",
+    "headers": {
+      "name": "Artículo",
+      "quantity": "Cantidad"
+    }
+  },
+  "deleteDialog": {
+    "title": "Eliminar factura",
+    "description": "¿Está seguro de que desea eliminar permanentemente esta factura guardada?",
+    "cancel": "Cancelar",
+    "confirm": "Borrar"
+  },
+  "itemDetails": {
+    "title": "Detalles del artículo",
+    "description": "Información detallada sobre este artículo de factura",
+    "fields": {
+      "name": "Nombre",
+      "barcode": "Código de barras",
+      "category": "Categoría",
+      "quantity": "Cantidad",
+      "location": "Ubicación",
+      "unitPrice": "Precio unitario",
+      "reorderLevel": "Nivel de reorden",
+      "supplier": "Proveedor",
+      "unit": "Unidad",
+      "description": "Descripción",
+      "prices": "Precios"
+    }
+  },
+  "meta": {
+    "title": "Actualizar estado de factura",
+    "description": "Mantenga notas de pago, entrega y estado general (no compartidas en el código de factura).",
+    "paymentStatus": "Estado de pago",
+    "payment": {
+      "waiting": "Esperando pago",
+      "issue": "Problema con el pago",
+      "received": "Pago recibido"
+    },
+    "paymentNotes": {
+      "ph": "Notas de pago (identificaciones de tx, números de bloque, activos, montos...)"
+    },
+    "deliveryStatus": "Estado de entrega",
+    "delivery": {
+      "sent": "Enviado",
+      "issue": "Problema con la entrega",
+      "received": "Artículo recibido"
+    },
+    "deliveryNotes": {
+      "ph": "Albaranes de entrega (identificadores de seguimiento, referencias...)"
+    },
+    "overallStatus": "Estado general",
+    "cancel": "Cancelar",
+    "save": "Ahorrar"
+  }
+}

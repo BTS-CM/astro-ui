@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "Waiting",
+    "in_progress": "In progress",
+    "issue_detected": "Issue detected",
+    "cancelled": "Cancelled",
+    "completed": "Completed"
+  },
+  "headers": {
+    "recipientId": "Recipient ID",
+    "recipientName": "Recipient Name",
+    "identifier": "Identifier",
+    "note": "Note",
+    "when": "When",
+    "itemQty": "Item qty",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "actions": {
+    "view": "View",
+    "payTitle": "Pay this invoice",
+    "pay": "Pay",
+    "copied": "Copied",
+    "copy": "Copy",
+    "delete": "Delete",
+    "update": "Update"
+  },
+  "toggle": {
+    "generated": "Generated Invoices",
+    "received": "Invoices To Pay"
+  },
+  "title": {
+    "generated": "Your Generated Invoices",
+    "received": "Invoices Saved To Pay"
+  },
+  "description": {
+    "generated": "Invoices you created and saved; items enriched from inventory when possible",
+    "received": "Invoices you've saved while preparing to pay them"
+  },
+  "empty": {
+    "title": "No saved invoices",
+    "description": "Generate and save invoices to see them here"
+  },
+  "details": {
+    "title": "Invoice Details",
+    "description": "Review the invoice you selected"
+  },
+  "recipientAccount": {
+    "info": "Recipient account ID",
+    "header": "Recipient account"
+  },
+  "recipientName": {
+    "info": "Name of the recipient",
+    "header": "Recipient name"
+  },
+  "identifier": {
+    "info": "Invoice identifier",
+    "header": "Identifier"
+  },
+  "timeSince": {
+    "info": "Time since invoice was created",
+    "header": "When"
+  },
+  "note": {
+    "info": "Note provided by the creator",
+    "header": "Note"
+  },
+  "items": {
+    "title": "Invoice items",
+    "headers": {
+      "name": "Item",
+      "quantity": "Qty"
+    }
+  },
+  "deleteDialog": {
+    "title": "Delete invoice",
+    "description": "Are you sure you want to permanently remove this saved invoice?",
+    "cancel": "Cancel",
+    "confirm": "Delete"
+  },
+  "itemDetails": {
+    "title": "Item Details",
+    "description": "Detailed information about this invoice item",
+    "fields": {
+      "name": "Name",
+      "barcode": "Barcode",
+      "category": "Category",
+      "quantity": "Quantity",
+      "location": "Location",
+      "unitPrice": "Unit Price",
+      "reorderLevel": "Reorder Level",
+      "supplier": "Supplier",
+      "unit": "Unit",
+      "description": "Description",
+      "prices": "Prices"
+    }
+  },
+  "meta": {
+    "title": "Update Invoice Status",
+    "description": "Maintain payment, delivery and overall status notes (not shared in invoice code).",
+    "paymentStatus": "Payment Status",
+    "payment": {
+      "waiting": "Waiting on payment",
+      "issue": "Issue with payment",
+      "received": "Payment received"
+    },
+    "paymentNotes": {
+      "ph": "Payment notes (tx ids, block numbers, assets, amounts...)"
+    },
+    "deliveryStatus": "Delivery Status",
+    "delivery": {
+      "sent": "Sent",
+      "issue": "Issue with delivery",
+      "received": "Received item"
+    },
+    "deliveryNotes": {
+      "ph": "Delivery notes (tracking ids, references...)"
+    },
+    "overallStatus": "Overall Status",
+    "cancel": "Cancel",
+    "save": "Save"
+  }
+}

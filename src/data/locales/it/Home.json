@@ -301,6 +301,13 @@
     "hover1": "Paga una fattura inserendo il codice fattura fornito dall'autore della fattura.",
     "hover2": "Facoltativamente, paga con risorse diverse per ciascun articolo acquistato."
   },
+  "stored_invoices": {
+    "title": "💾 Fatture archiviate",
+    "subtitle": "Visualizza e gestisci le tue fatture salvate",
+    "hover1": "Sfoglia le tue fatture salvate, sia generate che ricevute.",
+    "hover2": "Visualizza i dettagli della fattura ed elimina le fatture indesiderate.",
+    "hover3": "Memorizzare i dati sullo stato di avanzamento delle fatture in evasione."
+  },
   "tfund_user": {
     "title": "🚀 Trade del fondo dello stesso T",
     "subtitle": "Prendi in prestito, commercio, rimborso, semplice!",

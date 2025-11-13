@@ -1,0 +1,123 @@
+{
+  "status": {
+    "waiting": "待っている",
+    "in_progress": "進行中",
+    "issue_detected": "問題が検出されました",
+    "cancelled": "キャンセル",
+    "completed": "完了しました"
+  },
+  "headers": {
+    "recipientId": "受信者ID",
+    "recipientName": "受信者名",
+    "identifier": "識別子",
+    "note": "注記",
+    "when": "いつ",
+    "itemQty": "アイテムの数量",
+    "status": "状態",
+    "actions": "アクション"
+  },
+  "actions": {
+    "view": "ビュー",
+    "payTitle": "この請求書をお支払いください",
+    "pay": "支払う",
+    "copied": "コピーされました",
+    "copy": "コピー",
+    "delete": "消去",
+    "update": "アップデート"
+  },
+  "toggle": {
+    "generated": "生成された請求書",
+    "received": "支払う請求書"
+  },
+  "title": {
+    "generated": "作成した請求書",
+    "received": "支払うために保存された請求書"
+  },
+  "description": {
+    "generated": "作成して保存した請求書。",
+    "received": "支払いの準備中に保存した請求書"
+  },
+  "empty": {
+    "title": "保存された請求書はありません",
+    "description": "請求書を生成して保存すると、ここで確認できます"
+  },
+  "details": {
+    "title": "請求書の詳細",
+    "description": "選択した請求書を確認します"
+  },
+  "recipientAccount": {
+    "info": "受信者のアカウントID",
+    "header": "受信者のアカウント"
+  },
+  "recipientName": {
+    "info": "受取人の名前",
+    "header": "受信者名"
+  },
+  "identifier": {
+    "info": "請求書の識別子",
+    "header": "識別子"
+  },
+  "timeSince": {
+    "info": "請求書が作成されてからの時間",
+    "header": "いつ"
+  },
+  "note": {
+    "info": "作成者によるメモ",
+    "header": "注記"
+  },
+  "items": {
+    "title": "請求書項目",
+    "headers": {
+      "name": "アイテム",
+      "quantity": "数量"
+    }
+  },
+  "deleteDialog": {
+    "title": "請求書の削除",
+    "description": "この保存された請求書を完全に削除してもよろしいですか?",
+    "cancel": "キャンセル",
+    "confirm": "消去"
+  },
+  "itemDetails": {
+    "title": "アイテム詳細",
+    "description": "この請求書アイテムに関する詳細情報",
+    "fields": {
+      "name": "名前",
+      "barcode": "バーコード",
+      "category": "カテゴリ",
+      "quantity": "量",
+      "location": "位置",
+      "unitPrice": "単価",
+      "reorderLevel": "再注文レベル",
+      "supplier": "サプライヤー",
+      "unit": "ユニット",
+      "description": "説明",
+      "prices": "価格"
+    }
+  },
+  "meta": {
+    "title": "請求書のステータスを更新する",
+    "description": "支払い、配送、および全体的なステータスのメモを管理します (請求書コードでは共有されません)。",
+    "paymentStatus": "支払い状況",
+    "payment": {
+      "waiting": "支払いを待っています",
+      "issue": "支払いに関する問題",
+      "received": "支払いを受け取りました"
+    },
+    "paymentNotes": {
+      "ph": "支払いメモ (TX ID、ブロック番号、資産、金額など)"
+    },
+    "deliveryStatus": "配送状況",
+    "delivery": {
+      "sent": "送信済み",
+      "issue": "配送に関する問題",
+      "received": "受け取ったアイテム"
+    },
+    "deliveryNotes": {
+      "ph": "納品書（追跡ID、参照先など）"
+    },
+    "overallStatus": "全体的なステータス",
+    "cancel": "キャンセル",
+    "save": "保存"
+  }
+}

@@ -301,6 +301,13 @@
     "hover1": "Pay an invoice by entering the invoice code provided by the invoice creator.",
     "hover2": "Optionally pay with different assets for each item being purchased."
   },
+  "stored_invoices": {
+    "title": "💾 Stored Invoices",
+    "subtitle": "View and manage your saved invoices",
+    "hover1": "Browse your saved invoices, both generated and received.",
+    "hover2": "View invoice details and delete unwanted invoices.",
+    "hover3": "Store data about the progress of invoices being fulfilled."
+  },
   "tfund_user": {
     "title": "🚀 Same-T Fund Trade",
     "subtitle": "Borrow, trade, repay, simple!",

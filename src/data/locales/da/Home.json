@@ -301,6 +301,13 @@
     "hover1": "Betal en faktura ved at indtaste fakturakoden oplyst af fakturaopretteren.",
     "hover2": "Betal eventuelt med forskellige aktiver for hver vare, der købes."
   },
+  "stored_invoices": {
+    "title": "💾 Gemte fakturaer",
+    "subtitle": "Se og administrer dine gemte fakturaer",
+    "hover1": "Gennemse dine gemte fakturaer, både genererede og modtagne.",
+    "hover2": "Se fakturadetaljer og slet uønskede fakturaer.",
+    "hover3": "Gem data om status for fakturaer, der opfyldes."
+  },
   "tfund_user": {
     "title": "🚀 Samme-T-fondshandel",
     "subtitle": "Lån, handel, tilbagebetaling, enkel!",
