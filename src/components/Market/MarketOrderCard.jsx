@@ -28,15 +28,6 @@ export default function MarketOrderCard(properties) {
   const { cardType, assetA, assetAData, assetB, assetBData, marketOrders } =
     properties;
 
-  console.log({
-    cardType,
-    assetA,
-    assetAData,
-    assetB,
-    assetBData,
-    marketOrders,
-  });
-
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const Row = ({ index, style }) => {
