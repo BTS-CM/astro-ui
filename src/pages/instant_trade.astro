@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import InstantTrading from '../components/InstantTrade';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const assetsBTS = btsAllAssets.map(collection => collection.data);
+const assetsTEST = testAllAssets.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
+const marketSearchBTS = btsMarketData.map(collection => collection.data);
+const marketSearchTEST = testMarketData.map(collection => collection.data);
+const globalParamsBTS = btsFeeSchedule.map(collection => collection.data);
+const globalParamsTEST = testFeeSchedule.map(collection => collection.data);
+---
+
+<Layout title="Bitshares DEX - Instant Trade">
+	<main>
+		<PageHeader client:only="react" page="instant_trade" backURL="../index.html" />
+        <InstantTrading
+            client:only="react"
+            _assetsBTS={assetsBTS}
+            _assetsTEST={assetsTEST}
+            _poolsBTS={poolsBTS}
+            _poolsTEST={poolsTEST}
+            _marketSearchBTS={marketSearchBTS}
+            _marketSearchTEST={marketSearchTEST}
+            _globalParamsBTS={globalParamsBTS}
+            _globalParamsTEST={globalParamsTEST}
+        />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/instant_trade.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

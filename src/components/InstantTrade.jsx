@@ -8,13 +8,21 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { useStore } from "@nanostores/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useForm, Controller } from "react-hook-form";
+import { List } from "react-window";
 
-import { humanReadableFloat, trimPrice, isInvertedMarket } from "@/lib/common";
+import {
+  humanReadableFloat,
+  trimPrice,
+  isInvertedMarket,
+  blockchainFloat,
+} from "@/lib/common";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 import { createMarketOrderStore } from "@/nanoeffects/MarketOrderBook.ts";
+import { createMarketGroupedLimitOrdersStore } from "@/nanoeffects/MarketGroupedLimitOrders.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -27,11 +35,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
-import HorizontalTradeCard from "./Market/HorizontalTradeCard.jsx";
-import MarketOrderCard from "./Market/MarketOrderCard.jsx";
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
 export default function InstantTrade(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -54,8 +80,6 @@ export default function InstantTrade(properties) {
     _assetsTEST,
     _marketSearchBTS,
     _marketSearchTEST,
-    _poolsBTS,
-    _poolsTEST,
     _globalParamsBTS,
     _globalParamsTEST,
   } = properties;
@@ -134,6 +158,7 @@ export default function InstantTrade(properties) {
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
   const [assetB, setAssetB] = useState(!window.location.search ? "CNY" : null);
+
   useEffect(() => {
     async function parseUrlAssets() {
       //console.log("Parsing market parameters");
@@ -216,6 +241,8 @@ export default function InstantTrade(properties) {
 
   const [assetAData, setAssetAData] = useState(null);
   const [assetBData, setAssetBData] = useState(null);
+
+  const [orderType, setOrderType] = useState("buy"); // buy or sell
 
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
@@ -301,11 +328,15 @@ export default function InstantTrade(properties) {
   }, [usr]);
 
   const invertedMarket = useMemo(() => {
+    if (!assetAData || !assetBData) {
+      return;
+    }
     return isInvertedMarket(assetAData.id, assetBData.id);
   }, [assetAData, assetBData]);
 
   const [buyOrders, setBuyOrders] = useState(null);
   const [sellOrders, setSellOrders] = useState(null);
+
   useEffect(() => {
     async function fetchMarketOrders() {
       const marketOrdersStore = createMarketOrderStore([
@@ -332,7 +363,6 @@ export default function InstantTrade(properties) {
   }, [usr, assetA, assetB]);
 
   const [clicked, setClicked] = useState(false);
-
   const [amount, setAmount] = useState(0.0);
   const [price, setPrice] = useState(0.0);
   const [total, setTotal] = useState(0);
@@ -419,25 +449,28 @@ export default function InstantTrade(properties) {
   const [inputChars, setInputChars] = useState(0);
   useEffect(() => {
     if (inputChars > 0) {
-      let finalUrlParams =
-        `?market=${thisAssetA}_${thisAssetB}` + `&amount=${amount}`;
+      let finalUrlParams = `?market=${assetA}_${assetB}` + `&amount=${amount}`;
 
       window.history.replaceState({}, "", finalUrlParams);
     }
-  }, [amount, thisAssetA, thisAssetB]);
+  }, [amount, assetA, assetB]);
 
   const trxJSON = useMemo(() => {
     // TODO: process limit orders which match multiple open market orders
+    if (!usr || !usr.id || !assetAData || !assetBData || !marketSearch) {
+      return null;
+    }
+
     return [
       {
         seller: usr.id,
         amount_to_sell: {
           amount: blockchainFloat(total, assetBData.precision).toFixed(0),
-          asset_id: marketSearch.find((asset) => asset.s === thisAssetB).id,
+          asset_id: marketSearch.find((asset) => asset.s === assetB).id,
         },
         min_to_receive: {
           amount: blockchainFloat(amount, assetAData.precision).toFixed(0),
-          asset_id: marketSearch.find((asset) => asset.s === thisAssetA).id,
+          asset_id: marketSearch.find((asset) => asset.s === assetA).id,
         },
         expiration: date,
         fill_or_kill: true,
@@ -448,10 +481,10 @@ export default function InstantTrade(properties) {
     usr,
     total,
     assetBData,
-    thisAssetB,
+    assetB,
     amount,
     assetAData,
-    thisAssetA,
+    assetA,
     date,
     marketSearch,
   ]);
@@ -501,12 +534,12 @@ export default function InstantTrade(properties) {
             {price}
           </div>
           <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
-            {cardType === "buy"
+            {orderType === "buy"
               ? base.toFixed(assetBData.precision)
               : quote.toFixed(assetAData.precision)}
           </div>
           <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
-            {cardType === "buy"
+            {orderType === "buy"
               ? quote.toFixed(assetAData.precision)
               : base.toFixed(assetBData.precision)}
           </div>
@@ -580,8 +613,8 @@ export default function InstantTrade(properties) {
             <CardHeader className="pb-2">
               <CardTitle>
                 {t("LimitOrderCard:buyingWith", {
-                  assetA: thisAssetA,
-                  assetB: thisAssetB,
+                  assetA: assetA,
+                  assetB: assetB,
                 })}
               </CardTitle>
               <CardDescription>
@@ -589,11 +622,7 @@ export default function InstantTrade(properties) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {thisAssetA &&
-              thisAssetB &&
-              marketSearch &&
-              assetAData &&
-              assetBData ? (
+              {assetA && assetB && marketSearch && assetAData && assetBData ? (
                 <form onSubmit={form.handleSubmit(() => setShowDialog(true))}>
                   <FieldGroup>
                     <Controller
@@ -609,7 +638,7 @@ export default function InstantTrade(properties) {
                           </FieldLabel>
                           <FieldDescription>
                             {t("LimitOrderCard:sellAmount.buyDescription", {
-                              asset: thisAssetA,
+                              asset: assetA,
                             })}
                           </FieldDescription>
                           <span className="grid grid-cols-12">
@@ -678,8 +707,8 @@ export default function InstantTrade(properties) {
                     />
 
                     <Separator className="mt-3" />
-
-                    <Controller
+                    {/*
+                      <Controller
                       name="fee"
                       control={form.control}
                       render={({ field, fieldState }) => (
@@ -715,6 +744,8 @@ export default function InstantTrade(properties) {
                         </Field>
                       )}
                     />
+                    */}
+
                     {orderType === "buy" &&
                     assetAData &&
                     assetAData.market_fee_percent &&
@@ -766,13 +797,13 @@ export default function InstantTrade(properties) {
             <Card>
               <CardHeader>
                 <CardTitle>
-                  {cardType === "buy"
+                  {orderType === "buy"
                     ? t("MarketOrderCard:openBuyLimitOrdersTitle")
                     : t("MarketOrderCard:openSellLimitOrdersTitle")}
                 </CardTitle>
                 <CardDescription>
                   {t(
-                    cardType === "buy"
+                    orderType === "buy"
                       ? "MarketOrderCard:buyLimitOrdersDescription"
                       : "MarketOrderCard:sellLimitOrdersDescription",
                     {
@@ -783,26 +814,26 @@ export default function InstantTrade(properties) {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {marketOrders && marketOrders.length ? (
+                {/*marketOrders && marketOrders.length ? (
                   <>
                     <div className="grid grid-cols-4">
                       <div className="col-span-1 pl-3 text-right pr-2">
                         Price
                       </div>
                       <div className="col-span-1 pl-3 text-md text-right pr-2">
-                        {cardType === "sell" && assetA && assetA.length < 12
+                        {orderType === "sell" && assetA && assetA.length < 12
                           ? assetA
                           : null}
-                        {cardType === "sell" &&
+                        {orderType === "sell" &&
                         assetA &&
                         assetA.length >= 12 &&
                         assetAData
                           ? assetAData.id
                           : null}
-                        {cardType === "buy" && assetB && assetB.length < 12
+                        {orderType === "buy" && assetB && assetB.length < 12
                           ? assetB
                           : null}
-                        {cardType === "buy" &&
+                        {orderType === "buy" &&
                         assetB &&
                         assetB.length >= 12 &&
                         assetBData
@@ -810,19 +841,19 @@ export default function InstantTrade(properties) {
                           : null}
                       </div>
                       <div className="col-span-1 pl-3 text-right pr-2">
-                        {cardType === "sell" && assetB && assetB.length < 12
+                        {orderType === "sell" && assetB && assetB.length < 12
                           ? assetB
                           : null}
-                        {cardType === "sell" &&
+                        {orderType === "sell" &&
                         assetB &&
                         assetB.length >= 12 &&
                         assetBData
                           ? assetBData.id
                           : null}
-                        {cardType === "buy" && assetA && assetA.length < 12
+                        {orderType === "buy" && assetA && assetA.length < 12
                           ? assetA
                           : null}
-                        {cardType === "buy" &&
+                        {orderType === "buy" &&
                         assetA &&
                         assetA.length >= 12 &&
                         assetAData
@@ -850,7 +881,7 @@ export default function InstantTrade(properties) {
                   </>
                 ) : (
                   t("MarketOrderCard:noOpenOrders")
-                )}
+                )*/}
               </CardContent>
             </Card>
 
@@ -861,12 +892,12 @@ export default function InstantTrade(properties) {
                 usrChain={usr.chain}
                 userID={usr.id}
                 dismissCallback={setShowDialog}
-                key={`Buying${amount}${thisAssetA}for${total}${thisAssetB}`}
+                key={`Buying${amount}${assetA}for${total}${assetB}`}
                 headerText={t("LimitOrderCard:headerText.buying", {
                   amount,
-                  thisAssetA,
+                  assetA,
                   total,
-                  thisAssetB,
+                  assetB,
                 })}
                 trxJSON={trxJSON}
               />
