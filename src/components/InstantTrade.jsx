@@ -16,13 +16,14 @@ import {
   trimPrice,
   isInvertedMarket,
   blockchainFloat,
+  copyToClipboard,
 } from "@/lib/common";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 import { createMarketOrderStore } from "@/nanoeffects/MarketOrderBook.ts";
-import { createMarketGroupedLimitOrdersStore } from "@/nanoeffects/MarketGroupedLimitOrders.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -46,18 +47,23 @@ import {
 } from "@/components/ui/field";
 
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function InstantTrade(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -335,7 +341,7 @@ export default function InstantTrade(properties) {
   }, [assetAData, assetBData]);
 
   const [buyOrders, setBuyOrders] = useState(null);
-  const [sellOrders, setSellOrders] = useState(null);
+  //const [sellOrders, setSellOrders] = useState(null);
 
   useEffect(() => {
     async function fetchMarketOrders() {
@@ -349,10 +355,13 @@ export default function InstantTrade(properties) {
       marketOrdersStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setBuyOrders(data.bids);
-          setSellOrders(data.asks);
+
+          console.log({
+            bids: data.bids,
+            asks: data.asks,
+          });
         } else {
           setBuyOrders(null);
-          setSellOrders(null);
         }
       });
     }
@@ -372,7 +381,6 @@ export default function InstantTrade(properties) {
 
     if (amount && price && total) {
       if (
-        orderType === "buy" &&
         assetAData &&
         assetAData.market_fee_percent &&
         assetAData.market_fee_percent > 0
@@ -381,21 +389,10 @@ export default function InstantTrade(properties) {
           parseFloat(amount) * (assetAData.market_fee_percent / 100);
         return calculatedMarketFee.toFixed(assetAData.precision);
       }
-
-      if (
-        orderType === "sell" &&
-        assetBData &&
-        assetBData.market_fee_percent &&
-        assetBData.market_fee_percent > 0
-      ) {
-        calculatedMarketFee =
-          parseFloat(total) * (assetBData.market_fee_percent / 100);
-        return calculatedMarketFee.toFixed(assetBData.precision);
-      }
     }
 
     return calculatedMarketFee;
-  }, [amount, price, total, orderType, assetAData, assetBData]);
+  }, [amount, price, total, assetAData]);
 
   const [expiryType, setExpiryType] = useState("fkill");
   const [expiry, setExpiry] = useState(() => {
@@ -465,12 +462,12 @@ export default function InstantTrade(properties) {
       {
         seller: usr.id,
         amount_to_sell: {
-          amount: blockchainFloat(total, assetBData.precision).toFixed(0),
-          asset_id: marketSearch.find((asset) => asset.s === assetB).id,
-        },
-        min_to_receive: {
           amount: blockchainFloat(amount, assetAData.precision).toFixed(0),
           asset_id: marketSearch.find((asset) => asset.s === assetA).id,
+        },
+        min_to_receive: {
+          amount: blockchainFloat(total, assetBData.precision).toFixed(0),
+          asset_id: marketSearch.find((asset) => asset.s === assetB).id,
         },
         expiration: date,
         fill_or_kill: true,
@@ -488,6 +485,31 @@ export default function InstantTrade(properties) {
     date,
     marketSearch,
   ]);
+
+  const [buyOrderDetails, setBuyOrderDetails] = useState(null);
+  useEffect(() => {
+    async function fetching() {
+      const _store = createObjectStore([
+        _chain,
+        JSON.stringify(buyOrders.map((x) => x.id)),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      _store.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          if (!data.length) {
+            return;
+          }
+          console.log({ aaaaaa: data });
+          setBuyOrderDetails(data);
+        }
+      });
+    }
+
+    if (_chain && currentNode && buyOrders && buyOrders.length) {
+      fetching();
+    }
+  }, [currentNode, _chain, buyOrders]);
 
   if (
     !usr ||
@@ -509,19 +531,24 @@ export default function InstantTrade(properties) {
   }
 
   const Row = ({ index, style }) => {
-    const order = marketOrders[index];
+    const order = buyOrders[index];
+
+    const orderDetails =
+      buyOrderDetails && buyOrderDetails.length
+        ? buyOrderDetails.find((x) => x.id === order.id)
+        : null;
 
     const price = parseFloat(order.price).toFixed(assetBData.precision);
     const base = parseFloat(order.base);
     const quote = parseFloat(order.quote);
 
-    const totalBase = marketOrders
+    const totalBase = buyOrders
       .slice(0, index + 1)
       .map((x) => parseFloat(x.base))
       .reduce((acc, curr) => acc + curr, 0)
       .toFixed(assetBData.precision);
 
-    const totalQuote = marketOrders
+    const totalQuote = buyOrders
       .slice(0, index + 1)
       .map((x) => parseFloat(x.quote))
       .reduce((acc, curr) => acc + curr, 0)
@@ -529,19 +556,80 @@ export default function InstantTrade(properties) {
 
     return (
       <div style={style}>
-        <div className="grid grid-cols-4 text-sm">
-          <div className="col-span-1 border-l-2 border-r-2 pl-3 font-mono text-right tabular-nums">
+        <div className="grid grid-cols-7 text-sm hover:bg-gray-400">
+          <div>
+            <ExternalLink
+              classnamecontents="hover:text-purple-500"
+              type="text"
+              text={order.id}
+              hyperlink={`https://explorer.bitshares.ws/#/objects/${order.id}${
+                usr.chain === "bitshares" ? "" : "?network=testnet"
+              }`}
+            />
+          </div>
+          <div>
+            <ExternalLink
+              classnamecontents="hover:text-purple-500"
+              type="text"
+              text={order.owner_name}
+              hyperlink={`https://explorer.bitshares.ws/#/accounts/${
+                order.owner_name
+              }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+            />
+          </div>
+          <div>
+            {orderDetails && orderDetails.on_fill.length ? (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Badge
+                    variant="secondary"
+                    className="h-4 min-w-4 rounded-full px-1 font-mono tabular-nums"
+                  >
+                    ✔️
+                  </Badge>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[550px] bg-white">
+                  <DialogHeader>
+                    <DialogTitle>On Fill Operation Details</DialogTitle>
+                    <DialogDescription>
+                      This limit order in the order book has an "on fill"
+                      condition, which may repeat this order at or near its
+                      current price once purchased.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid grid-cols-1">
+                    <div className="col-span-1">
+                      <ScrollArea className="h-72 rounded-md border">
+                        <pre>
+                          {JSON.stringify(orderDetails.on_fill, null, 2)}
+                        </pre>
+                      </ScrollArea>
+                    </div>
+                    <div className="col-span-1 mt-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          copyToClipboard(
+                            JSON.stringify(orderDetails.on_fill, null, 4)
+                          );
+                        }}
+                      >
+                        {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            ) : null}
+          </div>
+          <div className="col-span-1 pl-3 font-mono text-right tabular-nums">
+            {quote.toFixed(assetAData.precision)}
+          </div>
+          <div className="col-span-1 pl-3 font-mono text-right tabular-nums">
             {price}
           </div>
-          <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
-            {orderType === "buy"
-              ? base.toFixed(assetBData.precision)
-              : quote.toFixed(assetAData.precision)}
-          </div>
-          <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
-            {orderType === "buy"
-              ? quote.toFixed(assetAData.precision)
-              : base.toFixed(assetBData.precision)}
+          <div className="col-span-1 pl-3 font-mono text-right tabular-nums">
+            {quote.toFixed(assetAData.precision)}
           </div>
           <div className="col-span-1 pl-3 font-mono text-right tabular-nums">
             {totalBase}
@@ -553,78 +641,77 @@ export default function InstantTrade(properties) {
 
   return (
     <div className="container mx-auto mt-5 mb-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="col-span-1">
-          <div className="flex-grow mb-2">
-            <Card>
-              <CardHeader className="pt-2 pb-2">
-                <CardTitle className="text-lg">
-                  {usr.chain === "bitshares"
-                    ? "Bitshares "
-                    : "Bitshares (Testnet) "}
-                  Instant Trade
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pb-3">
-                <div className="grid grid-cols-3 gap-1">
-                  <AssetDropDown
-                    assetSymbol={assetA}
-                    assetData={assetAData}
-                    storeCallback={setAssetA}
-                    otherAsset={assetB}
-                    marketSearch={marketSearch}
-                    type={"quote"}
-                    size="small"
-                    chain={usr.chain}
-                    balances={balances}
-                  />
+      <div className="grid grid-cols-2 md:grid-cols-1 gap-5">
+        <Card>
+          <CardHeader className="pt-2 pb-2">
+            <CardTitle className="text-lg">
+              {usr.chain === "bitshares"
+                ? "Bitshares "
+                : "Bitshares (Testnet) "}
+              Instant Trade
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pb-3">
+            <div className="grid grid-cols-3 gap-1">
+              <AssetDropDown
+                assetSymbol={assetB}
+                assetData={assetBData}
+                storeCallback={setAssetB}
+                otherAsset={assetA}
+                marketSearch={marketSearch}
+                type={"quote"}
+                size="small"
+                chain={usr.chain}
+                balances={balances}
+              />
 
-                  <a
-                    style={{ lineHeight: 1 }}
-                    href={`/dex/index.html?market=${assetB}_${assetA}`}
-                    onClick={() => setClicked(true)}
-                  >
-                    <Button variant="outline" className="w-full h-7">
-                      {clicked ? (
-                        <ReloadIcon className="animate-spin" />
-                      ) : (
-                        <ReloadIcon />
-                      )}
-                    </Button>
-                  </a>
+              <a
+                style={{ lineHeight: 1 }}
+                href={`/instant_trade/index.html?market=${assetB}_${assetA}`}
+                onClick={() => setClicked(true)}
+              >
+                <Button variant="outline" className="w-full h-7">
+                  {clicked ? (
+                    <ReloadIcon className="animate-spin" />
+                  ) : (
+                    <ReloadIcon />
+                  )}
+                </Button>
+              </a>
 
-                  <AssetDropDown
-                    assetSymbol={assetB}
-                    assetData={assetBData}
-                    storeCallback={setAssetB}
-                    otherAsset={assetA}
-                    marketSearch={marketSearch}
-                    type={"base"}
-                    size="small"
-                    chain={usr.chain}
-                    balances={balances}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              <AssetDropDown
+                assetSymbol={assetA}
+                assetData={assetAData}
+                storeCallback={setAssetA}
+                otherAsset={assetB}
+                marketSearch={marketSearch}
+                type={"base"}
+                size="small"
+                chain={usr.chain}
+                balances={balances}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>
-                {t("LimitOrderCard:buyingWith", {
-                  assetA: assetA,
-                  assetB: assetB,
-                })}
-              </CardTitle>
-              <CardDescription>
-                {t("LimitOrderCard:createLimitOrder")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {assetA && assetB && marketSearch && assetAData && assetBData ? (
-                <form onSubmit={form.handleSubmit(() => setShowDialog(true))}>
-                  <FieldGroup>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>
+              {t("LimitOrderCard:buyingWith", {
+                assetA: assetB,
+                assetB: assetA,
+              })}
+            </CardTitle>
+            <CardDescription>
+              Enter how much {assetB} you want by selling {assetA}, you will be
+              matched with existing bid orders.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {assetA && assetB && marketSearch && assetAData && assetBData ? (
+              <form onSubmit={form.handleSubmit(() => setShowDialog(true))}>
+                <FieldGroup>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <Controller
                       name="sellAmount"
                       control={form.control}
@@ -634,80 +721,67 @@ export default function InstantTrade(properties) {
                           className="mt-4 text-xs"
                         >
                           <FieldLabel>
-                            {t("LimitOrderCard:sellAmount.label")}
-                          </FieldLabel>
-                          <FieldDescription>
-                            {t("LimitOrderCard:sellAmount.buyDescription", {
+                            {t("LimitOrderCard:sellAmount.sellDescription", {
                               asset: assetA,
                             })}
-                          </FieldDescription>
-                          <span className="grid grid-cols-12">
-                            <span className="col-span-9">
-                              <Input
-                                {...field}
-                                label={`Amount`}
-                                placeholder={amount}
-                                disabled
-                                readOnly
-                              />
-                            </span>
-                            <span className="col-span-3 ml-3 text-center">
-                              <Popover>
-                                <PopoverTrigger>
-                                  <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
-                                    <Label>
-                                      {t("LimitOrderCard:editLabel")}
-                                    </Label>
-                                  </span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Label>
-                                    {t(
-                                      "LimitOrderCard:sellAmount.provideNewLabel"
-                                    )}
-                                  </Label>{" "}
-                                  <Input
-                                    placeholder={amount}
-                                    className="mb-2 mt-1"
-                                    onChange={(event) => {
-                                      const input = event.target.value;
-                                      const regex = /^[0-9,]*\.?[0-9]*$/;
-                                      if (
-                                        input &&
-                                        input.length &&
-                                        regex.test(input)
-                                      ) {
-                                        const parsedInput = parseFloat(
-                                          input.replaceAll(",", "")
-                                        );
-                                        if (parsedInput) {
-                                          setAmount(
-                                            parsedInput.toFixed(
-                                              assetAData.precision
-                                            )
-                                          );
-                                          if (price) {
-                                            setTotal(
-                                              (parsedInput * price).toFixed(
-                                                assetBData.precision
-                                              )
-                                            );
-                                          }
-                                          setInputChars(inputChars + 1);
-                                        }
-                                      }
-                                    }}
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            </span>
-                          </span>
+                          </FieldLabel>
+
+                          <Input
+                            placeholder={amount}
+                            className="mb-2 mt-1"
+                            onChange={(event) => {
+                              const input = event.target.value;
+                              const regex = /^[0-9,]*\.?[0-9]*$/;
+                              if (input && input.length && regex.test(input)) {
+                                const parsedInput = parseFloat(
+                                  input.replaceAll(",", "")
+                                );
+                                if (parsedInput) {
+                                  setAmount(
+                                    parsedInput.toFixed(assetAData.precision)
+                                  );
+                                  if (price) {
+                                    setTotal(
+                                      (parsedInput * price).toFixed(
+                                        assetBData.precision
+                                      )
+                                    );
+                                  }
+                                  setInputChars(inputChars + 1);
+                                }
+                              }
+                            }}
+                          />
                         </Field>
                       )}
                     />
 
-                    <Separator className="mt-3" />
-                    {/*
+                    <Controller
+                      name="buyAmount"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          invalid={fieldState.invalid}
+                          className="mt-4 text-xs"
+                        >
+                          <FieldLabel>
+                            {t("LimitOrderCard:sellAmount.sellDescription", {
+                              asset: assetA,
+                            })}
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            label={`Buy Amount`}
+                            value={amount}
+                            disabled
+                            readOnly
+                          />
+                        </Field>
+                      )}
+                    />
+                  </div>
+
+                  {/*
                       <Controller
                       name="fee"
                       control={form.control}
@@ -746,164 +820,168 @@ export default function InstantTrade(properties) {
                     />
                     */}
 
-                    {orderType === "buy" &&
-                    assetAData &&
-                    assetAData.market_fee_percent &&
-                    assetAData.market_fee_percent > 0 ? (
-                      <Controller
-                        name="marketFees"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                          <Field invalid={fieldState.invalid} disabled>
-                            <FieldLabel>
-                              {t("LimitOrderCard:marketFees.label")}
-                            </FieldLabel>
-                            <Input
-                              {...field}
-                              disabled
-                              value={`${marketFees} ${assetAData.symbol}`}
-                              placeholder={`${marketFees} ${assetAData.symbol}`}
-                            />
-                            <FieldDescription>
-                              {t("LimitOrderCard:marketFees.description")}
-                            </FieldDescription>
-                          </Field>
-                        )}
-                      />
-                    ) : null}
-                    {!amount || !price || !expiry ? (
-                      <Button
-                        className="mt-7 mb-1"
-                        variant="outline"
-                        disabled
-                        type="submit"
-                      >
-                        {t("LimitOrderCard:submit")}
-                      </Button>
-                    ) : (
-                      <Button
-                        className="mt-7 mb-1"
-                        variant="outline"
-                        type="submit"
-                      >
-                        {t("LimitOrderCard:submit")}
-                      </Button>
-                    )}
-                  </FieldGroup>
-                </form>
-              ) : null}
-            </CardContent>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {orderType === "buy"
-                    ? t("MarketOrderCard:openBuyLimitOrdersTitle")
-                    : t("MarketOrderCard:openSellLimitOrdersTitle")}
-                </CardTitle>
-                <CardDescription>
-                  {t(
-                    orderType === "buy"
-                      ? "MarketOrderCard:buyLimitOrdersDescription"
-                      : "MarketOrderCard:sellLimitOrdersDescription",
-                    {
-                      assetA: assetA,
-                      assetB: assetB,
-                    }
+                  {orderType === "buy" &&
+                  assetAData &&
+                  assetAData.market_fee_percent &&
+                  assetAData.market_fee_percent > 0 ? (
+                    <Controller
+                      name="marketFees"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field invalid={fieldState.invalid} disabled>
+                          <FieldLabel>
+                            {t("LimitOrderCard:marketFees.label")}
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            disabled
+                            value={`${marketFees} ${assetAData.symbol}`}
+                            placeholder={`${marketFees} ${assetAData.symbol}`}
+                          />
+                          <FieldDescription>
+                            {t("LimitOrderCard:marketFees.description")}
+                          </FieldDescription>
+                        </Field>
+                      )}
+                    />
+                  ) : null}
+                  {!amount || !price || !expiry ? (
+                    <Button
+                      className="mt-7 mb-1"
+                      variant="outline"
+                      disabled
+                      type="submit"
+                    >
+                      {t("LimitOrderCard:submit")}
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-7 mb-1"
+                      variant="outline"
+                      type="submit"
+                    >
+                      {t("LimitOrderCard:submit")}
+                    </Button>
                   )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {/*marketOrders && marketOrders.length ? (
-                  <>
-                    <div className="grid grid-cols-4">
-                      <div className="col-span-1 pl-3 text-right pr-2">
-                        Price
-                      </div>
-                      <div className="col-span-1 pl-3 text-md text-right pr-2">
-                        {orderType === "sell" && assetA && assetA.length < 12
-                          ? assetA
-                          : null}
-                        {orderType === "sell" &&
-                        assetA &&
-                        assetA.length >= 12 &&
-                        assetAData
-                          ? assetAData.id
-                          : null}
-                        {orderType === "buy" && assetB && assetB.length < 12
-                          ? assetB
-                          : null}
-                        {orderType === "buy" &&
-                        assetB &&
-                        assetB.length >= 12 &&
-                        assetBData
-                          ? assetBData.id
-                          : null}
-                      </div>
-                      <div className="col-span-1 pl-3 text-right pr-2">
-                        {orderType === "sell" && assetB && assetB.length < 12
-                          ? assetB
-                          : null}
-                        {orderType === "sell" &&
-                        assetB &&
-                        assetB.length >= 12 &&
-                        assetBData
-                          ? assetBData.id
-                          : null}
-                        {orderType === "buy" && assetA && assetA.length < 12
-                          ? assetA
-                          : null}
-                        {orderType === "buy" &&
-                        assetA &&
-                        assetA.length >= 12 &&
-                        assetAData
-                          ? assetAData.id
-                          : null}
-                      </div>
-                      <div className="col-span-1 pl-3 text-right pr-2">
-                        {assetB && assetB.length < 7
-                          ? `Total (${assetB})`
-                          : null}
-                        {assetB && assetB.length >= 7 && assetBData
-                          ? `Total (${assetBData.id})`
-                          : null}
-                      </div>
+                </FieldGroup>
+              </form>
+            ) : null}
+          </CardContent>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {orderType === "buy"
+                  ? t("MarketOrderCard:openBuyLimitOrdersTitle")
+                  : t("MarketOrderCard:openSellLimitOrdersTitle")}
+              </CardTitle>
+              <CardDescription>
+                {t(
+                  orderType === "buy"
+                    ? "MarketOrderCard:buyLimitOrdersDescription"
+                    : "MarketOrderCard:sellLimitOrdersDescription",
+                  {
+                    assetA: assetA,
+                    assetB: assetB,
+                  }
+                )}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {buyOrders && buyOrders.length ? (
+                <>
+                  <div className="grid grid-cols-7">
+                    <div>ID</div>
+                    <div>Seller</div>
+                    <div>On Repeat?</div>
+                    <div className="col-span-1 pl-3 text-right pr-2">Price</div>
+                    <div className="col-span-1 pl-3 text-md text-right pr-2">
+                      {orderType === "sell" && assetA && assetA.length < 12
+                        ? assetA
+                        : null}
+                      {orderType === "sell" &&
+                      assetA &&
+                      assetA.length >= 12 &&
+                      assetAData
+                        ? assetAData.id
+                        : null}
+                      {orderType === "buy" && assetB && assetB.length < 12
+                        ? assetB
+                        : null}
+                      {orderType === "buy" &&
+                      assetB &&
+                      assetB.length >= 12 &&
+                      assetBData
+                        ? assetBData.id
+                        : null}
                     </div>
-                    <div className="h-[300px] overflow-hidden">
+                    <div className="col-span-1 pl-3 text-right pr-2">
+                      {orderType === "sell" && assetB && assetB.length < 12
+                        ? assetB
+                        : null}
+                      {orderType === "sell" &&
+                      assetB &&
+                      assetB.length >= 12 &&
+                      assetBData
+                        ? assetBData.id
+                        : null}
+                      {orderType === "buy" && assetA && assetA.length < 12
+                        ? assetA
+                        : null}
+                      {orderType === "buy" &&
+                      assetA &&
+                      assetA.length >= 12 &&
+                      assetAData
+                        ? assetAData.id
+                        : null}
+                    </div>
+                    <div className="col-span-1 pl-3 text-right pr-2">
+                      {assetB && assetB.length < 7 ? `Total (${assetB})` : null}
+                      {assetB && assetB.length >= 7 && assetBData
+                        ? `Total (${assetBData.id})`
+                        : null}
+                    </div>
+                  </div>
+                  <div className="h-[300px] overflow-hidden">
+                    {buyOrders && buyOrderDetails ? (
                       <List
                         height={300}
                         rowComponent={Row}
-                        rowCount={marketOrders.length}
+                        rowCount={buyOrders.length}
                         rowHeight={20}
                         rowProps={{}}
                       />
-                    </div>
-                  </>
-                ) : (
-                  t("MarketOrderCard:noOpenOrders")
-                )*/}
-              </CardContent>
-            </Card>
-
-            {showDialog ? (
-              <DeepLinkDialog
-                operationNames={["limit_order_create"]}
-                username={usr.username}
-                usrChain={usr.chain}
-                userID={usr.id}
-                dismissCallback={setShowDialog}
-                key={`Buying${amount}${assetA}for${total}${assetB}`}
-                headerText={t("LimitOrderCard:headerText.buying", {
-                  amount,
-                  assetA,
-                  total,
-                  assetB,
-                })}
-                trxJSON={trxJSON}
-              />
-            ) : null}
+                    ) : (
+                      <div className="flex items-center">
+                        <Spinner className="size-8" />
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                t("MarketOrderCard:noOpenOrders")
+              )}
+            </CardContent>
           </Card>
-        </div>
+
+          {showDialog ? (
+            <DeepLinkDialog
+              operationNames={["limit_order_create"]}
+              username={usr.username}
+              usrChain={usr.chain}
+              userID={usr.id}
+              dismissCallback={setShowDialog}
+              key={`Buying${amount}${assetA}for${total}${assetB}`}
+              headerText={t("LimitOrderCard:headerText.buying", {
+                amount,
+                assetA,
+                total,
+                assetB,
+              })}
+              trxJSON={trxJSON}
+            />
+          ) : null}
+        </Card>
       </div>
     </div>
   );
