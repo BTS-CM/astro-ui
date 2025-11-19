@@ -68,7 +68,11 @@ import {
 } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { blockchainFloat, humanReadableFloat } from "@/lib/common";
+import {
+  blockchainFloat,
+  humanReadableFloat,
+  assetAmountRegex,
+} from "@/lib/common";
 
 import { $currentNode } from "@/stores/node.ts";
 
@@ -975,7 +979,7 @@ export default function PoolStake(properties) {
                                                   const input =
                                                     event.target.value;
                                                   const regex =
-                                                    /^[0-9]*\.?[0-9]*$/;
+                                                    assetAmountRegex(assetA);
                                                   if (
                                                     input &&
                                                     input.length &&
@@ -1012,6 +1016,10 @@ export default function PoolStake(properties) {
                                                         );
 
                                                       setBStake(_bAmount);
+                                                      form.setValue(
+                                                        "stakeB",
+                                                        _bAmount
+                                                      );
 
                                                       const _supply =
                                                         humanReadableFloat(
@@ -1120,7 +1128,7 @@ export default function PoolStake(properties) {
                                                   const input =
                                                     event.target.value;
                                                   const regex =
-                                                    /^[0-9]*\.?[0-9]*$/;
+                                                    assetAmountRegex(assetB);
                                                   if (
                                                     input &&
                                                     input.length &&
@@ -1157,6 +1165,10 @@ export default function PoolStake(properties) {
                                                         );
 
                                                       setAStake(_aAmount);
+                                                      form.setValue(
+                                                        "stakeA",
+                                                        _aAmount
+                                                      );
 
                                                       const _supply =
                                                         humanReadableFloat(
@@ -1290,7 +1302,12 @@ export default function PoolStake(properties) {
                                                   const input =
                                                     event.target.value;
                                                   const regex =
-                                                    /^[0-9]*\.?[0-9]*$/;
+                                                    assetAmountRegex({
+                                                      precision:
+                                                        foundPool
+                                                          .share_asset_details
+                                                          .precision,
+                                                    });
                                                   if (
                                                     input &&
                                                     input.length &&

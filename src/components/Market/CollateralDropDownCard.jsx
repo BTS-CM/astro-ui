@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/popover";
 
 import { $blockList } from "@/stores/blocklist.ts";
+import { assetAmountRegex } from "@/lib/common";
 
 /**
  * Creating an asset dropdown component
@@ -126,13 +127,13 @@ export default function CollateralDropDownCard(properties) {
                 if (event.key === "." && event.target.value.includes(".")) {
                   event.preventDefault();
                 }
-                const regex = /^[0-9]*\.?[0-9]*$/;
+                const regex = assetAmountRegex({ precision: res.item.p });
                 if (!regex.test(event.key)) {
                   event.preventDefault();
                 }
               }}
               onChange={(event) => {
-                const regex = /^[0-9]*\.?[0-9]*$/;
+                const regex = assetAmountRegex({ precision: res.item.p });
                 if (regex.test(event.target.value)) {
                   _value = event.target.value;
                 }

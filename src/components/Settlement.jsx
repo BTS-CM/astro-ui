@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import {
   Field,
   FieldContent,
@@ -22,21 +23,24 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
-import { Avatar } from "@/components/Avatar.tsx";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar } from "@/components/Avatar.tsx";
 
 import {
   humanReadableFloat,
   getFlagBooleans,
   blockchainFloat,
+  assetAmountRegex,
 } from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -542,7 +546,9 @@ export default function Settlement(properties) {
                                         value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          const regex = assetAmountRegex({
+                                            precision: parsedCollateralAsset.p,
+                                          });
                                           if (
                                             input &&
                                             input.length &&
@@ -550,9 +556,7 @@ export default function Settlement(properties) {
                                           ) {
                                             field.onChange(input);
                                             setAdditionalCollateral(
-                                              parseFloat(input).toFixed(
-                                                parsedCollateralAsset.p
-                                              )
+                                              parseFloat(input)
                                             );
                                           }
                                         }}
@@ -607,18 +611,16 @@ export default function Settlement(properties) {
                                         value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          const regex = assetAmountRegex({
+                                            precision: parsedAsset.p,
+                                          });
                                           if (
                                             input &&
                                             input.length &&
                                             regex.test(input)
                                           ) {
                                             field.onChange(input);
-                                            setDebtCovered(
-                                              parseFloat(input).toFixed(
-                                                parsedAsset.p
-                                              )
-                                            );
+                                            setDebtCovered(parseFloat(input));
                                           }
                                         }}
                                       />
@@ -749,7 +751,9 @@ export default function Settlement(properties) {
                                         value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          const regex = assetAmountRegex({
+                                            precision: parsedAsset.p,
+                                          });
                                           if (
                                             input &&
                                             input.length &&
@@ -757,9 +761,7 @@ export default function Settlement(properties) {
                                           ) {
                                             field.onChange(input);
                                             setForceSettleAmount(
-                                              parseFloat(input).toFixed(
-                                                parsedAsset.p
-                                              )
+                                              parseFloat(input)
                                             );
                                             const _total = parseFloat(
                                               (
@@ -769,6 +771,10 @@ export default function Settlement(properties) {
                                               ).toFixed(parsedCollateralAsset.p)
                                             );
                                             setTotalReceiving(_total);
+                                            form.setValue(
+                                              "totalReceiving",
+                                              _total
+                                            );
                                           }
                                         }}
                                       />
@@ -837,7 +843,9 @@ export default function Settlement(properties) {
                                         value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          const regex = assetAmountRegex({
+                                            precision: parsedCollateralAsset.p,
+                                          });
                                           if (
                                             input &&
                                             input.length &&
@@ -849,11 +857,15 @@ export default function Settlement(properties) {
                                                 parsedCollateralAsset.p
                                               )
                                             );
-                                            setForceSettleAmount(
-                                              (
-                                                input /
-                                                currentFeedSettlementPrice
-                                              ).toFixed(parsedAsset.p)
+
+                                            const _fsAmont = (
+                                              input / currentFeedSettlementPrice
+                                            ).toFixed(parsedAsset.p);
+
+                                            setForceSettleAmount(_fsAmont);
+                                            form.setValue(
+                                              "ForceSettleAmount",
+                                              _fsAmont
                                             );
                                           }
                                         }}

@@ -18,14 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-} from "@/components/ui/table";
-
-import {
   Card,
   CardContent,
   CardDescription,
@@ -50,7 +42,11 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
-import { humanReadableFloat, blockchainFloat } from "@/lib/common.js";
+import {
+  humanReadableFloat,
+  blockchainFloat,
+  assetAmountRegex,
+} from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
@@ -478,7 +474,7 @@ export default function SameTFunds(properties) {
     }
 
     const asset = assets.find((x) => x.id === fund.asset_type);
-    const regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${asset.precision}}$`);
+    const regex = assetAmountRegex(asset);
 
     const assetName = asset ? asset.symbol : fund.asset_type;
     const balance = humanReadableFloat(fund.balance, asset.precision);
