@@ -403,6 +403,8 @@ export default function SimpleSwap(properties) {
               // Pool's A matches user's Sell Asset
               setAssetA(assetDataA);
               setAssetB(assetDataB);
+              form.setValue("assetA", assetDataA.symbol);
+              form.setValue("assetB", assetDataB.symbol);
               setAssetADetails(data.assetADetails);
               setAssetBDetails(data.assetBDetails);
               setABitassetData(data.bitassetA);
@@ -411,6 +413,8 @@ export default function SimpleSwap(properties) {
               // Pool's B matches user's Sell Asset (swap them for component state)
               setAssetA(assetDataB); // assetA state now holds the Sell asset's data
               setAssetB(assetDataA); // assetB state now holds the Buy asset's data
+              form.setValue("assetA", assetDataB.symbol);
+              form.setValue("assetB", assetDataA.symbol);
               setAssetADetails(data.assetBDetails);
               setAssetBDetails(data.assetADetails);
               setABitassetData(data.bitassetB);

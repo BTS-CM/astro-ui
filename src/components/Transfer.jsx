@@ -226,6 +226,7 @@ export default function Transfer(properties) {
         .then((acct) => {
           if (acct && acct.id && acct.name) {
             setTargetUser({ id: acct.id, name: acct.name });
+            form.setValue("targetAccount", acct.name);
           }
         })
         .catch(() => {});

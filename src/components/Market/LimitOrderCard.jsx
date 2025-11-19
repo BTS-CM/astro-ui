@@ -300,27 +300,34 @@ export default function LimitOrderCard(properties) {
         }) => {
           if (finalAmount !== amount) {
             setAmount(finalAmount);
+            form.setValue("sellAmount", finalAmount);
           }
           if (finalPrice !== price) {
             setPrice(finalPrice);
+            form.setValue("priceAmount", finalPrice);
           }
           if (finalTotal !== total) {
             setTotal(finalTotal);
+            form.setValue("sellTotal", finalTotal);
           }
           if (finalOSO !== osoEnabled) {
             setOSOEnabled(finalOSO);
+            form.setValue("osoValue", finalOSO);
           }
           if (finalSpreadPercent !== spreadPercent) {
             setSpreadPercent(finalSpreadPercent);
+            form.setValue("osoSpread", finalSpreadPercent);
           }
           if (finalSizePercent !== sizePercent) {
             setSizePercent(finalSizePercent);
+            form.setValue("osoSize", finalSizePercent);
           }
           if (finalExpirationSeconds !== expirationSeconds) {
             setExpirationSeconds(finalExpirationSeconds);
           }
           if (finalRepeat !== repeat) {
             setRepeat(finalRepeat);
+            form.setValue("repeatValue", finalRepeat);
           }
 
           let finalUrlParams =

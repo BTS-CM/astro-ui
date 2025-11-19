@@ -55,7 +55,12 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
-import { debounce, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
+import {
+  debounce,
+  humanReadableFloat,
+  blockchainFloat,
+  assetAmountRegex,
+} from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
@@ -416,11 +421,10 @@ export default function SameTFunds(properties) {
                             min={1}
                             step={1}
                             onInput={(e) => {
-                              const input = parseInt(e.currentTarget.value);
-                              if (input >= 0) {
-                                setNewAmount(parseInt(e.currentTarget.value));
-                              } else {
-                                setNewAmount(0);
+                              const input = e.currentTarget.value;
+                              const regex = assetAmountRegex(asset);
+                              if (regex.test(input)) {
+                                setNewAmount(e.currentTarget.value);
                               }
                             }}
                           />
@@ -677,11 +681,10 @@ export default function SameTFunds(properties) {
                           min={1}
                           step={1}
                           onInput={(e) => {
-                            const input = parseInt(e.currentTarget.value);
-                            if (input >= 0) {
-                              setCreateAmount(parseInt(e.currentTarget.value));
-                            } else {
-                              setCreateAmount(0);
+                            const input = e.currentTarget.value;
+                            const regex = assetAmountRegex(lendingAssetData);
+                            if (regex.test(input)) {
+                              setCreateAmount(e.currentTarget.value);
                             }
                           }}
                         />

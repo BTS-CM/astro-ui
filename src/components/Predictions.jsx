@@ -87,6 +87,7 @@ import {
   humanReadableFloat,
   getFlagBooleans,
   blockchainFloat,
+  assetAmountRegex,
 } from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -865,13 +866,12 @@ export default function Predictions(properties) {
                               min={1}
                               step={1}
                               onInput={(e) => {
-                                const input = parseInt(e.currentTarget.value);
-                                if (input >= 0) {
-                                  setIssueAmount(
-                                    parseInt(e.currentTarget.value)
-                                  );
-                                } else {
-                                  setIssueAmount(0);
+                                const input = e.currentTarget.value;
+                                const regex = assetAmountRegex({
+                                  precision: _backingPrecision,
+                                });
+                                if (regex.test(input)) {
+                                  setIssueAmount(e.currentTarget.value);
                                 }
                               }}
                             />
@@ -1020,11 +1020,12 @@ export default function Predictions(properties) {
                             min={1}
                             step={1}
                             onInput={(e) => {
-                              const input = parseInt(e.currentTarget.value);
-                              if (input >= 0) {
-                                setSellAmount(parseInt(e.currentTarget.value));
-                              } else {
-                                setSellAmount(0);
+                              const input = e.currentTarget.value;
+                              const regex = assetAmountRegex({
+                                precision: res.precision,
+                              });
+                              if (regex.test(input)) {
+                                setSellAmount(e.currentTarget.value);
                               }
                             }}
                             className="mt-1"
@@ -1310,11 +1311,12 @@ export default function Predictions(properties) {
                               min={1}
                               step={1}
                               onInput={(e) => {
-                                const input = parseInt(e.currentTarget.value);
-                                if (input >= 0) {
-                                  setBuyAmount(parseInt(e.currentTarget.value));
-                                } else {
-                                  setBuyAmount(0);
+                                const input = e.currentTarget.value;
+                                const regex = assetAmountRegex({
+                                  precision: res.precision,
+                                });
+                                if (regex.test(input)) {
+                                  setBuyAmount(e.currentTarget.value);
                                 }
                               }}
                             />
@@ -1607,13 +1609,12 @@ export default function Predictions(properties) {
                               min={1}
                               step={1}
                               onInput={(e) => {
-                                const input = parseInt(e.currentTarget.value);
-                                if (input >= 0) {
-                                  setClaimAmount(
-                                    parseInt(e.currentTarget.value)
-                                  );
-                                } else {
-                                  setClaimAmount(0);
+                                const input = e.currentTarget.value;
+                                const regex = assetAmountRegex({
+                                  precision: res.precision,
+                                });
+                                if (regex.test(input)) {
+                                  setClaimAmount(e.currentTarget.value);
                                 }
                               }}
                             />

@@ -234,6 +234,7 @@ export default function TimedTransfer(properties) {
         .then((acct) => {
           if (acct && acct.id && acct.name) {
             setTargetUser({ id: acct.id, name: acct.name });
+            form.setValue("account", acct.name);
           }
         })
         .catch(() => {});
