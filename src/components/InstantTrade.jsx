@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useSyncExternalStore,
   useMemo,
+  useCallback,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -46,6 +47,13 @@ import {
   FieldDescription,
   FieldError,
 } from "@/components/ui/field";
+
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 import {
   Dialog,
@@ -249,8 +257,6 @@ export default function InstantTrade(properties) {
   const [assetAData, setAssetAData] = useState(null);
   const [assetBData, setAssetBData] = useState(null);
 
-  const [orderType, setOrderType] = useState("buy"); // buy or sell
-
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
   const [aBitassetData, setABitassetData] = useState(null);
@@ -342,7 +348,6 @@ export default function InstantTrade(properties) {
   }, [assetAData, assetBData]);
 
   const [buyOrders, setBuyOrders] = useState(null);
-  //const [sellOrders, setSellOrders] = useState(null);
 
   useEffect(() => {
     async function fetchMarketOrders() {
@@ -356,11 +361,6 @@ export default function InstantTrade(properties) {
       marketOrdersStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setBuyOrders(data.bids);
-
-          console.log({
-            bids: data.bids,
-            asks: data.asks,
-          });
         } else {
           setBuyOrders(null);
         }
@@ -375,8 +375,62 @@ export default function InstantTrade(properties) {
   const [clicked, setClicked] = useState(false);
   const [amountA, setAmountA] = useState(0.0);
   const [amountB, setAmountB] = useState(0.0);
+  const [avgPrice, setAvgPrice] = useState(0.0);
+
   const [price, setPrice] = useState(0.0);
   const [total, setTotal] = useState(0);
+
+  const calculatedBoughtOrders = useMemo(() => {
+    if (amountA && buyOrders && buyOrders.length && assetBData) {
+      let amountToSell = parseFloat(amountA);
+      let totalBought = 0;
+      let amountSold = 0;
+      const involvedOrders = [];
+
+      for (const order of buyOrders) {
+        if (amountToSell <= 0) break;
+
+        const orderQuote = parseFloat(order.quote); // Amount of Asset A in the order
+        const orderBase = parseFloat(order.base); // Amount of Asset B in the order
+
+        if (amountToSell >= orderQuote) {
+          // Consume the entire order
+          totalBought += orderBase;
+          amountToSell -= orderQuote;
+          amountSold += orderQuote;
+          involvedOrders.push(order);
+        } else {
+          // Partial fill
+          const fraction = amountToSell / orderQuote;
+          totalBought += orderBase * fraction;
+          amountSold += orderQuote * fraction;
+          amountToSell = 0;
+          involvedOrders.push(order);
+        }
+      }
+
+      return {
+        amount: totalBought,
+        avgPrice: trimPrice(totalBought / amountSold, assetBData.precision),
+        orders: involvedOrders,
+      };
+    } else {
+      return null;
+    }
+  }, [amountA, buyOrders, assetBData]);
+
+  useEffect(() => {
+    if (calculatedBoughtOrders) {
+      console.log({ calculatedBoughtOrders });
+      setAmountB(calculatedBoughtOrders.amount);
+      form.setValue("buyAmount", calculatedBoughtOrders.amount);
+      setAvgPrice(calculatedBoughtOrders.avgPrice);
+    } else {
+      setAmountB(0.0);
+      form.setValue("buyAmount", 0.0);
+      setAvgPrice(0.0);
+    }
+  }, [calculatedBoughtOrders]);
 
   const marketFees = useMemo(() => {
     let calculatedMarketFee = 0.0;
@@ -523,6 +577,16 @@ export default function InstantTrade(properties) {
       return totalBase;
     }
   }, [buyOrders, assetBData]);
+
+  const maxSellable = useMemo(() => {
+    if (buyOrders && buyOrders.length && assetAData) {
+      const totalQuote = buyOrders
+        .map((x) => parseFloat(x.quote))
+        .reduce((acc, curr) => acc + curr, 0)
+        .toFixed(assetAData.precision);
+      return totalQuote;
+    }
+  }, [buyOrders, assetAData]);
 
   if (
     !usr ||
@@ -685,7 +749,7 @@ export default function InstantTrade(properties) {
 
   return (
     <div className="container mx-auto mt-5 mb-5">
-      <div className="grid grid-cols-2 md:grid-cols-1 gap-5">
+      <div className="grid grid-cols-1 gap-5">
         <Card>
           <CardHeader className="pt-2 pb-2">
             <CardTitle className="text-lg">
@@ -755,19 +819,29 @@ export default function InstantTrade(properties) {
             {assetA && assetB && marketSearch && assetAData && assetBData ? (
               <form onSubmit={form.handleSubmit(() => setShowDialog(true))}>
                 <FieldGroup>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <Controller
                       name="sellAmount"
                       control={form.control}
                       render={({ field, fieldState }) => (
                         <Field
                           invalid={fieldState.invalid}
-                          className="mt-4 text-xs"
+                          className="mt-1 text-xs"
                         >
                           <FieldLabel>
-                            {t("LimitOrderCard:sellAmount.sellDescription", {
-                              asset: assetA,
-                            })}
+                            <div className="w-full grid grid-cols-2">
+                              <div className="text-left">
+                                {t(
+                                  "LimitOrderCard:sellAmount.sellDescription",
+                                  {
+                                    asset: assetA,
+                                  }
+                                )}
+                              </div>
+                              <div className="text-right">
+                                Balance: {assetABalance} {assetA}
+                              </div>
+                            </div>
                           </FieldLabel>
 
                           <Input
@@ -777,9 +851,7 @@ export default function InstantTrade(properties) {
                               const input = event.target.value;
                               const regex = assetAmountRegex(assetAData);
                               if (input && input.length && regex.test(input)) {
-                                const parsedInput = parseFloat(
-                                  input.replaceAll(",", "")
-                                );
+                                const parsedInput = parseFloat(input);
                                 if (parsedInput) {
                                   setAmountA(
                                     parsedInput.toFixed(assetAData.precision)
@@ -799,32 +871,120 @@ export default function InstantTrade(properties) {
                       render={({ field, fieldState }) => (
                         <Field
                           invalid={fieldState.invalid}
-                          className="mt-4 text-xs"
+                          className="mt-1 text-xs"
                         >
                           <FieldLabel>
-                            {t("LimitOrderCard:sellAmount.sellDescription", {
-                              asset: assetB,
-                            })}
+                            <div className="w-full grid grid-cols-2">
+                              <div className="text-left">
+                                {t("LimitOrderCard:sellAmount.buyDescription", {
+                                  asset: assetB,
+                                })}
+                              </div>
+                              <div className="text-right">
+                                Balance: {assetBBalance} {assetB}
+                              </div>
+                            </div>
                           </FieldLabel>
                           <Input
                             {...field}
                             label={`Buy Amount`}
                             placeholder={amountB}
+                            className="mb-2 mt-1"
+                            type="number"
                             onChange={(event) => {
-                              const input = event.target.value;
+                              const input = event.target.value.replaceAll(
+                                ",",
+                                ""
+                              );
                               const regex = assetAmountRegex(assetBData);
                               if (input && input.length && regex.test(input)) {
-                                const parsedInput = parseFloat(
-                                  input.replaceAll(",", "")
-                                );
+                                const parsedInput = parseFloat(input);
                                 if (parsedInput) {
                                   setAmountB(
                                     parsedInput.toFixed(assetBData.precision)
                                   );
+                                  form.setValue("buyAmount", parsedInput);
                                   setInputChars(inputChars + 1);
                                 }
                               }
                             }}
+                          />
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="maxSellable"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="text-xs">
+                          <FieldLabel>
+                            Maximum purchaseable amount of {assetA}
+                          </FieldLabel>
+
+                          <Input
+                            placeholder={maxSellable}
+                            className="mb-2 mt-1"
+                            readOnly
+                          />
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="maxPurchaseable"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="text-xs">
+                          <FieldLabel>
+                            Maximum purchaseable amount of {assetB}
+                          </FieldLabel>
+
+                          <Input
+                            placeholder={maxPurchaseable}
+                            className="mb-2 mt-1"
+                            readOnly
+                          />
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="avgPrice"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="text-xs">
+                          <FieldLabel>
+                            Effective average price of purchased {assetB} (
+                            {assetB}/{assetA})
+                          </FieldLabel>
+
+                          <Input
+                            placeholder={avgPrice}
+                            className="mb-2 mt-1"
+                            readOnly
+                          />
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="qtyLimitOrders"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="text-xs">
+                          <FieldLabel>
+                            Quantity of limit orders you'll be buying from
+                          </FieldLabel>
+
+                          <Input
+                            placeholder={
+                              calculatedBoughtOrders
+                                ? calculatedBoughtOrders.orders.length
+                                : 0
+                            }
+                            className="mb-2 mt-1"
+                            readOnly
                           />
                         </Field>
                       )}
@@ -868,33 +1028,34 @@ export default function InstantTrade(properties) {
                         </Field>
                       )}
                     />
-                    */}
 
-                  {orderType === "buy" &&
-                  assetAData &&
-                  assetAData.market_fee_percent &&
-                  assetAData.market_fee_percent > 0 ? (
-                    <Controller
-                      name="marketFees"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field invalid={fieldState.invalid} disabled>
-                          <FieldLabel>
-                            {t("LimitOrderCard:marketFees.label")}
-                          </FieldLabel>
-                          <Input
-                            {...field}
-                            disabled
-                            value={`${marketFees} ${assetAData.symbol}`}
-                            placeholder={`${marketFees} ${assetAData.symbol}`}
-                          />
-                          <FieldDescription>
-                            {t("LimitOrderCard:marketFees.description")}
-                          </FieldDescription>
-                        </Field>
-                      )}
-                    />
-                  ) : null}
+                    {assetAData &&
+                    assetAData.market_fee_percent &&
+                    assetAData.market_fee_percent > 0 ? (
+                      <Controller
+                        name="marketFees"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field invalid={fieldState.invalid} disabled>
+                            <FieldLabel>
+                              {t("LimitOrderCard:marketFees.label")}
+                            </FieldLabel>
+                            <Input
+                              {...field}
+                              disabled
+                              value={`${marketFees} ${assetAData.symbol}`}
+                              placeholder={`${marketFees} ${assetAData.symbol}`}
+                            />
+                            <FieldDescription>
+                              {t("LimitOrderCard:marketFees.description")}
+                            </FieldDescription>
+                          </Field>
+                        )}
+                      />
+                    ) : null}
+
+                  */}
+
                   {!amountA || !amountB || !price || !expiry ? (
                     <Button
                       className="mt-7 mb-1"
@@ -917,76 +1078,134 @@ export default function InstantTrade(properties) {
               </form>
             ) : null}
           </CardContent>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {t("MarketOrderCard:openBuyLimitOrdersTitle")}
-              </CardTitle>
-              <CardDescription>
-                {t("MarketOrderCard:buyLimitOrdersDescription", {
-                  assetA: assetB,
-                  assetB: assetA,
-                })}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {buyOrders && buyOrders.length ? (
-                <>
-                  <div className="grid grid-cols-6">
-                    <div>ID</div>
-                    <div>Seller</div>
-                    <div>On Repeat?</div>
-                    <div className="col-span-1 pl-3 text-right pr-2">
-                      Amount {assetA}
-                    </div>
-                    <div className="col-span-1 pl-3 text-md text-right pr-2">
-                      Price {assetB}/{assetA}
-                    </div>
-                    <div className="col-span-1 pl-3 text-md text-right pr-2">
-                      Total {assetB}
-                    </div>
-                  </div>
-                  <div className="h-[300px] overflow-hidden">
-                    {buyOrders && buyOrderDetails ? (
-                      <List
-                        height={300}
-                        rowComponent={Row}
-                        rowCount={buyOrders.length}
-                        rowHeight={20}
-                        rowProps={{}}
-                      />
-                    ) : (
-                      <div className="flex items-center">
-                        <Spinner className="size-8" />
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                t("MarketOrderCard:noOpenOrders")
-              )}
-            </CardContent>
-          </Card>
-
-          {showDialog ? (
-            <DeepLinkDialog
-              operationNames={["limit_order_create"]}
-              username={usr.username}
-              usrChain={usr.chain}
-              userID={usr.id}
-              dismissCallback={setShowDialog}
-              key={`Buying${amountA}${assetA}for${total}${assetB}`}
-              headerText={t("LimitOrderCard:headerText.buying", {
-                amountA,
-                assetA,
-                amountB,
-                assetB,
-              })}
-              trxJSON={trxJSON}
-            />
-          ) : null}
         </Card>
+
+        <Card>
+          <Accordion
+            type="single"
+            defaultValue="openBuyLimitOrders"
+            collapsible
+            className="w-full"
+          >
+            <AccordionItem key="openBuyLimitOrders" value="openBuyLimitOrders">
+              <AccordionTrigger>
+                <CardHeader>
+                  <CardTitle>
+                    {t("MarketOrderCard:openBuyLimitOrdersTitle")}
+                  </CardTitle>
+                  <CardDescription>
+                    {t("MarketOrderCard:buyLimitOrdersDescription", {
+                      assetA: assetB,
+                      assetB: assetA,
+                    })}
+                  </CardDescription>
+                </CardHeader>
+              </AccordionTrigger>
+              <AccordionContent>
+                <CardContent>
+                  {buyOrders && buyOrders.length ? (
+                    <>
+                      <div className="grid grid-cols-6 font-bold">
+                        <div>ID</div>
+                        <div>Seller</div>
+                        <div>On Repeat?</div>
+                        <div className="col-span-1 pl-3 text-right pr-2">
+                          Amount {assetA}
+                        </div>
+                        <div className="col-span-1 pl-3 text-md text-right pr-2">
+                          Price {assetB}/{assetA}
+                        </div>
+                        <div className="col-span-1 pl-3 text-md text-right pr-2">
+                          Total {assetB}
+                        </div>
+                      </div>
+                      <div className="h-[300px] overflow-hidden">
+                        {buyOrders && buyOrderDetails ? (
+                          <List
+                            height={300}
+                            rowComponent={Row}
+                            rowCount={buyOrders.length}
+                            rowHeight={20}
+                            rowProps={{}}
+                          />
+                        ) : (
+                          <div className="flex items-center">
+                            <Spinner className="size-8" />
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    t("MarketOrderCard:noOpenOrders")
+                  )}
+                </CardContent>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Market limit orders you're buying from</CardTitle>
+            <CardDescription>
+              These are the existing limit orders on the order book that you
+              will be purchasing from when you place your instant trade.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {calculatedBoughtOrders && calculatedBoughtOrders.orders.length ? (
+              <>
+                <div className="grid grid-cols-6">
+                  <div>ID</div>
+                  <div>Seller</div>
+                  <div>On Repeat?</div>
+                  <div className="col-span-1 pl-3 text-right pr-2">
+                    Amount {assetA}
+                  </div>
+                  <div className="col-span-1 pl-3 text-md text-right pr-2">
+                    Price {assetB}/{assetA}
+                  </div>
+                  <div className="col-span-1 pl-3 text-md text-right pr-2">
+                    Total {assetB}
+                  </div>
+                </div>
+                <div className="h-[300px] overflow-hidden">
+                  {calculatedBoughtOrders &&
+                  calculatedBoughtOrders.orders &&
+                  buyOrderDetails ? (
+                    <List
+                      height={300}
+                      rowComponent={Row}
+                      rowCount={calculatedBoughtOrders.orders.length}
+                      rowHeight={20}
+                      rowProps={{}}
+                    />
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              "Not yet intending to purchase from any existing market limit orders."
+            )}
+          </CardContent>
+        </Card>
+
+        {showDialog ? (
+          <DeepLinkDialog
+            operationNames={["limit_order_create"]}
+            username={usr.username}
+            usrChain={usr.chain}
+            userID={usr.id}
+            dismissCallback={setShowDialog}
+            key={`Buying${amountA}${assetA}for${total}${assetB}`}
+            headerText={t("LimitOrderCard:headerText.buying", {
+              amountA,
+              assetA,
+              amountB,
+              assetB,
+            })}
+            trxJSON={trxJSON}
+          />
+        ) : null}
       </div>
     </div>
   );
