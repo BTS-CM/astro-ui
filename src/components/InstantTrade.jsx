@@ -351,12 +351,14 @@ export default function InstantTrade(properties) {
     fetchUsrBalances();
   }, [usr]);
 
+  /*
   const invertedMarket = useMemo(() => {
     if (!assetAData || !assetBData) {
       return;
     }
     return isInvertedMarket(assetAData.id, assetBData.id);
   }, [assetAData, assetBData]);
+  */
 
   const [buyOrders, setBuyOrders] = useState(null);
   const [buyOrderIterator, setBuyOrderIterator] = useState(0);
@@ -389,7 +391,8 @@ export default function InstantTrade(properties) {
     }
   }, [usr, assetA, assetB, buyOrderIterator]);
 
-  // Increment the iterator every 1 minute so market orders refresh periodically
+  // Increment the iterator every 90 seconds so market orders refresh periodically
+  // TODO: Swap for a web socket subscription to market updates
   useEffect(() => {
     const interval = setInterval(() => {
       setBuyOrderIterator((n) => n + 1);
@@ -422,87 +425,137 @@ export default function InstantTrade(properties) {
   const [amountA, setAmountA] = useState(0.0);
   const [amountB, setAmountB] = useState(0.0);
   const [avgPrice, setAvgPrice] = useState(0.0);
+  const [tradeMode, setTradeMode] = useState("sell");
 
-  const [price, setPrice] = useState(0.0);
-  const [total, setTotal] = useState(0);
+  const orderCalc = useMemo(() => {
+    if (buyOrders && buyOrders.length && assetBData && assetAData) {
+      if (tradeMode === "sell" && amountA) {
+        let amountToSell = parseFloat(amountA);
 
-  const calculatedBoughtOrders = useMemo(() => {
-    if (amountA && buyOrders && buyOrders.length && assetBData) {
-      let amountToSell = parseFloat(amountA);
-
-      if (amountToSell > maxSellable) {
-        form.setValue("sellAmount", maxSellable);
-        setAmountA(maxSellable);
-        return;
-      }
-
-      let totalBought = 0;
-      let amountSold = 0;
-      const involvedOrders = [];
-
-      for (const order of buyOrders) {
-        if (amountToSell <= 0) break;
-
-        const orderQuote = parseFloat(order.quote); // Amount of Asset A in the order
-        const orderBase = parseFloat(order.base); // Amount of Asset B in the order
-
-        if (amountToSell >= orderQuote) {
-          // Consume the entire order
-          totalBought += orderBase;
-          amountToSell -= orderQuote;
-          amountSold += orderQuote;
-          involvedOrders.push(order);
-        } else {
-          // Partial fill
-          const fraction = amountToSell / orderQuote;
-          totalBought += orderBase * fraction;
-          amountSold += orderQuote * fraction;
-          amountToSell = 0;
-          involvedOrders.push(order);
+        if (amountToSell > maxSellable) {
+          form.setValue("sellAmount", maxSellable);
+          setAmountA(maxSellable);
+          return;
         }
-      }
 
-      return {
-        amount: totalBought,
-        avgPrice: trimPrice(totalBought / amountSold, assetBData.precision),
-        orders: involvedOrders,
-      };
-    } else {
-      return null;
+        let totalBought = 0;
+        let amountSold = 0;
+        const involvedOrders = [];
+
+        for (const order of buyOrders) {
+          if (amountToSell <= 0) break;
+
+          const orderQuote = parseFloat(order.quote); // Amount of Asset A in the order
+          const orderBase = parseFloat(order.base); // Amount of Asset B in the order
+
+          if (amountToSell >= orderQuote) {
+            // Consume the entire order
+            totalBought += orderBase;
+            amountToSell -= orderQuote;
+            amountSold += orderQuote;
+            involvedOrders.push(order);
+          } else {
+            // Partial fill
+            const fraction = amountToSell / orderQuote;
+            totalBought += orderBase * fraction;
+            amountSold += orderQuote * fraction;
+            amountToSell = 0;
+            involvedOrders.push(order);
+          }
+        }
+
+        return {
+          buyAmount: totalBought,
+          sellAmount: parseFloat(amountA),
+          avgPrice: trimPrice(totalBought / amountSold, assetBData.precision),
+          orders: involvedOrders,
+        };
+      } else if (tradeMode === "buy" && amountB) {
+        let amountToBuy = parseFloat(amountB);
+
+        if (amountToBuy > maxPurchaseable) {
+          form.setValue("buyAmount", maxPurchaseable);
+          setAmountB(maxPurchaseable);
+          return;
+        }
+
+        let totalSold = 0;
+        let amountBought = 0;
+        const involvedOrders = [];
+
+        for (const order of buyOrders) {
+          if (amountToBuy <= 0) break;
+
+          const orderQuote = parseFloat(order.quote); // Amount of Asset A
+          const orderBase = parseFloat(order.base); // Amount of Asset B
+
+          if (amountToBuy >= orderBase) {
+            // Consume the entire order
+            totalSold += orderQuote;
+            amountToBuy -= orderBase;
+            amountBought += orderBase;
+            involvedOrders.push(order);
+          } else {
+            // Partial fill
+            const fraction = amountToBuy / orderBase;
+            totalSold += orderQuote * fraction;
+            amountBought += orderBase * fraction;
+            amountToBuy = 0;
+            involvedOrders.push(order);
+          }
+        }
+
+        return {
+          buyAmount: parseFloat(amountB),
+          sellAmount: totalSold,
+          avgPrice: trimPrice(amountBought / totalSold, assetBData.precision),
+          orders: involvedOrders,
+        };
+      }
     }
-  }, [amountA, buyOrders, assetBData]);
+    return null;
+  }, [amountA, amountB, tradeMode, buyOrders, assetBData, assetAData]);
 
   useEffect(() => {
-    if (calculatedBoughtOrders) {
-      setAmountB(calculatedBoughtOrders.amount.toFixed(assetBData.precision));
-      form.setValue("buyAmount", calculatedBoughtOrders.amount);
-      setAvgPrice(calculatedBoughtOrders.avgPrice);
+    if (orderCalc) {
+      if (tradeMode === "sell") {
+        setAmountB(orderCalc.buyAmount.toFixed(assetBData.precision));
+        form.setValue("buyAmount", orderCalc.buyAmount);
+      } else {
+        setAmountA(orderCalc.sellAmount.toFixed(assetAData.precision));
+        form.setValue("sellAmount", orderCalc.sellAmount);
+      }
+      setAvgPrice(orderCalc.avgPrice);
     } else {
-      setAmountB(0.0);
-      form.setValue("buyAmount", 0.0);
+      if (tradeMode === "sell") {
+        setAmountB(0.0);
+        form.setValue("buyAmount", 0.0);
+      } else {
+        setAmountA(0.0);
+        form.setValue("sellAmount", 0.0);
+      }
       setAvgPrice(0.0);
     }
-  }, [calculatedBoughtOrders]);
+  }, [orderCalc, tradeMode]);
 
   const marketFees = useMemo(() => {
     let calculatedMarketFee = 0.0;
 
-    if (amountA && price && total) {
+    if (amountB) {
       if (
-        assetAData &&
-        assetAData.market_fee_percent &&
-        assetAData.market_fee_percent > 0
+        assetBData &&
+        assetBData.options.market_fee_percent &&
+        assetBData.options.market_fee_percent > 0
       ) {
         calculatedMarketFee =
-          parseFloat(amountA) * (assetAData.market_fee_percent / 100);
-        return calculatedMarketFee.toFixed(assetAData.precision);
+          parseFloat(amountB) * (assetBData.options.market_fee_percent / 10000);
+        return calculatedMarketFee.toFixed(assetBData.precision);
       }
     }
 
     return calculatedMarketFee;
-  }, [amountA, price, total, assetAData]);
+  }, [amountA, amountB, assetBData]);
 
-  const [expiryType, setExpiryType] = useState("fkill");
   const [expiry, setExpiry] = useState(() => {
     const now = new Date();
     const oneHour = 60 * 60 * 1000;
@@ -573,7 +626,6 @@ export default function InstantTrade(properties) {
     ];
   }, [
     usr,
-    total,
     assetBData,
     assetB,
     amountA,
@@ -598,7 +650,6 @@ export default function InstantTrade(properties) {
           if (!data.length) {
             return;
           }
-          console.log({ aaaaaa: data });
           setBuyOrderDetails(data);
         }
       });
@@ -637,7 +688,6 @@ export default function InstantTrade(properties) {
         : null;
 
     const price = parseFloat(order.price).toFixed(assetBData.precision);
-    const base = parseFloat(order.base);
     const quote = parseFloat(order.quote);
 
     const totalBase = buyOrders
@@ -648,8 +698,8 @@ export default function InstantTrade(properties) {
 
     return (
       <div style={style}>
-        <div className="grid grid-cols-6 text-sm hover:bg-gray-400">
-          <div>
+        <div className="grid grid-cols-3 md:grid-cols-6 text-sm hover:bg-gray-400">
+          <div className="hidden md:block">
             <Dialog>
               <DialogTrigger asChild>
                 <Badge
@@ -661,10 +711,11 @@ export default function InstantTrade(properties) {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[550px] bg-white">
                 <DialogHeader>
-                  <DialogTitle>Limit Order Contents</DialogTitle>
+                  <DialogTitle>
+                    {t("InstantTrade:limit_order_contents")}
+                  </DialogTitle>
                   <DialogDescription>
-                    These are the underlying details of this individual limit
-                    order on the order book.
+                    {t("InstantTrade:limit_order_details")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid grid-cols-1">
@@ -699,7 +750,7 @@ export default function InstantTrade(properties) {
               </DialogContent>
             </Dialog>
           </div>
-          <div>
+          <div className="hidden md:block">
             <ExternalLink
               classnamecontents="hover:text-purple-500"
               type="text"
@@ -709,7 +760,7 @@ export default function InstantTrade(properties) {
               }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
             />
           </div>
-          <div>
+          <div className="hidden md:block">
             {orderDetails && orderDetails.on_fill.length ? (
               <Dialog>
                 <DialogTrigger asChild>
@@ -722,11 +773,11 @@ export default function InstantTrade(properties) {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[550px] bg-white">
                   <DialogHeader>
-                    <DialogTitle>On Fill Operation Details</DialogTitle>
+                    <DialogTitle>
+                      {t("InstantTrade:on_fill_details")}
+                    </DialogTitle>
                     <DialogDescription>
-                      This limit order in the order book has an "on fill"
-                      condition, which may repeat this order at or near its
-                      current price once purchased.
+                      {t("InstantTrade:on_fill_desc")}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid grid-cols-1">
@@ -777,7 +828,7 @@ export default function InstantTrade(properties) {
               {usr.chain === "bitshares"
                 ? "Bitshares "
                 : "Bitshares (Testnet) "}
-              Instant Trade
+              {t("InstantTrade:instant_trade")}
             </CardTitle>
           </CardHeader>
           <CardContent className="pb-3">
@@ -832,8 +883,7 @@ export default function InstantTrade(properties) {
               })}
             </CardTitle>
             <CardDescription>
-              Enter how much {assetB} you want by selling {assetA}, you will be
-              matched with existing bid orders.
+              {t("InstantTrade:description", { assetB, assetA })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -860,7 +910,10 @@ export default function InstantTrade(properties) {
                                 )}
                               </div>
                               <div className="text-right">
-                                Balance: {assetABalance} {assetA}
+                                {t("InstantTrade:balance", {
+                                  balance: assetABalance,
+                                  asset: assetA,
+                                })}
                               </div>
                             </div>
                           </FieldLabel>
@@ -871,9 +924,9 @@ export default function InstantTrade(properties) {
                             onChange={(event) => {
                               const input = event.target.value;
                               const regex = assetAmountRegex(assetAData);
-                              console.log({ input, regex });
                               if (regex.test(input)) {
                                 setAmountA(input);
+                                setTradeMode("sell");
                                 form.setValue("sellAmount", input);
                                 setInputChars(inputChars + 1);
                               }
@@ -899,7 +952,10 @@ export default function InstantTrade(properties) {
                                 })}
                               </div>
                               <div className="text-right">
-                                Balance: {assetBBalance} {assetB}
+                                {t("InstantTrade:balance", {
+                                  balance: assetBBalance,
+                                  asset: assetB,
+                                })}
                               </div>
                             </div>
                           </FieldLabel>
@@ -909,9 +965,9 @@ export default function InstantTrade(properties) {
                             onChange={(event) => {
                               const input = event.target.value;
                               const regex = assetAmountRegex(assetBData);
-                              console.log({ input, regex });
                               if (regex.test(input)) {
                                 setAmountB(input);
+                                setTradeMode("buy");
                                 form.setValue("buyAmount", input);
                                 setInputChars(inputChars + 1);
                               }
@@ -927,7 +983,9 @@ export default function InstantTrade(properties) {
                       render={({ field, fieldState }) => (
                         <Field className="text-xs">
                           <FieldLabel>
-                            Maximum purchaseable amount of {assetA}
+                            {t("InstantTrade:max_purchaseable_assetA", {
+                              assetA,
+                            })}
                           </FieldLabel>
 
                           <Input
@@ -945,7 +1003,9 @@ export default function InstantTrade(properties) {
                       render={({ field, fieldState }) => (
                         <Field className="text-xs">
                           <FieldLabel>
-                            Maximum purchaseable amount of {assetB}
+                            {t("InstantTrade:max_purchaseable_assetB", {
+                              assetB,
+                            })}
                           </FieldLabel>
 
                           <Input
@@ -957,46 +1017,100 @@ export default function InstantTrade(properties) {
                       )}
                     />
 
-                    <Controller
-                      name="avgPrice"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field className="text-xs">
-                          <FieldLabel>
-                            Effective average price of purchased {assetB} (
-                            {assetB}/{assetA})
-                          </FieldLabel>
+                    <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-5">
+                      <Controller
+                        name="avgPrice"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field className="text-xs">
+                            <FieldLabel>
+                              {t("InstantTrade:effective_average_price", {
+                                assetB,
+                                assetA,
+                              })}
+                            </FieldLabel>
 
-                          <Input
-                            placeholder={avgPrice}
-                            className="mb-2 mt-1"
-                            readOnly
-                          />
-                        </Field>
-                      )}
-                    />
+                            <Input
+                              placeholder={avgPrice}
+                              className="mb-2 mt-1"
+                              readOnly
+                            />
+                          </Field>
+                        )}
+                      />
 
-                    <Controller
-                      name="qtyLimitOrders"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field className="text-xs">
-                          <FieldLabel>
-                            Quantity of limit orders you'll be buying from
-                          </FieldLabel>
+                      <Controller
+                        name="qtyLimitOrders"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field className="text-xs">
+                            <FieldLabel>
+                              {t("InstantTrade:quantity_limit_orders")}
+                            </FieldLabel>
 
-                          <Input
-                            placeholder={
-                              calculatedBoughtOrders
-                                ? calculatedBoughtOrders.orders.length
-                                : 0
-                            }
-                            className="mb-2 mt-1"
-                            readOnly
-                          />
-                        </Field>
-                      )}
-                    />
+                            <Input
+                              placeholder={
+                                orderCalc ? orderCalc.orders.length : 0
+                              }
+                              className="mb-2 mt-1"
+                              readOnly
+                            />
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name="uniqueSellers"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field className="text-xs">
+                            <FieldLabel>
+                              {t("InstantTrade:unique_sellers")}
+                            </FieldLabel>
+
+                            <Input
+                              placeholder={
+                                orderCalc &&
+                                orderCalc.orders &&
+                                orderCalc.orders.length
+                                  ? [
+                                      ...new Set(
+                                        orderCalc.orders.map(
+                                          (x) => x.owner_name
+                                        )
+                                      ),
+                                    ].length
+                                  : 0
+                              }
+                              className="mb-2 mt-1"
+                              readOnly
+                            />
+                          </Field>
+                        )}
+                      />
+                    </div>
+
+                    {marketFees && assetBData ? (
+                      <Controller
+                        name="marketFees"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field>
+                            <FieldLabel>
+                              {t("LimitOrderCard:marketFees.label")}
+                            </FieldLabel>
+                            <Input
+                              disabled
+                              placeholder={`${marketFees} ${assetBData.symbol}`}
+                              className="mb-2 mt-1"
+                            />
+                            <FieldDescription>
+                              {t("LimitOrderCard:marketFees.description")}
+                            </FieldDescription>
+                          </Field>
+                        )}
+                      />
+                    ) : null}
                   </div>
 
                   {/*
@@ -1036,37 +1150,11 @@ export default function InstantTrade(properties) {
                         </Field>
                       )}
                     />
-
-                    {assetAData &&
-                    assetAData.market_fee_percent &&
-                    assetAData.market_fee_percent > 0 ? (
-                      <Controller
-                        name="marketFees"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                          <Field invalid={fieldState.invalid} disabled>
-                            <FieldLabel>
-                              {t("LimitOrderCard:marketFees.label")}
-                            </FieldLabel>
-                            <Input
-                              {...field}
-                              disabled
-                              value={`${marketFees} ${assetAData.symbol}`}
-                              placeholder={`${marketFees} ${assetAData.symbol}`}
-                            />
-                            <FieldDescription>
-                              {t("LimitOrderCard:marketFees.description")}
-                            </FieldDescription>
-                          </Field>
-                        )}
-                      />
-                    ) : null}
-
                   */}
 
-                  {!amountA || !amountB || !price || !expiry ? (
+                  {!amountA || !amountB ? (
                     <Button
-                      className="mt-7 mb-1"
+                      className="mt-7 mb-1 w-full md:w-1/4 text-left"
                       variant="outline"
                       disabled
                       type="submit"
@@ -1075,7 +1163,7 @@ export default function InstantTrade(properties) {
                     </Button>
                   ) : (
                     <Button
-                      className="mt-7 mb-1"
+                      className="mt-7 mb-1 w-full md:w-1/4 text-left"
                       variant="outline"
                       type="submit"
                     >
@@ -1109,7 +1197,11 @@ export default function InstantTrade(properties) {
                     {updatingMarket ? (
                       <Spinner className="size-4" />
                     ) : (
-                      `Last updated: ${marketTimestamp.toLocaleTimeString()}`
+                      t("InstantTrade:last_updated", {
+                        time: marketTimestamp
+                          ? marketTimestamp.toLocaleTimeString()
+                          : "",
+                      })
                     )}
                   </CardDescription>
                 </CardHeader>
@@ -1118,18 +1210,27 @@ export default function InstantTrade(properties) {
                 <CardContent>
                   {buyOrders && buyOrders.length ? (
                     <>
-                      <div className="grid grid-cols-6 font-bold">
-                        <div>ID</div>
-                        <div>Seller</div>
-                        <div>On Repeat?</div>
+                      <div className="grid grid-cols-3 md:grid-cols-6 font-bold">
+                        <div className="hidden md:block">
+                          {t("InstantTrade:id")}
+                        </div>
+                        <div className="hidden md:block">
+                          {t("InstantTrade:seller")}
+                        </div>
+                        <div className="hidden md:block">
+                          {t("InstantTrade:on_repeat")}
+                        </div>
                         <div className="col-span-1 pl-3 text-right pr-2">
-                          Amount {assetA}
+                          {t("InstantTrade:amount_assetA", { assetA })}
                         </div>
                         <div className="col-span-1 pl-3 text-md text-right pr-2">
-                          Price {assetB}/{assetA}
+                          {t("InstantTrade:price_assetB_assetA", {
+                            assetB,
+                            assetA,
+                          })}
                         </div>
                         <div className="col-span-1 pl-3 text-md text-right pr-2">
-                          Total {assetB}
+                          {t("InstantTrade:total_assetB", { assetB })}
                         </div>
                       </div>
                       <div className="h-[300px] overflow-hidden">
@@ -1159,48 +1260,58 @@ export default function InstantTrade(properties) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Market limit orders you're buying from</CardTitle>
+            <CardTitle>
+              {t("InstantTrade:market_limit_orders_buying_from")}
+            </CardTitle>
             <CardDescription>
               <div className="w-full grid grid-cols-2">
                 <div className="text-left">
-                  These are the existing limit orders on the order book that you
-                  will be purchasing from when you place your instant trade.
+                  {t("InstantTrade:market_limit_orders_desc")}
                 </div>
                 <div className="text-right">
                   {updatingMarket ? (
                     <Spinner className="size-4" />
                   ) : (
-                    `Last updated: ${marketTimestamp.toLocaleTimeString()}`
+                    t("InstantTrade:last_updated", {
+                      time: marketTimestamp
+                        ? marketTimestamp.toLocaleTimeString()
+                        : "",
+                    })
                   )}
                 </div>
               </div>
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {calculatedBoughtOrders && calculatedBoughtOrders.orders.length ? (
+            {orderCalc && orderCalc.orders.length ? (
               <>
-                <div className="grid grid-cols-6">
-                  <div>ID</div>
-                  <div>Seller</div>
-                  <div>On Repeat?</div>
+                <div className="grid grid-cols-3 md:grid-cols-6">
+                  <div className="hidden md:block">{t("InstantTrade:id")}</div>
+                  <div className="hidden md:block">
+                    {t("InstantTrade:seller")}
+                  </div>
+                  <div className="hidden md:block">
+                    {t("InstantTrade:on_repeat")}
+                  </div>
                   <div className="col-span-1 pl-3 text-right pr-2">
-                    Amount {assetA}
+                    {t("InstantTrade:amount_assetA", { assetA })}
                   </div>
                   <div className="col-span-1 pl-3 text-md text-right pr-2">
-                    Price {assetB}/{assetA}
+                    {t("InstantTrade:price_assetB_assetA", {
+                      assetB,
+                      assetA,
+                    })}
                   </div>
                   <div className="col-span-1 pl-3 text-md text-right pr-2">
-                    Total {assetB}
+                    {t("InstantTrade:total_assetB", { assetB })}
                   </div>
                 </div>
                 <div className="h-[300px] overflow-hidden">
-                  {calculatedBoughtOrders &&
-                  calculatedBoughtOrders.orders &&
-                  buyOrderDetails ? (
+                  {orderCalc && orderCalc.orders && buyOrderDetails ? (
                     <List
                       height={300}
                       rowComponent={Row}
-                      rowCount={calculatedBoughtOrders.orders.length}
+                      rowCount={orderCalc.orders.length}
                       rowHeight={20}
                       rowProps={{}}
                     />
@@ -1208,7 +1319,7 @@ export default function InstantTrade(properties) {
                 </div>
               </>
             ) : (
-              "Not yet intending to purchase from any existing market limit orders."
+              t("InstantTrade:no_orders_to_purchase")
             )}
           </CardContent>
         </Card>
@@ -1220,12 +1331,12 @@ export default function InstantTrade(properties) {
             usrChain={usr.chain}
             userID={usr.id}
             dismissCallback={setShowDialog}
-            key={`Buying${amountA}${assetA}for${total}${assetB}`}
+            key={`Buying${assetB}with${assetA}`}
             headerText={t("LimitOrderCard:headerText.buying", {
-              amountA,
-              assetA,
-              amountB,
-              assetB,
+              amount: amountA,
+              thisAssetA: assetA,
+              total: amountB,
+              thisAssetB: assetB,
             })}
             trxJSON={trxJSON}
           />

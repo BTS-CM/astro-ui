@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Instant Trade",
+    "subtitle": "Quickly swap assets at the best available prices",
+    "hover1": "Instantly trade assets on the DEX without any distractions.",
+    "hover2": "Utilizes fill-or-kill order technology to either get the prices you want or cancels the order.",
+    "hover3": "See who you'll be trading with on the DEX and whether they've enabled on-fill conditions on their orders."
+  },
   "vote": {
     "title": "🗳️ Voting",
     "subtitle": "Vote for witnesses, committee members and worker proposals",

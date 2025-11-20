@@ -80,6 +80,7 @@ const pages = [
   "InvoiceCreator",
   "PayInvoice",
   "InvoiceStorage",
+  "InstantTrade",
 ];
 
 const locale = persistentAtom("locale", "en");

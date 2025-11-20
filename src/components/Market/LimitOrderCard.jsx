@@ -90,7 +90,7 @@ export default function LimitOrderCard(properties) {
         assetAData.market_fee_percent > 0
       ) {
         calculatedMarketFee =
-          parseFloat(amount) * (assetAData.market_fee_percent / 100);
+          parseFloat(amount) * (assetAData.market_fee_percent / 10000);
         return calculatedMarketFee.toFixed(assetAData.precision);
       }
 
@@ -101,7 +101,7 @@ export default function LimitOrderCard(properties) {
         assetBData.market_fee_percent > 0
       ) {
         calculatedMarketFee =
-          parseFloat(total) * (assetBData.market_fee_percent / 100);
+          parseFloat(total) * (assetBData.market_fee_percent / 10000);
         return calculatedMarketFee.toFixed(assetBData.precision);
       }
     }
@@ -136,7 +136,7 @@ export default function LimitOrderCard(properties) {
       osoSpread: 1,
       osoSize: 100,
       repeatValue: false,
-      fee: 0,
+      fee: fee,
       marketFees: 0,
     },
   });
@@ -1198,6 +1198,7 @@ export default function LimitOrderCard(properties) {
                 </>
               ) : null}
 
+              {/*
               <Separator className="mt-3" />
 
               <Controller
@@ -1213,7 +1214,9 @@ export default function LimitOrderCard(properties) {
                       {...field}
                       disabled
                       label={t("LimitOrderCard:fee.label")}
-                      value={`${fee} BTS`}
+                      value={`${fee} ${
+                        usr.chain === "bitshares" ? "BTS" : "TEST"
+                      }`}
                       placeholder={1}
                     />
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
@@ -1232,6 +1235,9 @@ export default function LimitOrderCard(properties) {
                   </Field>
                 )}
               />
+              
+              */}
+
               {orderType === "buy" &&
               assetAData &&
               assetAData.market_fee_percent &&

@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Sofortiger Handel",
+    "subtitle": "Tauschen Sie schnell Vermögenswerte zu den besten verfügbaren Preisen",
+    "hover1": "Handeln Sie sofort und ohne Ablenkung mit Vermögenswerten am DEX.",
+    "hover2": "Nutzt die Fill-or-Kill-Auftragstechnologie, um entweder die gewünschten Preise zu erhalten oder die Bestellung zu stornieren.",
+    "hover3": "Sehen Sie, mit wem Sie am DEX handeln und ob diese On-Fill-Bedingungen für ihre Aufträge aktiviert haben."
+  },
   "vote": {
     "title": "🗳️ Abstimmung",
     "subtitle": "Stimmen Sie für Zeugen, Ausschussmitglieder und Arbeitnehmervorschläge",

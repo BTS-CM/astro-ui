@@ -116,7 +116,11 @@ export default function Home(properties) {
           href: "/instant_trade/index.html",
           titleKey: "Home:instant_trade.title",
           subtitleKey: "Home:instant_trade.subtitle",
-          hoverKeys: ["Home:instant_trade.hover1"],
+          hoverKeys: [
+            "Home:instant_trade.hover1",
+            "Home:instant_trade.hover2",
+            "Home:instant_trade.hover3",
+          ],
         },
         {
           key: "swap",

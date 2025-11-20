@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Échange instantané",
+    "subtitle": "Échangez rapidement des actifs aux meilleurs prix disponibles",
+    "hover1": "Négociez instantanément des actifs sur le DEX sans aucune distraction.",
+    "hover2": "Utilise la technologie de commande fill-or-kill pour obtenir les prix souhaités ou annuler la commande.",
+    "hover3": "Voyez avec qui vous négocierez sur le DEX et s’ils ont activé les conditions de remplissage sur leurs ordres."
+  },
   "vote": {
     "title": "🗳️ Voter",
     "subtitle": "Votez pour les témoins, les membres des comités et les propositions des travailleurs",

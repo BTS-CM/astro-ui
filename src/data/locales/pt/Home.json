@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Negociação Instantânea",
+    "subtitle": "Troque ativos rapidamente pelos melhores preços disponíveis",
+    "hover1": "Negocie ativos instantaneamente no DEX sem distrações.",
+    "hover2": "Utiliza tecnologia de preenchimento ou eliminação de pedidos para obter os preços desejados ou cancelar o pedido.",
+    "hover3": "Veja com quem você negociará no DEX e se eles ativaram condições de preenchimento em seus pedidos."
+  },
   "vote": {
     "title": "🗳️ Votação",
     "subtitle": "Vote em testemunhas, membros do comitê e propostas de trabalhadores",

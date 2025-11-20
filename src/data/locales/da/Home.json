@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Øjeblikkelig handel",
+    "subtitle": "Skift hurtigt aktiver til de bedste tilgængelige priser",
+    "hover1": "Handl øjeblikkeligt aktiver på DEX uden distraktioner.",
+    "hover2": "Bruger udfyld-eller-dræb ordreteknologi til enten at få de priser, du ønsker, eller annullere ordren.",
+    "hover3": "Se, hvem du vil handle med på DEX, og om de har aktiveret on-fill-betingelser på deres ordrer."
+  },
   "vote": {
     "title": "🗳️ Afstemning",
     "subtitle": "Stem på vidner, udvalgsmedlemmer og arbejderforslag",

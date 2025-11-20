@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Comercio instantáneo",
+    "subtitle": "Intercambie activos rápidamente a los mejores precios disponibles",
+    "hover1": "Opere activos instantáneamente en el DEX sin distracciones.",
+    "hover2": "Utiliza tecnología de pedidos de llenado o eliminación para obtener los precios que desea o cancelar el pedido.",
+    "hover3": "Vea con quién operará en el DEX y si han habilitado condiciones de cumplimiento en sus órdenes."
+  },
   "vote": {
     "title": "🗳️ Votación",
     "subtitle": "Votación por testigos, miembros del comité y propuestas de trabajadores.",

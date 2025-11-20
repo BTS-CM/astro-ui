@@ -211,7 +211,7 @@ export default function LimitOrderWizard(properties) {
 
     const _quoteFee =
       _assetLimitOrderOffers && _assetLimitOrderOffers.market_fee_percent
-        ? _assetLimitOrderOffers.market_fee_percent / 100
+        ? _assetLimitOrderOffers.market_fee_percent / 10000
         : 0;
 
     const sellingAssetBalance = updatedBalances.find(

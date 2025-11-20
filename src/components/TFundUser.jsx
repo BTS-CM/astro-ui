@@ -393,7 +393,7 @@ export default function SameTFunds(properties) {
 
       const sellAmount = buyAmount * parseFloat(operation.final_price);
       const marketFeePercent = _purchasedAsset.market_fee_percent
-        ? _purchasedAsset.market_fee_percent / 100
+        ? _purchasedAsset.market_fee_percent / 10000
         : 0;
       const marketFee = buyAmount * marketFeePercent;
       const netBuyAmount = buyAmount - marketFee;
@@ -443,7 +443,7 @@ export default function SameTFunds(properties) {
       const buyAmount = parseFloat(operation.final_buy_amount);
 
       const marketFeePercent = _purchasedAsset.market_fee_percent
-        ? _purchasedAsset.market_fee_percent / 100
+        ? _purchasedAsset.market_fee_percent / 10000
         : 0;
       const marketFee = buyAmount * marketFeePercent;
 
@@ -782,7 +782,7 @@ export default function SameTFunds(properties) {
     const _soldAsset = assets.find((x) => x.id === _operation.final_asset_sold);
 
     const _marketPurchaseFee = _purchasedAsset.market_fee_percent
-      ? _purchasedAsset.market_fee_percent / 100
+      ? _purchasedAsset.market_fee_percent / 10000
       : 0;
 
     const _amountPurchased = (

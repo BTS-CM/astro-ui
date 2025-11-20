@@ -172,6 +172,11 @@ export default function PageHeader(properties) {
       description: "Home:dex.subtitle",
     },
     {
+      title: "Home:instant_trade.title",
+      href: "/instant_trade/index.html",
+      description: "Home:instant_trade.subtitle",
+    },
+    {
       title: "Home:swap.title",
       href: "/swap/index.html",
       description: "Home:swap.subtitle",
