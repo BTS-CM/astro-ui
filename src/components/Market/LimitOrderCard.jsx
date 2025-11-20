@@ -51,6 +51,7 @@ import {
   humanReadableFloat,
   blockchainFloat,
   debounce,
+  assetAmountRegex,
 } from "@/lib/common.js";
 import DeepLinkDialog from "../common/DeepLinkDialog";
 
@@ -89,7 +90,7 @@ export default function LimitOrderCard(properties) {
         assetAData.market_fee_percent > 0
       ) {
         calculatedMarketFee =
-          parseFloat(amount) * (assetAData.market_fee_percent / 100);
+          parseFloat(amount) * (assetAData.market_fee_percent / 10000);
         return calculatedMarketFee.toFixed(assetAData.precision);
       }
 
@@ -100,7 +101,7 @@ export default function LimitOrderCard(properties) {
         assetBData.market_fee_percent > 0
       ) {
         calculatedMarketFee =
-          parseFloat(total) * (assetBData.market_fee_percent / 100);
+          parseFloat(total) * (assetBData.market_fee_percent / 10000);
         return calculatedMarketFee.toFixed(assetBData.precision);
       }
     }
@@ -135,7 +136,7 @@ export default function LimitOrderCard(properties) {
       osoSpread: 1,
       osoSize: 100,
       repeatValue: false,
-      fee: 0,
+      fee: fee,
       marketFees: 0,
     },
   });
@@ -299,27 +300,34 @@ export default function LimitOrderCard(properties) {
         }) => {
           if (finalAmount !== amount) {
             setAmount(finalAmount);
+            form.setValue("sellAmount", finalAmount);
           }
           if (finalPrice !== price) {
             setPrice(finalPrice);
+            form.setValue("priceAmount", finalPrice);
           }
           if (finalTotal !== total) {
             setTotal(finalTotal);
+            form.setValue("sellTotal", finalTotal);
           }
           if (finalOSO !== osoEnabled) {
             setOSOEnabled(finalOSO);
+            form.setValue("osoValue", finalOSO);
           }
           if (finalSpreadPercent !== spreadPercent) {
             setSpreadPercent(finalSpreadPercent);
+            form.setValue("osoSpread", finalSpreadPercent);
           }
           if (finalSizePercent !== sizePercent) {
             setSizePercent(finalSizePercent);
+            form.setValue("osoSize", finalSizePercent);
           }
           if (finalExpirationSeconds !== expirationSeconds) {
             setExpirationSeconds(finalExpirationSeconds);
           }
           if (finalRepeat !== repeat) {
             setRepeat(finalRepeat);
+            form.setValue("repeatValue", finalRepeat);
           }
 
           let finalUrlParams =
@@ -381,6 +389,7 @@ export default function LimitOrderCard(properties) {
         if (input >= 0 && input <= 100) {
           setSpreadPercent(input);
           setInputChars(inputChars + 1);
+          form.setValue("osoSpread", input);
         }
       }
     }, 25),
@@ -394,6 +403,7 @@ export default function LimitOrderCard(properties) {
         if (input >= 0 && input <= 100) {
           setSizePercent(input);
           setInputChars(inputChars + 1);
+          form.setValue("osoSize", input);
         }
       }
     }, 25),
@@ -466,34 +476,38 @@ export default function LimitOrderCard(properties) {
                               className="mb-2 mt-1"
                               onChange={(event) => {
                                 const input = event.target.value;
-                                const regex = /^[0-9,]*\.?[0-9]*$/;
+                                const parsedInput = parseFloat(
+                                  input.replaceAll(",", "")
+                                );
+                                const regex = assetAmountRegex(
+                                  orderType === "buy" ? assetBData : assetAData
+                                );
                                 if (
                                   input &&
                                   input.length &&
-                                  regex.test(input)
+                                  parsedInput &&
+                                  regex.test(parsedInput)
                                 ) {
-                                  const parsedInput = parseFloat(
-                                    input.replaceAll(",", "")
+                                  setPrice(
+                                    parsedInput.toFixed(
+                                      orderType === "buy"
+                                        ? assetBData.precision
+                                        : assetAData.precision
+                                    )
                                   );
-                                  if (parsedInput) {
-                                    setPrice(
-                                      parsedInput.toFixed(
-                                        orderType === "buy"
-                                          ? assetBData.precision
-                                          : assetAData.precision
-                                      )
+                                  field.onChange(parsedInput); // <- keep the Controller/form in sync
+                                  if (amount) {
+                                    const _total = (
+                                      parsedInput * amount
+                                    ).toFixed(
+                                      orderType === "buy"
+                                        ? assetBData.precision
+                                        : assetAData.precision
                                     );
-                                    if (amount) {
-                                      setTotal(
-                                        (parsedInput * amount).toFixed(
-                                          orderType === "buy"
-                                            ? assetBData.precision
-                                            : assetAData.precision
-                                        )
-                                      );
-                                    }
-                                    setInputChars(inputChars + 1);
+                                    setTotal(_total);
+                                    form.setValue("sellTotal", _total);
                                   }
+                                  setInputChars(inputChars + 1);
                                 }
                               }}
                             />
@@ -540,6 +554,7 @@ export default function LimitOrderCard(properties) {
                                         assetBData.precision
                                       )
                                     );
+                                    field.onChange(finalPrice); // <- keep the Controller/form in sync
 
                                     if (amount) {
                                       setTotal(
@@ -548,6 +563,8 @@ export default function LimitOrderCard(properties) {
                                           parseFloat(amount)
                                         ).toFixed(assetBData.precision)
                                       );
+                                      setTotal(_total);
+                                      form.setValue("sellTotal", _total);
                                     }
                                     setInputChars(inputChars + 1);
                                   }
@@ -615,28 +632,28 @@ export default function LimitOrderCard(properties) {
                               className="mb-2 mt-1"
                               onChange={(event) => {
                                 const input = event.target.value;
-                                const regex = /^[0-9,]*\.?[0-9]*$/;
+                                const parsedInput = parseFloat(
+                                  input.replaceAll(",", "")
+                                );
+                                const regex = assetAmountRegex(assetAData);
                                 if (
                                   input &&
                                   input.length &&
-                                  regex.test(input)
+                                  parsedInput &&
+                                  regex.test(parsedInput)
                                 ) {
-                                  const parsedInput = parseFloat(
-                                    input.replaceAll(",", "")
+                                  setAmount(
+                                    parsedInput.toFixed(assetAData.precision)
                                   );
-                                  if (parsedInput) {
-                                    setAmount(
-                                      parsedInput.toFixed(assetAData.precision)
-                                    );
-                                    if (price) {
-                                      setTotal(
-                                        (parsedInput * price).toFixed(
-                                          assetBData.precision
-                                        )
-                                      );
-                                    }
-                                    setInputChars(inputChars + 1);
+                                  field.onChange(parsedInput); // <- keep the Controller/form in sync
+                                  if (price) {
+                                    const _total = (
+                                      parsedInput * price
+                                    ).toFixed(assetBData.precision);
+                                    setTotal(_total);
+                                    form.setValue("sellTotal", _total);
                                   }
+                                  setInputChars(inputChars + 1);
                                 }
                               }}
                             />
@@ -650,12 +667,13 @@ export default function LimitOrderCard(properties) {
                                     setAmount(
                                       parsedAmount.toFixed(assetAData.precision)
                                     );
+                                    field.onChange(parsedAmount); // <- keep the Controller/form in sync
                                     if (price) {
-                                      setTotal(
-                                        (parsedAmount * price).toFixed(
-                                          assetBData.precision
-                                        )
-                                      );
+                                      const _total = (
+                                        parsedAmount * price
+                                      ).toFixed(assetBData.precision);
+                                      setTotal(_total);
+                                      form.setValue("sellTotal", _total);
                                     }
                                     setInputChars(inputChars + 1);
                                   }
@@ -733,28 +751,28 @@ export default function LimitOrderCard(properties) {
                               className="mb-2 mt-1"
                               onChange={(event) => {
                                 const input = event.target.value;
-                                const regex = /^[0-9,]*\.?[0-9]*$/;
+                                const parsedFloat = parseFloat(
+                                  input.replaceAll(",", "")
+                                );
+                                const regex = assetAmountRegex(assetBData);
                                 if (
                                   input &&
                                   input.length &&
-                                  regex.test(input)
+                                  parsedFloat &&
+                                  regex.test(parsedFloat)
                                 ) {
-                                  const parsedFloat = parseFloat(
-                                    input.replaceAll(",", "")
+                                  setTotal(
+                                    parsedFloat.toFixed(assetBData.precision)
                                   );
-                                  if (parsedFloat) {
-                                    setTotal(
-                                      parsedFloat.toFixed(assetBData.precision)
-                                    );
-                                    if (price) {
-                                      setAmount(
-                                        (parsedFloat / price).toFixed(
-                                          assetAData.precision
-                                        )
-                                      );
-                                    }
-                                    setInputChars(inputChars + 1);
+                                  field.onChange(parsedFloat); // <- keep the Controller/form in sync
+                                  if (price) {
+                                    const _total = (
+                                      parsedFloat / price
+                                    ).toFixed(assetAData.precision);
+                                    setAmount(_total);
+                                    form.setValue("sellAmount", _total);
                                   }
+                                  setInputChars(inputChars + 1);
                                 }
                               }}
                             />
@@ -1180,6 +1198,7 @@ export default function LimitOrderCard(properties) {
                 </>
               ) : null}
 
+              {/*
               <Separator className="mt-3" />
 
               <Controller
@@ -1195,7 +1214,9 @@ export default function LimitOrderCard(properties) {
                       {...field}
                       disabled
                       label={t("LimitOrderCard:fee.label")}
-                      value={`${fee} BTS`}
+                      value={`${fee} ${
+                        usr.chain === "bitshares" ? "BTS" : "TEST"
+                      }`}
                       placeholder={1}
                     />
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
@@ -1214,6 +1235,9 @@ export default function LimitOrderCard(properties) {
                   </Field>
                 )}
               />
+              
+              */}
+
               {orderType === "buy" &&
               assetAData &&
               assetAData.market_fee_percent &&

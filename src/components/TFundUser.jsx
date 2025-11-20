@@ -18,14 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-} from "@/components/ui/table";
-
-import {
   Card,
   CardContent,
   CardDescription,
@@ -50,7 +42,11 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
-import { humanReadableFloat, blockchainFloat } from "@/lib/common.js";
+import {
+  humanReadableFloat,
+  blockchainFloat,
+  assetAmountRegex,
+} from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
@@ -397,7 +393,7 @@ export default function SameTFunds(properties) {
 
       const sellAmount = buyAmount * parseFloat(operation.final_price);
       const marketFeePercent = _purchasedAsset.market_fee_percent
-        ? _purchasedAsset.market_fee_percent / 100
+        ? _purchasedAsset.market_fee_percent / 10000
         : 0;
       const marketFee = buyAmount * marketFeePercent;
       const netBuyAmount = buyAmount - marketFee;
@@ -447,7 +443,7 @@ export default function SameTFunds(properties) {
       const buyAmount = parseFloat(operation.final_buy_amount);
 
       const marketFeePercent = _purchasedAsset.market_fee_percent
-        ? _purchasedAsset.market_fee_percent / 100
+        ? _purchasedAsset.market_fee_percent / 10000
         : 0;
       const marketFee = buyAmount * marketFeePercent;
 
@@ -478,7 +474,7 @@ export default function SameTFunds(properties) {
     }
 
     const asset = assets.find((x) => x.id === fund.asset_type);
-    const regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${asset.precision}}$`);
+    const regex = assetAmountRegex(asset);
 
     const assetName = asset ? asset.symbol : fund.asset_type;
     const balance = humanReadableFloat(fund.balance, asset.precision);
@@ -786,7 +782,7 @@ export default function SameTFunds(properties) {
     const _soldAsset = assets.find((x) => x.id === _operation.final_asset_sold);
 
     const _marketPurchaseFee = _purchasedAsset.market_fee_percent
-      ? _purchasedAsset.market_fee_percent / 100
+      ? _purchasedAsset.market_fee_percent / 10000
       : 0;
 
     const _amountPurchased = (

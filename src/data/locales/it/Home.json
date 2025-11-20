@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Commercio istantaneo",
+    "subtitle": "Scambia rapidamente le tue risorse ai migliori prezzi disponibili",
+    "hover1": "Scambia istantaneamente asset sul DEX senza distrazioni.",
+    "hover2": "Utilizza la tecnologia degli ordini \"fill-or-kill\" per ottenere i prezzi desiderati o per annullare l'ordine.",
+    "hover3": "Scopri con chi farai trading sul DEX e se hanno abilitato le condizioni di on-fill sui loro ordini."
+  },
   "vote": {
     "title": "🗳️ Votazioni",
     "subtitle": "Vota per testimoni, membri del comitato e proposte dei lavoratori",

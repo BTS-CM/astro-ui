@@ -184,6 +184,24 @@ function isInvertedMarket(_baseID, _quoteID) {
   return baseID > quoteID;
 }
 
+/**
+ * Given an asset, return a regex to validate input amounts for that asset
+ * @param {Object} asset
+ * @returns {string}
+ */
+function assetAmountRegex(asset) {
+  if (!asset || !asset.hasOwnProperty("precision")) {
+    // For non-asset cases, allow any number format
+    return /^[0-9]*(?:\.[0-9]*)?$/;
+  }
+
+  if (asset.precision === 0) {
+    return /^[0-9]*$/;
+  }
+
+  return new RegExp(`^[0-9]*(?:\\.[0-9]{0,${asset.precision}})?$`);
+}
+
 export {
   debounce,
   blockchainFloat,
@@ -195,4 +213,5 @@ export {
   getFlags,
   getPermissions,
   isInvertedMarket,
+  assetAmountRegex,
 };

@@ -66,6 +66,7 @@ import {
   getFlagBooleans,
   debounce,
   blockchainFloat,
+  assetAmountRegex,
 } from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -1199,7 +1200,7 @@ export default function Smartcoin(properties) {
                   <FormField
                     control={form.control}
                     name="account"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>{t("Smartcoin:borrowingAccount")}</FormLabel>
                         <FormControl>
@@ -1246,7 +1247,7 @@ export default function Smartcoin(properties) {
                   <FormField
                     control={form.control}
                     name="borrowAsset"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>{t("Smartcoin:assetToBorrow")}</FormLabel>
                         <FormControl>
@@ -1486,7 +1487,9 @@ export default function Smartcoin(properties) {
                                       className="mb-2 mt-1"
                                       onChange={(event) => {
                                         const input = event.target.value;
-                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                        const regex = assetAmountRegex({
+                                          precision: parsedAsset.p,
+                                        });
                                         if (
                                           input &&
                                           input.length &&
@@ -1497,8 +1500,8 @@ export default function Smartcoin(properties) {
                                             currentFeedSettlementPrice,
                                             collateralAmount,
                                             ratioValue,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
+                                            parsedAsset.p, // debt precision
+                                            parsedCollateralAsset.p, // collateral precision
                                             debtLock,
                                             collateralLock,
                                             ratioLock
@@ -1621,7 +1624,9 @@ export default function Smartcoin(properties) {
                                       className="mb-2 mt-1"
                                       onChange={(event) => {
                                         const input = event.target.value;
-                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                        const regex = assetAmountRegex({
+                                          precision: parsedCollateralAsset.p,
+                                        });
                                         if (
                                           input &&
                                           input.length &&

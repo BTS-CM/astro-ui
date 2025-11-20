@@ -1,4 +1,11 @@
 {
+  "instant_trade": {
+    "title": "⚡ Vahetu kauplemine",
+    "subtitle": "Vahetage varasid kiiresti parimate saadaolevate hindadega",
+    "hover1": "Kaubelge varadega kohe DEX-is ilma segajateta.",
+    "hover2": "Kasutab tellimuste täitmise või tapmise tehnoloogiat soovitud hindade saamiseks või tellimuse tühistamiseks.",
+    "hover3": "Vaadake, kellega te DEX-is kauplete ja kas nad on lubanud oma tellimustele täitmise tingimused."
+  },
   "vote": {
     "title": "🗳️ Hääletamine",
     "subtitle": "Hääletage tunnistajate, komisjoni liikmete ja töötajate ettepanekute poolt",

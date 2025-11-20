@@ -14,10 +14,10 @@ import {
   blockchainFloat,
   debounce,
   copyToClipboard,
+  assetAmountRegex,
 } from "@/lib/common.js";
 import { evaluateTradingPair } from "@/lib/market.js";
 
-import { createUsernameStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -72,11 +72,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import {
   Avatar as Av,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -536,13 +538,13 @@ export default function CreditOfferEditor(properties) {
                         ) {
                           event.preventDefault();
                         }
-                        const regex = /^[0-9]*\.?[0-9]*$/;
+                        const regex = assetAmountRegex(_targetAsset);
                         if (!regex.test(event.key)) {
                           event.preventDefault();
                         }
                       }}
                       onChange={(event) => {
-                        const regex = /^[0-9]*\.?[0-9]*$/;
+                        const regex = assetAmountRegex(_targetAsset);
                         if (regex.test(event.target.value)) {
                           _updatedCollateral = acceptableCollateral.map((x) => {
                             if (x.symbol === res.symbol) {
@@ -651,13 +653,13 @@ export default function CreditOfferEditor(properties) {
                         ) {
                           event.preventDefault();
                         }
-                        const regex = /^[0-9]*\.?[0-9]*$/;
+                        const regex = assetAmountRegex(foundAsset);
                         if (!regex.test(event.key)) {
                           event.preventDefault();
                         }
                       }}
                       onChange={(event) => {
-                        const regex = /^[0-9]*\.?[0-9]*$/;
+                        const regex = assetAmountRegex(foundAsset);
                         if (regex.test(event.target.value)) {
                           _updatedAllowedAccounts = allowedAccounts.map((x) => {
                             if (x.id === res.id) {
@@ -1126,14 +1128,14 @@ export default function CreditOfferEditor(properties) {
                             ) {
                               event.preventDefault();
                             }
-                            const regex = /^[0-9]*\.?[0-9]*$/;
+                            const regex = assetAmountRegex(foundAsset);
                             if (!regex.test(event.key)) {
                               event.preventDefault();
                             }
                           }}
                           onChange={(event) => {
                             const input = event.target.value;
-                            const regex = /^[0-9]*\.?[0-9]*$/;
+                            const regex = assetAmountRegex(foundAsset);
                             if (regex.test(input) && input > 0) {
                               setMinimumBorowAmount(input);
                               form.setValue("minimumAmount", input);

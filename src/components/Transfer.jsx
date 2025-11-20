@@ -48,7 +48,12 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
-import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
+import {
+  humanReadableFloat,
+  trimPrice,
+  blockchainFloat,
+  assetAmountRegex,
+} from "@/lib/common";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
@@ -221,6 +226,7 @@ export default function Transfer(properties) {
         .then((acct) => {
           if (acct && acct.id && acct.name) {
             setTargetUser({ id: acct.id, name: acct.name });
+            form.setValue("targetAccount", acct.name);
           }
         })
         .catch(() => {});
@@ -576,7 +582,8 @@ export default function Transfer(properties) {
                             className="mb-1"
                             onChange={(event) => {
                               const input = event.target.value;
-                              const regex = /^[0-9]*\.?[0-9]*$/;
+                              const regex = assetAmountRegex(foundAsset);
+                              console.log({ foundAsset, regex });
                               if (regex.test(input)) {
                                 setTransferAmount(input);
                                 field.onChange(input);

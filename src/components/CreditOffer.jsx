@@ -47,7 +47,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
+import {
+  blockchainFloat,
+  humanReadableFloat,
+  assetAmountRegex,
+} from "@/lib/common.js";
 
 import { $currentUser } from "@/stores/users.ts";
 
@@ -436,7 +440,7 @@ export default function CreditOffer(properties) {
 
   const handleInputChange = (event) => {
     const input = event.target.value;
-    const regex = /^[0-9]*\.?[0-9]*$/;
+    const regex = assetAmountRegex(foundAsset);
     if (regex.test(input)) {
       let adjustedValue = input;
 
@@ -463,7 +467,7 @@ export default function CreditOffer(properties) {
         (x) => x.id === relevantOffer.owner_account
       );
       if (foundOwner) {
-        setOwner(foundOwner);
+        setCreditOfferOwner(foundOwner);
       } else {
         const userStore = createObjectStore([
           _chain,

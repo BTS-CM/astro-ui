@@ -40,7 +40,11 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { blockchainFloat, humanReadableFloat } from "@/lib/common"; // Assuming blockchainFloat is available
+import {
+  blockchainFloat,
+  humanReadableFloat,
+  assetAmountRegex,
+} from "@/lib/common"; // Assuming blockchainFloat is available
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import HoverInfo from "@/components/common/HoverInfo.tsx";
@@ -761,11 +765,13 @@ export default function Barter(properties) {
                           id="escrow-payment"
                           type="number"
                           value={escrowPayment}
-                          min="0"
-                          step="0.00001" // Assuming core asset precision
-                          onChange={(e) =>
-                            setEscrowPayment(parseFloat(e.target.value) || 0)
-                          }
+                          onChange={(e) => {
+                            const input = e.target.value;
+                            const regex = assetAmountRegex({ precision: 5 });
+                            if (regex.test(input)) {
+                              setEscrowPayment(input);
+                            }
+                          }}
                         />
                         <p className="text-xs text-muted-foreground">
                           ({_chain === "bitshares" ? "BTS" : "TEST"})

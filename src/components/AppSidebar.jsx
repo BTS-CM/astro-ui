@@ -26,6 +26,7 @@ export default function AppSidebar() {
 
   const exchangingFundsHeading = [
     { title: "Home:dex.title", href: "/dex/index.html" },
+    { title: "Home:instant_trade.title", href: "/instant_trade/index.html" },
     { title: "Home:swap.title", href: "/swap/index.html" },
     { title: "Home:stake.title", href: "/stake/index.html" },
     { title: "Home:barter.title", href: "/barter/index.html" },

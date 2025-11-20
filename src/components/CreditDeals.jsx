@@ -59,7 +59,11 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createBorrowerDealsStore } from "@/nanoeffects/BorrowerDeals.ts";
 import { createLenderDealsStore } from "@/nanoeffects/LenderDeals.ts";
 
-import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
+import {
+  blockchainFloat,
+  humanReadableFloat,
+  assetAmountRegex,
+} from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -474,7 +478,7 @@ export default function CreditDeals(properties) {
                                     placeholder={borrowedAmount}
                                     onChange={(e) => {
                                       const input = e.target.value;
-                                      const regex = /^[0-9]*\.?[0-9]*$/;
+                                      const regex = assetAmountRegex(debtAsset);
                                       if (regex.test(input)) {
                                         setInputValue(input);
                                         field.onChange(input);

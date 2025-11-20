@@ -43,7 +43,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { humanReadableFloat } from "@/lib/common.js";
+import { humanReadableFloat, assetAmountRegex } from "@/lib/common.js";
 
 import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
 
@@ -171,9 +171,7 @@ export default function LimitOrderWizard(properties) {
       return null;
     }
 
-    const regex = new RegExp(
-      `^[0-9]*\\.?[0-9]{0,${sellingAssetData.precision}}$`
-    );
+    const regex = assetAmountRegex(sellingAssetData);
 
     const existingOperation = operations.find((op) => op.id === _order.id);
     const [limitOrderBuyAmount, setLimitOrderBuyAmount] = useState(
@@ -213,7 +211,7 @@ export default function LimitOrderWizard(properties) {
 
     const _quoteFee =
       _assetLimitOrderOffers && _assetLimitOrderOffers.market_fee_percent
-        ? _assetLimitOrderOffers.market_fee_percent / 100
+        ? _assetLimitOrderOffers.market_fee_percent / 10000
         : 0;
 
     const sellingAssetBalance = updatedBalances.find(

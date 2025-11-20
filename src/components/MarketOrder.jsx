@@ -85,6 +85,7 @@ import {
   blockchainFloat,
   debounce,
   isInvertedMarket,
+  assetAmountRegex,
 } from "@/lib/common";
 
 import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
