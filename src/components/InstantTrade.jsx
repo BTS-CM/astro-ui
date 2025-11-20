@@ -99,6 +99,17 @@ export default function InstantTrade(properties) {
     _globalParamsTEST,
   } = properties;
 
+  const form = useForm({
+    defaultValues: {
+      priceAmount: 0.0,
+      sellAmount: 0.0,
+      sellTotal: 0,
+      expiry: "fkill",
+      fee: 0,
+      marketFees: 0,
+    },
+  });
+
   useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
@@ -348,6 +359,9 @@ export default function InstantTrade(properties) {
   }, [assetAData, assetBData]);
 
   const [buyOrders, setBuyOrders] = useState(null);
+  const [buyOrderIterator, setBuyOrderIterator] = useState(0);
+  const [updatingMarket, setUpdatingMarket] = useState(false);
+  const [marketTimestamp, setMarketTimestamp] = useState(null);
 
   useEffect(() => {
     async function fetchMarketOrders() {
@@ -364,13 +378,45 @@ export default function InstantTrade(properties) {
         } else {
           setBuyOrders(null);
         }
+        setUpdatingMarket(false);
+        setMarketTimestamp(new Date());
       });
     }
 
     if (usr && assetA && assetB) {
       fetchMarketOrders();
+      setUpdatingMarket(true);
     }
-  }, [usr, assetA, assetB]);
+  }, [usr, assetA, assetB, buyOrderIterator]);
+
+  // Increment the iterator every 1 minute so market orders refresh periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBuyOrderIterator((n) => n + 1);
+    }, 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const maxPurchaseable = useMemo(() => {
+    if (buyOrders && buyOrders.length && assetBData) {
+      const totalBase = buyOrders
+        .map((x) => parseFloat(x.base))
+        .reduce((acc, curr) => acc + curr, 0)
+        .toFixed(assetBData.precision);
+      return totalBase;
+    }
+  }, [buyOrders, assetBData]);
+
+  const maxSellable = useMemo(() => {
+    if (buyOrders && buyOrders.length && assetAData) {
+      const totalQuote = buyOrders
+        .map((x) => parseFloat(x.quote))
+        .reduce((acc, curr) => acc + curr, 0)
+        .toFixed(assetAData.precision);
+      return totalQuote;
+    }
+  }, [buyOrders, assetAData]);
 
   const [clicked, setClicked] = useState(false);
   const [amountA, setAmountA] = useState(0.0);
@@ -383,6 +429,13 @@ export default function InstantTrade(properties) {
   const calculatedBoughtOrders = useMemo(() => {
     if (amountA && buyOrders && buyOrders.length && assetBData) {
       let amountToSell = parseFloat(amountA);
+
+      if (amountToSell > maxSellable) {
+        form.setValue("sellAmount", maxSellable);
+        setAmountA(maxSellable);
+        return;
+      }
+
       let totalBought = 0;
       let amountSold = 0;
       const involvedOrders = [];
@@ -421,8 +474,7 @@ export default function InstantTrade(properties) {
 
   useEffect(() => {
     if (calculatedBoughtOrders) {
-      console.log({ calculatedBoughtOrders });
-      setAmountB(calculatedBoughtOrders.amount);
+      setAmountB(calculatedBoughtOrders.amount.toFixed(assetBData.precision));
       form.setValue("buyAmount", calculatedBoughtOrders.amount);
       setAvgPrice(calculatedBoughtOrders.avgPrice);
     } else {
@@ -460,17 +512,6 @@ export default function InstantTrade(properties) {
   const [date, setDate] = useState(
     new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)
   );
-
-  const form = useForm({
-    defaultValues: {
-      priceAmount: 0.0,
-      sellAmount: 0.0,
-      sellTotal: 0,
-      expiry: "fkill",
-      fee: 0,
-      marketFees: 0,
-    },
-  });
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -567,26 +608,6 @@ export default function InstantTrade(properties) {
       fetching();
     }
   }, [currentNode, _chain, buyOrders]);
-
-  const maxPurchaseable = useMemo(() => {
-    if (buyOrders && buyOrders.length && assetBData) {
-      const totalBase = buyOrders
-        .map((x) => parseFloat(x.base))
-        .reduce((acc, curr) => acc + curr, 0)
-        .toFixed(assetBData.precision);
-      return totalBase;
-    }
-  }, [buyOrders, assetBData]);
-
-  const maxSellable = useMemo(() => {
-    if (buyOrders && buyOrders.length && assetAData) {
-      const totalQuote = buyOrders
-        .map((x) => parseFloat(x.quote))
-        .reduce((acc, curr) => acc + curr, 0)
-        .toFixed(assetAData.precision);
-      return totalQuote;
-    }
-  }, [buyOrders, assetAData]);
 
   if (
     !usr ||
@@ -845,19 +866,16 @@ export default function InstantTrade(properties) {
                           </FieldLabel>
 
                           <Input
-                            placeholder={amountA}
+                            value={amountA}
                             className="mb-2 mt-1"
                             onChange={(event) => {
                               const input = event.target.value;
                               const regex = assetAmountRegex(assetAData);
-                              if (input && input.length && regex.test(input)) {
-                                const parsedInput = parseFloat(input);
-                                if (parsedInput) {
-                                  setAmountA(
-                                    parsedInput.toFixed(assetAData.precision)
-                                  );
-                                  setInputChars(inputChars + 1);
-                                }
+                              console.log({ input, regex });
+                              if (regex.test(input)) {
+                                setAmountA(input);
+                                form.setValue("sellAmount", input);
+                                setInputChars(inputChars + 1);
                               }
                             }}
                           />
@@ -886,26 +904,16 @@ export default function InstantTrade(properties) {
                             </div>
                           </FieldLabel>
                           <Input
-                            {...field}
-                            label={`Buy Amount`}
-                            placeholder={amountB}
+                            value={amountB}
                             className="mb-2 mt-1"
-                            type="number"
                             onChange={(event) => {
-                              const input = event.target.value.replaceAll(
-                                ",",
-                                ""
-                              );
+                              const input = event.target.value;
                               const regex = assetAmountRegex(assetBData);
-                              if (input && input.length && regex.test(input)) {
-                                const parsedInput = parseFloat(input);
-                                if (parsedInput) {
-                                  setAmountB(
-                                    parsedInput.toFixed(assetBData.precision)
-                                  );
-                                  form.setValue("buyAmount", parsedInput);
-                                  setInputChars(inputChars + 1);
-                                }
+                              console.log({ input, regex });
+                              if (regex.test(input)) {
+                                setAmountB(input);
+                                form.setValue("buyAmount", input);
+                                setInputChars(inputChars + 1);
                               }
                             }}
                           />
@@ -1085,7 +1093,6 @@ export default function InstantTrade(properties) {
             type="single"
             defaultValue="openBuyLimitOrders"
             collapsible
-            className="w-full"
           >
             <AccordionItem key="openBuyLimitOrders" value="openBuyLimitOrders">
               <AccordionTrigger>
@@ -1098,6 +1105,12 @@ export default function InstantTrade(properties) {
                       assetA: assetB,
                       assetB: assetA,
                     })}
+                    <br />
+                    {updatingMarket ? (
+                      <Spinner className="size-4" />
+                    ) : (
+                      `Last updated: ${marketTimestamp.toLocaleTimeString()}`
+                    )}
                   </CardDescription>
                 </CardHeader>
               </AccordionTrigger>
@@ -1148,8 +1161,19 @@ export default function InstantTrade(properties) {
           <CardHeader>
             <CardTitle>Market limit orders you're buying from</CardTitle>
             <CardDescription>
-              These are the existing limit orders on the order book that you
-              will be purchasing from when you place your instant trade.
+              <div className="w-full grid grid-cols-2">
+                <div className="text-left">
+                  These are the existing limit orders on the order book that you
+                  will be purchasing from when you place your instant trade.
+                </div>
+                <div className="text-right">
+                  {updatingMarket ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    `Last updated: ${marketTimestamp.toLocaleTimeString()}`
+                  )}
+                </div>
+              </div>
             </CardDescription>
           </CardHeader>
           <CardContent>
