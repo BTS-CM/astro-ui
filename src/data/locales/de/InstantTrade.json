@@ -20,5 +20,8 @@
   "total_assetB": "Gesamt {{assetB}}",
   "description": "Geben Sie ein, wie viel {{assetB}} Sie wollen, indem Sie verkaufen {{assetA}}, werden Sie mit vorhandenen Gebotsaufträgen abgeglichen.",
   "balance": "Gleichgewicht: {{balance}} {{asset}}",
+  "instant_trading_method": "Sofortige Handelsmethode",
+  "single_limit_order": "Einzelne Limit-Order",
+  "multiple_limit_orders": "Mehrere Limitaufträge",
   "last_updated": "Letzte Aktualisierung: {{time}}"
 }

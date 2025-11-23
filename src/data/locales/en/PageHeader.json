@@ -52,6 +52,7 @@
   "portuguese": "Portuguese (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "instant_trade": "Instantly trade on the decentralized exchange between two assets using fill or kill limit orders.",
     "stored_invoices": "Keep track of both your generated and received invoices for easy management and payment.",
     "vote": "Voting is an integral part of Delegated Proof of Stake, so vote on committee members, witnesses and workers to help govern the blockchain!",
     "committee": "Use this page to monitor the current committee members, their stats and their votes.",

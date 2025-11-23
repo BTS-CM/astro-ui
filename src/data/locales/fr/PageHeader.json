@@ -52,6 +52,7 @@
   "portuguese": "Portugais (pt)",
   "thai": "Thaï (th)",
   "descText": {
+    "instant_trade": "Négociez instantanément sur l'échange décentralisé entre deux actifs à l'aide d'ordres à cours limité fill ou kill.",
     "stored_invoices": "Gardez une trace de vos factures générées et reçues pour une gestion et un paiement faciles.",
     "vote": "Le vote fait partie intégrante de la preuve de participation déléguée, alors votez pour les membres du comité, les témoins et les travailleurs pour aider à gouverner la blockchain !",
     "htlc": "Utilisez le formulaire ci-dessous pour créer, prolonger et échanger des contrats verrouillés dans le temps hachés.",

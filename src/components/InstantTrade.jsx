@@ -8,7 +8,7 @@ import React, {
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { useStore } from "@nanostores/react";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { ReloadIcon, ResetIcon } from "@radix-ui/react-icons";
 import { useForm, Controller } from "react-hook-form";
 import { List } from "react-window";
 
@@ -69,6 +69,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -391,16 +393,6 @@ export default function InstantTrade(properties) {
     }
   }, [usr, assetA, assetB, buyOrderIterator]);
 
-  // Increment the iterator every 90 seconds so market orders refresh periodically
-  // TODO: Swap for a web socket subscription to market updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBuyOrderIterator((n) => n + 1);
-    }, 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const maxPurchaseable = useMemo(() => {
     if (buyOrders && buyOrders.length && assetBData) {
       const totalBase = buyOrders
@@ -566,6 +558,8 @@ export default function InstantTrade(properties) {
     new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)
   );
 
+  const [tradeMethod, setTradeMethod] = useState("single");
+
   const [showDialog, setShowDialog] = useState(false);
 
   function getReadableBalance(assetData, balances) {
@@ -608,6 +602,63 @@ export default function InstantTrade(properties) {
       return null;
     }
 
+    if (
+      tradeMethod === "multiple" &&
+      orderCalc &&
+      orderCalc.orders &&
+      orderCalc.orders.length
+    ) {
+      const operations = [];
+      let remainingAmountA = parseFloat(amountA);
+
+      for (const order of orderCalc.orders) {
+        if (remainingAmountA <= 0) break;
+
+        const orderQuote = parseFloat(order.quote); // Amount of A they want to buy
+        const orderBase = parseFloat(order.base); // Amount of B they offer
+
+        let sellAmountForThisOrder = 0;
+        let receiveAmountForThisOrder = 0;
+
+        if (remainingAmountA >= orderQuote) {
+          // Full fill of this order
+          sellAmountForThisOrder = orderQuote;
+          receiveAmountForThisOrder = orderBase;
+        } else {
+          // Partial fill
+          sellAmountForThisOrder = remainingAmountA;
+          // Calculate proportional receive amount
+          // receive = orderBase * (sell / orderQuote)
+          receiveAmountForThisOrder =
+            orderBase * (sellAmountForThisOrder / orderQuote);
+        }
+
+        operations.push({
+          seller: usr.id,
+          amount_to_sell: {
+            amount: blockchainFloat(
+              sellAmountForThisOrder,
+              assetAData.precision
+            ).toFixed(0),
+            asset_id: assetAData.id,
+          },
+          min_to_receive: {
+            amount: blockchainFloat(
+              receiveAmountForThisOrder,
+              assetBData.precision
+            ).toFixed(0),
+            asset_id: assetBData.id,
+          },
+          expiration: date,
+          fill_or_kill: true,
+          extensions: {},
+        });
+
+        remainingAmountA -= sellAmountForThisOrder;
+      }
+      return operations;
+    }
+
     return [
       {
         seller: usr.id,
@@ -634,6 +685,8 @@ export default function InstantTrade(properties) {
     assetA,
     date,
     marketSearch,
+    tradeMethod,
+    orderCalc,
   ]);
 
   const [buyOrderDetails, setBuyOrderDetails] = useState(null);
@@ -1152,6 +1205,31 @@ export default function InstantTrade(properties) {
                     />
                   */}
 
+                  <div className="mb-3">
+                    <Label className="mb-4 block">
+                      {t("InstantTrade:instant_trading_method")}
+                    </Label>
+                    <RadioGroup
+                      defaultValue="single"
+                      value={tradeMethod}
+                      onValueChange={setTradeMethod}
+                      className="flex flex-row space-x-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="single" id="r1" />
+                        <Label htmlFor="r1">
+                          {t("InstantTrade:single_limit_order")}
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="multiple" id="r2" />
+                        <Label htmlFor="r2">
+                          {t("InstantTrade:multiple_limit_orders")}
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
                   {!amountA || !amountB ? (
                     <Button
                       className="mt-7 mb-1 w-full md:w-1/4 text-left"
@@ -1253,6 +1331,14 @@ export default function InstantTrade(properties) {
                     t("MarketOrderCard:noOpenOrders")
                   )}
                 </CardContent>
+                <CardFooter>
+                  <Button
+                    onClick={() => setBuyOrderIterator((n) => n + 1)}
+                    variant="outline"
+                  >
+                    <ReloadIcon className="hover:animate-spin" />
+                  </Button>
+                </CardFooter>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -1322,21 +1408,29 @@ export default function InstantTrade(properties) {
               t("InstantTrade:no_orders_to_purchase")
             )}
           </CardContent>
+          <CardFooter>
+            <Button
+              onClick={() => setBuyOrderIterator((n) => n + 1)}
+              variant="outline"
+            >
+              <ReloadIcon className="hover:animate-spin" />
+            </Button>
+          </CardFooter>
         </Card>
 
         {showDialog ? (
           <DeepLinkDialog
-            operationNames={["limit_order_create"]}
+            operationNames={trxJSON.map(() => "limit_order_create")}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}
             dismissCallback={setShowDialog}
             key={`Buying${assetB}with${assetA}`}
             headerText={t("LimitOrderCard:headerText.buying", {
-              amount: amountA,
-              thisAssetA: assetA,
-              total: amountB,
-              thisAssetB: assetB,
+              amount: amountB,
+              thisAssetA: assetB,
+              total: amountA,
+              thisAssetB: assetA,
             })}
             trxJSON={trxJSON}
           />

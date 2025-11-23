@@ -919,11 +919,7 @@ export default function SimpleSwap(properties) {
                                           <CommandEmpty>
                                             {t("PageHeader:noResultsFound")}
                                           </CommandEmpty>
-                                          <CommandGroup
-                                            heading={t(
-                                              "SimpleSwap:selectAssetToReceive"
-                                            )}
-                                          >
+                                          <CommandGroup>
                                             {possiblePoolAssets.length > 0 ? (
                                               possiblePoolAssets.map(
                                                 (assetSymbol) => (

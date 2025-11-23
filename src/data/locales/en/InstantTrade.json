@@ -20,5 +20,8 @@
   "total_assetB": "Total {{assetB}}",
   "description": "Enter how much {{assetB}} you want by selling {{assetA}}, you will be matched with existing bid orders.",
   "balance": "Balance: {{balance}} {{asset}}",
+  "instant_trading_method": "Instant Trading Method",
+  "single_limit_order": "Single limit order",
+  "multiple_limit_orders": "Multiple limit orders",
   "last_updated": "Last updated: {{time}}"
 }

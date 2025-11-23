@@ -20,5 +20,8 @@
   "total_assetB": "ทั้งหมด {{assetB}}",
   "description": "ใส่เท่าไหร่ครับ {{assetB}} คุณต้องการโดยการขาย {{assetA}}คุณจะจับคู่กับคำสั่งซื้อการเสนอราคาที่มีอยู่",
   "balance": "สมดุล: {{balance}} {{asset}}",
+  "instant_trading_method": "วิธีการซื้อขายทันที",
+  "single_limit_order": "คำสั่งจำกัดเดียว",
+  "multiple_limit_orders": "คำสั่งจำกัดหลายรายการ",
   "last_updated": "อัปเดตล่าสุด: {{time}}"
 }

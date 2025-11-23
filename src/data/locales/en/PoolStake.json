@@ -14,6 +14,7 @@
   "assetA": "Asset A",
   "assetB": "Asset B",
   "takerFee": "Taker Fee",
+  "withdrawFee": "Withdrawal Fee",
   "currentTotalAmountInPool": "Current total amount in pool",
   "stakingAssets": "Staking assets",
   "stakeAssets": "Stake assets",

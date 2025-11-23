@@ -52,6 +52,7 @@
   "portuguese": "portugisisk (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "instant_trade": "Handl øjeblikkeligt på den decentraliserede udveksling mellem to aktiver ved hjælp af udfyldnings- eller dræb-grænseordrer.",
     "stored_invoices": "Hold styr på både dine genererede og modtagne fakturaer for nem administration og betaling.",
     "vote": "Afstemning er en integreret del af Delegeret bevis for indsats, så stem på udvalgsmedlemmer, vidner og arbejdere for at hjælpe med at styre blockchainen!",
     "htlc": "Brug formularen nedenfor til at oprette, forlænge og indløse hash-låste kontrakter.",

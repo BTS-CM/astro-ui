@@ -4,7 +4,6 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import Fuse from "fuse.js";
 import { useForm, Controller } from "react-hook-form";
 import { List } from "react-window";
 import { useStore } from "@nanostores/react";
@@ -89,6 +88,40 @@ import MarketAssetCardPlaceholder from "./Market/MarketAssetCardPlaceholder.jsx"
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 import { Spinner } from "@/components/ui/spinner";
+
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import {
+  QuestionMarkCircledIcon,
+  CircleIcon,
+  CheckCircledIcon,
+} from "@radix-ui/react-icons";
 
 export default function PoolStake(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -204,66 +237,148 @@ export default function PoolStake(properties) {
     }
   }, [globalParams]);
 
-  // Search dialog
-  const [activeTab, setActiveTab] = useState("asset");
-  const [stakeTab, setStakeTab] = useState("stake");
-  const poolSearch = useMemo(() => {
-    if (!pools || !pools.length) {
-      return null;
+  // State for the symbols of selected assets
+  const [selectedAssetASymbol, setSelectedAssetASymbol] = useState(); // Asset User wants to SELL
+  const [selectedAssetBSymbol, setSelectedAssetBSymbol] = useState(); // Asset User wants to BUY
+  // Controlled open state for dropdown menus so we can close them on selection
+  const [sendMenuOpen, setSendMenuOpen] = useState(false);
+  const [receiveMenuOpen, setReceiveMenuOpen] = useState(false);
+
+  // Memoized list of unique asset symbols available in pools
+  const poolAssets = useMemo(() => {
+    if (pools && pools.length) {
+      const allSymbols = pools.flatMap((pool) => [
+        pool.asset_a_symbol,
+        pool.asset_b_symbol,
+      ]);
+      return [...new Set(allSymbols)].sort(); // Sort alphabetically for consistent dropdown order
     }
-    return new Fuse(pools, {
-      includeScore: true,
-      threshold: 0.2,
-      keys:
-        activeTab === "asset"
-          ? ["asset_a_symbol", "asset_b_symbol"]
-          : ["share_asset_symbol"],
-    });
-  }, [pools, activeTab]);
+    return [];
+  }, [pools]);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  // Memoized list of pools that involve the selected selling asset (selectedAssetASymbol)
+  const possiblePools = useMemo(() => {
+    if (selectedAssetASymbol && pools && pools.length) {
+      return pools.filter(
+        (x) =>
+          x.asset_a_symbol === selectedAssetASymbol ||
+          x.asset_b_symbol === selectedAssetASymbol
+      );
+    }
+    return [];
+  }, [selectedAssetASymbol, pools]);
 
-  const [thisInput, setThisInput] = useState();
-  const [thisResult, setThisResult] = useState();
+  // Memoized list of asset symbols that can be bought when selling selectedAssetASymbol
+  const possiblePoolAssets = useMemo(() => {
+    if (possiblePools && possiblePools.length) {
+      return [
+        ...new Set(
+          possiblePools.map((x) =>
+            x.asset_a_symbol === selectedAssetASymbol
+              ? x.asset_b_symbol
+              : x.asset_a_symbol
+          )
+        ),
+      ].sort(); // Sort alphabetically
+    }
+    return [];
+  }, [possiblePools, selectedAssetASymbol]);
+
+  // Memoized list of pools matching the selected pair (A and B)
+  const [finalPools, setFinalPools] = useState([]);
   useEffect(() => {
-    if (poolSearch && thisInput) {
-      const searchResult = poolSearch.search(thisInput);
-      setThisResult(searchResult);
-    }
-  }, [poolSearch, thisInput]);
+    if (!_chain || !pools || pools.length === 0) return;
 
-  const PoolRow = ({ index, style }) => {
-    const res = thisResult[index].item;
+    if (selectedAssetASymbol && selectedAssetBSymbol) {
+      let relevantPools = pools.filter(
+        (x) =>
+          (x.asset_a_symbol === selectedAssetASymbol &&
+            x.asset_b_symbol === selectedAssetBSymbol) ||
+          (x.asset_a_symbol === selectedAssetBSymbol &&
+            x.asset_b_symbol === selectedAssetASymbol)
+      );
+
+      if (relevantPools && relevantPools.length) {
+        // If a pool is already selected and it's still valid, keep it. Otherwise, select the first one.
+        const currentPoolIsValid = relevantPools.some((p) => p.id === pool);
+        if (!currentPoolIsValid) {
+          setPool(relevantPools[0].id);
+        }
+        setFinalPools(relevantPools);
+      } else {
+        setPool("");
+        setFinalPools([]);
+      }
+    } else {
+      // Clear pool selection if assets aren't fully selected
+      setPool("");
+      setFinalPools([]);
+    }
+  }, [_chain, selectedAssetASymbol, selectedAssetBSymbol, pools, pool]);
+
+  const poolRow = ({ index, style }) => {
+    const _pool = finalPools[index];
+
+    const assetDetailA = assetA;
+    const assetDetailB = assetB;
+
+    if (!assetDetailA || !assetDetailB) {
+      return <div style={style}>Loading pool details...</div>;
+    }
+
+    let balanceForSelectedA, balanceForSelectedB;
+    let precisionForSelectedA, precisionForSelectedB;
+
+    if (_pool.asset_a_symbol === selectedAssetASymbol) {
+      balanceForSelectedA = _pool.balance_a;
+      precisionForSelectedA = assetDetailA.precision;
+      balanceForSelectedB = _pool.balance_b;
+      precisionForSelectedB = assetDetailB.precision;
+    } else {
+      balanceForSelectedA = _pool.balance_b;
+      precisionForSelectedA = assetDetailA.precision;
+      balanceForSelectedB = _pool.balance_a;
+      precisionForSelectedB = assetDetailB.precision;
+    }
+
+    const feePercent = (_pool.taker_fee_percent ?? 0) / 100; // e.g., 0.2
+
     return (
       <div
-        style={{ ...style }}
-        className="grid grid-cols-12 hover:bg-purple-300"
-        key={`acard-${res.id}`}
+        style={style}
+        className={`grid grid-cols-12 hover:bg-purple-100 p-1 cursor-pointer ${
+          pool === _pool.id ? "bg-purple-200" : ""
+        }`}
+        key={`pool_${_pool.id}`}
         onClick={() => {
-          setPool(res.id);
-          setDialogOpen(false);
-          setThisResult();
+          setPool(_pool.id);
         }}
       >
-        <div className="col-span-2">{res.id}</div>
-        <div className="col-span-3">{res.share_asset_symbol}</div>
-        <div className="col-span-3">
-          {res.asset_a_symbol} ({res.asset_a_id})
+        <div className="col-span-1 flex items-center">
+          {_pool.id === pool ? (
+            <CheckCircledIcon className="mt-1 text-green-600" />
+          ) : (
+            <CircleIcon className="mt-1 text-gray-400" />
+          )}
         </div>
-        <div className="col-span-3">
-          {res.asset_b_symbol} ({res.asset_b_id})
+        <div className="col-span-1 text-sm flex items-center">
+          {_pool.id.split(".")[2]}
         </div>
-        <div className="col-span-1">{res.taker_fee_percent / 100}%</div>
+        <div className="col-span-2 text-sm flex items-center">
+          {feePercent}%
+        </div>
+        <div className="col-span-2 text-sm flex items-center">
+          {_pool.withdrawal_fee_percent / 100}%
+        </div>
+        <div className="col-span-3 text-sm flex items-center justify-end">
+          {humanReadableFloat(balanceForSelectedA, precisionForSelectedA)}
+        </div>
+        <div className="col-span-3 text-sm flex items-center justify-end">
+          {humanReadableFloat(balanceForSelectedB, precisionForSelectedB)}
+        </div>
       </div>
     );
   };
-
-  const activeTabStyle = {
-    backgroundColor: "#252526",
-    color: "white",
-  };
-
-  // End of Search dialog
 
   useEffect(() => {
     async function parseUrlParams() {
@@ -297,6 +412,11 @@ export default function PoolStake(properties) {
         }
 
         setPool(poolParameter);
+        const foundPoolByURL = pools.find((p) => p.id === poolParameter);
+        if (foundPoolByURL) {
+          setSelectedAssetASymbol(foundPoolByURL.asset_a_symbol);
+          setSelectedAssetBSymbol(foundPoolByURL.asset_b_symbol);
+        }
       }
     }
 
@@ -334,28 +454,47 @@ export default function PoolStake(properties) {
             console.log({ error, location: "poolStore.subscribe" });
           }
           if (data && !error && !loading) {
-            setFoundPool(data.foundPool);
+            const poolData = data.foundPool;
+            const assetDataA = data.assetA;
+            const assetDataB = data.assetB;
+
+            setFoundPool(poolData);
             setPoolShareDetails(data.poolAsset);
 
-            setAssetA(data.assetA);
-            setAssetB(data.assetB);
+            if (assetDataA && assetDataB && poolData) {
+              if (assetDataA.symbol === selectedAssetASymbol) {
+                setAssetA(assetDataA);
+                setAssetB(assetDataB);
+                setAssetADetails(data.assetADetails);
+                setAssetBDetails(data.assetBDetails);
+                if (data.bitassetA) setABitassetData(data.bitassetA);
+                if (data.bitassetB) setBBitassetData(data.bitassetB);
+              } else if (assetDataB.symbol === selectedAssetASymbol) {
+                setAssetA(assetDataB);
+                setAssetB(assetDataA);
+                setAssetADetails(data.assetBDetails);
+                setAssetBDetails(data.assetADetails);
+                if (data.bitassetB) setABitassetData(data.bitassetB);
+                if (data.bitassetA) setBBitassetData(data.bitassetA);
+              } else {
+                // Fallback if symbols don't match (e.g. initial load or URL param)
+                setAssetA(assetDataA);
+                setAssetB(assetDataB);
+                setAssetADetails(data.assetADetails);
+                setAssetBDetails(data.assetBDetails);
+                if (data.bitassetA) setABitassetData(data.bitassetA);
+                if (data.bitassetB) setBBitassetData(data.bitassetB);
+              }
+            }
 
             setFoundPoolDetails(data.foundPoolDetails);
-            setAssetADetails(data.assetADetails);
-            setAssetBDetails(data.assetBDetails);
-            if (data.bitassetA) {
-              setABitassetData(data.bitassetA);
-            }
-            if (data.bitassetB) {
-              setBBitassetData(data.bitassetB);
-            }
           }
         });
       } catch (error) {
         console.log({ error });
       }
     }
-  }, [usr, pool, pools, assets]);
+  }, [usr, pool, pools, assets, selectedAssetASymbol, selectedAssetBSymbol]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -415,6 +554,13 @@ export default function PoolStake(properties) {
     return Boolean(pool && foundPool && foundPoolDetails && assetA && assetB);
   }, [pool, foundPool, foundPoolDetails, assetA, assetB]);
 
+  const [stakeTab, setStakeTab] = useState("stake");
+
+  const activeTabStyle = {
+    backgroundColor: "#252526",
+    color: "white",
+  };
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5 w-full lg:w-1/2 px-3 sm:px-4">
@@ -435,7 +581,7 @@ export default function PoolStake(properties) {
                     })}
                   >
                     <FieldGroup>
-                      <Field className="mb-4">
+                      <Field className="mb-1">
                         <FieldLabel>{t("PoolStake:account")}</FieldLabel>
                         <FieldContent>
                           <div className="grid grid-cols-8 gap-3">
@@ -475,201 +621,238 @@ export default function PoolStake(properties) {
                           </div>
                         </FieldContent>
                       </Field>
-                      <Field className="mb-4">
-                        <FieldLabel>{t("PoolStake:liquidityPool")}</FieldLabel>
-                        <FieldDescription style={{ marginTop: "0px" }}>
-                          {pool
-                            ? t("PoolStake:liquidityPoolChosen")
-                            : t("PoolStake:selectLiquidityPool")}
-                        </FieldDescription>
-                        <FieldContent>
-                          <div className="grid grid-cols-5 mt-3 gap-3">
-                            <div className="mt-1 col-span-4">
-                              <Select
-                                key={poolKey}
-                                onValueChange={(value) => setPool(value)}
-                              >
-                                <SelectTrigger className="mb-3">
-                                  <SelectValue
-                                    placeholder={
-                                      foundPool
-                                        ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
-                                        : t("PoolStake:selectPoolPlaceholder")
-                                    }
-                                  />
-                                </SelectTrigger>
-                                <SelectContent className="bg-white">
-                                  {pools && pools.length ? (
-                                    <div className="w-full max-h-[150px] overflow-auto">
-                                      <List
-                                        rowComponent={Row}
-                                        rowCount={pools.length}
-                                        rowHeight={35}
-                                        rowProps={{}}
-                                        initialScrollOffset={
-                                          pools.map((x) => x.id).indexOf(pool) *
-                                          35
-                                        }
-                                      />
-                                    </div>
-                                  ) : null}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="text-gray-500 text-right col-span-1 ml-3">
-                              <Dialog
-                                open={dialogOpen}
-                                onOpenChange={(open) => {
-                                  if (!open) {
-                                    setThisResult();
-                                  }
-                                  setDialogOpen(open);
-                                }}
-                              >
-                                <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    className="h-9 mt-1 p-3 w-full"
+
+                      <div className="grid grid-cols-2 gap-5 mb-1">
+                        <div className="col-span-1">
+                          <Controller
+                            name="assetA"
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel>{t("PoolStake:assetA")}</FieldLabel>
+                                <FieldContent>
+                                  <DropdownMenu
+                                    open={sendMenuOpen}
+                                    onOpenChange={setSendMenuOpen}
                                   >
-                                    {t("PoolStake:searchButton")}
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[900px] bg-white">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      {t("PoolStake:searchDialogTitle")}
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      {t("PoolStake:searchDialogDescription")}
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <div className="grid grid-cols-1">
-                                    <div className="col-span-1">
-                                      <Tabs defaultValue="asset">
-                                        <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
-                                          {activeTab === "asset" ? (
-                                            <TabsTrigger
-                                              style={activeTabStyle}
-                                              value="asset"
-                                            >
-                                              {t("PoolStake:swappableAssets")}
-                                            </TabsTrigger>
-                                          ) : (
-                                            <TabsTrigger
-                                              value="asset"
-                                              onClick={() =>
-                                                setActiveTab("asset")
-                                              }
-                                            >
-                                              {t("PoolStake:swappableAssets")}
-                                            </TabsTrigger>
-                                          )}
-                                          {activeTab === "share" ? (
-                                            <TabsTrigger
-                                              style={activeTabStyle}
-                                              value="share"
-                                            >
-                                              {t("PoolStake:poolShareAsset")}
-                                            </TabsTrigger>
-                                          ) : (
-                                            <TabsTrigger
-                                              value="share"
-                                              onClick={() =>
-                                                setActiveTab("share")
-                                              }
-                                            >
-                                              {t("PoolStake:poolShareAsset")}
-                                            </TabsTrigger>
-                                          )}
-                                        </TabsList>
-
-                                        <Input
-                                          name="assetSearch"
+                                    <DropdownMenuTrigger asChild>
+                                      <Button
+                                        variant="outline"
+                                        className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal"
+                                        aria-label={t(
+                                          "SimpleSwap:selectSendAsset"
+                                        )}
+                                        aria-invalid={fieldState.invalid}
+                                      >
+                                        {selectedAssetASymbol
+                                          ? selectedAssetASymbol
+                                          : t("SimpleSwap:sendAsset")}
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                      className="p-0 w-[300px]"
+                                      align="start"
+                                    >
+                                      <Command className="rounded-lg border shadow-md">
+                                        <CommandInput
                                           placeholder={t(
-                                            "PoolStake:searchPlaceholder"
+                                            "PageHeader:commandSearchPlaceholder"
                                           )}
-                                          className="mb-3 max-w-[400px]"
-                                          onChange={(event) => {
-                                            setThisInput(event.target.value);
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                          }}
                                         />
+                                        <CommandList>
+                                          <CommandEmpty>
+                                            {t("PageHeader:noResultsFound")}
+                                          </CommandEmpty>
+                                          <CommandGroup>
+                                            {poolAssets.length > 0 ? (
+                                              poolAssets.map((assetSymbol) => (
+                                                <CommandItem
+                                                  key={`sell-${assetSymbol}`}
+                                                  onSelect={() => {
+                                                    setSelectedAssetASymbol(
+                                                      assetSymbol
+                                                    );
+                                                    setSelectedAssetBSymbol(
+                                                      undefined
+                                                    );
+                                                    setPool("");
+                                                    field.onChange(assetSymbol);
+                                                    setSendMenuOpen(false);
+                                                  }}
+                                                  className="cursor-pointer"
+                                                >
+                                                  {assetSymbol}
+                                                </CommandItem>
+                                              ))
+                                            ) : (
+                                              <CommandItem disabled>
+                                                {t("SimpleSwap:loading")}
+                                              </CommandItem>
+                                            )}
+                                          </CommandGroup>
+                                        </CommandList>
+                                      </Command>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </FieldContent>
+                              </Field>
+                            )}
+                          />
+                        </div>
 
-                                        <TabsContent value="share">
-                                          {thisResult && thisResult.length ? (
-                                            <>
-                                              <div className="grid grid-cols-12">
-                                                <div className="col-span-2">
-                                                  {t("PoolStake:id")}
-                                                </div>
-                                                <div className="col-span-3">
-                                                  <b>
-                                                    {t("PoolStake:shareAsset")}
-                                                  </b>
-                                                </div>
-                                                <div className="col-span-3">
-                                                  {t("PoolStake:assetA")}
-                                                </div>
-                                                <div className="col-span-3">
-                                                  {t("PoolStake:assetB")}
-                                                </div>
-                                                <div className="col-span-1">
-                                                  {t("PoolStake:takerFee")}
-                                                </div>
-                                              </div>
-                                              <div className="w-full max-h-[400px] overflow-auto">
-                                                <List
-                                                  rowComponent={PoolRow}
-                                                  rowCount={thisResult.length}
-                                                  rowHeight={45}
-                                                  rowProps={{}}
-                                                />
-                                              </div>
-                                            </>
-                                          ) : null}
-                                        </TabsContent>
+                        <div className="col-span-1">
+                          <Controller
+                            name="assetB"
+                            control={form.control}
+                            rules={{
+                              validate: (val) => !selectedAssetASymbol || !!val,
+                            }}
+                            render={({ field, fieldState }) => (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel>{t("PoolStake:assetB")}</FieldLabel>
+                                <FieldContent>
+                                  <DropdownMenu
+                                    open={receiveMenuOpen}
+                                    onOpenChange={setReceiveMenuOpen}
+                                  >
+                                    <DropdownMenuTrigger
+                                      asChild
+                                      disabled={!selectedAssetASymbol}
+                                    >
+                                      <Button
+                                        variant="outline"
+                                        className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal"
+                                        disabled={!selectedAssetASymbol}
+                                        aria-label={t(
+                                          "SimpleSwap:selectReceiveAsset"
+                                        )}
+                                        aria-invalid={fieldState.invalid}
+                                      >
+                                        {selectedAssetBSymbol
+                                          ? selectedAssetBSymbol
+                                          : t("SimpleSwap:sendAsset")}
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                      className="p-0 w-[300px]"
+                                      align="start"
+                                    >
+                                      <Command className="rounded-lg border shadow-md">
+                                        <CommandInput
+                                          placeholder={t(
+                                            "PageHeader:commandSearchPlaceholder"
+                                          )}
+                                        />
+                                        <CommandList>
+                                          <CommandEmpty>
+                                            {t("PageHeader:noResultsFound")}
+                                          </CommandEmpty>
+                                          <CommandGroup>
+                                            {possiblePoolAssets.length > 0 ? (
+                                              possiblePoolAssets.map(
+                                                (assetSymbol) => (
+                                                  <CommandItem
+                                                    key={`buy-${assetSymbol}`}
+                                                    onSelect={() => {
+                                                      setSelectedAssetBSymbol(
+                                                        assetSymbol
+                                                      );
+                                                      field.onChange(
+                                                        assetSymbol
+                                                      );
+                                                      setReceiveMenuOpen(false);
+                                                    }}
+                                                    className="cursor-pointer"
+                                                  >
+                                                    {assetSymbol}
+                                                  </CommandItem>
+                                                )
+                                              )
+                                            ) : (
+                                              <CommandItem disabled>
+                                                {selectedAssetASymbol
+                                                  ? t(
+                                                      "SimpleSwap:noAssetsAvailable"
+                                                    )
+                                                  : t(
+                                                      "SimpleSwap:selectSendFirst"
+                                                    )}
+                                              </CommandItem>
+                                            )}
+                                          </CommandGroup>
+                                        </CommandList>
+                                      </Command>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </FieldContent>
+                                {fieldState.invalid && (
+                                  <FieldError errors={[fieldState.error]} />
+                                )}
+                              </Field>
+                            )}
+                          />
+                        </div>
+                      </div>
 
-                                        <TabsContent value="asset">
-                                          {thisResult && thisResult.length ? (
-                                            <>
-                                              <div className="grid grid-cols-12">
-                                                <div className="col-span-2">
-                                                  {t("PoolStake:id")}
-                                                </div>
-                                                <div className="col-span-3">
-                                                  {t("PoolStake:shareAsset")}
-                                                </div>
-                                                <div className="col-span-3">
-                                                  <b>{t("PoolStake:assetA")}</b>
-                                                </div>
-                                                <div className="col-span-3">
-                                                  <b>{t("PoolStake:assetB")}</b>
-                                                </div>
-                                                <div className="col-span-1">
-                                                  {t("PoolStake:takerFee")}
-                                                </div>
-                                              </div>
-                                              <div className="w-full max-h-[400px] overflow-auto">
-                                                <List
-                                                  rowComponent={PoolRow}
-                                                  rowCount={thisResult.length}
-                                                  rowHeight={45}
-                                                  rowProps={{}}
-                                                />
-                                              </div>
-                                            </>
-                                          ) : null}
-                                        </TabsContent>
-                                      </Tabs>
-                                    </div>
-                                  </div>
-                                </DialogContent>
-                              </Dialog>
+                      {finalPools &&
+                      finalPools.length > 0 &&
+                      selectedAssetASymbol &&
+                      selectedAssetBSymbol ? (
+                        <div className="mt-5 border rounded-md p-2 mb-1">
+                          <div className="grid grid-cols-12 text-xs text-gray-500 mb-1 p-1 border-b">
+                            <div className="col-span-1"></div>
+                            <div className="col-span-1">ID</div>
+                            <div className="col-span-2">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="flex items-center cursor-help">
+                                      {t("SimpleSwap:poolFee")}{" "}
+                                      <QuestionMarkCircledIcon className="ml-1" />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>{t("SimpleSwap:poolFeeDescription")}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <div className="col-span-2">
+                              {t("PoolStake:withdrawFee")}
+                            </div>
+                            <div className="col-span-3 text-right">
+                              {selectedAssetASymbol} ({t("SimpleSwap:balance")})
+                            </div>
+                            <div className="col-span-3 text-right">
+                              {selectedAssetBSymbol} ({t("SimpleSwap:balance")})
                             </div>
                           </div>
-                        </FieldContent>
-                      </Field>
+
+                          <div
+                            className={`w-full max-h-[${Math.min(
+                              210,
+                              finalPools.length * 40
+                            )}px] overflow-auto`}
+                          >
+                            <List
+                              rowComponent={poolRow}
+                              rowCount={finalPools.length}
+                              rowHeight={40}
+                              rowProps={{}}
+                            />
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {selectedAssetASymbol &&
+                        selectedAssetBSymbol &&
+                        finalPools.length === 0 &&
+                        pools &&
+                        pools.length > 0 && (
+                          <p className="text-red-500 mt-4 mb-4">
+                            {t("SimpleSwap:noPoolsForPair")}
+                          </p>
+                        )}
 
                       {pool && !isFormReady ? (
                         <div className="flex items-center justify-center py-10">

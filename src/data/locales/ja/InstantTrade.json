@@ -20,5 +20,8 @@
   "total_assetB": "合計 {{assetB}}",
   "description": "金額を入力してください {{assetB}} 売って欲しい {{assetA}}の場合、既存の入札注文と照合されます。",
   "balance": "バランス： {{balance}} {{asset}}",
+  "instant_trading_method": "即時取引方法",
+  "single_limit_order": "単一指値注文",
+  "multiple_limit_orders": "複数の指値注文",
   "last_updated": "最終更新日: {{time}}"
 }

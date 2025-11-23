@@ -52,6 +52,7 @@
   "portuguese": "Portugiesisch (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "instant_trade": "Handeln Sie sofort an der dezentralen Börse zwischen zwei Vermögenswerten mithilfe von Fill-or-Kill-Limit-Orders.",
     "stored_invoices": "Behalten Sie den Überblick über Ihre erstellten und empfangenen Rechnungen, um die Verwaltung und Zahlung zu vereinfachen.",
     "vote": "Abstimmungen sind ein wesentlicher Bestandteil des Delegated Proof of Stake, also stimmen Sie über Ausschussmitglieder, Zeugen und Arbeiter ab, um bei der Verwaltung der Blockchain mitzuhelfen!",
     "htlc": "Verwenden Sie das untenstehende Formular, um gehashte, zeitgesperrte Verträge zu erstellen, zu verlängern und einzulösen.",

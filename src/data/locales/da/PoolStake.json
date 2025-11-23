@@ -14,6 +14,7 @@
   "assetA": "Aktiv A",
   "assetB": "Aktiv B",
   "takerFee": "Taker Gebyr",
+  "withdrawFee": "Udbetalingsgebyr",
   "currentTotalAmountInPool": "Aktuelt samlet beløb i pulje",
   "stakingAssets": "Indsats af aktiver",
   "stakeAssets": "Indsats aktiver",

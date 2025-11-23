@@ -14,6 +14,7 @@
   "assetA": "สินทรัพย์ ก",
   "assetB": "สินทรัพย์ B",
   "takerFee": "ค่าธรรมเนียมผู้รับ",
+  "withdrawFee": "ค่าธรรมเนียมการถอนเงิน",
   "currentTotalAmountInPool": "จำนวนเงินรวมปัจจุบันในพูล",
   "stakingAssets": "การปักหลักสินทรัพย์",
   "stakeAssets": "สินทรัพย์เดิมพัน",

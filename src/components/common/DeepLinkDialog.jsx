@@ -425,11 +425,7 @@ export default function DeepLinkDialog(properties) {
                       {t("DeepLinkDialog:tabsContent.operationType")}
                     </span>
                     <Textarea
-                      value={JSON.stringify(
-                        [...new Set(operationNames)],
-                        null,
-                        4
-                      )}
+                      value={JSON.stringify(operationNames, null, 4)}
                       className="min-h-[125px]"
                       id="trxJSON"
                       readOnly

@@ -20,5 +20,8 @@
   "total_assetB": "Total {{assetB}}",
   "description": "Digite quanto {{assetB}} você quer vendendo {{assetA}}, você será correspondido com pedidos de lance existentes.",
   "balance": "Equilíbrio: {{balance}} {{asset}}",
+  "instant_trading_method": "Método de negociação instantânea",
+  "single_limit_order": "Ordem de limite único",
+  "multiple_limit_orders": "Vários pedidos com limite",
   "last_updated": "Última atualização: {{time}}"
 }

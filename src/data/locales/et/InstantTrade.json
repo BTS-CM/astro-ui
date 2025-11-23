@@ -20,5 +20,8 @@
   "total_assetB": "Kokku {{assetB}}",
   "description": "Sisestage, kui palju {{assetB}} tahad müües {{assetA}}, sobitatakse teid olemasolevate pakkumistellimustega.",
   "balance": "Saldo: {{balance}} {{asset}}",
+  "instant_trading_method": "Kiire kauplemismeetod",
+  "single_limit_order": "Ühekordne limiittellimus",
+  "multiple_limit_orders": "Mitu limiittellimust",
   "last_updated": "Viimati värskendatud: {{time}}"
 }

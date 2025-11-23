@@ -14,6 +14,7 @@
   "assetA": "Ativo A",
   "assetB": "Ativo B",
   "takerFee": "Taxa do tomador",
+  "withdrawFee": "Taxa de retirada",
   "currentTotalAmountInPool": "Valor total atual no pool",
   "stakingAssets": "Apostar ativos",
   "stakeAssets": "Ativos de aposta",

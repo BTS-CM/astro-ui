@@ -14,6 +14,7 @@
   "assetA": "Bene A",
   "assetB": "Bene B",
   "takerFee": "Commissione dell'acquirente",
+  "withdrawFee": "Commissione di prelievo",
   "currentTotalAmountInPool": "Importo totale attuale nel pool",
   "stakingAssets": "Asset di picchettamento",
   "stakeAssets": "Patrimonio in palio",

@@ -52,6 +52,7 @@
   "portuguese": "portugali (pt)",
   "thai": "Tai (th)",
   "descText": {
+    "instant_trade": "Kaubelge koheselt kahe vara vahelisel detsentraliseeritud börsil, kasutades täitmis- või tapmispiiranguid.",
     "stored_invoices": "Lihtsaks haldamiseks ja maksmiseks jälgige nii genereeritud kui ka saadud arveid.",
     "vote": "Hääletamine on osaluse delegeeritud tõendi lahutamatu osa, seega hääletage komisjoni liikmete, tunnistajate ja töötajate poolt, et aidata plokiahelat juhtida!",
     "htlc": "Kasutage allolevat vormi ajaliselt lukustatud räsilepingute loomiseks, pikendamiseks ja lunastamiseks.",

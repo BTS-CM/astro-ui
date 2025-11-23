@@ -20,5 +20,8 @@
   "total_assetB": "Total {{assetB}}",
   "description": "Entrez combien {{assetB}} tu veux en vendant {{assetA}}, vous serez mis en correspondance avec les ordres d'enchères existants.",
   "balance": "Équilibre: {{balance}} {{asset}}",
+  "instant_trading_method": "Méthode de trading instantanée",
+  "single_limit_order": "Ordre à cours limité",
+  "multiple_limit_orders": "Ordres limités multiples",
   "last_updated": "Dernière mise à jour : {{time}}"
 }

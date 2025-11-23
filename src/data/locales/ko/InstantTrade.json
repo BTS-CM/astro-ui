@@ -20,5 +20,8 @@
   "total_assetB": "총 {{assetB}}",
   "description": "얼마인지 입력하세요. {{assetB}} 당신은 판매하여 원하는 {{assetA}}, 기존 입찰 주문과 일치하게 됩니다.",
   "balance": "균형: {{balance}} {{asset}}",
+  "instant_trading_method": "즉시거래방식",
+  "single_limit_order": "단일 지정가 주문",
+  "multiple_limit_orders": "다중 지정가 주문",
   "last_updated": "마지막 업데이트: {{time}}"
 }
