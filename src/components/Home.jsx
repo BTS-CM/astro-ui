@@ -639,6 +639,13 @@ export default function Home(properties) {
             "Home:create_account.hover2",
           ],
         },
+        {
+          key: "theme",
+          href: "/theme/index.html",
+          titleKey: "Home:theme.title",
+          subtitleKey: "Home:theme.subtitle",
+          hoverKeys: ["Home:theme.hover1", "Home:theme.hover2"],
+        },
       ],
     },
   ];

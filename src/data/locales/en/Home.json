@@ -378,5 +378,11 @@
   "waveHero": {
     "title": "A Next Generation Bitshares Client!",
     "subtitle": "Built with the latest tech, designed for ease of use!"
+  },
+  "theme": {
+    "title": "🎨 Theme",
+    "subtitle": "Customize the look and feel of the UI",
+    "hover1": "Switch between different color themes.",
+    "hover2": "Choose a theme that suits your preference."
   }
 }

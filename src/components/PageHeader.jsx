@@ -407,6 +407,11 @@ export default function PageHeader(properties) {
       href: "/create_account/index.html",
       description: "Home:create_account.subtitle",
     },
+    {
+      title: "Home:theme.title",
+      href: "/theme/index.html",
+      description: "Home:theme.subtitle",
+    },
   ];
 
   const invoicingHeading = [

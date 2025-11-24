@@ -1,0 +1,12 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+import { ThemeSelector } from '@/components/ThemeSelector';
+---
+
+<Layout title="Theme Selector">
+    <PageHeader client:only="react" page="theme" backURL="../index.html" />
+    <ThemeSelector client:load />
+    <PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/theme.astro" />
+</Layout>

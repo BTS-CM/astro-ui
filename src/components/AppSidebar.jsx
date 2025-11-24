@@ -114,6 +114,7 @@ export default function AppSidebar() {
     { title: "Home:ltm.title", href: "/ltm/index.html" },
     { title: "Home:nodes.title", href: "/nodes/index.html" },
     { title: "Home:create_account.title", href: "/create_account/index.html" },
+    { title: "Home:theme.title", href: "/theme/index.html" },
   ];
 
   const invoicingHeading = [
