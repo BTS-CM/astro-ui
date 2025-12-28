@@ -33,6 +33,8 @@
     "ownerSearching": "Buscando por nombre del propietario",
     "ownerSearch": "Buscar por nombre del propietario",
     "noResults": "No se encontraron resultados",
-    "loading": "Cargando ofertas..."
+    "loading": "Cargando ofertas...",
+    "hideExpired": "Ocultar ofertas caducadas",
+    "showExpired": "Mostrar ofertas caducadas"
   }
 }

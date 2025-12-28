@@ -33,6 +33,8 @@
     "ownerSearching": "所有者名で検索する",
     "ownerSearch": "所有者名で検索",
     "noResults": "結果が見つかりませんでした",
-    "loading": "オファーを読み込んでいます..."
+    "loading": "オファーを読み込んでいます...",
+    "hideExpired": "期限切れのオファーを非表示",
+    "showExpired": "期限切れのオファーを表示"
   }
 }

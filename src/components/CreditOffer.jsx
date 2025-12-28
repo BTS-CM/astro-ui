@@ -107,8 +107,6 @@ export default function CreditOffer(properties) {
     _assetsTEST,
     _globalParamsBTS,
     _globalParamsTEST,
-    _offersBTS,
-    _offersTEST,
     _marketSearchBTS,
     _marketSearchTEST,
   } = properties;
@@ -165,13 +163,6 @@ export default function CreditOffer(properties) {
     return [];
   }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
-  const offers = useMemo(() => {
-    if (_chain && (_offersBTS || _offersTEST)) {
-      return _chain === "bitshares" ? _offersBTS : _offersTEST;
-    }
-    return [];
-  }, [_offersBTS, _offersTEST, _chain]);
-
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
@@ -199,50 +190,48 @@ export default function CreditOffer(properties) {
       return id;
     }
 
-    if (offers && offers.length) {
-      parseUrlAssets().then((id) => {
-        if (!id) {
-          setError(true);
-          return;
-        }
+    parseUrlAssets().then((id) => {
+      if (!id) {
+        setError(true);
+        return;
+      }
 
-        const offerStore = createObjectStore([
-          _chain,
-          JSON.stringify([id]),
-          currentNode ? currentNode.url : null,
-        ]);
-        offerStore.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const foundOffer = data[0];
-            if (foundOffer) {
-              if (_chain === "bitshares") {
-                const hashedID = toHex(
-                  sha256(utf8ToBytes(foundOffer.owner_account))
-                );
-                if (blocklist.users.includes(hashedID)) {
-                  // Credit offer is owned by a banned user
-                  setError(true);
-                  setRelevantOffer();
-                  setFoundAsset();
-                  return;
-                }
-              }
-
-              setRelevantOffer(foundOffer);
-              const foundAsset = assets.find(
-                (asset) => asset.id === foundOffer.asset_type
+      const offerStore = createObjectStore([
+        _chain,
+        JSON.stringify([id]),
+        currentNode ? currentNode.url : null,
+      ]);
+      offerStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const foundOffer = data[0];
+          if (foundOffer) {
+            if (_chain === "bitshares") {
+              const hashedID = toHex(
+                sha256(utf8ToBytes(foundOffer.owner_account))
               );
-              setError(false);
-              setFoundAsset(foundAsset);
+              if (blocklist.users.includes(hashedID)) {
+                // Credit offer is owned by a banned user
+                setError(true);
+                setRelevantOffer();
+                setFoundAsset();
+                return;
+              }
             }
+
+            setRelevantOffer(foundOffer);
+            const foundAsset = assets.find(
+              (asset) => asset.id === foundOffer.asset_type
+            );
+            setError(false);
+            setFoundAsset(foundAsset);
           }
-          if (error) {
-            setError(true);
-          }
-        });
+        }
+        if (error) {
+          setError(true);
+        }
       });
-    }
-  }, [_chain, offers]);
+    });
+  }, [_chain, assets, currentNode, blocklist]);
 
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);

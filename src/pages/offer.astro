@@ -24,8 +24,6 @@ const btsMarketDataData = btsMarketData.map(collection => collection.data);
 const testMarketDataData = testMarketData.map(collection => collection.data);
 const btsFeeScheduleData = btsFeeSchedule.map(collection => collection.data);
 const testFeeScheduleData = testFeeSchedule.map(collection => collection.data);
-const btsOffersData = btsOffers.map(collection => collection.data);
-const testOffersData = testOffers.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares credit deal">
@@ -37,8 +35,6 @@ const testOffersData = testOffers.map(collection => collection.data);
 			_assetsTEST={testAllAssetsData}
 			_marketSearchBTS={btsMarketDataData}
 			_marketSearchTEST={testMarketDataData}
-			_offersBTS={btsOffersData}
-			_offersTEST={testOffersData}
 			_globalParamsBTS={btsFeeScheduleData}
 			_globalParamsTEST={testFeeScheduleData}
 		/>

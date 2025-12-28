@@ -1,13 +1,7 @@
 import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
-
-const MAXIMUM_CREDIT_OFFERS = 1000;
-const BTS_LIMIT = 50;
-const TEST_LIMIT = 10;
-
-const MAX_BTS_ITERATIONS = MAXIMUM_CREDIT_OFFERS / BTS_LIMIT;
-const MAX_TEST_ITERATIONS = MAXIMUM_CREDIT_OFFERS / TEST_LIMIT;
+import { getObjects } from "./src/common";
 
 // Retrieve all active credit offers from the blockchain
 function getCreditOffers(chain: string, specificNode?: string | null) {
@@ -38,67 +32,67 @@ function getCreditOffers(chain: string, specificNode?: string | null) {
         .exec("get_next_object_id", [1, 21, false]);
     } catch (error) {
       console.log({ error });
+      currentAPI.close();
       reject(error);
       return;
     }
 
     const latestObjectIDNumber = parseInt(latestObjectID.split(".")[2], 10);
 
-    let limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
-    let allOffers: any[] = [];
-    let start_id = null;
+    const objectIds = Array.from(
+      { length: latestObjectIDNumber },
+      (_, i) => `1.21.${i}`
+    );
 
-    let firstPageOffers;
+    let allOffers: any[];
     try {
-      firstPageOffers = await currentAPI
-        .db_api()
-        .exec("list_credit_offers", [limit]);
+      allOffers = (await getObjects(
+        chain,
+        objectIds,
+        node,
+        currentAPI
+      )) as any[];
     } catch (error) {
-      console.log({ error });
+      console.log(error);
+      currentAPI.close();
       reject(error);
       return;
     }
 
-    if (firstPageOffers && firstPageOffers.length) {
-      let lastOfferIDNumber = parseInt(
-        firstPageOffers[firstPageOffers.length - 1].id.split(".")[2],
-        10
-      );
-
-      let totalItems = latestObjectIDNumber - lastOfferIDNumber;
-
-      let totalFetches = Math.min(
-        Math.ceil(totalItems / limit),
-        chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS
-      );
-
-      allOffers.push(...firstPageOffers);
-
-      start_id = firstPageOffers[firstPageOffers.length - 1].id;
-
-      // Use a for loop for the remaining fetches
-      for (let i = 1; i < totalFetches; i++) {
-        let options = [limit, start_id];
-        let pageOffers;
-        try {
-          pageOffers = await currentAPI
-            .db_api()
-            .exec("list_credit_offers", options);
-        } catch (error) {
-          console.log({ error });
-          reject(error);
-          return;
-        }
-        if (!pageOffers || pageOffers.length) {
-          break;
-        }
-        allOffers.push(...pageOffers);
-        start_id = pageOffers[pageOffers.length - 1].id;
-      }
+    if (!allOffers || !allOffers.length) {
+      currentAPI.close();
+      resolve([]);
+      return;
     }
 
+    let fetchedAccounts: any[];
+    try {
+      fetchedAccounts = (await getObjects(
+        chain,
+        [...new Set(allOffers.map((x) => x.owner_account))],
+        node,
+        currentAPI
+      )) as any[];
+    } catch (error) {
+      console.log(error);
+      currentAPI.close();
+      reject(error);
+      return;
+    }
+
+    const data = allOffers.map((offer) => {
+      const account = fetchedAccounts.find(
+        (account) => account.id === offer.owner_account
+      );
+
+      return {
+        ...offer,
+        owner_name: account ? account.name : "Unknown",
+      };
+    });
+
     currentAPI.close();
-    resolve(allOffers);
+    resolve(data);
   });
 }
 

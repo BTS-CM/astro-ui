@@ -11,6 +11,7 @@ import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
+import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/card";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createCreditOfferStore } from "@/nanoeffects/CreditOffers.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
@@ -66,7 +68,7 @@ export default function CreditBorrow(properties) {
 
   const currentNode = useStore($currentNode);
 
-  const { _assetsBTS, _assetsTEST, _offersBTS, _offersTEST } = properties;
+  const { _assetsBTS, _assetsTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -84,16 +86,35 @@ export default function CreditBorrow(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
+  const [allOffers, setAllOffers] = useState([]);
+  const [showExpired, setShowExpired] = useState(false);
+
+  useEffect(() => {
+    async function fetchCreditOffers() {
+      const creditOfferStore = createCreditOfferStore([
+        _chain,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      creditOfferStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setAllOffers(data);
+        }
+      });
+    }
+
+    fetchCreditOffers();
+  }, [_chain, currentNode]);
+
   const offers = useMemo(() => {
-    if (_chain && (_offersBTS || _offersTEST)) {
-      let currentOffers =
-        _chain === "bitshares"
-          ? _offersBTS.filter(
-              (x) => hoursTillExpiration(x.auto_disable_time) >= 0
-            )
-          : _offersTEST.filter(
-              (x) => hoursTillExpiration(x.auto_disable_time) >= 0
-            );
+    if (_chain && allOffers && allOffers.length) {
+      let currentOffers = allOffers;
+
+      if (!showExpired) {
+        currentOffers = currentOffers.filter(
+          (x) => hoursTillExpiration(x.auto_disable_time) >= 0
+        );
+      }
 
       if (_chain === "bitshares" && blocklist && blocklist.users) {
         // Discard offers from banned users
@@ -108,7 +129,7 @@ export default function CreditBorrow(properties) {
       return currentOffers;
     }
     return [];
-  }, [_offersBTS, _offersTEST, _chain]);
+  }, [allOffers, _chain, blocklist, showExpired]);
 
   const [activeTab, setActiveTab] = useState("allOffers");
   const [activeSearch, setActiveSearch] = useState("borrow"); // borrow, collateral, owner_name
@@ -494,13 +515,29 @@ export default function CreditBorrow(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
-              <CardTitle>{t("CreditBorrow:card.title")}</CardTitle>
-              <CardDescription>
-                {t("CreditBorrow:card.description")}
-              </CardDescription>
+              <div className="flex flex-row justify-between items-center">
+                <div>
+                  <CardTitle>{t("CreditBorrow:card.title")}</CardTitle>
+                  <CardDescription>
+                    {t("CreditBorrow:card.description")}
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowExpired(!showExpired)}
+                  title={
+                    showExpired
+                      ? t("CreditBorrow:card.hideExpired")
+                      : t("CreditBorrow:card.showExpired")
+                  }
+                >
+                  {showExpired ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
-              {offers && offers.length && activeTab ? (
+              {allOffers && allOffers.length && activeTab ? (
                 <>
                   <div className="w-full">
                     <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-2">

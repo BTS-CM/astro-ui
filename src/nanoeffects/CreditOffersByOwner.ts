@@ -1,13 +1,7 @@
 import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
-
-const MAXIMUM_CREDIT_OFFERS = 1000;
-const BTS_LIMIT = 50;
-const TEST_LIMIT = 10;
-
-const MAX_BTS_ITERATIONS = MAXIMUM_CREDIT_OFFERS / BTS_LIMIT;
-const MAX_TEST_ITERATIONS = MAXIMUM_CREDIT_OFFERS / TEST_LIMIT;
+import { getObjects } from "./src/common";
 
 // Retrieve credit offers by their owner from the blockchain
 function getCreditOffersByOwner(
@@ -35,74 +29,73 @@ function getCreditOffersByOwner(
       return;
     }
 
-    let latestObjectID;
-    try {
-      latestObjectID = await currentAPI
-        .db_api()
-        .exec("get_next_object_id", [1, 21, false]);
-    } catch (error) {
-      console.log({ error });
-      reject(error);
-      return;
-    }
-
-    const latestObjectIDNumber = parseInt(latestObjectID.split(".")[2], 10);
-
-    let limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
+    const limit = 100;
     let creditOffers: any[] = [];
-    let start_id = null;
+    let last_id = null;
 
-    let firstPageOffers;
-    try {
-      firstPageOffers = await currentAPI
-        .db_api()
-        .exec("get_credit_offers_by_owner", [account_name_or_id, limit]);
-    } catch (error) {
-      console.log({ error });
-      reject(error);
-      return;
-    }
+    while (true) {
+      let pageOffers;
+      try {
+        pageOffers = await currentAPI
+          .db_api()
+          .exec("get_credit_offers_by_owner", [
+            account_name_or_id,
+            limit,
+            last_id,
+          ]);
+      } catch (error) {
+        console.log({ error });
+        currentAPI.close();
+        reject(error);
+        return;
+      }
 
-    if (firstPageOffers && firstPageOffers.length) {
-      creditOffers.push(...firstPageOffers);
+      if (!pageOffers || !pageOffers.length) {
+        break;
+      }
 
-      let lastOfferIDNumber = parseInt(
-        firstPageOffers[firstPageOffers.length - 1].id.split(".")[2],
-        10
-      );
-      let totalItems = latestObjectIDNumber - lastOfferIDNumber;
+      // If we have a last_id, the first element of pageOffers is the same as the last element of the previous page
+      const newOffers = last_id ? pageOffers.slice(1) : pageOffers;
+      if (newOffers.length === 0) {
+        break;
+      }
 
-      if (totalItems > 0) {
-        let totalFetches = Math.min(
-          Math.ceil(totalItems / limit),
-          chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS
-        );
+      creditOffers.push(...newOffers);
+      last_id = pageOffers[pageOffers.length - 1].id;
 
-        start_id = firstPageOffers[firstPageOffers.length - 1].id;
-
-        for (let i = 1; i < totalFetches; i++) {
-          let options = [account_name_or_id, limit, start_id];
-          let pageOffers;
-          try {
-            pageOffers = await currentAPI
-              .db_api()
-              .exec("get_credit_offers_by_owner", options);
-          } catch (error) {
-            console.log({ error });
-            reject(error);
-            return;
-          }
-          if (!pageOffers || pageOffers.length) {
-            break;
-          }
-          creditOffers.push(...pageOffers);
-          start_id = pageOffers[pageOffers.length - 1].id;
-        }
+      if (pageOffers.length < limit) {
+        break;
       }
     }
 
+    if (!creditOffers.length) {
+      currentAPI.close();
+      resolve([]);
+      return;
+    }
+
+    // Fetch owner name if not already known or to ensure consistency
+    let fetchedAccount: any;
+    try {
+      const accountData = (await getObjects(
+        chain,
+        [creditOffers[0].owner_account],
+        node,
+        currentAPI
+      )) as any[];
+      fetchedAccount =
+        accountData && accountData.length ? accountData[0] : null;
+    } catch (error) {
+      console.log(error);
+    }
+
+    const data = creditOffers.map((offer) => ({
+      ...offer,
+      owner_name: fetchedAccount ? fetchedAccount.name : "Unknown",
+    }));
+
     currentAPI.close();
-    resolve(creditOffers);
+    resolve(data);
   });
 }
 

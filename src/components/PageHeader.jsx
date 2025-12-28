@@ -52,55 +52,6 @@ import { NavigationMenuIndicator } from "@radix-ui/react-navigation-menu";
 // Sidebar imports
 // Use the same Button component as the language dropdown so the appearance matches
 
-function MenuRow(properties) {
-  const { url, text, icon } = properties;
-
-  const [hover, setHover] = useState(false);
-  const [isCurrentPage, setIsCurrentPage] = useState(false);
-
-  useEffect(() => {
-    setIsCurrentPage(window.location.pathname === url);
-  }, [url]);
-
-  const [clicked, setClicked] = useState(false);
-
-  return (
-    <a
-      href={url}
-      onClick={() => {
-        setClicked(true);
-        if (window.location.pathname === "/blocks/index.html") {
-          window.electron.stopBlocks({});
-        }
-      }}
-    >
-      <CommandItem
-        onMouseEnter={() => {
-          setHover(true);
-        }}
-        onMouseLeave={() => {
-          setHover(false);
-        }}
-        style={{
-          backgroundColor: hover || isCurrentPage ? "#F1F1F1" : "",
-        }}
-      >
-        <span className="grid grid-cols-8 w-full">
-          <span className="col-span-1">{icon}</span>
-          <span className="col-span-6">{text}</span>
-          <span className="col-span-1 text-right">
-            {clicked && !isCurrentPage ? (
-              <ReloadIcon className="ml-2 mt-1 animate-spin" />
-            ) : (
-              ""
-            )}
-          </span>
-        </span>
-      </CommandItem>
-    </a>
-  );
-}
-
 function LanguageRow(properties) {
   const { language, text, i18n } = properties;
 

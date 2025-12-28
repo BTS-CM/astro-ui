@@ -1,6 +1,13 @@
-import React, { useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { List } from "react-window";
 import { useTranslation } from "react-i18next";
+import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
+import { useStore } from "@nanostores/react";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -25,8 +32,10 @@ import {
 } from "@/components/ui/empty";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createCreditOfferByOwnerStore } from "@/nanoeffects/CreditOffersByOwner.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -47,7 +56,9 @@ export default function CreditOffers(properties) {
     () => true
   );
 
-  const { _assetsBTS, _assetsTEST, _offersBTS, _offersTEST } = properties;
+  const currentNode = useStore($currentNode);
+
+  const { _assetsBTS, _assetsTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -65,22 +76,43 @@ export default function CreditOffers(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
+  const [allOffers, setAllOffers] = useState([]);
+  const [showExpired, setShowExpired] = useState(false);
+
+  useEffect(() => {
+    async function fetchUserOffers() {
+      if (usr && usr.id) {
+        const userOffersStore = createCreditOfferByOwnerStore([
+          _chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
+
+        userOffersStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setAllOffers(data);
+          }
+        });
+      }
+    }
+
+    fetchUserOffers();
+  }, [_chain, usr, currentNode]);
+
   const offers = useMemo(() => {
-    if (_chain && (_offersBTS || _offersTEST)) {
-      return _chain === "bitshares"
-        ? _offersBTS.filter(
-            (x) =>
-              hoursTillExpiration(x.auto_disable_time) >= 0 &&
-              x.owner_account === usr.id
-          )
-        : _offersTEST.filter(
-            (x) =>
-              hoursTillExpiration(x.auto_disable_time) >= 0 &&
-              x.owner_account === usr.id
-          );
+    if (_chain && allOffers && allOffers.length) {
+      let currentOffers = allOffers;
+
+      if (!showExpired) {
+        currentOffers = currentOffers.filter(
+          (x) => hoursTillExpiration(x.auto_disable_time) >= 0
+        );
+      }
+
+      return currentOffers;
     }
     return [];
-  }, [_offersBTS, _offersTEST, _chain, usr]);
+  }, [allOffers, _chain, showExpired]);
 
   function CommonRow({ index, style, res, foundAsset }) {
     return (
@@ -212,10 +244,26 @@ export default function CreditOffers(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
-              <CardTitle>{t("CreditOffers:card.title")}</CardTitle>
-              <CardDescription>
-                {t("CreditOffers:card.description")}
-              </CardDescription>
+              <div className="flex flex-row justify-between items-center">
+                <div>
+                  <CardTitle>{t("CreditOffers:card.title")}</CardTitle>
+                  <CardDescription>
+                    {t("CreditOffers:card.description")}
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowExpired(!showExpired)}
+                  title={
+                    showExpired
+                      ? t("CreditBorrow:card.hideExpired")
+                      : t("CreditBorrow:card.showExpired")
+                  }
+                >
+                  {showExpired ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <>

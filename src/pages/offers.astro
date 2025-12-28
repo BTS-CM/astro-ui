@@ -9,13 +9,8 @@ import PageFooter from '../components/PageFooter';
 const btsAllAssets = await getCollection('btsAllAssets');
 const testAllAssets = await getCollection('testAllAssets');
 
-const btsOffers = await getCollection('btsOffers');
-const testOffers = await getCollection('testOffers');
-
 const btsAllAssetsData = btsAllAssets.map(collection => collection.data);
 const testAllAssetsData = testAllAssets.map(collection => collection.data);
-const btsOffersData = btsOffers.map(collection => collection.data);
-const testOffersData = testOffers.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares credit offer listings">
@@ -25,8 +20,6 @@ const testOffersData = testOffers.map(collection => collection.data);
 			client:only="react"
 			_assetsBTS={btsAllAssetsData}
 			_assetsTEST={testAllAssetsData}
-			_offersBTS={btsOffersData}
-			_offersTEST={testOffersData}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offers.astro" />
 	</main>
