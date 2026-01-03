@@ -415,7 +415,7 @@ export default function CreditOfferEditor(properties) {
     }
     const _operation = {
       owner_account: usr.id,
-      fee_rate: parseInt(rate * 100),
+      fee_rate: parseInt(rate * 10000),
       max_duration_seconds: repaymentPeriods[repayPeriod],
       min_deal_amount: blockchainFloat(
         minimumBorowAmount,
