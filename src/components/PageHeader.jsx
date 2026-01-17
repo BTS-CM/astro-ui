@@ -257,12 +257,15 @@ export default function PageHeader(properties) {
     },
   ];
 
-  const blockchainOverviewsHeading = [
+  /*
+    // Removed for now...
     {
       title: "Home:featured.title",
       href: "/featured/index.html",
       description: "Home:featured.subtitle",
     },
+  */
+  const blockchainOverviewsHeading = [
     {
       title: "Home:blocks.title",
       href: "/blocks/index.html",

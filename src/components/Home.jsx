@@ -106,6 +106,17 @@ export default function Home(properties) {
         "Home:portfolio_recent_activity.hover3",
       ],
     },
+    {
+      key: "featured",
+      href: "/featured/index.html",
+      titleKey: "Home:featured.title",
+      subtitleKey: "Home:featured.subtitle",
+      hoverKeys: [
+        "Home:featured.hover1",
+        "Home:featured.hover2",
+        "Home:featured.hover3",
+      ],
+    },
   */
 
   const accordionSections = [
@@ -432,17 +443,6 @@ export default function Home(properties) {
       icon: "⛓️",
       headingKey: "PageHeader:blockchainOverviewsHeading",
       cards: [
-        {
-          key: "featured",
-          href: "/featured/index.html",
-          titleKey: "Home:featured.title",
-          subtitleKey: "Home:featured.subtitle",
-          hoverKeys: [
-            "Home:featured.hover1",
-            "Home:featured.hover2",
-            "Home:featured.hover3",
-          ],
-        },
         {
           key: "blocks",
           href: "/blocks/index.html",

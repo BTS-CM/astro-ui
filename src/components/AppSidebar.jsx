@@ -89,8 +89,8 @@ export default function AppSidebar() {
     { title: "Home:proposals.title", href: "/proposals/index.html" },
   ];
 
+  // { title: "Home:featured.title", href: "/featured/index.html" }, // Removed for now
   const blockchainOverviewsHeading = [
-    { title: "Home:featured.title", href: "/featured/index.html" },
     { title: "Home:blocks.title", href: "/blocks/index.html" },
     {
       title: "Home:custom_pool_tracker.title",
