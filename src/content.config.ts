@@ -19,7 +19,7 @@ const btsFeeSchedule = defineCollection({
         });
         console.log(
           "Successfully parsed and preprocessed fees:",
-          preprocessedData.length
+          preprocessedData.length,
         );
         return preprocessedData;
       } catch (error) {
@@ -44,7 +44,7 @@ const testFeeSchedule = defineCollection({
         });
         console.log(
           "Successfully parsed and preprocessed fees:",
-          preprocessedData.length
+          preprocessedData.length,
         );
         return preprocessedData;
       } catch (error) {
@@ -80,7 +80,7 @@ const offerSchema = z.object({
           asset_id: z.string(),
         }),
       }),
-    ])
+    ]),
   ),
   acceptable_borrowers: z.array(z.unknown()),
   owner_name: z.string(),
@@ -205,55 +205,6 @@ const allPoolSchema = z.object({
     total_exchange_fee_a: z.string(),
     total_exchange_fee_b: z.string(),
   }),
-  details: z.object({
-    asset_a: z.object({
-      symbol: z.string(),
-      float: z.number(),
-    }),
-    asset_b: z.object({
-      symbol: z.string(),
-      float: z.number(),
-    }),
-    share_asset: z.object({
-      symbol: z.string(),
-      float: z.number(),
-      holders: z.number(),
-      value: z.object({
-        total_withdraw_value_in_core: z.union([z.null(), z.number()]),
-        withdraw_value_a: z.union([z.null(), z.number()]),
-        withdraw_value_b: z.union([z.null(), z.number()]),
-        market_value_in_core: z.number(),
-      }),
-      warnings: z.object({
-        may_use_override_transfer: z.boolean(),
-        may_whitelist: z.boolean(),
-      }),
-    }),
-    price_sell_a_per_percent: z.object({
-      "1": z.number(),
-      "5": z.number(),
-      "10": z.number(),
-      unit: z.string(),
-    }),
-    price_sell_b_per_percent: z.object({
-      "1": z.number(),
-      "5": z.number(),
-      "10": z.number(),
-      unit: z.string(),
-    }),
-    value_in_core: z.number(),
-    ticker: z.object({
-      volume_a_24h: z.number(),
-      volume_b_24h: z.number(),
-      delta_a_24h: z.number(),
-      delta_b_24h: z.number(),
-      apy_24h_in_core: z.union([z.null(), z.number()]),
-      apy_in_core: z.union([z.null(), z.number()]),
-      total_volume_24h_in_core: z.number(),
-    }),
-    activity: z.number(),
-    score: z.number(),
-  }),
 });
 
 const btsAllPools = defineCollection({
@@ -344,7 +295,7 @@ const marketDataSchema = z.object({
 const compressMarketData = (assets: any, issuers: any) => {
   return assets.map((asset: any) => {
     const thisIssuer = issuers.find(
-      (issuer: any) => issuer.id === asset.issuer
+      (issuer: any) => issuer.id === asset.issuer,
     );
     const issuerString = `${thisIssuer?.name ?? "???"} (${asset.issuer}) ${
       thisIssuer?.ltm ? "(LTM)" : ""
@@ -365,13 +316,13 @@ const btsMarketData = defineCollection({
         const assets = JSON.parse(text);
         console.log(
           "Successfully parsed assets for btsMarketData:",
-          assets.length
+          assets.length,
         );
         return compressMarketData(assets, bts_assetIssuers);
       } catch (error) {
         console.error(
           "Error parsing JSON from allAssets.json for btsMarketData:",
-          error
+          error,
         );
         throw error;
       }
@@ -387,13 +338,13 @@ const testMarketData = defineCollection({
         const assets = JSON.parse(text);
         console.log(
           "Successfully parsed assets for testMarketData:",
-          assets.length
+          assets.length,
         );
         return compressMarketData(assets, test_assetIssuers);
       } catch (error) {
         console.error(
           "Error parsing JSON from allAssets.json for testMarketData:",
-          error
+          error,
         );
         throw error;
       }
