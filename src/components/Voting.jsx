@@ -57,13 +57,13 @@ export default function Witnesses(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
-    () => true
+    () => true,
   );
   const currentNode = useStore($currentNode);
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
-    () => true
+    () => true,
   );
 
   const _chain = useMemo(() => {
@@ -168,8 +168,8 @@ export default function Witnesses(properties) {
               filteredData = filteredData.filter(
                 (witness) =>
                   !blocklist.users.includes(
-                    toHex(sha256(utf8ToBytes(witness.witness_account)))
-                  )
+                    toHex(sha256(utf8ToBytes(witness.witness_account))),
+                  ),
               );
             }
             setAllWitnesses(filteredData);
@@ -202,8 +202,8 @@ export default function Witnesses(properties) {
               filteredData = filteredData.filter(
                 (comm) =>
                   !blocklist.users.includes(
-                    toHex(sha256(utf8ToBytes(comm.committee_member_account)))
-                  )
+                    toHex(sha256(utf8ToBytes(comm.committee_member_account))),
+                  ),
               );
             }
             setAllCommitteeMembers(filteredData);
@@ -237,15 +237,15 @@ export default function Witnesses(properties) {
                 filteredData = filteredData.filter(
                   (comm) =>
                     !blocklist.users.includes(
-                      toHex(sha256(utf8ToBytes(comm.worker_account)))
-                    )
+                      toHex(sha256(utf8ToBytes(comm.worker_account))),
+                    ),
                 );
               }
               setAllWorkerProposals(filteredData);
             } else if (error) {
               console.error("Error fetching all worker proposals:", error);
             }
-          }
+          },
         );
       }
     }
@@ -266,14 +266,14 @@ export default function Witnesses(properties) {
         const _witnessAccountIDs = allWitnesses.map((w) => w.witness_account);
         const uniqueWitnessAccountIds = [...new Set(_witnessAccountIDs)];
         const _committeeMmberAccountIDs = allCommitteeMembers.map(
-          (cm) => cm.committee_member_account
+          (cm) => cm.committee_member_account,
         );
         const uniqueCommitteeAccountIds = [
           ...new Set(_committeeMmberAccountIDs),
         ];
 
         const _workerAccountIDs = allWorkerProposals.map(
-          (wp) => wp.worker_account
+          (wp) => wp.worker_account,
         );
         const uniqueWorkerAccountIds = [...new Set(_workerAccountIDs)];
 
@@ -341,7 +341,7 @@ export default function Witnesses(properties) {
       })
       .filter(Boolean) // Remove null entries
       .filter((witness) =>
-        witness.name.toLowerCase().includes(filter.toLowerCase())
+        witness.name.toLowerCase().includes(filter.toLowerCase()),
       ); // Apply filter
   }, [allWitnesses, allFetchedAccounts, activeWitnessIds, filter]);
 
@@ -361,7 +361,7 @@ export default function Witnesses(properties) {
       })
       .filter(Boolean) // Remove null entries
       .filter((member) =>
-        member.name.toLowerCase().includes(filter.toLowerCase())
+        member.name.toLowerCase().includes(filter.toLowerCase()),
       );
   }, [allCommitteeMembers, allFetchedAccounts, activeCommitteeMembers, filter]);
 
@@ -403,7 +403,7 @@ export default function Witnesses(properties) {
       })
       .filter(Boolean) // Remove null entries
       .filter((member) =>
-        member.name.toLowerCase().includes(filter.toLowerCase())
+        member.name.toLowerCase().includes(filter.toLowerCase()),
       );
   }, [allWorkerProposals, allFetchedAccounts, filter]);
 
@@ -534,7 +534,7 @@ export default function Witnesses(properties) {
     debounce((value) => {
       setFilter(value);
     }, 300),
-    []
+    [],
   );
 
   function calculateNeededVotes(_workerProposal) {
@@ -542,7 +542,7 @@ export default function Witnesses(properties) {
     let remainingBudget = 400000 - consumedBudget;
     const requiredPay = humanReadableFloat(
       parseInt(_workerProposal.daily_pay),
-      5
+      5,
     );
     for (let i = budgetConsumers.length - 1; i >= 0; i--) {
       const bc = budgetConsumers[i];
@@ -579,13 +579,13 @@ export default function Witnesses(properties) {
     // "1:" = witness
     // "2:" = worker
     const _committeeVotes = votes.filter(
-      (v) => typeof v === "string" && v.startsWith("0:")
+      (v) => typeof v === "string" && v.startsWith("0:"),
     );
     const _witnessVotes = votes.filter(
-      (v) => typeof v === "string" && v.startsWith("1:")
+      (v) => typeof v === "string" && v.startsWith("1:"),
     );
     const _workerVotes = votes.filter(
-      (v) => typeof v === "string" && v.startsWith("2:")
+      (v) => typeof v === "string" && v.startsWith("2:"),
     );
     setCommitteeVotes(_committeeVotes);
     setWitnessVotes(_witnessVotes);
@@ -661,7 +661,7 @@ export default function Witnesses(properties) {
               <div>
                 {humanReadableFloat(witness.total_votes, 5).toLocaleString(
                   undefined,
-                  { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+                  { minimumFractionDigits: 0, maximumFractionDigits: 0 },
                 )}
               </div>
               <div>
@@ -669,7 +669,7 @@ export default function Witnesses(properties) {
                   onClick={() => {
                     if (isToggled) {
                       setWitnessVotes((prev) =>
-                        prev.filter((v) => v !== witness.vote_id)
+                        prev.filter((v) => v !== witness.vote_id),
                       );
                     } else {
                       setWitnessVotes((prev) => [...prev, witness.vote_id]);
@@ -736,7 +736,7 @@ export default function Witnesses(properties) {
               <div>
                 {humanReadableFloat(member.total_votes, 5).toLocaleString(
                   undefined,
-                  { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+                  { minimumFractionDigits: 0, maximumFractionDigits: 0 },
                 )}
                 {_chain === "bitshares" ? " BTS" : " TEST"}
               </div>
@@ -746,7 +746,7 @@ export default function Witnesses(properties) {
                     if (isToggled) {
                       // Remove vote
                       setCommitteeVotes((prev) =>
-                        prev.filter((v) => v !== member.vote_id)
+                        prev.filter((v) => v !== member.vote_id),
                       );
                     } else {
                       // Add vote
@@ -792,14 +792,24 @@ export default function Witnesses(properties) {
                 </span>
               </div>
               <div className="col-span-3 grid grid-cols-1">
-                <span className="text-blue-500 hover:text-purple-500">
-                  {worker.username}
-                </span>{" "}
-                (
-                <span className="text-blue-500 hover:text-purple-500">
-                  {worker.worker_account}
-                </span>
-                )
+                <div title={worker.name}>
+                  {worker.name.length > 20
+                    ? `${worker.name.slice(0, 20)}...`
+                    : worker.name}
+                </div>
+                <div>
+                  <span className="text-blue-500 hover:text-purple-500">
+                    {worker.username}
+                  </span>{" "}
+                  (
+                  <span className="text-blue-500 hover:text-purple-500">
+                    {worker.worker_account}
+                  </span>
+                  )
+                </div>
+              </div>
+              <div className="hidden md:block col-span-2">
+                {worker.readableVotesFor}
               </div>
               <div className="hidden md:block">
                 {calculateNeededVotes(worker)}
@@ -813,7 +823,7 @@ export default function Witnesses(properties) {
                   onClick={() => {
                     if (isToggled) {
                       setWorkerVotes((prev) =>
-                        prev.filter((v) => v !== worker.vote_for)
+                        prev.filter((v) => v !== worker.vote_for),
                       );
                     } else {
                       setWorkerVotes((prev) => [...prev, worker.vote_for]);

@@ -93,7 +93,7 @@ export default function Htlc(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
-    () => true
+    () => true,
   );
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -244,9 +244,7 @@ export default function Htlc(properties) {
         <Card className="m-2 w-full md:w-1/2">
           <CardContent className="pt-3 pb-1 text-sm">
             <div className="grid grid-cols-6 gap-1 items-center">
-              <div className="col-span-1">
-                {id}
-              </div>
+              <div className="col-span-1">{id}</div>
               <div className="col-span-1">{toAccountName}</div>
               <div className="col-span-1">
                 {formattedAmount} {asset?.symbol ?? asset_id}
@@ -408,9 +406,7 @@ export default function Htlc(properties) {
         <Card className="m-2">
           <CardContent className="pt-3 pb-1 text-sm">
             <div className="grid grid-cols-6 gap-1 items-center">
-              <div className="col-span-1">
-                {id}
-              </div>
+              <div className="col-span-1">{id}</div>
               <div className="col-span-1">{fromAccountName}</div>
               <div className="col-span-1">
                 {formattedAmount} {asset?.symbol ?? asset_id}
