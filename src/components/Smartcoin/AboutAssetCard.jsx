@@ -82,7 +82,7 @@ export default function AboutAssetCard({
                           {JSON.stringify(
                             { fullAssetInfo, fullBitassetInfo },
                             null,
-                            2
+                            2,
                           )}
                         </pre>
                       </ScrollArea>
@@ -258,6 +258,10 @@ export default function AboutAssetCard({
                 </Button>
               </div>
             </div>
+
+            <div className="grid grid-cols-11 gap-1 w-full text-sm">
+              <div className="col-span-5">
+                <div className="grid grid-cols-1 gap-1 w-full text-sm">
                   <CardRow
                     title={t("Smartcoin:collateralAsset")}
                     button={
