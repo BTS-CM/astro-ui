@@ -52,8 +52,8 @@ const run = async () => {
         asset_b_symbol: symbolMap[pool.asset_b],
         share_asset_symbol: symbolMap[pool.share_asset],
         share_asset_id: pool.share_asset,
-        balance_a: parseInt(pool.balance_a),
-        balance_b: parseInt(pool.balance_b),
+        balance_a: pool.balance_a,
+        balance_b: pool.balance_b,
         taker_fee_percent: pool.taker_fee_percent,
         withdrawal_fee_percent: pool.withdrawal_fee_percent,
       };
@@ -77,8 +77,8 @@ const run = async () => {
         bs: symbolMap[pool.asset_b],
         sa: symbolMap[pool.share_asset],
         said: pool.share_asset,
-        ba: parseInt(pool.balance_a),
-        bb: parseInt(pool.balance_b),
+        ba: pool.balance_a,
+        bb: pool.balance_b,
         tfp: pool.taker_fee_percent,
       };
     });

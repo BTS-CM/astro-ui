@@ -62,13 +62,23 @@ function fetchLiquidityPools(
       for (let i = 1; i < iterations; i++) {
         let nextPage;
         try {
+          // Compute a start id that is one higher than the last fetched id's numeric suffix.
+          // The DB API treats the start id as inclusive, so passing the last id returns it again.
+          let startId = pools[pools.length - 1].id;
+          try {
+            const parts = startId.split(".");
+            const lastNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(lastNum)) {
+              parts[parts.length - 1] = String(lastNum + 1);
+              startId = parts.join(".");
+            }
+          } catch (e) {
+            // if anything goes wrong, fall back to the original id (existing behavior)
+          }
+
           nextPage = await currentAPI
             .db_api()
-            .exec("list_liquidity_pools", [
-              limit,
-              pools[pools.length - 1].id,
-              true,
-            ]);
+            .exec("list_liquidity_pools", [limit, startId, true]);
         } catch (error) {
           console.log({ error });
           if (!existingAPI) {
@@ -79,7 +89,11 @@ function fetchLiquidityPools(
         }
 
         if (nextPage && nextPage.length) {
-          pools = [...pools, ...nextPage];
+          const isDuplicate = nextPage[0].id === pools[pools.length - 1].id;
+          const newItems = isDuplicate ? nextPage.slice(1) : nextPage;
+          if (newItems.length > 0) {
+            pools = [...pools, ...newItems];
+          }
           if (nextPage.length < limit) {
             break;
           }
