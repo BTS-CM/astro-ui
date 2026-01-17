@@ -136,13 +136,13 @@ export default function CreditOfferEditor(properties) {
         }
       }
     }, 25),
-    []
+    [],
   );
 
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
-    () => true
+    () => true,
   );
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
@@ -206,7 +206,7 @@ export default function CreditOfferEditor(properties) {
         userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id)
+              assets.find((x) => x.id === balance.asset_id),
             );
             setBalances(filteredData);
           }
@@ -241,7 +241,7 @@ export default function CreditOfferEditor(properties) {
       }
       const readableBalance = humanReadableFloat(
         _balance.amount,
-        foundAsset.precision
+        foundAsset.precision,
       );
       setFoundAssetBalance(readableBalance);
     } else {
@@ -302,7 +302,7 @@ export default function CreditOfferEditor(properties) {
           setOfferOwner(_data.owner_account);
           setSelectedAsset(_lendingAsset.symbol);
           setLendingAmount(
-            humanReadableFloat(_data.total_balance, _lendingAsset.precision)
+            humanReadableFloat(_data.total_balance, _lendingAsset.precision),
           );
           setRate(_data.fee_rate ? _data.fee_rate / 10000 : 0);
           setRepayPeriod(
@@ -310,25 +310,25 @@ export default function CreditOfferEditor(properties) {
               Math.abs(repaymentPeriods[a] - _data.max_duration_seconds) <
               Math.abs(repaymentPeriods[b] - _data.max_duration_seconds)
                 ? a
-                : b
-            )
+                : b,
+            ),
           );
           setMinimumBorowAmount(
-            humanReadableFloat(_data.min_deal_amount, _lendingAsset.precision)
+            humanReadableFloat(_data.min_deal_amount, _lendingAsset.precision),
           );
           setExpiration(_data.auto_disable_time);
 
           setAcceptableCollateral(
             _data.acceptable_collateral.map((x) => {
               const _collateralAsset = assets.find(
-                (y) => y.id === x[1].quote.asset_id
+                (y) => y.id === x[1].quote.asset_id,
               );
               const _price =
                 1 /
                 (humanReadableFloat(x[1].base.amount, _lendingAsset.precision) /
                   humanReadableFloat(
                     x[1].quote.amount,
-                    _collateralAsset.precision
+                    _collateralAsset.precision,
                   ));
 
               const evaluatedTradingPair = evaluateTradingPair(
@@ -336,7 +336,7 @@ export default function CreditOfferEditor(properties) {
                 1,
                 _lendingAsset.precision,
                 1,
-                _collateralAsset.precision
+                _collateralAsset.precision,
               );
 
               return {
@@ -346,7 +346,7 @@ export default function CreditOfferEditor(properties) {
                 baseAmount: evaluatedTradingPair.base,
                 quoteAmount: evaluatedTradingPair.quote,
               };
-            })
+            }),
           );
 
           if (_data.acceptable_borrowers) {
@@ -390,11 +390,11 @@ export default function CreditOfferEditor(properties) {
                   id: x.id,
                   amount: humanReadableFloat(
                     _identityBatch[i].amount,
-                    foundAsset.precision
+                    foundAsset.precision,
                   ),
                 };
-              })
-            )
+              }),
+            ),
           );
           // Move to the next chunk
           setChunkIndex((prevIndex) => prevIndex + 1);
@@ -418,7 +418,7 @@ export default function CreditOfferEditor(properties) {
       max_duration_seconds: repaymentPeriods[repayPeriod],
       min_deal_amount: blockchainFloat(
         minimumBorowAmount,
-        foundAsset.precision
+        foundAsset.precision,
       ),
       enabled: true,
       auto_disable_time: expiration,
@@ -430,7 +430,7 @@ export default function CreditOfferEditor(properties) {
             1,
             foundAsset.precision,
             1,
-            x.precision
+            x.precision,
           );
         }
 
@@ -579,7 +579,7 @@ export default function CreditOfferEditor(properties) {
                   onClick={(e) => {
                     e.preventDefault();
                     const _newCollateral = acceptableCollateral.filter(
-                      (x) => x.symbol !== res.symbol
+                      (x) => x.symbol !== res.symbol,
                     );
                     setAcceptableCollateral(_newCollateral);
                   }}
@@ -689,7 +689,7 @@ export default function CreditOfferEditor(properties) {
                   onClick={(e) => {
                     e.preventDefault();
                     const _update = allowedAccounts.filter(
-                      (x) => x.id !== res.id
+                      (x) => x.id !== res.id,
                     );
                     setAllowedAccounts(_update);
                   }}
@@ -779,12 +779,12 @@ export default function CreditOfferEditor(properties) {
                                   <DialogHeader>
                                     <DialogTitle>
                                       {t(
-                                        "CreditOfferEditor:existingCreditOfferJSON"
+                                        "CreditOfferEditor:existingCreditOfferJSON",
                                       )}
                                     </DialogTitle>
                                     <DialogDescription>
                                       {t(
-                                        "CreditOfferEditor:currentBlockchainData"
+                                        "CreditOfferEditor:currentBlockchainData",
                                       )}
                                     </DialogDescription>
                                   </DialogHeader>
@@ -801,12 +801,12 @@ export default function CreditOfferEditor(properties) {
                                         variant="outline"
                                         onClick={() => {
                                           copyToClipboard(
-                                            JSON.stringify(offerJSON, null, 4)
+                                            JSON.stringify(offerJSON, null, 4),
                                           );
                                         }}
                                       >
                                         {t(
-                                          "DeepLinkDialog:tabsContent.copyOperationJSON"
+                                          "DeepLinkDialog:tabsContent.copyOperationJSON",
                                         )}
                                       </Button>
                                       <span className="ml-3">
@@ -819,6 +819,37 @@ export default function CreditOfferEditor(properties) {
                             </div>
                           </div>
                         </FieldContent>
+                        <FieldDescription>
+                          {t("CreditOfferEditor:viewingExistingOffer")}
+                        </FieldDescription>
+                      </Field>
+                    </span>
+                  </span>
+                ) : null}
+                <Field>
+                  <span className="grid grid-cols-2">
+                    <FieldLabel
+                      className="mt-2"
+                      htmlFor={`targetAsset-${offerID ?? "new"}`}
+                    >
+                      {t("CreditOfferEditor:assetToLend")}
+                    </FieldLabel>
+                    <span className="text-right mt-1">
+                      {!offerID ? (
+                        <AssetDropDown
+                          assetSymbol={selectedAsset ?? ""}
+                          assetData={null}
+                          storeCallback={setSelectedAsset}
+                          otherAsset={null}
+                          marketSearch={marketSearch}
+                          type={null}
+                          chain={usr.chain}
+                          balances={balances}
+                        />
+                      ) : null}
+                    </span>
+                  </span>
+                  <FieldContent>
                     <div className="grid grid-cols-12 mt-4">
                       <div className="col-span-1 ml-5">
                         {!selectedAsset || !foundAsset ? (
@@ -910,7 +941,7 @@ export default function CreditOfferEditor(properties) {
                               ? 2
                               : foundAsset.precision;
                             let regex = new RegExp(
-                              `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
+                              `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`,
                             );
                             if (regex.test(input)) {
                               setLendingAmount(input);
@@ -1014,7 +1045,7 @@ export default function CreditOfferEditor(properties) {
                           <SelectTrigger className="mb-3 w-3/4">
                             <SelectValue
                               placeholder={t(
-                                "CreditOfferEditor:placeholder1hr"
+                                "CreditOfferEditor:placeholder1hr",
                               )}
                             />
                           </SelectTrigger>
@@ -1104,7 +1135,7 @@ export default function CreditOfferEditor(properties) {
                               variant={"outline"}
                               className={cn(
                                 "w-[240px] justify-start text-left font-normal",
-                                !expiration && "text-muted-foreground"
+                                !expiration && "text-muted-foreground",
                               )}
                             >
                               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -1127,8 +1158,8 @@ export default function CreditOfferEditor(properties) {
                                 if (parsedDate < now) {
                                   setExpiration(
                                     new Date(
-                                      Date.now() + 1 * 24 * 60 * 60 * 1000
-                                    )
+                                      Date.now() + 1 * 24 * 60 * 60 * 1000,
+                                    ),
                                   );
                                   return;
                                 }
@@ -1232,14 +1263,14 @@ export default function CreditOfferEditor(properties) {
                                 if (
                                   _account &&
                                   !allowedAccounts.find(
-                                    (_usr) => _usr.id === _account.id
+                                    (_usr) => _usr.id === _account.id,
                                   )
                                 ) {
                                   _account.amount = minimumBorowAmount ?? 1;
                                   setAllowedAccounts(
                                     allowedAccounts && allowedAccounts.length
                                       ? [...allowedAccounts, _account]
-                                      : [_account]
+                                      : [_account],
                                   );
                                 }
                                 setTargetUserDialogOpen(false);
