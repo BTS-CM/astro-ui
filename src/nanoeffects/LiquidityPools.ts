@@ -11,7 +11,7 @@ const MAX_TEST_ITERATIONS = MAXIMUM_DEALS / TEST_LIMIT;
 function fetchLiquidityPools(
   chain: string,
   specificNode?: string | null,
-  existingAPI?: any
+  existingAPI?: any,
 ) {
   return new Promise(async (resolve, reject) => {
     let node = specificNode
@@ -27,7 +27,7 @@ function fetchLiquidityPools(
             true,
             4000,
             { enableDatabase: true },
-            (error: Error) => console.log({ error })
+            (error: Error) => console.log({ error }),
           );
     } catch (error) {
       console.log({ error });
@@ -89,11 +89,7 @@ function fetchLiquidityPools(
         }
 
         if (nextPage && nextPage.length) {
-          const isDuplicate = nextPage[0].id === pools[pools.length - 1].id;
-          const newItems = isDuplicate ? nextPage.slice(1) : nextPage;
-          if (newItems.length > 0) {
-            pools = [...pools, ...newItems];
-          }
+          pools = [...pools, ...nextPage];
           if (nextPage.length < limit) {
             break;
           }
@@ -115,7 +111,7 @@ function fetchLPTradingVolume(
   chain: string,
   pools: string[],
   specificNode?: string | null,
-  existingAPI?: any
+  existingAPI?: any,
 ) {
   return new Promise(async (resolve, reject) => {
     let node = specificNode
@@ -131,7 +127,7 @@ function fetchLPTradingVolume(
             true,
             4000,
             { enableDatabase: true },
-            (error: Error) => console.log({ error })
+            (error: Error) => console.log({ error }),
           );
     } catch (error) {
       console.log({ error });
@@ -161,7 +157,7 @@ function fetchLPTradingVolume(
           _output[_poolID] = _res ? _res : 0;
 
           return _output;
-        })
+        }),
       );
     } catch (error) {
       console.log({ error });
