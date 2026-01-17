@@ -136,12 +136,12 @@ export default function PoolStake(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
-    () => true
+    () => true,
   );
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
-    () => true
+    () => true,
   );
 
   const {
@@ -175,7 +175,7 @@ export default function PoolStake(properties) {
 
     const relevantAssets = _assetsBTS.filter((asset) => {
       return !blocklist.users.includes(
-        toHex(sha256(utf8ToBytes(asset.issuer)))
+        toHex(sha256(utf8ToBytes(asset.issuer))),
       );
     });
 
@@ -193,11 +193,11 @@ export default function PoolStake(properties) {
 
     const relevantPools = _poolsBTS.filter((pool) => {
       const poolShareAsset = assets.find(
-        (asset) => asset.id === pool.share_asset_id
+        (asset) => asset.id === pool.share_asset_id,
       );
       if (!poolShareAsset) return false;
       return !blocklist.users.includes(
-        toHex(sha256(utf8ToBytes(poolShareAsset.issuer)))
+        toHex(sha256(utf8ToBytes(poolShareAsset.issuer))),
       );
     });
 
@@ -261,7 +261,7 @@ export default function PoolStake(properties) {
       return pools.filter(
         (x) =>
           x.asset_a_symbol === selectedAssetASymbol ||
-          x.asset_b_symbol === selectedAssetASymbol
+          x.asset_b_symbol === selectedAssetASymbol,
       );
     }
     return [];
@@ -275,8 +275,8 @@ export default function PoolStake(properties) {
           possiblePools.map((x) =>
             x.asset_a_symbol === selectedAssetASymbol
               ? x.asset_b_symbol
-              : x.asset_a_symbol
-          )
+              : x.asset_a_symbol,
+          ),
         ),
       ].sort(); // Sort alphabetically
     }
@@ -294,7 +294,7 @@ export default function PoolStake(properties) {
           (x.asset_a_symbol === selectedAssetASymbol &&
             x.asset_b_symbol === selectedAssetBSymbol) ||
           (x.asset_a_symbol === selectedAssetBSymbol &&
-            x.asset_b_symbol === selectedAssetASymbol)
+            x.asset_b_symbol === selectedAssetASymbol),
       );
 
       if (relevantPools && relevantPools.length) {
@@ -512,7 +512,7 @@ export default function PoolStake(properties) {
       userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
+            assets.find((x) => x.id === balance.asset_id),
           );
           setUsrBalances(filteredData);
         }
@@ -639,7 +639,7 @@ export default function PoolStake(properties) {
                                         variant="outline"
                                         className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal"
                                         aria-label={t(
-                                          "SimpleSwap:selectSendAsset"
+                                          "SimpleSwap:selectSendAsset",
                                         )}
                                         aria-invalid={fieldState.invalid}
                                       >
@@ -655,7 +655,7 @@ export default function PoolStake(properties) {
                                       <Command className="rounded-lg border shadow-md">
                                         <CommandInput
                                           placeholder={t(
-                                            "PageHeader:commandSearchPlaceholder"
+                                            "PageHeader:commandSearchPlaceholder",
                                           )}
                                         />
                                         <CommandList>
@@ -669,10 +669,10 @@ export default function PoolStake(properties) {
                                                   key={`sell-${assetSymbol}`}
                                                   onSelect={() => {
                                                     setSelectedAssetASymbol(
-                                                      assetSymbol
+                                                      assetSymbol,
                                                     );
                                                     setSelectedAssetBSymbol(
-                                                      undefined
+                                                      undefined,
                                                     );
                                                     setPool("");
                                                     field.onChange(assetSymbol);
@@ -723,7 +723,7 @@ export default function PoolStake(properties) {
                                         className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal"
                                         disabled={!selectedAssetASymbol}
                                         aria-label={t(
-                                          "SimpleSwap:selectReceiveAsset"
+                                          "SimpleSwap:selectReceiveAsset",
                                         )}
                                         aria-invalid={fieldState.invalid}
                                       >
@@ -739,7 +739,7 @@ export default function PoolStake(properties) {
                                       <Command className="rounded-lg border shadow-md">
                                         <CommandInput
                                           placeholder={t(
-                                            "PageHeader:commandSearchPlaceholder"
+                                            "PageHeader:commandSearchPlaceholder",
                                           )}
                                         />
                                         <CommandList>
@@ -754,10 +754,10 @@ export default function PoolStake(properties) {
                                                     key={`buy-${assetSymbol}`}
                                                     onSelect={() => {
                                                       setSelectedAssetBSymbol(
-                                                        assetSymbol
+                                                        assetSymbol,
                                                       );
                                                       field.onChange(
-                                                        assetSymbol
+                                                        assetSymbol,
                                                       );
                                                       setReceiveMenuOpen(false);
                                                     }}
@@ -765,16 +765,16 @@ export default function PoolStake(properties) {
                                                   >
                                                     {assetSymbol}
                                                   </CommandItem>
-                                                )
+                                                ),
                                               )
                                             ) : (
                                               <CommandItem disabled>
                                                 {selectedAssetASymbol
                                                   ? t(
-                                                      "SimpleSwap:noAssetsAvailable"
+                                                      "SimpleSwap:noAssetsAvailable",
                                                     )
                                                   : t(
-                                                      "SimpleSwap:selectSendFirst"
+                                                      "SimpleSwap:selectSendFirst",
                                                     )}
                                               </CommandItem>
                                             )}
@@ -830,7 +830,7 @@ export default function PoolStake(properties) {
                           <div
                             className={`w-full max-h-[${Math.min(
                               210,
-                              finalPools.length * 40
+                              finalPools.length * 40,
                             )}px] overflow-auto`}
                           >
                             <List
@@ -884,7 +884,9 @@ export default function PoolStake(properties) {
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
                                     {t("PoolStake:assetB")}:{" "}
-                                    <span className="text-blue-500">{assetB.symbol}</span>
+                                    <span className="text-blue-500">
+                                      {assetB.symbol}
+                                    </span>
                                   </CardTitle>
                                   <CardDescription>
                                     {t("PoolStake:currentTotalAmountInPool")}
@@ -897,6 +899,7 @@ export default function PoolStake(properties) {
                                 </CardContent>
                               </Card>
                             </div>
+                          </>
                         ) : null}
                       </div>
 
@@ -929,7 +932,7 @@ export default function PoolStake(properties) {
                                           {JSON.stringify(
                                             [foundPool, foundPoolDetails],
                                             null,
-                                            2
+                                            2,
                                           )}
                                         </pre>
                                       </ScrollArea>
@@ -940,8 +943,8 @@ export default function PoolStake(properties) {
                                             JSON.stringify(
                                               [foundPool, foundPoolDetails],
                                               null,
-                                              2
-                                            )
+                                              2,
+                                            ),
                                           );
                                         }}
                                       >
@@ -970,7 +973,7 @@ export default function PoolStake(properties) {
                                     </DialogTitle>
                                     <DialogDescription>
                                       {t(
-                                        "PoolStake:checkSwappableAssetsDetails"
+                                        "PoolStake:checkSwappableAssetsDetails",
                                       )}
                                     </DialogDescription>
                                   </DialogHeader>
@@ -994,7 +997,7 @@ export default function PoolStake(properties) {
                                                 poolShareDetails ?? {},
                                             },
                                             null,
-                                            2
+                                            2,
                                           )}
                                         </pre>
                                       </ScrollArea>
@@ -1018,8 +1021,8 @@ export default function PoolStake(properties) {
                                                   poolShareDetails ?? {},
                                               },
                                               null,
-                                              2
-                                            )
+                                              2,
+                                            ),
                                           );
                                         }}
                                       >
@@ -1150,25 +1153,25 @@ export default function PoolStake(properties) {
                                                             _aAmount *
                                                             (humanReadableFloat(
                                                               Number(
-                                                                foundPool.balance_b
+                                                                foundPool.balance_b,
                                                               ),
-                                                              foundPool.asset_b_precision
+                                                              foundPool.asset_b_precision,
                                                             ) /
                                                               humanReadableFloat(
                                                                 Number(
-                                                                  foundPool.balance_a
+                                                                  foundPool.balance_a,
                                                                 ),
-                                                                foundPool.asset_a_precision
+                                                                foundPool.asset_a_precision,
                                                               ))
                                                           ).toFixed(
-                                                            foundPool.asset_a_precision
-                                                          )
+                                                            foundPool.asset_a_precision,
+                                                          ),
                                                         );
 
                                                       setBStake(_bAmount);
                                                       form.setValue(
                                                         "stakeB",
-                                                        _bAmount
+                                                        _bAmount,
                                                       );
 
                                                       const _supply =
@@ -1176,23 +1179,23 @@ export default function PoolStake(properties) {
                                                           foundPoolDetails.current_supply,
                                                           foundPool
                                                             .share_asset_details
-                                                            .precision
+                                                            .precision,
                                                         );
 
                                                       const balanceA =
                                                         humanReadableFloat(
                                                           Number(
-                                                            foundPool.balance_a
+                                                            foundPool.balance_a,
                                                           ),
-                                                          foundPool.asset_a_precision
+                                                          foundPool.asset_a_precision,
                                                         );
 
                                                       const balanceB =
                                                         humanReadableFloat(
                                                           Number(
-                                                            foundPool.balance_b
+                                                            foundPool.balance_b,
                                                           ),
-                                                          foundPool.asset_b_precision
+                                                          foundPool.asset_b_precision,
                                                         );
 
                                                       const shareAssetAmountA =
@@ -1205,7 +1208,7 @@ export default function PoolStake(properties) {
                                                       const shareAssetAmount =
                                                         Math.min(
                                                           shareAssetAmountA,
-                                                          shareAssetAmountB
+                                                          shareAssetAmountB,
                                                         );
 
                                                       setTotalReceiving(
@@ -1213,9 +1216,9 @@ export default function PoolStake(properties) {
                                                           shareAssetAmount.toFixed(
                                                             foundPool
                                                               .share_asset_details
-                                                              .precision
-                                                          )
-                                                        )
+                                                              .precision,
+                                                          ),
+                                                        ),
                                                       );
                                                     }
                                                   }
@@ -1299,25 +1302,25 @@ export default function PoolStake(properties) {
                                                             _bAmount *
                                                             (humanReadableFloat(
                                                               Number(
-                                                                foundPool.balance_a
+                                                                foundPool.balance_a,
                                                               ),
-                                                              foundPool.asset_a_precision
+                                                              foundPool.asset_a_precision,
                                                             ) /
                                                               humanReadableFloat(
                                                                 Number(
-                                                                  foundPool.balance_b
+                                                                  foundPool.balance_b,
                                                                 ),
-                                                                foundPool.asset_b_precision
+                                                                foundPool.asset_b_precision,
                                                               ))
                                                           ).toFixed(
-                                                            foundPool.asset_a_precision
-                                                          )
+                                                            foundPool.asset_a_precision,
+                                                          ),
                                                         );
 
                                                       setAStake(_aAmount);
                                                       form.setValue(
                                                         "stakeA",
-                                                        _aAmount
+                                                        _aAmount,
                                                       );
 
                                                       const _supply =
@@ -1325,23 +1328,23 @@ export default function PoolStake(properties) {
                                                           foundPoolDetails.current_supply,
                                                           foundPool
                                                             .share_asset_details
-                                                            .precision
+                                                            .precision,
                                                         );
 
                                                       const balanceA =
                                                         humanReadableFloat(
                                                           Number(
-                                                            foundPool.balance_a
+                                                            foundPool.balance_a,
                                                           ),
-                                                          foundPool.asset_a_precision
+                                                          foundPool.asset_a_precision,
                                                         );
 
                                                       const balanceB =
                                                         humanReadableFloat(
                                                           Number(
-                                                            foundPool.balance_b
+                                                            foundPool.balance_b,
                                                           ),
-                                                          foundPool.asset_b_precision
+                                                          foundPool.asset_b_precision,
                                                         );
 
                                                       const shareAssetAmountA =
@@ -1354,7 +1357,7 @@ export default function PoolStake(properties) {
                                                       const shareAssetAmount =
                                                         Math.min(
                                                           shareAssetAmountA,
-                                                          shareAssetAmountB
+                                                          shareAssetAmountB,
                                                         );
 
                                                       setTotalReceiving(
@@ -1362,9 +1365,9 @@ export default function PoolStake(properties) {
                                                           shareAssetAmount.toFixed(
                                                             foundPool
                                                               .share_asset_details
-                                                              .precision
-                                                          )
-                                                        )
+                                                              .precision,
+                                                          ),
+                                                        ),
                                                       );
                                                     }
                                                   }
@@ -1467,8 +1470,8 @@ export default function PoolStake(properties) {
                                                       Number(input).toFixed(
                                                         foundPool
                                                           .share_asset_details
-                                                          .precision
-                                                      )
+                                                          .precision,
+                                                      ),
                                                     );
 
                                                     field.onChange(input);
@@ -1479,23 +1482,23 @@ export default function PoolStake(properties) {
                                                         foundPoolDetails.current_supply,
                                                         foundPool
                                                           .share_asset_details
-                                                          .precision
+                                                          .precision,
                                                       );
 
                                                     const _balanceA =
                                                       humanReadableFloat(
                                                         Number(
-                                                          foundPool.balance_a
+                                                          foundPool.balance_a,
                                                         ),
-                                                        foundPool.asset_a_precision
+                                                        foundPool.asset_a_precision,
                                                       );
 
                                                     const _balanceB =
                                                       humanReadableFloat(
                                                         Number(
-                                                          foundPool.balance_b
+                                                          foundPool.balance_b,
                                                         ),
-                                                        foundPool.asset_b_precision
+                                                        foundPool.asset_b_precision,
                                                       );
 
                                                     const _withdrawRatio =
@@ -1506,8 +1509,8 @@ export default function PoolStake(properties) {
                                                           _balanceA *
                                                           _withdrawRatio
                                                         ).toFixed(
-                                                          foundPool.asset_a_precision
-                                                        )
+                                                          foundPool.asset_a_precision,
+                                                        ),
                                                       );
                                                     const _allocatedB =
                                                       parseFloat(
@@ -1515,15 +1518,15 @@ export default function PoolStake(properties) {
                                                           _balanceB *
                                                           _withdrawRatio
                                                         ).toFixed(
-                                                          foundPool.asset_b_precision
-                                                        )
+                                                          foundPool.asset_b_precision,
+                                                        ),
                                                       );
 
                                                     setWithdrawingA(
-                                                      _allocatedA
+                                                      _allocatedA,
                                                     );
                                                     setWithdrawingB(
-                                                      _allocatedB
+                                                      _allocatedB,
                                                     );
                                                   }
                                                 }}
@@ -1581,7 +1584,7 @@ export default function PoolStake(properties) {
                             {t(
                               `PoolStake:networkFeeDescription${
                                 stakeTab === "stake" ? "1" : "2"
-                              }`
+                              }`,
                             )}
                           </FieldDescription>
                           <FieldContent>
@@ -1672,7 +1675,7 @@ export default function PoolStake(properties) {
                           share_amount: {
                             amount: blockchainFloat(
                               withdrawAmount,
-                              foundPool.share_asset_details.precision
+                              foundPool.share_asset_details.precision,
                             ),
                             asset_id: foundPool.share_asset,
                           },
