@@ -208,12 +208,9 @@ export default function TicketLeaderboard() {
                       {t("TicketsLeaderboard:th.account", "Account")}
                     </TableCell>
                     <TableCell>
-                      <ExternalLink
-                        type="text"
-                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${name}`}
-                        text={name}
-                        classnamecontents="hover:underline text-blue-600 cursor-pointer"
-                      />
+                      <span className="hover:underline text-blue-600 cursor-pointer">
+                        {name}
+                      </span>
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -352,12 +349,7 @@ export default function TicketLeaderboard() {
                 >
                   {t("Common:buttons.copy", "Copy")}
                 </Button>
-                <ExternalLink
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${activeTicketId}`}
-                  text={t("Common:buttons.open", "Open")}
-                  variant="outline"
-                  classnamecontents="h-8"
-                />
+                <span className="h-8 flex items-center">{activeTicketId}</span>
               </div>
             </DialogContent>
           </Dialog>

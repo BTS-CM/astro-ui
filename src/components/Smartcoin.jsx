@@ -1042,14 +1042,7 @@ export default function Smartcoin(properties) {
     return (
       <div className="grid grid-cols-6 text-sm" style={style}>
         <div className="col-span-1">
-          <ExternalLink
-            classnamecontents="text-blue-500"
-            type="text"
-            text={res.borrower}
-            hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-              res.borrower
-            }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-          />
+          <span className="text-blue-500">{res.borrower}</span>
         </div>
         <div className="col-span-1">{collateralAmount}</div>
         <div className="col-span-1">{debtAmount}</div>
@@ -1137,14 +1130,7 @@ export default function Smartcoin(properties) {
     return (
       <div className="grid grid-cols-7 md:grid-cols-11 text-sm" style={style}>
         <div className="hidden md:block col-span-2 mr-1">
-          <ExternalLink
-            classnamecontents="text-blue-500"
-            type="text"
-            text={userID}
-            hyperlink={`https://explorer.bitshares.ws/#/accounts/${userID}${
-              usr.chain === "bitshares" ? "" : "?network=testnet"
-            }`}
-          />
+          <span className="text-blue-500">{userID}</span>
         </div>
         <div className="hidden md:block col-span-2 ml-1">
           {timeAgo(date, t)}

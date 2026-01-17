@@ -228,14 +228,7 @@ export default function InvoiceStorage() {
                 className="col-span-1 lg:col-span-2 truncate mt-1"
                 title={inv.recipientId || ""}
               >
-                <ExternalLink
-                  classnamecontents="hover:text-blue-500"
-                  type="text"
-                  text={inv.recipientId}
-                  hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                    inv.recipientId
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                {inv.recipientId}
               </div>
               <div
                 className="hidden lg:block col-span-1 truncate mt-1"

@@ -283,23 +283,7 @@ export default function Market(properties) {
           {assetA}/{assetB} {t("Market:externalMarketLinks")}
         </b>
         <br />
-        <ExternalLink
-          variant="outline"
-          classnamecontents="mb-2 mt-2"
-          type="button"
-          text={t("Market:bitsharesMarketExplorer")}
-          hyperlink={
-            usr.chain === "bitshares"
-              ? `https://explorer.bitshares.ws/#/markets/${
-                  activeLimitCard === "buy" ? assetA : assetB
-                }/${activeLimitCard === "buy" ? assetB : assetA}`
-              : `https://explorer.bitshares.ws/#/markets/${
-                  activeLimitCard === "buy" ? assetA : assetB
-                }/${
-                  activeLimitCard === "buy" ? assetB : assetA
-                }?network=testnet`
-          }
-        />
+        {t("Market:bitsharesMarketExplorer")}
         {usr.chain === "bitshares" ? (
           <>
             <ExternalLink

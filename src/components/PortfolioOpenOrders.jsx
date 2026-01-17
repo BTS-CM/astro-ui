@@ -40,7 +40,6 @@ import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 import { humanReadableFloat } from "@/lib/common";
 
 export default function PortfolioOpenOrders({
@@ -323,14 +322,7 @@ export default function PortfolioOpenOrders({
                 </div>
               </div>
               <div className="truncate">
-                <ExternalLink
-                  classnamecontents="hover:text-blue-500"
-                  type="text"
-                  text={`${orderId}`}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${orderId}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
+                {orderId}
               </div>
               <div>{timeDiffString}</div>
               <div>

@@ -36,7 +36,7 @@ import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import { humanReadableFloat, debounce } from "@/lib/common.js";
-import ExternalLink from "./common/ExternalLink.jsx";
+// External links removed due to domain hijack; render plain text instead
 
 function hoursTillExpiration(expirationTime) {
   var expirationDate = new Date(expirationTime);
@@ -297,34 +297,11 @@ export default function CreditBorrow(properties) {
             <CardTitle>
               {t("CreditBorrow:common.offer")}
               {" #"}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={res.id.replace("1.21.", "")}
-                hyperlink={`https://explorer.bitshares.ws/#/credit-offers/${res.id.replace(
-                  "1.21.",
-                  ""
-                )}${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />{" "}
-              {t("CreditBorrow:common.by")}{" "}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={res.owner_name}
-                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                  res.owner_name
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />{" "}
-              (
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={res.owner_account}
-                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                  res.owner_account
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
-              )
+              {res.id.replace("1.21.", "")} {t("CreditBorrow:common.by")}{" "}
+              {res.owner_name}
+              {"("}
+              {res.owner_account}
+              {")"}
             </CardTitle>
             <CardDescription>
               {t("CreditBorrow:common.offering")}
@@ -333,49 +310,23 @@ export default function CreditBorrow(properties) {
                   res.current_balance,
                   foundAsset.precision
                 )} `}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={foundAsset.symbol}
-                  hyperlink={`https://explorer.bitshares.ws/#/asset/${
-                    foundAsset.symbol
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
-                (
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={res.asset_type}
-                  hyperlink={`https://explorer.bitshares.ws/#/asset/${
-                    res.asset_type
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
-                )
+                {foundAsset.symbol} ({res.asset_type})
               </b>
               <br />
               {t("CreditBorrow:common.accepting")}
               <b className="ml-1">
                 {assets && assets.length
-                  ? res.acceptable_collateral
-                      .map((asset) => asset[0])
-                      .map((x) => {
-                        return assets.find((y) => y.id === x)?.symbol;
-                      })
-                      .map((x, index, array) => (
-                        <>
-                          <ExternalLink
-                            classnamecontents="hover:text-purple-500"
-                            type="text"
-                            text={x}
-                            hyperlink={`https://explorer.bitshares.ws/#/asset/${x}${
-                              usr.chain === "bitshares"
-                                ? ""
-                                : "?network=testnet"
-                            }`}
-                          />
-                          {index < array.length - 1 && ", "}
-                        </>
-                      ))
+                      ? res.acceptable_collateral
+                          .map((asset) => asset[0])
+                          .map((x) => {
+                            return assets.find((y) => y.id === x)?.symbol;
+                          })
+                          .map((x, index, array) => (
+                            <span key={`${x}-${index}`}>
+                              {x}
+                              {index < array.length - 1 && ", "}
+                            </span>
+                          ))
                   : t("CreditBorrow:common.loading")}
               </b>
             </CardDescription>

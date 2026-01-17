@@ -21,7 +21,6 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import ExternalLink from "@/components/common/ExternalLink.jsx";
 import { $currentUser } from "@/stores/users.ts";
 
 export default function MyOrderSummary(properties) {
@@ -190,19 +189,7 @@ export default function MyOrderSummary(properties) {
                       {t("MyOrderSummary:proceedToUpdateButton")}
                     </Button>
                   </a>
-                  <ExternalLink
-                    variant="outline"
-                    classnamecontents=""
-                    type="button"
-                    text={t("MyOrderSummary:viewObjectOnbitshares")}
-                    hyperlink={
-                      usr && usr.chain
-                        ? `https://explorer.bitshares.ws/#/objects/${res.id}${
-                            usr.chain === "bitshares" ? "" : "?network=testnet"
-                          }`
-                        : ""
-                    }
-                  />
+                  {t("MyOrderSummary:viewObjectOnbitshares")}
                 </div>
               </div>
             </DialogContent>

@@ -74,7 +74,6 @@ import { Label } from "@/components/ui/label";
 
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function InstantTrade(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -791,27 +790,14 @@ export default function InstantTrade(properties) {
                     >
                       {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
                     </Button>
-                    <ExternalLink
-                      type="button"
-                      text={order.id}
-                      hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                        order.id
-                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
+                    {order.id}
                   </div>
                 </div>
               </DialogContent>
             </Dialog>
           </div>
           <div className="hidden md:block">
-            <ExternalLink
-              classnamecontents="hover:text-purple-500"
-              type="text"
-              text={order.owner_name}
-              hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                order.owner_name
-              }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-            />
+            {order.owner_name}
           </div>
           <div className="hidden md:block">
             {orderDetails && orderDetails.on_fill.length ? (

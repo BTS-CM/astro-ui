@@ -387,23 +387,13 @@ export default function Witnesses(properties) {
                     <span className="ml-2">{witness.name}</span>
                   </div>
                   <div className="col-span-4 md:col-span-2">
-                    <ExternalLink
-                      classnamecontents="text-blue-500 hover:text-purple-500"
-                      type="text"
-                      text={witness.id}
-                      hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                        witness.id
-                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />{" "}
+                    <span className="text-blue-500 hover:text-purple-500">
+                      {witness.id}
+                    </span>{" "}
                     (
-                    <ExternalLink
-                      classnamecontents="text-blue-500 hover:text-purple-500"
-                      type="text"
-                      text={witness.account_id}
-                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                        witness.account_id
-                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
+                    <span className="text-blue-500 hover:text-purple-500">
+                      {witness.account_id}
+                    </span>
                     )
                   </div>
                   <div className="hidden md:block col-span-3">
@@ -415,16 +405,9 @@ export default function Witnesses(properties) {
                         <br />
                         <span className="text-xs">
                           (
-                          <ExternalLink
-                            classnamecontents="text-blue-500 hover:text-purple-500"
-                            type="text"
-                            text={`#${witness.last_block_num}`}
-                            hyperlink={`https://explorer.bitshares.ws/#/blocks/${
-                              witness.last_block_num
-                            }${
-                              _chain === "bitshares" ? "" : "?network=testnet"
-                            }`}
-                          />
+                          <span className="text-blue-500 hover:text-purple-500">
+                            #{witness.last_block_num}
+                          </span>
                           )
                         </span>
                       </>

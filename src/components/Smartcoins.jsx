@@ -358,23 +358,9 @@ export default function Smartcoins(properties) {
         <Card className="ml-2 mr-2 overflow-visible">
           <CardHeader className="pb-1">
             <CardTitle>
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={thisBitassetData.symbol}
-                hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                  thisBitassetData.symbol
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="hover:text-purple-500">{thisBitassetData.symbol}</span>
               {" ("}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={thisBitassetData.id}
-                hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                  thisBitassetData.id
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="hover:text-purple-500">{thisBitassetData.id}</span>
               {")"}
             </CardTitle>
             <CardDescription className="text-md">
@@ -383,27 +369,9 @@ export default function Smartcoins(properties) {
                   {issuer ? (
                     <div>
                       {t("Smartcoins:createdBy")}{" "}
-                      <ExternalLink
-                        classnamecontents="hover:text-purple-500 font-bold"
-                        type="text"
-                        text={issuer.name}
-                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                          issuer.name
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />{" "}
-                      {"("}
-                      <ExternalLink
-                        classnamecontents="hover:text-purple-500 font-bold"
-                        type="text"
-                        text={issuer.id}
-                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                          issuer.id
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />
+                      <span className="hover:text-purple-500 font-bold">{issuer.name}</span>
+                      {" ("}
+                      <span className="hover:text-purple-500 font-bold">{issuer.id}</span>
                       {")"}
                     </div>
                   ) : null}
@@ -411,44 +379,10 @@ export default function Smartcoins(properties) {
                     {t("Smartcoins:collateral")}:
                     <b>
                       {" "}
-                      <ExternalLink
-                        classnamecontents="hover:text-purple-500"
-                        type="text"
-                        text={thisCollateralAssetData.symbol}
-                        hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                          thisCollateralAssetData.symbol
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />{" "}
-                      {"("}
-                      <ExternalLink
-                        classnamecontents="hover:text-purple-500"
-                        type="text"
-                        text={thisCollateralAssetData.id}
-                        hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                          thisCollateralAssetData.id
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />
+                      <span className="hover:text-purple-500">{thisCollateralAssetData.symbol}</span>
+                      {" ("}
+                      <span className="hover:text-purple-500">{thisCollateralAssetData.id}</span>
                       {")"}
-                    </b>
-                  </div>
-                  <div>
-                    {t("Smartcoins:currentSupply")}
-                    {": "}
-                    <b>
-                      {currentSupply.toLocaleString()} {thisBitassetData.symbol}
-                    </b>
-                  </div>
-                  <div>
-                    {t("Smartcoins:currentSettlementPrice")}
-                    {": "}
-                    <b>
-                      {_price > 0
-                        ? `${_price} ${thisCollateralAssetData.symbol}/${thisBitassetData.symbol}`
-                        : "??? ⚠️"}
                     </b>
                   </div>
                 </div>

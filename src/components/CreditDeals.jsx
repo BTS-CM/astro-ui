@@ -66,7 +66,6 @@ import {
 } from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function CreditDeals(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -309,27 +308,9 @@ export default function CreditDeals(properties) {
           <CardHeader className="pb-1">
             <CardTitle>
               {t("CreditDeals:dealNo")}
-              <ExternalLink
-                classnamecontents="text-blue-500"
-                type="text"
-                text={res.id.replace("1.22.", "")}
-                hyperlink={
-                  usr && usr.chain
-                    ? `https://explorer.bitshares.ws/#/objects/${res.id}${
-                        usr.chain === "bitshares" ? "" : "?network=testnet"
-                      }`
-                    : ""
-                }
-              />
+              {res.id.replace("1.22.", "")}
               {t("CreditDeals:with")}
-              <ExternalLink
-                classnamecontents="text-blue-500"
-                type="text"
-                text={type === "borrower" ? res.offer_owner : res.borrower}
-                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                  type === "borrower" ? res.offer_owner : res.borrower
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              {type === "borrower" ? res.offer_owner : res.borrower}
             </CardTitle>
             <CardDescription>
               {type === "borrower"
@@ -337,30 +318,12 @@ export default function CreditDeals(properties) {
                 : t("CreditDeals:lent")}
               :
               <b>
-                {` ${borrowedAmount} ${debtAsset.symbol}`} (
-                <ExternalLink
-                  classnamecontents="text-blue-500"
-                  type="text"
-                  text={res.debt_asset}
-                  hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                    res.debt_asset
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
-                )
+                {` ${borrowedAmount} ${debtAsset.symbol}`} ({res.debt_asset})
               </b>
               <br />
               {t("CreditDeals:loanCollateral")}
               <b>
-                {` ${collateralAmount} ${collateralAsset.symbol}`} (
-                <ExternalLink
-                  classnamecontents="text-blue-500"
-                  type="text"
-                  text={res.collateral_asset}
-                  hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                    res.collateral_asset
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
-                )
+                {` ${collateralAmount} ${collateralAsset.symbol}`} ({res.collateral_asset})
               </b>
               <br />
               {type === "borrower"

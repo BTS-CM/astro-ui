@@ -515,17 +515,7 @@ export default function MarketOrder(properties) {
                             </ScrollArea>
                           </div>
                           <div className="col-span-1 text-left mt-5">
-                            <ExternalLink
-                              variant="outline"
-                              classnamecontents=""
-                              type="button"
-                              text={t("MarketOrder:viewObjectOnbitsharesInfo")}
-                              hyperlink={`https://explorer.bitshares.ws/#/objects/${limitOrderID}${
-                                usr.chain === "bitshares"
-                                  ? ""
-                                  : "?network=testnet"
-                              }`}
-                            />
+                            {t("MarketOrder:viewObjectOnbitsharesInfo")}
                           </div>
                         </div>
                       </DialogContent>

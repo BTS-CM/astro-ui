@@ -43,7 +43,6 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { humanReadableFloat, blockchainFloat } from "@/lib/common";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import HtlcCreateDialog from "./HtlcCreateDialog.jsx"; // New component for creation form
-import ExternalLink from "./common/ExternalLink.jsx";
 
 const claimPeriods = {
   "1hour": 3600,
@@ -246,14 +245,7 @@ export default function Htlc(properties) {
           <CardContent className="pt-3 pb-1 text-sm">
             <div className="grid grid-cols-6 gap-1 items-center">
               <div className="col-span-1">
-                <ExternalLink
-                  classnamecontents="text-blue-500"
-                  type="text"
-                  text={id}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${id}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
+                {id}
               </div>
               <div className="col-span-1">{toAccountName}</div>
               <div className="col-span-1">
@@ -417,14 +409,7 @@ export default function Htlc(properties) {
           <CardContent className="pt-3 pb-1 text-sm">
             <div className="grid grid-cols-6 gap-1 items-center">
               <div className="col-span-1">
-                <ExternalLink
-                  classnamecontents="text-blue-500"
-                  type="text"
-                  text={id}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${id}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
+                {id}
               </div>
               <div className="col-span-1">{fromAccountName}</div>
               <div className="col-span-1">

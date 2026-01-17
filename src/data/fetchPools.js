@@ -1,70 +1,97 @@
 import fs from "fs";
+import { fetchLiquidityPools } from "../nanoeffects/LiquidityPools.ts";
+import { getObjects } from "../nanoeffects/src/common.ts";
 
 const chains = ["bitshares", "bitshares_testnet"];
 
-const urls = {
-  bitshares: "https://api.bitshares.ws/openexplorer/pools",
-  bitshares_testnet: "https://api.testnet.bitshares.ws/openexplorer/pools",
+const run = async () => {
+  for (const chain of chains) {
+    let data;
+    try {
+      data = await fetchLiquidityPools(chain);
+    } catch (err) {
+      console.log("Error: " + err.message);
+      continue;
+    }
+
+    fs.writeFile(
+      `./src/data/${chain}/allPools.json`,
+      JSON.stringify(data, undefined, 4),
+      (err) => {
+        if (err) throw err;
+        console.log(`${chain} Pools data saved to allPools.json`);
+      },
+    );
+
+    const assetIds = new Set();
+    data.forEach((pool) => {
+      assetIds.add(pool.asset_a);
+      assetIds.add(pool.asset_b);
+      assetIds.add(pool.share_asset);
+    });
+
+    let assetData;
+    try {
+      assetData = await getObjects(chain, Array.from(assetIds));
+    } catch (err) {
+      console.log(`Error fetching assets for ${chain}: ` + err.message);
+      continue;
+    }
+
+    const symbolMap = {};
+    assetData.forEach((asset) => {
+      symbolMap[asset.id] = asset.symbol;
+    });
+
+    const filteredPoolData = data.map((pool) => {
+      return {
+        id: pool.id,
+        asset_a_id: pool.asset_a,
+        asset_a_symbol: symbolMap[pool.asset_a],
+        asset_b_id: pool.asset_b,
+        asset_b_symbol: symbolMap[pool.asset_b],
+        share_asset_symbol: symbolMap[pool.share_asset],
+        share_asset_id: pool.share_asset,
+        balance_a: parseInt(pool.balance_a),
+        balance_b: parseInt(pool.balance_b),
+        taker_fee_percent: pool.taker_fee_percent,
+        withdrawal_fee_percent: pool.withdrawal_fee_percent,
+      };
+    });
+
+    fs.writeFile(
+      `./src/data/${chain}/pools.json`,
+      JSON.stringify(filteredPoolData, undefined, 4),
+      (err) => {
+        if (err) throw err;
+        console.log(`${chain} Pools data saved to pools.json`);
+      },
+    );
+
+    const minPoolData = data.map((pool) => {
+      return {
+        id: pool.id.replace("1.19.", ""),
+        a: pool.asset_a.replace("1.3.", ""),
+        as: symbolMap[pool.asset_a],
+        b: pool.asset_b.replace("1.3.", ""),
+        bs: symbolMap[pool.asset_b],
+        sa: symbolMap[pool.share_asset],
+        said: pool.share_asset,
+        ba: parseInt(pool.balance_a),
+        bb: parseInt(pool.balance_b),
+        tfp: pool.taker_fee_percent,
+      };
+    });
+
+    fs.writeFile(
+      `./src/data/${chain}/minPools.json`,
+      JSON.stringify(minPoolData),
+      (err) => {
+        if (err) throw err;
+        console.log(`${chain} Pools data saved to minPools.json`);
+      },
+    );
+  }
 };
 
-for (const chain of chains) {
-  const url = urls[chain];
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      fs.writeFile(
-        `./src/data/${chain}/allPools.json`,
-        JSON.stringify(data, undefined, 4),
-        (err) => {
-          if (err) throw err;
-          console.log("Pools data saved to allPools.json");
-        }
-      );
-
-      const filteredPoolData = data.map((pool) => {
-        return {
-          id: pool.id,
-          asset_a_id: pool.asset_a,
-          asset_a_symbol: pool.details.asset_a.symbol,
-          asset_b_id: pool.asset_b,
-          asset_b_symbol: pool.details.asset_b.symbol,
-          share_asset_symbol: pool.details.share_asset.symbol,
-          share_asset_id: pool.share_asset,
-          balance_a: pool.balance_a,
-          balance_b: pool.balance_b,
-          taker_fee_percent: pool.taker_fee_percent,
-          withdrawal_fee_percent: pool.withdrawal_fee_percent,
-        };
-      });
-
-      fs.writeFile(
-        `./src/data/${chain}/pools.json`,
-        JSON.stringify(filteredPoolData, undefined, 4),
-        (err) => {
-          if (err) throw err;
-          console.log("Pools data saved to pools.json");
-        }
-      );
-
-      const minPoolData = data.map((pool) => {
-        return {
-          id: pool.id.replace("1.19.", ""),
-          a: pool.asset_a.replace("1.3.", ""),
-          as: pool.details.asset_a.symbol,
-          b: pool.asset_b.replace("1.3.", ""),
-          bs: pool.details.asset_b.symbol,
-          sa: pool.details.share_asset.symbol,
-          said: pool.share_asset,
-          ba: pool.balance_a,
-          bb: pool.balance_b,
-          tfp: pool.taker_fee_percent,
-        };
-      });
-
-      fs.writeFile(`./src/data/${chain}/minPools.json`, JSON.stringify(minPoolData), (err) => {
-        if (err) throw err;
-        console.log("Pools data saved to pools.json");
-      });
-    })
-    .catch((err) => console.log("Error: " + err.message));
-}
+run();

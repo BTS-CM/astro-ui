@@ -271,14 +271,7 @@ export default function Proposals(properties) {
                 <div className="col-span-2">
                   {t("Proposals:proposalID")}
                   {": "}
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={proposal.id}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                      proposal.id
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
+                  <span className="hover:text-purple-500">{proposal.id}</span>
                   <Badge
                     className="ml-3"
                     onClick={() => {
@@ -294,39 +287,16 @@ export default function Proposals(properties) {
                   {": "}
                   <b>
                     {proposerAccount && proposerAccount.name ? (
-                      <ExternalLink
-                        classnamecontents="hover:text-purple-500"
-                        type="text"
-                        text={proposerAccount.name}
-                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                          proposerAccount.name
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />
+                      <span className="hover:text-purple-500">
+                        {proposerAccount.name}
+                      </span>
                     ) : (
                       <>???</>
                     )}
                   </b>{" "}
                   (
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={proposer}
-                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${proposer}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
-                  />
+                  <span className="hover:text-purple-500">{proposer}</span>
                   )
-                  <Badge
-                    className="ml-3"
-                    onClick={() => {
-                      setViewJSON(true);
-                      setJSON(proposerAccount);
-                    }}
-                  >
-                    JSON
-                  </Badge>
                 </div>
                 <div className="col-span-2">
                   {t("Proposals:expirationTime")}:{" "}

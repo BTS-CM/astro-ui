@@ -519,28 +519,14 @@ export default function SameTFunds(properties) {
               <DialogDescription>
                 {t("WithdrawPermissions:id")}
                 {": "}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={fund.id}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                    fund.id
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                <span className="hover:text-purple-500">{fund.id}</span>
                 <br />
                 {lender ? (
                   <>
                     {t("Smartcoin:owner")}
                     {": "}
 
-                    <ExternalLink
-                      classnamecontents="hover:text-purple-500"
-                      type="text"
-                      text={lender.name}
-                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                        lender.name
-                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
+                    <span className="hover:text-purple-500">{lender.name}</span>
                     <br />
                   </>
                 ) : null}

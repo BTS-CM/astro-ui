@@ -91,7 +91,6 @@ import {
 } from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 import {
@@ -583,40 +582,10 @@ export default function Predictions(properties) {
             <CardTitle>
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div>
-                  <ExternalLink
-                    classnamecontents={
-                      "text-xl text-semibold hover:text-purple-600"
-                    }
-                    type="text"
-                    text={`${symbol}`}
-                    hyperlink={`https://explorer.bitshares.ws/#/assets/${symbol}${
-                      _chain !== "bitshares" ? "?network=testnet" : ""
-                    }`}
-                  />{" "}
-                  (
-                  <ExternalLink
-                    classnamecontents={
-                      "text-xl text-semibold hover:text-purple-600"
-                    }
-                    type="text"
-                    text={`${res.id}`}
-                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                      res.id
-                    }${_chain !== "bitshares" ? "?network=testnet" : ""}`}
-                  />
-                  )
+                  {symbol} ( {res.id} )
                 </div>
                 <div className="md:text-right">
-                  <ExternalLink
-                    classnamecontents={
-                      "text-xl text-semibold hover:text-purple-600"
-                    }
-                    type="text"
-                    text={username ?? house}
-                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${house}${
-                      _chain !== "bitshares" ? "?network=testnet" : ""
-                    }`}
-                  />
+                  {username ?? house}
                 </div>
               </div>
             </CardTitle>

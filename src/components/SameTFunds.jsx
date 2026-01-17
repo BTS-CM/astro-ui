@@ -316,36 +316,19 @@ export default function SameTFunds(properties) {
             <CardTitle>
               {t("SameTFunds:fund")}
               {" #"}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={fund.id.replace("1.20.", "")}
-                hyperlink={`https://explorer.bitshares.ws/#/objects/${fund.id}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
-              />{" "}
+              <span className="hover:text-purple-500">
+                {fund.id.replace("1.20.", "")}
+              </span>{" "}
               {t("CreditBorrow:common.by")}{" "}
               {lender ? (
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={lender.name}
-                  hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                    lender.name
-                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                <span className="hover:text-purple-500">{lender.name}</span>
               ) : (
                 "???"
               )}
               {" ("}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={fund.owner_account}
-                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                  fund.owner_account
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="hover:text-purple-500">
+                {fund.owner_account}
+              </span>
               {") "}
               {lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}
             </CardTitle>
@@ -355,18 +338,9 @@ export default function SameTFunds(properties) {
               <div className="col-span-2">
                 {t("SameTFunds:offering")}:
                 <b>{` ${balance - unpaidAmount} `}</b>
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500 font-bold"
-                  type="text"
-                  text={assetName}
-                  hyperlink={`https://explorer.bitshares.ws/#/assets/${assetName}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
-              </div>
-              <div>
-                {t("SameTFunds:fee")}:<b>{` ${feeRate} %`}</b>
-                {feeRate > 20 ? "⚠️" : null}
+                <span className="hover:text-purple-500 font-bold">
+                  {assetName}
+                </span>
               </div>
 
               {usr.id === fund.owner_account ? (

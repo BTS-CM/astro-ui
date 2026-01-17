@@ -62,7 +62,6 @@ import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 
 import { Avatar } from "./Avatar.tsx";
 
@@ -586,21 +585,9 @@ export default function CreditOffer(properties) {
                               </div>
                               <div className="col-span-1 text-right">
                                 {creditOfferOwner ? (
-                                  <ExternalLink
-                                    classnamecontents="text-blue-500"
-                                    type="text"
-                                    text={t(
-                                      "CreditOffer:cardContent.viewAccount",
-                                      { owner_name: creditOfferOwner.name }
-                                    )}
-                                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                                      creditOfferOwner.name
-                                    }${
-                                      usr.chain === "bitshares"
-                                        ? ""
-                                        : "?network=testnet"
-                                    }`}
-                                  />
+                                  t("CreditOffer:cardContent.viewAccount", {
+                                    owner_name: creditOfferOwner.name,
+                                  })
                                 ) : null}
                               </div>
                             </div>

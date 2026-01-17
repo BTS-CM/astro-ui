@@ -50,12 +50,12 @@ export default function Home(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
-    () => true
+    () => true,
   );
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
-    () => true
+    () => true,
   );
   const currentNode = useStore($currentNode);
 
@@ -92,6 +92,21 @@ export default function Home(properties) {
       }
     }
   }, [usr, currentNode]);
+
+  /*
+    // Removed for now due to domain issues
+    {
+      key: "portfolio_recent_activity",
+      href: "/recent-activity/index.html",
+      titleKey: "Home:portfolio_recent_activity.title",
+      subtitleKey: "Home:portfolio_recent_activity.subtitle",
+      hoverKeys: [
+        "Home:portfolio_recent_activity.hover1",
+        "Home:portfolio_recent_activity.hover2",
+        "Home:portfolio_recent_activity.hover3",
+      ],
+    },
+  */
 
   const accordionSections = [
     {
@@ -362,17 +377,6 @@ export default function Home(properties) {
             "Home:portfolio_open_orders.hover1",
             "Home:portfolio_open_orders.hover2",
             "Home:portfolio_open_orders.hover3",
-          ],
-        },
-        {
-          key: "portfolio_recent_activity",
-          href: "/recent-activity/index.html",
-          titleKey: "Home:portfolio_recent_activity.title",
-          subtitleKey: "Home:portfolio_recent_activity.subtitle",
-          hoverKeys: [
-            "Home:portfolio_recent_activity.hover1",
-            "Home:portfolio_recent_activity.hover2",
-            "Home:portfolio_recent_activity.hover3",
           ],
         },
         {

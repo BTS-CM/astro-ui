@@ -444,25 +444,15 @@ export default function PortfolioRecentActivity() {
             </div>
 
             <div className="font-mono text-xs truncate mt-2">
-              <ExternalLink
-                classnamecontents="text-blue-600 hover:underline"
-                type="text"
-                text={`${activityItem.account_history.operation_id}`}
-                hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                  activityItem.account_history.operation_id
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="text-blue-600 hover:underline">
+                {activityItem.account_history.operation_id}
+              </span>
             </div>
 
             <div className="font-mono text-xs truncate mt-2">
-              <ExternalLink
-                classnamecontents="text-blue-600 hover:underline"
-                type="text"
-                text={`${activityItem.block_data.block_num}`}
-                hyperlink={`https://explorer.bitshares.ws/#/blocks/${
-                  activityItem.block_data.block_num
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="text-blue-600 hover:underline">
+                {activityItem.block_data.block_num}
+              </span>
             </div>
 
             <div className="text-sm mt-2">{timeDiffString}</div>
@@ -543,25 +533,15 @@ export default function PortfolioRecentActivity() {
             </div>
 
             <div className="font-mono text-xs truncate mt-2">
-              <ExternalLink
-                classnamecontents="text-blue-600 hover:underline"
-                type="text"
-                text={`${activityItem.account_history.operation_id}`}
-                hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                  activityItem.account_history.operation_id
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="text-blue-600 hover:underline">
+                {activityItem.account_history.operation_id}
+              </span>
             </div>
 
             <div className="font-mono text-xs truncate mt-2">
-              <ExternalLink
-                classnamecontents="text-blue-600 hover:underline"
-                type="text"
-                text={`${activityItem.block_data.block_num}`}
-                hyperlink={`https://explorer.bitshares.ws/#/blocks/${
-                  activityItem.block_data.block_num
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              <span className="text-blue-600 hover:underline">
+                {activityItem.block_data.block_num}
+              </span>
             </div>
 
             <div className="text-sm mt-2">{timeDiffString}</div>

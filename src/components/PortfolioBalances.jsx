@@ -62,7 +62,6 @@ import {
   removeFavouriteAsset,
 } from "@/stores/favourites.ts";
 
-import ExternalLink from "./common/ExternalLink.jsx";
 import { humanReadableFloat } from "@/lib/common";
 
 function RowHyperlink({
@@ -385,15 +384,7 @@ export default function PortfolioBalances({
             <div className="col-span-4 md:col-span-2 text-left">
               <CardHeader className="pt-3 pb-3">
                 <CardTitle title={`${t("PoolStake:id")}: ${currentAsset.id}`}>
-                  <ExternalLink
-                    variant="outline"
-                    classnamecontents="mt-2 hover:text-blue-500"
-                    type="text"
-                    text={currentAsset.symbol}
-                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                      currentAsset.symbol
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
+                  {currentAsset.symbol}
                 </CardTitle>
                 <CardDescription>
                   <div className="flex items-center space-x-2">

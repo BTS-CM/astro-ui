@@ -268,17 +268,6 @@ export default function MarketAssetCard(properties) {
                   <b>{t("MarketAssetCard:explorers")}</b>
                 </div>
                 <div>
-                  <ExternalLink
-                    variant="outline"
-                    classnamecontents=""
-                    type="button"
-                    text={`explorer.bitshares.ws`}
-                    hyperlink={
-                      chain === "bitshares"
-                        ? `https://explorer.bitshares.ws/#/assets/${asset}`
-                        : `https://explorer.bitshares.ws/#/assets/${asset}?network=testnet`
-                    }
-                  />
                   {chain === "bitshares" ? (
                     <ExternalLink
                       variant="outline"

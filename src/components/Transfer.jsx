@@ -720,18 +720,11 @@ export default function Transfer(properties) {
                     <li>{t("Transfer:doubleCheckFormInputs")}</li>
                     <li>{t("Transfer:validateBeetPrompt")}</li>
                     <li>
-                      <ExternalLink
-                        type="text"
-                        classnamecontents=""
-                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                          targetUser.name
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                        text={t("Transfer:bitsharesLink", {
+                      <span>
+                        {t("Transfer:bitsharesLink", {
                           name: targetUser.name,
                         })}
-                      />
+                      </span>
                     </li>
                   </ul>
                 </CardContent>

@@ -68,15 +68,18 @@ export default function AppSidebar() {
     },
   ];
 
+  /*
+    // Removed for now due to domain issues
+    {
+      title: "Home:portfolio_recent_activity.title",
+      href: "/recent-activity/index.html",
+    },
+  */
   const accountOverviewsHeading = [
     { title: "Home:portfolio_balances.title", href: "/balances/index.html" },
     {
       title: "Home:portfolio_open_orders.title",
       href: "/open-orders/index.html",
-    },
-    {
-      title: "Home:portfolio_recent_activity.title",
-      href: "/recent-activity/index.html",
     },
     { title: "Home:favourites.title", href: "/favourites/index.html" },
     { title: "Home:issued_assets.title", href: "/issued_assets/index.html" },

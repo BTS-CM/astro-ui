@@ -60,7 +60,6 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { $currentUser, $userStorage } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
-import ExternalLink from "./common/ExternalLink.jsx";
 import AssetIssuerActions from "./AssetIssuerActions.jsx";
 
 const activeTabStyle = { backgroundColor: "#252526", color: "white" };
@@ -494,24 +493,10 @@ export default function IssuedAssets(properties) {
                 <div className="lg:grid lg:grid-cols-2 lg:gap-5">
                   <div className="hidden lg:block pb-2">
                     {smartcoinCheck}
-                    <ExternalLink
-                      classnamecontents="hover:text-purple-500"
-                      type="text"
-                      text={issuedAsset.symbol}
-                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                        issuedAsset.symbol
-                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
+                    {issuedAsset.symbol}
                     <br />
                     {" ("}
-                    <ExternalLink
-                      classnamecontents="hover:text-purple-500"
-                      type="text"
-                      text={issuedAsset.id}
-                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                        issuedAsset.id
-                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
+                    {issuedAsset.id}
                     {")"}
                   </div>
                   <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3 text-right">

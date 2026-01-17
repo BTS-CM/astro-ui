@@ -24,7 +24,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import ExternalLink from "@/components/common/ExternalLink.jsx";
 import CardRow from "@/components/common/CardRow.jsx";
 
 export default function AboutAssetCard({
@@ -106,15 +105,7 @@ export default function AboutAssetCard({
             <Label>{t("Smartcoin:generalAssetInfo")}</Label>
           </div>
           <div className="col-span-1 text-right">
-            <ExternalLink
-              classnamecontents="h-5 mb-2"
-              variant="outline"
-              type="button"
-              text={t("Smartcoin:viewAssetOnbitshares")}
-              hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                assetInfo.id
-              }${usr?.chain === "bitshares" ? "" : "?network=testnet"}`}
-            />
+            {t("Smartcoin:viewAssetOnbitshares")}
           </div>
         </div>
 
@@ -133,17 +124,12 @@ export default function AboutAssetCard({
                     <li>{t("Smartcoin:issuerDetail2")}</li>
                     <li>{t("Smartcoin:issuerDetail3")}</li>
                     <li>{t("Smartcoin:issuerDetail4")}</li>
-                    <ExternalLink
-                      classnamecontents="h-8 mb-2 mt-3"
-                      type="button"
-                      text={t("Smartcoin:viewIssuerOnbitshares")}
-                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                        assetInfo.u.split(" ")[0]
-                      }${usr?.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
+                    <span className="h-8 mb-2 mt-3 block">
+                      {t("Smartcoin:viewIssuerOnbitshares")}
+                    </span>
                   </ul>
                 }
-                tooltip={t("Smartcoin:moreAboutAssetIssuer")}
+                tooltip={t("Smartcoin:moreInfoOnMaxSupply")}
               />
 
               <CardRow
@@ -267,21 +253,11 @@ export default function AboutAssetCard({
                 </Label>
               </div>
               <div className="col-span-1 text-right">
-                <ExternalLink
-                  classnamecontents="h-5 mb-2"
-                  variant="outline"
-                  type="button"
-                  text={t("Smartcoin:viewBitassetOnbitshares")}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                    bitassetInfo.id
-                  }${usr?.chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                <Button variant="outline" className="h-5 mb-2">
+                  {t("Smartcoin:viewBitassetOnbitshares")}
+                </Button>
               </div>
             </div>
-
-            <div className="grid grid-cols-11 gap-1 w-full text-sm">
-              <div className="col-span-5">
-                <div className="grid grid-cols-1 gap-1 w-full text-sm">
                   <CardRow
                     title={t("Smartcoin:collateralAsset")}
                     button={

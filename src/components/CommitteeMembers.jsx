@@ -304,24 +304,10 @@ export default function CommitteeMembers(properties) {
                     <span className="ml-2">{member.name}</span>
                   </div>
                   <div>
-                    <ExternalLink
-                      classnamecontents="text-blue-500 hover:text-purple-500"
-                      type="text"
-                      text={member.id}
-                      hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                        member.id
-                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />{" "}
-                    (
-                    <ExternalLink
-                      classnamecontents="text-blue-500 hover:text-purple-500"
-                      type="text"
-                      text={member.account_id}
-                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                        member.account_id
-                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
-                    )
+                    {member.id}
+                    {" ("}
+                    {member.account_id}
+                    {")"}
                   </div>
                   <div className="text-right pr-3">
                     {humanReadableFloat(member.total_votes, 5).toLocaleString(

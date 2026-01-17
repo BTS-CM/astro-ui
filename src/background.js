@@ -324,6 +324,7 @@ const createWindow = async () => {
     }
   });
 
+  /*
   ipcMain.handle("fetchTopMarkets", async (event, arg) => {
     const { chain } = arg;
 
@@ -331,8 +332,8 @@ const createWindow = async () => {
     try {
       retrievedData = await fetch(
         chain === "bitshares"
-          ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100`
-          : `https://api.testnet.bitshares.ws/openexplorer/top_markets?top_n=50`
+          ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100` // WS DOMAIN HIJACKED!
+          : `https://api.testnet.bitshares.ws/openexplorer/top_markets?top_n=50` // WS DOMAIN HIJACKED!
       );
     } catch (error) {
       console.log({ error });
@@ -346,7 +347,9 @@ const createWindow = async () => {
     const topMarkets = await retrievedData.json();
     return topMarkets ?? null;
   });
+  */
 
+  /*
   ipcMain.handle("fetchAccountHistory", async (event, arg) => {
     const { chain, accountID } = arg;
 
@@ -387,6 +390,7 @@ const createWindow = async () => {
     const accountHistory = await history.json();
     return accountHistory ?? null;
   });
+  */
 
   ipcMain.on("notify", (event, arg) => {
     const NOTIFICATION_TITLE = "Error!";
@@ -599,7 +603,6 @@ const createWindow = async () => {
   });
 
   const safeDomains = [
-    "https://explorer.bitshares.ws/",
     "https://bts.exchange/",
     "https://ex.xbts.io/",
     "https://kibana.bts.mobi/",

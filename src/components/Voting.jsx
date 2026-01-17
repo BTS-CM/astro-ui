@@ -649,23 +649,13 @@ export default function Witnesses(properties) {
                 <span className="ml-2">{witness.name}</span>
               </div>
               <div>
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={witness.id}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                    witness.id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />{" "}
+                <span className="text-blue-500 hover:text-purple-500">
+                  {witness.id}
+                </span>{" "}
                 (
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={witness.account_id}
-                  hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                    witness.account_id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                <span className="text-blue-500 hover:text-purple-500">
+                  {witness.account_id}
+                </span>
                 )
               </div>
               <div>
@@ -734,23 +724,13 @@ export default function Witnesses(properties) {
                 <span className="ml-2">{member.name}</span>
               </div>
               <div>
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={member.id}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                    member.id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />{" "}
+                <span className="text-blue-500 hover:text-purple-500">
+                  {member.id}
+                </span>{" "}
                 (
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={member.account_id}
-                  hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                    member.account_id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                <span className="text-blue-500 hover:text-purple-500">
+                  {member.account_id}
+                </span>
                 )
               </div>
               <div>
@@ -807,44 +787,19 @@ export default function Witnesses(properties) {
                   : "❌"}
               </div>
               <div className="hidden md:block">
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={worker.id}
-                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                    worker.id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
+                <span className="text-blue-500 hover:text-purple-500">
+                  {worker.id}
+                </span>
               </div>
               <div className="col-span-3 grid grid-cols-1">
-                <div title={worker.name}>
-                  {worker.name.length > 20
-                    ? `${worker.name.slice(0, 20)}...`
-                    : worker.name}
-                </div>
-                <div>
-                  <ExternalLink
-                    classnamecontents="text-blue-500 hover:text-purple-500"
-                    type="text"
-                    text={worker.username}
-                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                      worker.username
-                    }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />{" "}
-                  (
-                  <ExternalLink
-                    classnamecontents="text-blue-500 hover:text-purple-500"
-                    type="text"
-                    text={worker.worker_account}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                      worker.worker_account
-                    }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  )
-                </div>
-              </div>
-              <div className="hidden md:block col-span-2">
-                {worker.readableVotesFor}
+                <span className="text-blue-500 hover:text-purple-500">
+                  {worker.username}
+                </span>{" "}
+                (
+                <span className="text-blue-500 hover:text-purple-500">
+                  {worker.worker_account}
+                </span>
+                )
               </div>
               <div className="hidden md:block">
                 {calculateNeededVotes(worker)}

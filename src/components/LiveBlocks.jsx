@@ -169,17 +169,7 @@ export default function LiveBlocks(properties) {
     return (
       <div style={style} className="border grid grid-cols-2 gap-2 mb-1 mt-1">
         <div className="col-span-1 ml-2">
-          <span
-            className="hover:text-purple-500"
-            onClick={() => {
-              setHyperlink(
-                `https://explorer.bitshares.ws/#/blocks/${activity.block}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`
-              );
-              setOpenHyperlink(true);
-            }}
-          >
+          <span>
             {activity.block}
           </span>
         </div>
@@ -240,17 +230,7 @@ export default function LiveBlocks(properties) {
         title={`${_ts} : ${block.witness}`}
       >
         <div>
-          <span
-            className="hover:text-purple-500"
-            onClick={() => {
-              setHyperlink(
-                `https://explorer.bitshares.ws/#/blocks/${block.block}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`
-              );
-              setOpenHyperlink(true);
-            }}
-          >
+          <span>
             {block.block}
           </span>
         </div>
@@ -258,19 +238,13 @@ export default function LiveBlocks(properties) {
         <div className="hidden md:block">
           <span
             className="hover:text-purple-500"
-            onClick={() => {
-              setHyperlink(
-                `https://explorer.bitshares.ws/#/witness/${block.witness}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`
-              );
-              setOpenHyperlink(true);
-            }}
           >
             {block.witness}
           </span>
         </div>
-        <div>{block.transactions?.length ?? 0}</div>
+        <div className="hidden md:block">
+          {block.transactions ? block.transactions.length : 0}
+        </div>
       </div>
     );
   };
@@ -310,25 +284,11 @@ export default function LiveBlocks(properties) {
                         type="header"
                       />
                       {recentBlocks && recentBlocks.length ? (
-                        <span
-                          className="hover:text-purple-500"
-                          onClick={() => {
-                            setHyperlink(
-                              `https://explorer.bitshares.ws/#/witness/${
-                                recentBlocks[0].witness
-                              }${
-                                usr.chain === "bitshares"
-                                  ? ""
-                                  : "?network=testnet"
-                              }`
-                            );
-                            setOpenHyperlink(true);
-                          }}
-                        >
+                        <span className="hover:text-purple-500">
                           {recentBlocks[0].witness}
                         </span>
                       ) : (
-                        "..."
+                        "-"
                       )}
                     </CardContent>
                   </Card>

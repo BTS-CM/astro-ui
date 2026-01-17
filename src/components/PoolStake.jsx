@@ -86,7 +86,6 @@ import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketAssetCardPlaceholder from "./Market/MarketAssetCardPlaceholder.jsx";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 import { Spinner } from "@/components/ui/spinner";
 
 import {
@@ -867,19 +866,7 @@ export default function PoolStake(properties) {
                               <Card>
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
-                                    {t("PoolStake:assetA")}:{" "}
-                                    <ExternalLink
-                                      classnamecontents="text-blue-500"
-                                      type="text"
-                                      text={assetA.symbol}
-                                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                                        assetA.id
-                                      }${
-                                        usr.chain === "bitshares"
-                                          ? ""
-                                          : "?network=testnet"
-                                      }`}
-                                    />
+                                    {t("PoolStake:assetA")}: {assetA.symbol}
                                   </CardTitle>
                                   <CardDescription>
                                     {t("PoolStake:currentTotalAmountInPool")}
@@ -897,48 +884,28 @@ export default function PoolStake(properties) {
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
                                     {t("PoolStake:assetB")}:{" "}
-                                    <ExternalLink
-                                      classnamecontents="text-blue-500"
-                                      type="text"
-                                      text={assetB.symbol}
-                                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                                        assetB.id
-                                      }${
-                                        usr.chain === "bitshares"
-                                          ? ""
-                                          : "?network=testnet"
-                                      }`}
-                                    />
+                                    <span className="text-blue-500">{assetB.symbol}</span>
                                   </CardTitle>
                                   <CardDescription>
                                     {t("PoolStake:currentTotalAmountInPool")}
                                   </CardDescription>
                                 </CardHeader>
-                                <CardContent className="text-lg">
+                                <CardContent className="text-lg mt-0 pt-0">
                                   {foundPool && foundPoolDetails
                                     ? foundPool.readable_balance_b.split(" ")[0]
                                     : "0"}
                                 </CardContent>
                               </Card>
                             </div>
-                          </>
                         ) : null}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-5 text-center">
                         {isFormReady ? (
                           <>
-                            <ExternalLink
-                              variant="outline"
-                              classnamecontents="ml-2"
-                              type="button"
-                              text={t("PoolStake:bitsharesPoolExplorer")}
-                              hyperlink={`https://explorer.bitshares.ws/#/pools/${pool}${
-                                usr.chain !== "bitshares"
-                                  ? "?network=testnet"
-                                  : ""
-                              }`}
-                            />
+                            <span className="ml-2 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                              {t("PoolStake:bitsharesPoolExplorer")}
+                            </span>
                             {foundPool && foundPoolDetails ? (
                               <Dialog>
                                 <DialogTrigger asChild>
@@ -949,7 +916,7 @@ export default function PoolStake(properties) {
                                 <DialogContent className="sm:max-w-[550px] bg-white">
                                   <DialogHeader>
                                     <DialogTitle>
-                                      {t("PoolStake:liquidityPoolJson")}
+                                      {t("PoolStake:poolJson")}
                                     </DialogTitle>
                                     <DialogDescription>
                                       {t("PoolStake:checkPoolDetails")}

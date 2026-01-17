@@ -96,7 +96,7 @@ export default function PageHeader(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
-    () => true
+    () => true,
   );
 
   function ListItem({ title, children, href, ...props }) {
@@ -205,6 +205,15 @@ export default function PageHeader(properties) {
     },
   ];
 
+  /*
+    // Removed for now due to domain issues
+    {
+      title: "Home:portfolio_recent_activity.title",
+      href: "/recent-activity/index.html",
+      description: "Home:portfolio_recent_activity.subtitle",
+    },
+  */
+
   const accountOverviewsHeading = [
     {
       title: "Home:portfolio_balances.title",
@@ -215,11 +224,6 @@ export default function PageHeader(properties) {
       title: "Home:portfolio_open_orders.title",
       href: "/open-orders/index.html",
       description: "Home:portfolio_open_orders.subtitle",
-    },
-    {
-      title: "Home:portfolio_recent_activity.title",
-      href: "/recent-activity/index.html",
-      description: "Home:portfolio_recent_activity.subtitle",
     },
     {
       title: "Home:favourites.title",

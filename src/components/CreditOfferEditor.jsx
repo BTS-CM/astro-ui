@@ -62,7 +62,6 @@ import {
 
 import { Avatar } from "./Avatar.tsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import CollateralDropDownCard from "./Market/CollateralDropDownCard.jsx";
 import AccountSearch from "./AccountSearch.jsx";
@@ -745,21 +744,7 @@ export default function CreditOfferEditor(properties) {
                               />
                             </div>
                             <div className="col-span-4 mt-1 text-center">
-                              <ExternalLink
-                                variant="outline"
-                                classnamecontents=""
-                                type="button"
-                                text={t("CreditOfferEditor:viewAccount")}
-                                hyperlink={
-                                  usr.chain === "bitshares"
-                                    ? `https://explorer.bitshares.ws/#/accounts/${
-                                        offerOwner ?? ""
-                                      }`
-                                    : `https://explorer.bitshares.ws/#/accounts/${
-                                        offerOwner ?? ""
-                                      }?network=testnet`
-                                }
-                              />
+                              {t("CreditOfferEditor:viewAccount")}
                             </div>
                           </div>
                         </FieldContent>
@@ -824,19 +809,9 @@ export default function CreditOfferEditor(properties) {
                                           "DeepLinkDialog:tabsContent.copyOperationJSON"
                                         )}
                                       </Button>
-                                      <ExternalLink
-                                        variant="outline"
-                                        classnamecontents="ml-3"
-                                        type="button"
-                                        text={t(
-                                          "CreditOfferEditor:viewOnbitshares"
-                                        )}
-                                        hyperlink={
-                                          usr.chain === "bitshares"
-                                            ? `https://explorer.bitshares.ws/#/objects/${offerID}`
-                                            : `https://explorer.bitshares.ws/#/objects/${offerID}?network=testnet`
-                                        }
-                                      />
+                                      <span className="ml-3">
+                                        {t("CreditOfferEditor:viewOnbitshares")}
+                                      </span>
                                     </div>
                                   </div>
                                 </DialogContent>
@@ -844,37 +819,6 @@ export default function CreditOfferEditor(properties) {
                             </div>
                           </div>
                         </FieldContent>
-                        <FieldDescription>
-                          {t("CreditOfferEditor:viewingExistingOffer")}
-                        </FieldDescription>
-                      </Field>
-                    </span>
-                  </span>
-                ) : null}
-                <Field>
-                  <span className="grid grid-cols-2">
-                    <FieldLabel
-                      className="mt-2"
-                      htmlFor={`targetAsset-${offerID ?? "new"}`}
-                    >
-                      {t("CreditOfferEditor:assetToLend")}
-                    </FieldLabel>
-                    <span className="text-right mt-1">
-                      {!offerID ? (
-                        <AssetDropDown
-                          assetSymbol={selectedAsset ?? ""}
-                          assetData={null}
-                          storeCallback={setSelectedAsset}
-                          otherAsset={null}
-                          marketSearch={marketSearch}
-                          type={null}
-                          chain={usr.chain}
-                          balances={balances}
-                        />
-                      ) : null}
-                    </span>
-                  </span>
-                  <FieldContent>
                     <div className="grid grid-cols-12 mt-4">
                       <div className="col-span-1 ml-5">
                         {!selectedAsset || !foundAsset ? (

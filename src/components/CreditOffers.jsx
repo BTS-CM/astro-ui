@@ -38,7 +38,6 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
-import ExternalLink from "./common/ExternalLink.jsx";
 
 function hoursTillExpiration(expirationTime) {
   var expirationDate = new Date(expirationTime);
@@ -122,33 +121,13 @@ export default function CreditOffers(properties) {
             <CardTitle>
               {t("CreditBorrow:common.offer")}
               {" #"}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={res.id.replace("1.21.", "")}
-                hyperlink={`https://explorer.bitshares.ws/#/credit-offers/${res.id.replace(
-                  "1.21.",
-                  ""
-                )}${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />{" "}
+              {res.id.replace("1.21.", "")}
+              {" "}
               {t("CreditBorrow:common.by")}{" "}
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={res.owner_name}
-                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                  res.owner_name
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />{" "}
+              {res.owner_name}
+              {" "}
               (
-              <ExternalLink
-                classnamecontents="hover:text-purple-500"
-                type="text"
-                text={res.owner_account}
-                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                  res.owner_account
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
+              {res.owner_account}
               )
             </CardTitle>
             <CardDescription>
