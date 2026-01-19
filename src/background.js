@@ -462,7 +462,7 @@ const createWindow = async () => {
         true,
         4000,
         { enableDatabase: true },
-        (error) => console.log({ error })
+        (error) => console.log({ error }),
       );
     } catch (error) {
       console.log({ error });
@@ -503,7 +503,7 @@ const createWindow = async () => {
         usrChain,
         nodeURL,
         operationNames,
-        trxJSON
+        trxJSON,
       );
     } catch (error) {
       console.log({ error });
@@ -521,7 +521,7 @@ const createWindow = async () => {
         usrChain,
         nodeURL || currentNode,
         operationNames,
-        trxJSON
+        trxJSON,
       );
     } catch (error) {
       console.log({ error });
@@ -605,7 +605,7 @@ const createWindow = async () => {
   const safeDomains = [
     "https://bts.exchange/",
     "https://ex.xbts.io/",
-    "https://kibana.bts.mobi/",
+    "https://kibana.bitshares.dev/",
     "https://www.electronjs.org/",
     "https://bitshareschain.com/",
     "https://react.dev/",

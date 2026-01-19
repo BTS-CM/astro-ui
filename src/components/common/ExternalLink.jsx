@@ -25,7 +25,7 @@ const allowedDomains = [
   "https://bitshareschain.com/",
   "https://bts.exchange/",
   "https://ex.xbts.io/",
-  "https://kibana.bts.mobi/",
+  "https://kibana.bitshares.dev/",
   "https://github.com/bitshares/beet",
   "https://react.dev/",
   "https://github.com/",

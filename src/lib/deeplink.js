@@ -9,7 +9,7 @@ const chains = {
         url: "wss://node.xbts.io/ws",
       },
       {
-        url: "wss://api.bts.mobi/ws",
+        url: "wss://kibana.bitshares.dev/ws",
       },
       {
         url: "wss://btsws.roelandp.nl/ws",
@@ -42,7 +42,7 @@ async function generateDeepLink(chain, nodeURL, opTypes, operations) {
         true,
         4000,
         { enableCrypto: false, enableOrders: true },
-        (error) => console.log({ error })
+        (error) => console.log({ error }),
       ).init_promise;
     } catch (error) {
       console.log({ error, location: "api instance failed" });

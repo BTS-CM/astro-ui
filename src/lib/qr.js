@@ -15,7 +15,7 @@ async function generateQRContents(chain, nodeURL, opTypes, operations) {
     const defaultNodes = {
       bitshares: [
         "wss://node.xbts.io/ws",
-        "wss://api.bts.mobi/ws",
+        "wss://kibana.bitshares.dev/ws",
         "wss://btsws.roelandp.nl/ws",
       ],
       bitshares_testnet: [
@@ -34,7 +34,7 @@ async function generateQRContents(chain, nodeURL, opTypes, operations) {
         true,
         4000,
         { enableCrypto: false, enableOrders: true },
-        (error) => console.log({ error })
+        (error) => console.log({ error }),
       ).init_promise;
     } catch (error) {
       console.log({ error, location: "api instance failed (QR)" });

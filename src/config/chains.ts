@@ -8,7 +8,7 @@ export const chains = {
         url: "wss://node.xbts.io/ws",
       },
       {
-        url: "wss://api.bts.mobi/ws",
+        url: "wss://kibana.bitshares.dev/ws",
       },
       {
         url: "wss://btsws.roelandp.nl/ws",
