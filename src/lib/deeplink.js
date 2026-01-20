@@ -9,7 +9,7 @@ const chains = {
         url: "wss://node.xbts.io/ws",
       },
       {
-        url: "wss://kibana.bitshares.dev/ws",
+        url: "wss://api.bitshares.dev/ws",
       },
       {
         url: "wss://btsws.roelandp.nl/ws",

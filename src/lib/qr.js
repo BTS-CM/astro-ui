@@ -15,7 +15,7 @@ async function generateQRContents(chain, nodeURL, opTypes, operations) {
     const defaultNodes = {
       bitshares: [
         "wss://node.xbts.io/ws",
-        "wss://kibana.bitshares.dev/ws",
+        "wss://api.bitshares.dev/ws",
         "wss://btsws.roelandp.nl/ws",
       ],
       bitshares_testnet: [
