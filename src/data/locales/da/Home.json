@@ -470,6 +470,11 @@
         "openInstant": "Åbn i Instant Swap"
     },
     "testnetUnsupported": "Denne funktion forespørger det offentlige BitShares Elasticsearch-indeks, som kun er tilgængeligt på hovednetværket. Testnet understøttes ikke.",
+    "mcp": {
+        "title": "Model context protocol-server",
+        "subtitle": "Gør astro-ui's logik tilgængelig for en AI-assistent via Model Context Protocol.",
+        "hover1": "Slå en lokal Model context protocol-server til, så en AI-assistent kan læse sider, hente kædedata og bygge operationer på dine vegne."
+    },
     "top_pools": {
         "title": "Mest aktive puljer",
         "subtitle": "De mest aktive likviditetspulje-swaps på netværket.",

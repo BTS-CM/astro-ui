@@ -156,6 +156,7 @@ const ITEM_ICONS = {
   configure_visuals: Palette,
   theme_customizer: Palette,
   page_themes: Layers,
+  mcp: Server,
   home: Home,
   create_uia: Gem,
   create_smartcoin: Gem,
@@ -277,6 +278,7 @@ export default function AppSidebar() {
     { slug: "configure_visuals", title: "Home:configure_visuals.title", href: "/visuals.html" },
     { slug: "theme_customizer", title: "Home:theme_customizer.title", href: "/theme.html" },
     { slug: "page_themes", title: "Home:page_themes.title", href: "/page_themes.html" },
+    { slug: "mcp", title: "Home:mcp.title", href: "/mcp.html" },
   ];
 
   const invoicingHeading = [

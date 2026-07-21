@@ -470,6 +470,11 @@
     "openInstant": "เปิดใน Instant Swap"
   },
   "testnetUnsupported": "คุณสมบัตินี้ค้นหาดัชนี BitShares Elasticsearch สาธารณะ ซึ่งมีให้ใช้งานเฉพาะบนเมนเน็ตเท่านั้น ไม่รองรับเทสต์เน็ต",
+  "mcp": {
+    "title": "เซิร์ฟเวอร์ Model Context Protocol",
+    "subtitle": "เปิดเผยโลจิกของ astro-ui ให้ผู้ช่วย AI ผ่าน Model Context Protocol",
+    "hover1": "เปิดเซิร์ฟเวอร์ Model Context Protocol ภายในเครื่อง เพื่อให้ผู้ช่วย AI อ่านหน้าเว็บ ดึงข้อมูลบล็อกเชน และสร้างการดำเนินการในนามของคุณได้"
+  },
   "top_pools": {
     "title": "พูลยอดนิยม",
     "subtitle": "พูลสภาพคล่องที่มีการสลับมากที่สุดบนเครือข่าย",

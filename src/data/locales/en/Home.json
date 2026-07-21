@@ -471,6 +471,11 @@
         "openInstant": "Open in Instant Swap"
     },
     "testnetUnsupported": "This feature queries the public BitShares Elasticsearch index, which is only available on the mainnet. Testnet is not supported.",
+    "mcp": {
+        "title": "Model context protocol server",
+        "subtitle": "Expose astro-ui's logic to an AI assistant over the Model Context Protocol.",
+        "hover1": "Turn on a local Model context protocol server to let an AI assistant read pages, fetch chain data, and build operations on your behalf."
+    },
     "top_pools": {
         "title": "Top pools",
         "subtitle": "The most actively swapped liquidity pools on the network.",

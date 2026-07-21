@@ -470,6 +470,11 @@
     "openInstant": "Abrir en Instant Swap"
   },
   "testnetUnsupported": "Esta función consulta el índice público de BitShares Elasticsearch, que solo está disponible en la red principal. Testnet no es compatible.",
+  "mcp": {
+    "title": "Servidor de Model Context Protocol",
+    "subtitle": "Expón la lógica de astro-ui a un asistente de IA mediante el Model Context Protocol.",
+    "hover1": "Activa un servidor local de Model Context Protocol para que un asistente de IA pueda leer páginas, obtener datos de la cadena y construir operaciones en tu nombre."
+  },
   "top_pools": {
     "title": "Pools principales",
     "subtitle": "Los pools de liquidez más intercambiados en la red.",

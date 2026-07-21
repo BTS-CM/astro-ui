@@ -459,6 +459,11 @@
     "openInstant": "In Instant Swap öffnen"
   },
   "testnetUnsupported": "Diese Funktion fragt den öffentlichen BitShares-Elasticsearch-Index ab, der nur im Hauptnetz verfügbar ist. Testnet wird nicht unterstützt.",
+  "mcp": {
+    "title": "Model-Context-Protocol-Server",
+    "subtitle": "Mache astro-uis Logik über das Model Context Protocol für einen KI-Assistenten zugänglich.",
+    "hover1": "Schalte einen lokalen Model-Context-Protocol-Server ein, damit ein KI-Assistent Seiten lesen, Kettendaten abrufen und Operationen in deinem Auftrag erstellen kann."
+  },
   "top_pools": {
     "title": "Top-Pools",
     "subtitle": "Die aktivsten Liquiditätspool-Swaps im Netzwerk.",

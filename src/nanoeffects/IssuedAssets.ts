@@ -113,4 +113,4 @@ const [createIssuedAssetsStore] = nanoquery({
   },
 });
 
-export { createIssuedAssetsStore };
+export { createIssuedAssetsStore, fetchingIssuedAssets };

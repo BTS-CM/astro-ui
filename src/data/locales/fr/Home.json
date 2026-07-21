@@ -470,6 +470,11 @@
     "openInstant": "Ouvrir dans Instant Swap"
   },
   "testnetUnsupported": "Cette fonctionnalité interroge l'index Elasticsearch public de BitShares, qui n'est disponible que sur le mainnet. Le testnet n'est pas pris en charge.",
+  "mcp": {
+    "title": "Serveur Model Context Protocol",
+    "subtitle": "Expose la logique d'astro-ui à un assistant IA via le Model Context Protocol.",
+    "hover1": "Active un serveur local Model Context Protocol pour qu'un assistant IA puisse lire des pages, récupérer des données de la chaîne et construire des opérations en votre nom."
+  },
   "top_pools": {
     "title": "Meilleurs pools",
     "subtitle": "Les pools de liquidité les plus activement échangés sur le réseau.",

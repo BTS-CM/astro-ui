@@ -470,6 +470,11 @@
     "openInstant": "Instant Swap에서 열기"
   },
   "testnetUnsupported": "이 기능은 메인넷에서만 사용할 수 있는 공개 BitShares Elasticsearch 인덱스를 조회합니다. 테스트넷은 지원되지 않습니다.",
+  "mcp": {
+    "title": "Model Context Protocol 서버",
+    "subtitle": "astro-ui의 로직을 Model Context Protocol을 통해 AI 비서에 공개합니다.",
+    "hover1": "로컬 Model Context Protocol 서버를 켜면 AI 비서가 페이지를 읽고, 체인 데이터를 가져오고, 대신 운영을 생성할 수 있습니다."
+  },
   "top_pools": {
     "title": "인기 풀",
     "subtitle": "네트워크에서 가장 활발하게 스왑되는 유동성 풀.",

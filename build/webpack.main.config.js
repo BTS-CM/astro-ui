@@ -29,7 +29,8 @@ module.exports = function(env) {
             mainFields: ["main"],
             alias: {
                 env: path.resolve(__dirname, `../config/env_${env}.json`),
-                '~': path.resolve(__dirname, '../src/')
+                '~': path.resolve(__dirname, '../src/'),
+                '@': path.resolve(__dirname, '../src/')
             }
         },
 

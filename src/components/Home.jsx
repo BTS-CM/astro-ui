@@ -151,6 +151,7 @@ const ITEM_ICONS = {
   top_markets: TrendingUp,
   top_pools: Droplets,
   docs: BookOpen,
+  mcp: Server,
 };
 
 // Section metadata (icon + i18n keys). All colors now come from the theme via
@@ -308,6 +309,7 @@ export default function Home(properties) {
     { key: "configure_visuals", href: "/visuals.html", titleKey: "Home:configure_visuals.title", subtitleKey: "Home:configure_visuals.subtitle", hoverKeys: ["Home:configure_visuals.hover1", "Home:configure_visuals.hover2"] },
     { key: "theme_customizer", href: "/theme.html", titleKey: "Home:theme_customizer.title", subtitleKey: "Home:theme_customizer.subtitle", hoverKeys: ["Home:theme_customizer.hover1", "Home:theme_customizer.hover2"] },
     { key: "page_themes", href: "/page_themes.html", titleKey: "Home:page_themes.title", subtitleKey: "Home:page_themes.subtitle", hoverKeys: ["Home:page_themes.hover1"] },
+    { key: "mcp", href: "/mcp.html", titleKey: "Home:mcp.title", subtitleKey: "Home:mcp.subtitle", hoverKeys: ["Home:mcp.hover1"] },
     { key: "docs", href: "docs/docs-index.html", titleKey: "Home:docs.title", subtitleKey: "Home:docs.subtitle", hoverKeys: ["Home:docs.hover1"] },
   ];
 

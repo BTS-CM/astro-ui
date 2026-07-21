@@ -37,4 +37,21 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("calculateOperationFees", args),
   // Ping a node URL from the main process. Returns an object { ok: boolean, status?: number, error?: string }
   ping: async (url) => ipcRenderer.invoke("ping", url),
+
+  // ---- MCP server control (page-tied lifecycle) ----
+  mcp: {
+    start: async (port) => ipcRenderer.invoke("mcp:start", { port }),
+    stop: async () => ipcRenderer.invoke("mcp:stop"),
+    setStoredUsers: async (users) => ipcRenderer.invoke("mcp:setStoredUsers", users),
+    setActiveNode: async (chain, url) => ipcRenderer.invoke("mcp:setActiveNode", { chain, url }),
+    onStatus: (func) => {
+      ipcRenderer.on("mcp-status", (event, data) => func(data));
+    },
+    onLog: (func) => {
+      ipcRenderer.on("mcp-log", (event, data) => func(data));
+    },
+    onActiveNode: (func) => {
+      ipcRenderer.on("mcp-active-node", (event, data) => func(data));
+    },
+  },
 });

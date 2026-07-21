@@ -470,6 +470,11 @@
     "openInstant": "Instant Swap で開く"
   },
   "testnetUnsupported": "この機能は BitShares の公開 Elasticsearch インデックスを照会します。これはメインネットでのみ利用可能です。テストネットはサポートされていません。",
+  "mcp": {
+    "title": "Model Context Protocolサーバー",
+    "subtitle": "astro-ui のロジックを Model Context Protocol 経由で AI アシスタントに公開します。",
+    "hover1": "ローカルの Model Context Protocol サーバーを有効にすると、AI アシスタントがページを読み取り、チェーンデータを取得し、あなたに代わってオペレーションを構築できるようになります。"
+  },
   "top_pools": {
     "title": "トッププール",
     "subtitle": "ネットワーク上で最も活発にスワップされている流動性プール。",

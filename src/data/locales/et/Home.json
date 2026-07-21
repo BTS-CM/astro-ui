@@ -470,6 +470,11 @@
     "openInstant": "Ava Instant Swapis"
   },
   "testnetUnsupported": "See funktsioon pärib avalikku BitShares Elasticsearchi indeksit, mis on saadaval ainult põhivõrgus. Testneti ei toetata.",
+  "mcp": {
+    "title": "Model context protocoli server",
+    "subtitle": "Tee astro-ui loogika kättesaadavaks tehisintellekti abilisele läbi Model Context Protocoli.",
+    "hover1": "Lülita sisse kohalik Model context protocoli server, et tehisintellekti abiline saaks lugeda lehti, hankida plokiahela andmeid ja luua sinu nimel operatsioone."
+  },
   "top_pools": {
     "title": "Populaarsemad poolid",
     "subtitle": "Võrgu aktiivsemad likviidsuspoolsi vahetused.",

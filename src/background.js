@@ -27,9 +27,28 @@ import {
 import { initApplicationMenu } from "./lib/applicationMenu.js";
 import { generateDeepLink } from "./lib/deeplink.js";
 import { generateQRContents } from "./lib/qr.js";
+import * as mcpServer from "./mcp/server.js";
 
 let mainWindow = null;
 let tray = null;
+
+mcpServer.setHooks({
+  log: (msg) => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send("mcp-log", msg);
+    }
+  },
+  status: (status) => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send("mcp-status", status);
+    }
+  },
+  activeNode: (info) => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send("mcp-active-node", info);
+    }
+  },
+});
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -414,74 +433,6 @@ const createWindow = async () => {
     return decrypted;
   });
 
-  /*
-  ipcMain.handle("fetchTopMarkets", async (event, arg) => {
-    const { chain } = arg;
-
-    let retrievedData;
-    try {
-      retrievedData = await fetch(
-        chain === "bitshares"
-          ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100` // WS DOMAIN HIJACKED!
-          : `https://api.testnet.bitshares.ws/openexplorer/top_markets?top_n=50` // WS DOMAIN HIJACKED!
-      );
-    } catch (error) {
-      console.log({ error });
-    }
-
-    if (!retrievedData || !retrievedData.ok) {
-      console.log("Failed to fetch top markets");
-      return;
-    }
-
-    const topMarkets = await retrievedData.json();
-    return topMarkets ?? null;
-  });
-  */
-
-  /*
-  ipcMain.handle("fetchAccountHistory", async (event, arg) => {
-    const { chain, accountID } = arg;
-
-    const from = arg.from ?? 0;
-    const size = arg.size ?? 100;
-    const from_date = arg.from_date ?? "2015-10-10";
-    const to_date = arg.to_date ?? "now";
-    const sort_by = arg.sort_by ?? "-operation_id_num";
-    const type = arg.type ?? "data";
-    const agg_field = arg.agg_field ?? "operation_type";
-
-    const url =
-      `https://${
-        chain === "bitshares" ? "api" : "api.testnet"
-      }.bitshares.ws/openexplorer/es/account_history` +
-      `?account_id=${accountID}` +
-      `&from_=${from}` +
-      `&size=${size}` +
-      `&from_date=${from_date}` +
-      `&to_date=${to_date}` +
-      `&sort_by=${sort_by}` +
-      `&type=${type}` +
-      `&agg_field=${agg_field}`;
-
-    let history;
-    try {
-      history = await fetch(url, { method: "GET" });
-    } catch (error) {
-      console.log({ error });
-      return null;
-    }
-
-    if (!history || !history.ok) {
-      console.log("Couldn't fetch account history.");
-      return null;
-    }
-
-    const accountHistory = await history.json();
-    return accountHistory ?? null;
-  });
-  */
-
   ipcMain.on("notify", (event, arg) => {
     const NOTIFICATION_TITLE = "Error!";
     const NOTIFICATION_BODY = arg;
@@ -690,6 +641,38 @@ const createWindow = async () => {
         resolve({ ok: false, error: `error: ${err && err.message}` });
       });
     });
+  });
+
+  ipcMain.handle("mcp:start", async (event, arg) => {
+    const port = (arg && arg.port) || 35899;
+    try {
+      const result = await mcpServer.start(port);
+      return { ok: true, ...result };
+    } catch (e) {
+      return { ok: false, error: String(e && e.message ? e.message : e) };
+    }
+  });
+
+  ipcMain.handle("mcp:stop", async () => {
+    try {
+      await mcpServer.stop();
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e && e.message ? e.message : e) };
+    }
+  });
+
+  ipcMain.handle("mcp:setStoredUsers", async (event, users) => {
+    mcpServer.setStoredUsers(users);
+    return { ok: true };
+  });
+
+  ipcMain.handle("mcp:setActiveNode", async (event, payload) => {
+    try {
+      return mcpServer.setActiveNode(payload.chain, payload.url);
+    } catch (e) {
+      return { error: String(e && e.message ? e.message : e) };
+    }
   });
 
   const safeDomains = [
