@@ -60,6 +60,7 @@ export const PAGES = [
       { name: "withdraw_permission_delete", label: "Delete withdraw permission" },
     ],
     accountScoped: true,
+    nanoeffect: { name: "fetchReceiverWithdrawPermissions", args: (c) => [c.chain, c.account] },
   },
   {
     slug: "create_vesting",
@@ -153,6 +154,8 @@ export const PAGES = [
       { name: "samet_fund_borrow", label: "Borrow from credit fund" },
       { name: "samet_fund_repay", label: "Repay credit fund" },
       { name: "credit_offer_create", label: "Create credit offer" },
+      { name: "credit_offer_update", label: "Update credit offer" },
+      { name: "credit_offer_delete", label: "Delete credit offer" },
       { name: "credit_offer_accept", label: "Accept credit offer" },
     ],
     accountScoped: true,
@@ -170,7 +173,9 @@ export const PAGES = [
       { name: "asset_global_settle", label: "Global settle" },
       { name: "asset_settle", label: "Settle" },
       { name: "asset_claim_pool", label: "Claim pool" },
+      { name: "asset_update_bitasset", label: "Update smartcoin options" },
     ],
+    nanoeffect: { name: "getFullSmartcoin", args: (c) => [c.chain, c.asset] },
   },
   {
     slug: "tfunds",
@@ -204,6 +209,7 @@ export const PAGES = [
       { name: "asset_settle", label: "Settle" },
       { name: "asset_global_settle", label: "Global settle" },
       { name: "asset_claim_fees", label: "Claim fees" },
+      { name: "bid_collateral", label: "Bid on collateral" },
     ],
   },
 
@@ -302,6 +308,7 @@ export const PAGES = [
     docs: `${DOCS}/account/deals.mdx`,
     accountScoped: true,
     operations: [{ name: "credit_deal_repay", label: "Repay credit deal" }],
+    nanoeffect: { name: "fetchBorrowerDeals", args: (c) => [c.chain, c.account] },
   },
   {
     slug: "vesting",

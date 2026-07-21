@@ -28,6 +28,7 @@ export const OPERATION_BUILDERS = {
     to: p.to,
     amount: amt(p.amount, p.asset_id),
     memo: p.memo || undefined,
+    extensions: {},
   }),
 
   limit_order_create: (p) => ({
@@ -37,23 +38,26 @@ export const OPERATION_BUILDERS = {
     min_to_receive: amt(p.min_to_receive, p.min_to_receive_asset),
     expiration: p.expiration,
     fill_or_kill: !!p.fill_or_kill,
-    extensions: [],
+    on_fill: p.on_fill || undefined,
+    extensions: {},
   }),
 
   limit_order_cancel: (p) => ({
     ...withDefaults(p, "fee_paying_account"),
     fee_paying_account: p.fee_paying_account || p.account,
     order: p.order,
+    extensions: [],
   }),
 
   limit_order_update: (p) => ({
-    ...withDefaults(p, "fee_paying_account"),
-    fee_paying_account: p.fee_paying_account || p.account,
+    ...withDefaults(p, "seller"),
+    seller: p.seller || p.account,
     order: p.order,
-    amount_to_sell: amt(p.amount_to_sell, p.amount_to_sell_asset),
-    min_to_receive: amt(p.min_to_receive, p.min_to_receive_asset),
-    expiration: p.expiration,
-    fill_or_kill: !!p.fill_or_kill,
+    delta_amount_to_sell: p.delta_amount_to_sell != null ? amt(p.delta_amount_to_sell, p.delta_amount_to_sell_asset) : undefined,
+    new_price: p.new_price || undefined,
+    new_expiration: p.new_expiration || undefined,
+    on_fill: p.on_fill || undefined,
+    extensions: [],
   }),
 
   call_order_update: (p) => ({
@@ -61,7 +65,7 @@ export const OPERATION_BUILDERS = {
     funding_account: p.funding_account || p.account,
     delta_collateral: amt(p.delta_collateral, p.delta_collateral_asset),
     delta_debt: amt(p.delta_debt, p.delta_debt_asset),
-    new_target_collateral_ratio: p.new_target_collateral_ratio ?? null,
+    extensions: p.extensions || {},
   }),
 
   account_create: (p) => ({
@@ -82,20 +86,22 @@ export const OPERATION_BUILDERS = {
     owner: p.owner || undefined,
     active: p.active || undefined,
     new_options: p.new_options || undefined,
-    extensions: [],
+    extensions: {},
   }),
 
   account_upgrade: (p) => ({
     ...withDefaults(p, "account_to_upgrade"),
     account_to_upgrade: p.account_to_upgrade || p.account,
     upgrade_to_lifetime_member: !!p.upgrade_to_lifetime_member,
+    extensions: {},
   }),
 
   account_whitelist: (p) => ({
     ...withDefaults(p, "authorizing_account"),
     authorizing_account: p.authorizing_account || p.account,
-    listed_account: p.listed_account,
+    account_to_list: p.account_to_list,
     new_listing: p.new_listing,
+    extensions: {},
   }),
 
   asset_create: (p) => ({
@@ -106,7 +112,7 @@ export const OPERATION_BUILDERS = {
     common_options: p.common_options,
     bitasset_opts: p.bitasset_opts || undefined,
     is_prediction_market: !!p.is_prediction_market,
-    extensions: [],
+    extensions: {},
   }),
 
   asset_update: (p) => ({
@@ -115,7 +121,7 @@ export const OPERATION_BUILDERS = {
     asset_to_update: p.asset_to_update,
     new_issuer: p.new_issuer || undefined,
     new_options: p.new_options,
-    extensions: [],
+    extensions: {},
   }),
 
   asset_issue: (p) => ({
@@ -124,14 +130,14 @@ export const OPERATION_BUILDERS = {
     asset_to_issue: amt(p.amount, p.asset_id),
     issue_to_account: p.issue_to_account,
     memo: p.memo || undefined,
-    extensions: [],
+    extensions: {},
   }),
 
   asset_reserve: (p) => ({
     ...withDefaults(p, "payer"),
     payer: p.payer || p.account,
     amount_to_reserve: amt(p.amount, p.asset_id),
-    extensions: [],
+    extensions: {},
   }),
 
   asset_fund_fee_pool: (p) => ({
@@ -139,20 +145,36 @@ export const OPERATION_BUILDERS = {
     from_account: p.from_account || p.account,
     asset_id: p.asset_id,
     amount: Number(p.amount),
-    extensions: [],
+    extensions: {},
   }),
 
   asset_claim_fees: (p) => ({
     ...withDefaults(p, "issuer"),
     issuer: p.issuer || p.account,
     amount_to_claim: amt(p.amount, p.asset_id),
-    extensions: [],
+    extensions: {},
   }),
 
   asset_settle: (p) => ({
     ...withDefaults(p, "account"),
     account: p.account,
     amount: amt(p.amount, p.asset_id),
+    extensions: {},
+  }),
+
+  asset_update_bitasset: (p) => ({
+    ...withDefaults(p, "issuer"),
+    issuer: p.issuer || p.account,
+    asset_to_update: p.asset_to_update,
+    new_options: p.new_options,
+    extensions: {},
+  }),
+
+  bid_collateral: (p) => ({
+    ...withDefaults(p, "bidder"),
+    bidder: p.bidder || p.account,
+    additional_collateral: amt(p.additional_collateral, p.additional_collateral_asset),
+    debt_covered: amt(p.debt_covered, p.debt_covered_asset),
     extensions: [],
   }),
 
@@ -161,7 +183,7 @@ export const OPERATION_BUILDERS = {
     issuer: p.issuer || p.account,
     asset_to_settle: p.asset_to_settle,
     settle_price: p.settle_price,
-    extensions: [],
+    extensions: {},
   }),
 
   asset_publish_feed: (p) => ({
@@ -169,7 +191,7 @@ export const OPERATION_BUILDERS = {
     publisher: p.publisher || p.account,
     asset_id: p.asset_id,
     feed: p.feed,
-    extensions: [],
+    extensions: {},
   }),
 
   asset_update_feed_producers: (p) => ({
@@ -177,7 +199,7 @@ export const OPERATION_BUILDERS = {
     issuer: p.issuer || p.account,
     asset_to_update: p.asset_to_update,
     new_feed_producers: p.new_feed_producers || [],
-    extensions: [],
+    extensions: {},
   }),
 
   asset_update_issuer: (p) => ({
@@ -185,7 +207,7 @@ export const OPERATION_BUILDERS = {
     issuer: p.issuer || p.account,
     asset_to_update: p.asset_to_update,
     new_issuer: p.new_issuer,
-    extensions: [],
+    extensions: {},
   }),
 
   override_transfer: (p) => ({
@@ -195,7 +217,7 @@ export const OPERATION_BUILDERS = {
     to: p.to,
     amount: amt(p.amount, p.asset_id),
     memo: p.memo || undefined,
-    extensions: [],
+    extensions: {},
   }),
 
   htlc_create: (p) => ({
@@ -203,9 +225,10 @@ export const OPERATION_BUILDERS = {
     from: p.from || p.account,
     to: p.to,
     amount: amt(p.amount, p.asset_id),
-    preimages: p.preimages || [],
+    preimage_hash: p.preimage_hash,
+    preimage_size: p.preimage_size,
     claim_period_seconds: p.claim_period_seconds,
-    extensions: [],
+    extensions: {},
   }),
 
   htlc_redeem: (p) => ({
@@ -213,15 +236,15 @@ export const OPERATION_BUILDERS = {
     redeemer: p.redeemer || p.account,
     htlc_id: p.htlc_id,
     preimage: p.preimage,
-    extensions: [],
+    extensions: {},
   }),
 
   htlc_extend: (p) => ({
-    ...withDefaults(p, "fee_paying_account"),
-    fee_paying_account: p.fee_paying_account || p.account,
+    ...withDefaults(p, "update_issuer"),
+    update_issuer: p.update_issuer || p.account,
     htlc_id: p.htlc_id,
-    new_claim_period_seconds: p.new_claim_period_seconds,
-    extensions: [],
+    seconds_to_add: p.seconds_to_add,
+    extensions: {},
   }),
 
   vesting_balance_create: (p) => ({
@@ -230,7 +253,7 @@ export const OPERATION_BUILDERS = {
     owner: p.owner || p.account,
     amount: amt(p.amount, p.asset_id),
     policy: p.policy,
-    extensions: [],
+    extensions: {},
   }),
 
   vesting_balance_withdraw: (p) => ({
@@ -238,22 +261,23 @@ export const OPERATION_BUILDERS = {
     owner: p.owner || p.account,
     vesting_balance: p.vesting_balance,
     amount: amt(p.amount, p.asset_id),
-    extensions: [],
+    extensions: {},
   }),
 
   ticket_create: (p) => ({
-    ...withDefaults(p, "target"),
-    target: p.target || p.account,
+    ...withDefaults(p, "account"),
+    account: p.account || p.account,
     amount: amt(p.amount, p.asset_id),
     target_type: p.target_type ?? 0,
     extensions: [],
   }),
 
   ticket_update: (p) => ({
-    ...withDefaults(p, "target"),
-    target: p.target || p.account,
+    ...withDefaults(p, "account"),
+    account: p.account || p.account,
     ticket: p.ticket,
-    amount: amt(p.amount, p.asset_id),
+    target_type: p.target_type,
+    amount_for_new_target: p.amount_for_new_target != null ? amt(p.amount_for_new_target, p.asset_id) : undefined,
     extensions: [],
   }),
 
@@ -262,15 +286,17 @@ export const OPERATION_BUILDERS = {
     account: p.account,
     asset_a: p.asset_a,
     asset_b: p.asset_b,
-    trade_fee_percent: p.trade_fee_percent,
-    extensions: [],
+    taker_fee_percent: p.taker_fee_percent,
+    withdrawal_fee_percent: p.withdrawal_fee_percent,
+    share_asset: p.share_asset,
+    extensions: {},
   }),
 
   liquidity_pool_delete: (p) => ({
     ...withDefaults(p, "account"),
     account: p.account,
     pool: p.pool,
-    extensions: [],
+    extensions: {},
   }),
 
   liquidity_pool_deposit: (p) => ({
@@ -304,10 +330,9 @@ export const OPERATION_BUILDERS = {
     account: p.account,
     enabled: !!p.enabled,
     valid_from: p.valid_from || undefined,
-    expiration_time: p.expiration_time || undefined,
+    valid_to: p.valid_to || undefined,
     operation_type: p.operation_type,
-    auth_context: p.auth_context || undefined,
-    auth_ref: p.auth_ref || undefined,
+    auth: p.auth,
     restrictions: p.restrictions || [],
     extensions: [],
   }),
@@ -315,48 +340,46 @@ export const OPERATION_BUILDERS = {
   custom_authority_update: (p) => ({
     ...withDefaults(p, "account"),
     account: p.account,
-    custom_authority: p.custom_authority,
-    enabled: p.enabled === undefined ? undefined : !!p.enabled,
-    valid_from: p.valid_from || undefined,
-    expiration_time: p.expiration_time || undefined,
-    operation_type: p.operation_type || undefined,
-    auth_context: p.auth_context || undefined,
-    auth_ref: p.auth_ref || undefined,
-    restrictions: p.restrictions || undefined,
+    authority_to_update: p.authority_to_update,
+    new_enabled: p.new_enabled === undefined ? undefined : !!p.new_enabled,
+    new_valid_from: p.new_valid_from || undefined,
+    new_valid_to: p.new_valid_to || undefined,
+    new_auth: p.new_auth || undefined,
+    restrictions_to_remove: p.restrictions_to_remove || [],
+    restrictions_to_add: p.restrictions_to_add || [],
     extensions: [],
   }),
 
   custom_authority_delete: (p) => ({
     ...withDefaults(p, "account"),
     account: p.account,
-    custom_authority: p.custom_authority,
+    authority_to_delete: p.authority_to_delete,
     extensions: [],
   }),
 
   samet_fund_create: (p) => ({
-    ...withDefaults(p, "owner"),
-    owner: p.owner || p.account,
+    ...withDefaults(p, "owner_account"),
+    owner_account: p.owner_account || p.account,
     asset_type: p.asset_type,
     balance: Number(p.balance),
     fee_rate: p.fee_rate,
-    max_duration_seconds: p.max_duration_seconds,
-    extensions: [],
+    extensions: {},
   }),
 
   samet_fund_delete: (p) => ({
-    ...withDefaults(p, "owner"),
-    owner: p.owner || p.account,
+    ...withDefaults(p, "owner_account"),
+    owner_account: p.owner_account || p.account,
     fund_id: p.fund_id,
     extensions: [],
   }),
 
   samet_fund_update: (p) => ({
-    ...withDefaults(p, "owner"),
-    owner: p.owner || p.account,
+    ...withDefaults(p, "owner_account"),
+    owner_account: p.owner_account || p.account,
     fund_id: p.fund_id,
-    delta_balance: Number(p.delta_balance),
+    delta_amount: p.delta_amount != null ? amt(p.delta_amount, p.asset_type) : undefined,
     new_fee_rate: p.new_fee_rate,
-    extensions: [],
+    extensions: {},
   }),
 
   samet_fund_borrow: (p) => ({
@@ -364,26 +387,52 @@ export const OPERATION_BUILDERS = {
     borrower: p.borrower || p.account,
     fund_id: p.fund_id,
     borrow_amount: amt(p.borrow_amount, p.asset_type),
-    extensions: [],
+    extensions: {},
   }),
 
   samet_fund_repay: (p) => ({
-    ...withDefaults(p, "repayer"),
-    repayer: p.repayer || p.account,
+    ...withDefaults(p, "account"),
+    account: p.account || p.repayer,
     fund_id: p.fund_id,
-    repayment: amt(p.repayment, p.asset_type),
-    extensions: [],
+    repay_amount: amt(p.repay_amount || p.repayment, p.asset_type),
+    fund_fee: amt(p.fund_fee, p.asset_type),
+    extensions: {},
   }),
 
   credit_offer_create: (p) => ({
-    ...withDefaults(p, "owner"),
-    owner: p.owner || p.account,
-    asset: p.asset,
-    balance: amt(p.balance, p.asset),
+    ...withDefaults(p, "owner_account"),
+    owner_account: p.owner_account || p.account,
+    asset_type: p.asset_type,
+    balance: Number(p.balance),
     fee_rate: p.fee_rate,
     max_duration_seconds: p.max_duration_seconds,
-    min_deal_amount: amt(p.min_deal_amount, p.asset),
+    min_deal_amount: Number(p.min_deal_amount),
     enabled: !!p.enabled,
+    auto_disable_time: p.auto_disable_time || undefined,
+    acceptable_collateral: p.acceptable_collateral || undefined,
+    acceptable_borrowers: p.acceptable_borrowers || undefined,
+    extensions: [],
+  }),
+
+  credit_offer_delete: (p) => ({
+    ...withDefaults(p, "owner_account"),
+    owner_account: p.owner_account || p.account,
+    offer_id: p.offer_id,
+    extensions: [],
+  }),
+
+  credit_offer_update: (p) => ({
+    ...withDefaults(p, "owner_account"),
+    owner_account: p.owner_account || p.account,
+    offer_id: p.offer_id,
+    delta_amount: p.delta_amount || undefined,
+    fee_rate: p.fee_rate,
+    max_duration_seconds: p.max_duration_seconds,
+    min_deal_amount: Number(p.min_deal_amount),
+    enabled: !!p.enabled,
+    auto_disable_time: p.auto_disable_time || undefined,
+    acceptable_collateral: p.acceptable_collateral || undefined,
+    acceptable_borrowers: p.acceptable_borrowers || undefined,
     extensions: [],
   }),
 
@@ -402,6 +451,7 @@ export const OPERATION_BUILDERS = {
     ...withDefaults(p, "withdraw_from_account"),
     withdraw_from_account: p.withdraw_from_account || p.account,
     authorized_account: p.authorized_account,
+    permission_to_update: p.permission_to_update,
     withdrawal_limit: amt(p.withdrawal_limit, p.withdrawal_limit_asset),
     withdrawal_period_sec: p.withdrawal_period_sec,
     periods_until_expiration: p.periods_until_expiration,
@@ -411,19 +461,19 @@ export const OPERATION_BUILDERS = {
 
   withdraw_permission_claim: (p) => ({
     ...withDefaults(p, "withdraw_from_account"),
-    withdraw_permission: p.withdraw_permission,
+    withdraw_permission: p.withdraw_permission || p.withdrawal_permission,
     withdraw_from_account: p.withdraw_from_account || p.account,
-    bound_account: p.bound_account,
-    amount: amt(p.amount, p.asset_id),
+    withdraw_to_account: p.withdraw_to_account,
+    amount_to_withdraw: amt(p.amount_to_withdraw, p.asset_id),
     memo: p.memo || undefined,
     extensions: [],
   }),
 
   withdraw_permission_delete: (p) => ({
     ...withDefaults(p, "withdraw_from_account"),
-    withdraw_permission: p.withdraw_permission,
     withdraw_from_account: p.withdraw_from_account || p.account,
     authorized_account: p.authorized_account,
+    withdraw_permission: p.withdraw_permission || p.withdrawal_permission,
     extensions: [],
   }),
 
@@ -463,11 +513,11 @@ export const OPERATION_BUILDERS = {
     ...withDefaults(p, "borrower"),
     borrower: p.borrower || p.account,
     offer_id: p.offer_id,
-    borrow_amount: amt(p.borrow_amount, p.borrow_asset),
-    collateral: amt(p.collateral, p.collateral_asset),
+    borrow_amount: p.borrow_amount,
+    collateral: p.collateral,
     max_fee_rate: p.max_fee_rate,
     min_duration_seconds: p.min_duration_seconds,
-    extensions: [],
+    extensions: p.extensions || {},
   }),
 
   credit_deal_repay: (p) => ({
@@ -484,7 +534,7 @@ export const OPERATION_BUILDERS = {
     issuer: p.issuer || p.account,
     asset_id: p.asset_id,
     amount_to_claim: amt(p.amount, p.amount_asset_id || p.asset_id),
-    extensions: [],
+    extensions: {},
   }),
 
   worker_create: (p) => ({
@@ -496,7 +546,7 @@ export const OPERATION_BUILDERS = {
     name: p.name,
     url: p.url,
     initializer: p.initializer,
-    extensions: [],
+    extensions: {},
   }),
 };
 
@@ -506,8 +556,8 @@ export function hasBuilder(operationName) {
 
 const ACCOUNT_FIELDS = new Set([
   "from", "to", "seller", "borrower", "repayer", "issuer", "registrar", "referrer",
-  "account", "account_to_upgrade", "authorizing_account", "listed_account",
-  "withdraw_from_account", "authorized_account", "bound_account", "witness_account",
+  "account", "account_to_upgrade", "authorizing_account", "account_to_list",
+  "withdraw_from_account", "authorized_account", "withdraw_to_account", "witness_account",
   "witness", "committee_member_account", "committee_member", "target", "owner",
   "creator", "payer", "funding_account", "fee_paying_account",
 ]);

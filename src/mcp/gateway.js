@@ -49,6 +49,7 @@ function chunk(arr, size) {
 }
 
 async function getObjects(chain, objectIds, nodeURL) {
+  if (!objectIds || (Array.isArray(objectIds) && objectIds.length === 0)) return [];
   return withApi(chain, nodeURL, async (api) => {
     const ids = Array.isArray(objectIds) ? objectIds : [objectIds];
     const chunks = chunk(ids, chain === "bitshares" ? 50 : 10);
@@ -61,12 +62,6 @@ async function getObjects(chain, objectIds, nodeURL) {
   });
 }
 
-async function getAccountByName(chain, name, nodeURL) {
-  return withApi(chain, nodeURL, async (api) => {
-    return api.db_api().exec("get_account_by_name", [name]);
-  });
-}
-
 async function getFullAccounts(chain, namesOrIds, nodeURL) {
   return withApi(chain, nodeURL, async (api) => {
     const list = Array.isArray(namesOrIds) ? namesOrIds : [namesOrIds];
@@ -76,22 +71,18 @@ async function getFullAccounts(chain, namesOrIds, nodeURL) {
 
 async function query(chain, apiName, method, params, nodeURL) {
   return withApi(chain, nodeURL, async (api) => {
-    const sub = api[apiName] ? api[apiName]() : null;
+    const apiMap = {
+      database: "db_api",
+      history: "history_api",
+      network_broadcast: "network_broadcast_api",
+      crypto: "crypto_api",
+    };
+    const actualApiName = apiMap[apiName] || apiName;
+    const sub = api[actualApiName] ? api[actualApiName]() : null;
     if (!sub || typeof sub.exec !== "function") {
       throw new Error(`Unknown api "${apiName}"`);
     }
     return sub.exec(method, params);
-  });
-}
-
-async function calculateOperationFees(nodeURL, trxJSON) {
-  return withApi("bitshares", nodeURL, async (api) => {
-    const op = { ...trxJSON };
-    delete op.fee;
-    const fee = await api
-      .db_api()
-      .exec("get_required_fees", [[[op]], "1.3.0"]);
-    return fee && fee.length ? fee[0].amount : null;
   });
 }
 
@@ -104,8 +95,8 @@ function getChainId(chain, nodeURL) {
   const c = resolveNode(chain, nodeURL);
   const key = Object.keys(chains).find((k) => chains[k].nodeList && chains[k].nodeList.some((n) => n.url === c));
   if (key && chains[key].chainId) return chains[key].chainId;
-  // Fall back to known ids
-  if (c.includes("testnet")) return "39f5e2ede1f8bc1a3a54a7914414e3779e33193f1f5693510e73cb7a87617447";
+  // Fall back to known ids using the chain parameter
+  if (chain === "bitshares_testnet" || (c && c.includes("testnet"))) return "39f5e2ede1f8bc1a3a54a7914414e3779e33193f1f5693510e73cb7a87617447";
   return "4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8";
 }
 
@@ -148,18 +139,16 @@ async function prepareTransaction(chain, nodeURL, operationNames, operations) {
       }
       tr.add_type_operation(operationNames[i], op);
     }
-    await tr.set_required_fees();
-    await tr.update_head_block();
+    await tr.set_required_fees(undefined, undefined, inst);
+    await tr.update_head_block(inst);
     tr.set_expire_seconds(7200);
-    tr.finalize();
+    tr.finalize(inst);
     return {
       transaction: tr.toObject(),
       chain_id: inst.chain_id,
       ref_block_num: tr.ref_block_num,
       ref_block_prefix: tr.ref_block_prefix,
     };
-  } catch (e) {
-    throw e;
   } finally {
     try {
       inst.close();
@@ -173,10 +162,8 @@ export {
   resolveNode,
   withApi,
   getObjects,
-  getAccountByName,
   getFullAccounts,
   query,
-  calculateOperationFees,
   makeDeepLink,
   getChainId,
   getAssets,

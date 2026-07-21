@@ -36,6 +36,7 @@ function getAccountReferences(
       console.log({ error });
       currentAPI.close();
       reject(error);
+      return;
     }
 
     currentAPI.close();

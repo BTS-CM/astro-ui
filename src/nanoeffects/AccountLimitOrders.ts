@@ -52,6 +52,7 @@ function getAccountLimitOrders(
       console.log({ error });
       currentAPI.close();
       reject(error);
+      return;
     }
 
     if (!limitOrders || !limitOrders.length) {

@@ -36,6 +36,7 @@ async function fetchingIssuedAssets(
           );
     } catch (error) {
       console.log({ error });
+      reject(error);
       return;
     }
 

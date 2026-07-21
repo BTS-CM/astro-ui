@@ -297,8 +297,8 @@ function classifyBitasset(asset, bitasset, backing) {
 async function listSmartcoinsReport(chain, nodeURL) {
   const c = chainKey(chain);
   const node = nodeURL || getActiveNode(c);
-  const max = await gateway.query(c, "database", "get_next_object_id", [2, 4, false], node);
-  const count = parseInt(String(max).split(".")[2], 10) - 1;
+  const max = await gateway.query(c, "database", "get_next_object_id", [2, 4, false], node).catch(() => "2.4.0");
+  const count = parseInt(String(max).split(".")[2], 10);
   if (!count || count < 0) return [];
   const ids = Array.from({ length: count }, (_, i) => `2.4.${i}`);
   const bitassets = await gateway.getObjects(c, ids, node);
@@ -315,7 +315,7 @@ async function listSmartcoinsReport(chain, nodeURL) {
   (backings || []).forEach((a) => { if (a) backingById[a.id] = a; });
   return valid
     .filter((b) => assetById[b.asset_id])
-    .map((b) => classifyBitasset(assetById[b.asset_id], b, backingById[b.options.short_backing_asset]));
+    .map((b) => classifyBitasset(assetById[b.asset_id], b, backingById[b.options && b.options.short_backing_asset]));
 }
 
 // astro-ui ships a pre-built asset index (id/symbol/precision/issuer) that the
@@ -438,6 +438,9 @@ function computeCreditDealRepayment(deal, repayAmount, debtPrecision) {
   if (!deal) return null;
   const borrowed = parseInt(deal.debt_amount, 10) / 10 ** debtPrecision;
   const collateral = parseInt(deal.collateral_amount, 10);
+  if (isNaN(borrowed) || isNaN(collateral)) {
+    return { error: "deal missing debt_amount or collateral_amount" };
+  }
   const feeRate = deal.fee_rate || 0;
   const minRepay = 1 / 10 ** debtPrecision;
   const capped = Math.min(Math.max(repayAmount, minRepay), borrowed);
@@ -477,6 +480,9 @@ function computeOrderExpiry(expiration) {
 
 // Resolve an asset id from either a 1.3.x id or a ticker symbol.
 async function resolveAssetId(chain, assetOrSymbol, nodeURL) {
+  if (assetOrSymbol == null || assetOrSymbol === "") {
+    throw new Error("Asset id or symbol is required");
+  }
   const c = chainKey(chain);
   if (/^1\.3\.\d+$/.test(assetOrSymbol)) return assetOrSymbol;
   // 1) rapid cached lookup (no node round-trip)
@@ -539,8 +545,8 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
         resolveAssetId(c, quoteSymbol, nodeForDex),
       ]);
       const [orderBook, tradeHistory, ticker] = await Promise.all([
-        callNanoEffect("getMarketOrderBook", [c, baseId, quoteId, nodeForDex]).catch(() => null),
-        callNanoEffect("getMarketTradeHistory", [c, baseId, quoteId, nodeForDex]).catch(() => null),
+        callNanoEffect("getMarketOrderBook", [c, baseId, quoteId, null, nodeForDex]).catch(() => null),
+        callNanoEffect("getMarketTradeHistory", [c, baseId, quoteId, null, nodeForDex]).catch(() => null),
         callNanoEffect("getTicker", [c, baseId, quoteId, nodeForDex]).catch(() => null),
       ]);
       const spread = ticker && ticker.lowest_ask && ticker.highest_bid
@@ -575,8 +581,8 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
         resolveAssetId(c, quoteSymbol, nodeForIT),
       ]);
       const [orderBook, tradeHistory, ticker] = await Promise.all([
-        callNanoEffect("getMarketOrderBook", [c, baseId, quoteId, nodeForIT]).catch(() => null),
-        callNanoEffect("getMarketTradeHistory", [c, baseId, quoteId, nodeForIT]).catch(() => null),
+        callNanoEffect("getMarketOrderBook", [c, baseId, quoteId, null, nodeForIT]).catch(() => null),
+        callNanoEffect("getMarketTradeHistory", [c, baseId, quoteId, null, nodeForIT]).catch(() => null),
         callNanoEffect("getTicker", [c, baseId, quoteId, nodeForIT]).catch(() => null),
       ]);
       const spread = ticker && ticker.lowest_ask && ticker.highest_bid
@@ -585,13 +591,18 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
       const bids = orderBook && orderBook.bids ? orderBook.bids : [];
       const asks = orderBook && orderBook.asks ? orderBook.asks : [];
       const totalBidsBase = bids.reduce((s, o) => s + parseFloat(o.base || 0), 0);
-      const totalAsksQuote = asks.reduce((s, o) => s + parseFloat(o.quote || 0), 0);
+      const totalBidsQuote = bids.reduce((s, o) => s + parseFloat(o.quote || 0), 0);
+      const totalAsksBase = asks.reduce((s, o) => s + parseFloat(o.base || 0), 0);
       const uniqueSellers = new Set(bids.map((o) => o.owner_name).filter(Boolean)).size;
       let limitOrderFee = null;
       try {
-        const globalParams = await callNanoEffect("getChainParameters", [c, nodeForIT]);
-        if (globalParams && globalParams.transferFeeSat !== undefined) {
-          limitOrderFee = { raw: globalParams.transferFeeSat, human: globalParams.transferFeeSat / 100000 };
+        const globalParams = await gateway.query(c, "database", "get_chain_parameters", [], nodeForIT).catch(() => null);
+        if (globalParams && globalParams.parameters && globalParams.parameters.current_fees) {
+          const fees = globalParams.parameters.current_fees.parameters;
+          const transferFee = fees && fees[0] && fees[0][1] && fees[0][1].fee;
+          if (transferFee !== undefined) {
+            limitOrderFee = { raw: transferFee, human: transferFee / 100000 };
+          }
         }
       } catch (e) { /* ignore */ }
       return {
@@ -599,11 +610,11 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
         market: { base: baseSymbol, quote: quoteSymbol, baseId, quoteId },
         ticker,
         spread,
-        orderBook: { bidDepth: bids.length, askDepth: asks.length, totalBidsBase, totalAsksQuote },
+        orderBook: { bidDepth: bids.length, askDepth: asks.length, totalBidsBase, totalBidsQuote, totalAsksBase },
         tradeHistory,
         instantTradeSummary: {
           maxPurchaseableBase: totalBidsBase.toFixed(5),
-          maxSellableQuote: totalAsksQuote.toFixed(5),
+          maxSellableQuote: totalBidsQuote.toFixed(5),
           uniqueSellers,
           bidCount: bids.length,
           askCount: asks.length,
@@ -621,12 +632,12 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
   if (page.slug === "witnesses") {
     const nodeForW = nodeURL;
     const [globalPropsArr, dynamicGlobalPropsArr, maxId] = await Promise.all([
-      callNanoEffect("getGlobalProperties", [c, nodeForW]).catch(() => []),
+      gateway.query(c, "database", "get_objects", [["2.0.0"]], nodeForW).catch(() => []),
       gateway.query(c, "database", "get_dynamic_global_properties", [], nodeForW).catch(() => ({})),
       gateway.query(c, "database", "get_next_object_id", [1, 6, false], nodeForW).catch(() => "1.6.0"),
     ]);
     const gp = Array.isArray(globalPropsArr) ? globalPropsArr[0] : globalPropsArr;
-    const witnessCount = parseInt(String(maxId).split(".")[2], 10) - 1;
+    const witnessCount = parseInt(String(maxId).split(".")[2], 10);
     const witnessIds = witnessCount > 0 ? Array.from({ length: witnessCount }, (_, i) => `1.6.${i}`) : [];
     const witnessObjs = witnessIds.length ? await gateway.getObjects(c, witnessIds, nodeForW) : [];
     const validWitnesses = (witnessObjs || []).filter((w) => w && w.id);
@@ -642,11 +653,11 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
   if (page.slug === "committee") {
     const nodeForC = nodeURL;
     const [globalPropsArr, maxId] = await Promise.all([
-      callNanoEffect("getGlobalProperties", [c, nodeForC]).catch(() => []),
+      gateway.query(c, "database", "get_objects", [["2.0.0"]], nodeForC).catch(() => []),
       gateway.query(c, "database", "get_next_object_id", [1, 5, false], nodeForC).catch(() => "1.5.0"),
     ]);
     const gp = Array.isArray(globalPropsArr) ? globalPropsArr[0] : globalPropsArr;
-    const memberCount = parseInt(String(maxId).split(".")[2], 10) - 1;
+    const memberCount = parseInt(String(maxId).split(".")[2], 10);
     const memberIds = memberCount > 0 ? Array.from({ length: memberCount }, (_, i) => `1.5.${i}`) : [];
     const memberObjs = memberIds.length ? await gateway.getObjects(c, memberIds, nodeForC) : [];
     const validMembers = (memberObjs || []).filter((cm) => cm && cm.id);
@@ -714,7 +725,7 @@ async function getPageData(slug, account, chain, nodeURL, asset, asset2) {
     if (!acc) return { note: "Account-scoped page requires set_current_user or an `account` argument." };
     const full = await gateway.getFullAccounts(c, [acc], nodeURL);
     if (!full || !full.length) return { note: `No account data for ${acc}` };
-    const fa = full[0];
+    const fa = full[0] && full[0][1] ? full[0][1] : full[0];
     return {
       account: fa.account,
       balances: fa.balances,
@@ -1378,7 +1389,8 @@ async function callTool(name, args) {
     case "get_accounts": {
       const c = chainKey(args.chain || currentUser.chain);
       const node = args.nodeURL || getActiveNode(c);
-      const accs = await gateway.getFullAccounts(c, args.accounts, node);
+      const raw = await gateway.getFullAccounts(c, args.accounts, node);
+      const accs = (raw || []).map((t) => (Array.isArray(t) ? t[1] : t)).filter(Boolean);
       return { content: [{ type: "text", text: JSON.stringify(accs, null, 2) }] };
     }
 
@@ -1469,6 +1481,9 @@ async function callTool(name, args) {
         a = assets && assets[0];
       }
       if (!a) return { isError: true, content: [{ type: "text", text: `Asset ${args.asset_id} not found` }] };
+      if (args.human_amount == null || isNaN(Number(args.human_amount))) {
+        return { isError: true, content: [{ type: "text", text: `Invalid human_amount: ${args.human_amount}` }] };
+      }
       const raw = Math.round(Number(args.human_amount) * 10 ** a.precision);
       return {
         content: [
@@ -1496,6 +1511,9 @@ async function callTool(name, args) {
         a = assets && assets[0];
       }
       if (!a) return { isError: true, content: [{ type: "text", text: `Asset ${args.asset_id} not found` }] };
+      if (args.raw_amount == null || isNaN(Number(args.raw_amount))) {
+        return { isError: true, content: [{ type: "text", text: `Invalid raw_amount: ${args.raw_amount}` }] };
+      }
       const human = parseFloat((Number(args.raw_amount) / 10 ** a.precision).toFixed(a.precision));
       return {
         content: [
@@ -1595,7 +1613,7 @@ async function callTool(name, args) {
       try {
         const c = chainKey(args.chain || currentUser.chain);
         const node = args.nodeURL || getActiveNode(c);
-        const params = await callNanoEffect("getChainParameters", [c, node]);
+        const params = await gateway.query(c, "database", "get_chain_parameters", [], node).catch(() => null);
         return { content: [{ type: "text", text: JSON.stringify(params, null, 2) }] };
       } catch (e) {
         return { isError: true, content: [{ type: "text", text: String(e && e.message ? e.message : e) }] };
@@ -1644,7 +1662,7 @@ const OP_NUMBERS = {
   vesting_balance_create: 32,
   vesting_balance_withdraw: 33,
   worker_create: 34,
-  limit_order_update: 36,
+  limit_order_update: 77,
   override_transfer: 38,
   asset_claim_fees: 43,
   asset_update_issuer: 48,
@@ -1667,9 +1685,12 @@ const OP_NUMBERS = {
   samet_fund_borrow: 67,
   samet_fund_repay: 68,
   credit_offer_create: 69,
-  credit_offer_accept: 70,
-  credit_deal_repay: 71,
-  asset_claim_pool: 72,
+  credit_offer_delete: 70,
+  credit_offer_update: 71,
+  credit_offer_accept: 72,
+  credit_deal_repay: 73,
+  asset_claim_pool: 47,
+  bid_collateral: 45,
 };
 
 function operationNumber(name) {
@@ -1761,8 +1782,10 @@ function buildServer() {
     if (neMatch) {
       const name = decodeURIComponent(neMatch[1]);
       if (!hasNanoEffect(name)) throw new Error(`Unknown nanoeffect ${name}`);
-      const data = await callNanoEffect(name, []);
-      return { contents: [{ uri, mimeType: "application/json", text: JSON.stringify({ name, args: [], data }, null, 2) }] };
+      const c = chainKey(currentUser.chain);
+      const node = getActiveNode(c);
+      const data = await callNanoEffect(name, [c, node]);
+      return { contents: [{ uri, mimeType: "application/json", text: JSON.stringify({ name, args: [c, node], data }, null, 2) }] };
     }
     throw new Error(`Unknown resource ${uri}`);
   });
@@ -1831,7 +1854,13 @@ async function start(port) {
       return;
     }
     if (req.url && req.url.startsWith("/mcp")) {
-      transport.handleRequest(req, res);
+      transport.handleRequest(req, res).catch((err) => {
+        hooks.log("transport error:", err);
+        if (!res.headersSent) {
+          res.writeHead(500, { "Content-Type": "text/plain" });
+          res.end("Internal error");
+        }
+      });
       return;
     }
     res.writeHead(404, { "Content-Type": "text/plain" });

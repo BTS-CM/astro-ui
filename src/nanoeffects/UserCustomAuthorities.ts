@@ -26,6 +26,7 @@ async function getUserCustomAuthorities(
           );
     } catch (error) {
       console.log({ error });
+      reject(error);
       return;
     }
 

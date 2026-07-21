@@ -38,6 +38,8 @@ async function getCurrentBlock(chain: string, specificNode?: string | null) {
         .exec("get_dynamic_global_properties", []);
     } catch (error) {
       console.log({ error });
+      reject(new Error("Failed to fetch dynamic global properties"));
+      return;
     }
 
     if (!dynamicGlobalProperties) {

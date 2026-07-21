@@ -44,8 +44,6 @@ import * as WithdrawPermissionReciever from "@/nanoeffects/WithdrawPermissionRec
 import * as WorkerProposals from "@/nanoeffects/WorkerProposals";
 import * as ChainParameters from "@/nanoeffects/ChainParameters";
 import * as GlobalProperties from "@/nanoeffects/GlobalProperties";
-import * as UserTickets from "@/nanoeffects/UserTickets";
-import * as Objects from "@/nanoeffects/Objects";
 
 const NANOEFFECTS = {
   getAccountActivity: {
@@ -88,15 +86,10 @@ const NANOEFFECTS = {
     argNames: ["chain", "blockNumber", "specificNode"],
     description: "Signature / header data for a specific block.",
   },
-  getBlockedaccounts: {
-    fn: BlockedAccounts.getBlockedaccounts,
-    argNames: ["chain", "specificNode"],
-    description: "List of blocked/blacklisted accounts.",
-  },
   getCallOrderHolders: {
     fn: CallOrderHolders.getCallOrderHolders,
-    argNames: ["chain", "assetId", "specificNode"],
-    description: "Holders of call orders for a bitasset.",
+    argNames: ["chain", "specificNode", "debtAssetId"],
+    description: "Accounts holding call orders for a debt asset.",
   },
   getCollateralBids: {
     fn: CollateralBids.getCollateralBids,
@@ -160,7 +153,7 @@ const NANOEFFECTS = {
   },
   getLimitOrders: {
     fn: MarketLimitOrders.getLimitOrders,
-    argNames: ["chain", "baseAssetId", "quoteAssetId", "specificNode"],
+    argNames: ["chain", "baseAssetId", "quoteAssetId", "limit", "specificNode"],
     description: "Limit orders on a market pair.",
   },
   getMarketOrderBook: {
@@ -220,22 +213,22 @@ const NANOEFFECTS = {
   },
   getTopAssetHolders: {
     fn: TopAssetHolders.getTopAssetHolders,
-    argNames: ["chain", "assetId", "specificNode"],
+    argNames: ["assetId", "limit"],
     description: "Top holders of a given asset.",
   },
   getTopLifetimeMembers: {
     fn: TopLifetimeMembers.getTopLifetimeMembers,
-    argNames: ["chain", "specificNode"],
+    argNames: ["limit", "lookbackDays"],
     description: "Top lifetime members by referral stats.",
   },
   getTopLimitOrderCreators: {
     fn: TopLimitOrderCreators.getTopLimitOrderCreators,
-    argNames: ["chain", "specificNode"],
+    argNames: ["assetId", "limit", "lookbackDays"],
     description: "Top accounts creating limit orders.",
   },
   getTopLimitOrderFillers: {
     fn: TopLimitOrderFillers.getTopLimitOrderFillers,
-    argNames: ["chain", "specificNode"],
+    argNames: ["assetId", "limit", "lookbackDays"],
     description: "Top accounts filling limit orders.",
   },
   getTopPoolSwaps: {
@@ -244,7 +237,25 @@ const NANOEFFECTS = {
     description: "Top liquidity pool swaps over a lookback window.",
   },
   accountSearch: {
-    fn: UserSearch.accountSearch,
+    fn: async (chain, searchTerm, specificNode) => {
+      // In Node.js, $nodes.get() crashes — require specificNode and fetch directly
+      if (!specificNode) {
+        const { chains } = await import("@/config/chains");
+        specificNode = chains[chain]?.nodeList[0]?.url;
+      }
+      if (!specificNode) throw new Error("No node available for accountSearch");
+
+      const Apis = await import("@/bts/ws/ApiInstances");
+      const instance = await Apis.default.instance(
+        specificNode, true, 4000, { enableDatabase: true }, (err) => console.log({ err })
+      );
+
+      const object = await instance.db_api().exec("get_accounts", [[searchTerm]]);
+      if (!object?.length) throw new Error("Couldn't retrieve account");
+
+      instance.close();
+      return object[0];
+    },
     argNames: ["chain", "searchTerm", "specificNode"],
     description: "Search for accounts by name/id prefix.",
   },
@@ -284,24 +295,34 @@ const NANOEFFECTS = {
     description: "Active worker proposals on the chain.",
   },
   getChainParameters: {
-    fn: ChainParameters.createChainParametersStore,
+    fn: async (chain, specificNode) => {
+      // Bypass nanoquery store creator — fetch data directly
+      const { default: gateway } = await import("@/bts/gateway.js");
+      const node = specificNode || (await import("@/config/chains")).chains[chain]?.nodeList[0]?.url;
+      const response = await gateway.query("get_objects", [["2.0.0"]], node);
+      if (!response?.[0]?.parameters) throw new Error("Failed to fetch chain parameters");
+      const params = response[0].parameters;
+      const transferFee = params.current_fees?.parameters?.[0]?.[1];
+      return {
+        maxBytes: params.maximum_transaction_size || 0,
+        transferFeeSat: transferFee?.fee || 0,
+        pricePerKbyteSat: transferFee?.price_per_kbyte || 0,
+      };
+    },
     argNames: ["chain", "specificNode"],
     description: "Chain global parameters: max transaction size, transfer fee, price per kbyte.",
   },
   getGlobalProperties: {
-    fn: GlobalProperties.createGlobalPropertiesStore,
+    fn: async (chain, specificNode) => {
+      // Bypass nanoquery store creator — fetch data directly
+      const { default: gateway } = await import("@/bts/gateway.js");
+      const node = specificNode || (await import("@/config/chains")).chains[chain]?.nodeList[0]?.url;
+      const response = await gateway.query("get_objects", [["2.0.0"]], node);
+      if (!response) throw new Error("Failed to fetch global properties");
+      return response;
+    },
     argNames: ["chain", "specificNode"],
     description: "Raw global properties object (2.0.0): active witnesses, committee, parameters.",
-  },
-  getUserTickets: {
-    fn: UserTickets.createUserTicketsStore,
-    argNames: ["chain", "accountID", "specificNode", "lastID"],
-    description: "Tickets owned by a specific account (filtered from all tickets).",
-  },
-  getUsername: {
-    fn: Objects.createUsernameStore,
-    argNames: ["chain", "object_ids", "specificNode"],
-    description: "Resolve object IDs to { name, id } tuples.",
   },
 };
 

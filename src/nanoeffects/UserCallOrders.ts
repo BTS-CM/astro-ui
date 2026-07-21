@@ -26,6 +26,7 @@ async function getUserCallOrders(
           );
     } catch (error) {
       console.log({ error });
+      reject(error);
       return;
     }
 
