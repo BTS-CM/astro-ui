@@ -1,5 +1,3 @@
-import WebSocket from "isomorphic-ws";
-
 // Faithful port of bitsharesjs-ws `src/ChainWebSocket.js`.
 //
 // Deviations from the literal reference, all behavior-preserving:

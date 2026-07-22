@@ -86,6 +86,28 @@ const NANOEFFECTS = {
     argNames: ["chain", "blockNumber", "specificNode"],
     description: "Signature / header data for a specific block.",
   },
+  getBlockedaccounts: {
+    fn: async (chain, specificNode) => {
+      // In Node.js, $blockList.get() crashes — fetch directly from chain API
+      const Apis = await import("@/bts/ws/ApiInstances");
+      const { chains } = await import("@/config/chains");
+      const { sha256 } = await import("@noble/hashes/sha2.js");
+      const { bytesToHex: toHex, utf8ToBytes } = await import("@noble/hashes/utils.js");
+
+      const node = specificNode || chains[chain].nodeList[0].url;
+      const instance = await Apis.default.instance(
+        node, true, 4000, { enableDatabase: true }, (err) => console.log({ err })
+      );
+
+      const committee = await instance.db_api().exec("get_accounts", [["committee-blacklist-manager"]]);
+      if (!committee?.length) throw new Error("Unable to retrieve committee account");
+
+      const blocked = committee[0].blacklisted_accounts;
+      return blocked.map((a) => toHex(sha256(utf8ToBytes(a))));
+    },
+    argNames: ["chain", "specificNode"],
+    description: "List of blocked/blacklisted accounts.",
+  },
   getCallOrderHolders: {
     fn: CallOrderHolders.getCallOrderHolders,
     argNames: ["chain", "specificNode", "debtAssetId"],
@@ -297,9 +319,10 @@ const NANOEFFECTS = {
   getChainParameters: {
     fn: async (chain, specificNode) => {
       // Bypass nanoquery store creator — fetch data directly
-      const { default: gateway } = await import("@/bts/gateway.js");
-      const node = specificNode || (await import("@/config/chains")).chains[chain]?.nodeList[0]?.url;
-      const response = await gateway.query("get_objects", [["2.0.0"]], node);
+      const { query } = await import("./gateway.js");
+      const { chains } = await import("@/config/chains");
+      const node = specificNode || chains[chain]?.nodeList[0]?.url;
+      const response = await query("get_objects", [["2.0.0"]], node);
       if (!response?.[0]?.parameters) throw new Error("Failed to fetch chain parameters");
       const params = response[0].parameters;
       const transferFee = params.current_fees?.parameters?.[0]?.[1];
@@ -315,9 +338,10 @@ const NANOEFFECTS = {
   getGlobalProperties: {
     fn: async (chain, specificNode) => {
       // Bypass nanoquery store creator — fetch data directly
-      const { default: gateway } = await import("@/bts/gateway.js");
-      const node = specificNode || (await import("@/config/chains")).chains[chain]?.nodeList[0]?.url;
-      const response = await gateway.query("get_objects", [["2.0.0"]], node);
+      const { query } = await import("./gateway.js");
+      const { chains } = await import("@/config/chains");
+      const node = specificNode || chains[chain]?.nodeList[0]?.url;
+      const response = await query("get_objects", [["2.0.0"]], node);
       if (!response) throw new Error("Failed to fetch global properties");
       return response;
     },
