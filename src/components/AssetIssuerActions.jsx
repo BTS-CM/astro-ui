@@ -1354,7 +1354,7 @@ function AssetIssuerActions(props) {
                   type="header"
                 />
               </div>
-              <div className="col-span-1">
+              <div className="col-span-1 flex items-center justify-center">
                 {issueTarget ? (
                   <Avatar
                     size={40}
@@ -1789,7 +1789,7 @@ function AssetIssuerActions(props) {
                     type="header"
                   />
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-1 flex items-center justify-center">
                   {updateIssuerTarget ? (
                     <Avatar
                       size={40}
@@ -1973,7 +1973,7 @@ function AssetIssuerActions(props) {
               type="header"
             />
             <div className="grid grid-cols-8 gap-2 mt-2">
-              <div className="col-span-1">
+              <div className="col-span-1 flex items-center justify-center">
                 {overrideTarget ? (
                   <Avatar
                     size={40}

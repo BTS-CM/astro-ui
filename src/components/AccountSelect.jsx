@@ -21,6 +21,7 @@ import {
   Inbox,
   ChevronRight,
   Shield,
+  Star,
 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,7 @@ import {
 } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { $favouriteUsers } from "@/stores/favourites.ts";
 
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
@@ -160,13 +162,7 @@ function AccountCard({ user, onClick, onRemove, accentColor, isCurrentChain, t }
       )}
     >
       <div className="flex items-center gap-3.5 w-full">
-        <div
-          className="relative h-11 w-11 rounded-full overflow-hidden ring-2 flex-shrink-0"
-          style={{
-            borderColor: `${userAccent}44`,
-            boxShadow: `0 0 12px -2px ${userAccent}40`,
-          }}
-        >
+        <div className="flex-shrink-0 rounded-full ring-2" style={{ boxShadow: `0 0 12px -2px ${userAccent}40` }}>
           <Avatar
             size={44}
             name={user.username}
@@ -252,6 +248,12 @@ export default function AccountSelect(properties) {
     return unsubscribe;
   }, [$userStorage]);
 
+  const favouriteUsersStore = useStore($favouriteUsers);
+  const favouriteUsers = useMemo(() => {
+    if (!favouriteUsersStore) return [];
+    return favouriteUsersStore[chain] ?? [];
+  }, [favouriteUsersStore, chain]);
+
   const [inProgress, setInProgress] = useState(false);
   const [searchResponse, setSearchResponse] = useState(null);
 
@@ -327,6 +329,39 @@ export default function AccountSelect(properties) {
     );
   };
 
+  const FavouriteRow = ({ index, style }) => {
+    const favUser = favouriteUsers[index];
+    if (!favUser) return null;
+    const user = { username: favUser.name, id: favUser.id };
+    return (
+      <div style={style} className="pr-1">
+        {usr && chain !== usr.chain ? (
+          <a href={window.location.pathname} className="block">
+            <AccountCard
+              user={user}
+              onClick={() =>
+                setCurrentUser(favUser.name, favUser.id, "", chain)
+              }
+              accentColor={accentColor}
+              isCurrentChain={usr.chain === chain}
+              t={t}
+            />
+          </a>
+        ) : (
+          <AccountCard
+            user={user}
+            onClick={() =>
+              setCurrentUser(favUser.name, favUser.id, "", chain)
+            }
+            accentColor={accentColor}
+            isCurrentChain={usr.chain === chain}
+            t={t}
+          />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-[320px]">
       <StepIndicator
@@ -379,6 +414,13 @@ export default function AccountSelect(properties) {
             subtitle={t("AccountSelect:existingAccountSubtitle", { count: filteredUsers.length })}
             icon={<Users className="w-5 h-5" style={{ color: accentColor }} />}
             onClick={() => setMode("existing")}
+            accentColor={accentColor}
+          />
+          <BlockchainButton
+            name={t("AccountSelect:noMode.favourites")}
+            subtitle={t("AccountSelect:favouritesAccountSubtitle", { count: favouriteUsers.length })}
+            icon={<Star className="w-5 h-5" style={{ color: accentColor }} />}
+            onClick={() => setMode("favourites")}
             accentColor={accentColor}
           />
           <Button
@@ -561,6 +603,53 @@ export default function AccountSelect(properties) {
                 </div>
                 <div className="text-muted-foreground/60 text-xs text-center max-w-[200px] dark:text-muted-foreground/50 text-muted-foreground/70">
                   {t("AccountSelect:existing.noneHint")}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Button
+            variant="ghost"
+            onClick={() => setMode(null)}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground/70 px-2 py-1 h-auto"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t("AccountSelect:noMode.back")}
+          </Button>
+        </div>
+      ) : null}
+
+      {mode === "favourites" ? (
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="text-muted-foreground text-sm">
+            {t("AccountSelect:favourites.description")}
+          </div>
+
+          <div className="w-full max-h-[340px] overflow-auto rounded-xl">
+            {favouriteUsers.length > 0 ? (
+              <List
+                rowComponent={FavouriteRow}
+                rowCount={favouriteUsers.length}
+                rowHeight={72}
+                rowProps={{}}
+                key={`list-favourites-${chain}`}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 px-4">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                  style={{
+                    background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+                    border: `1px solid ${accentColor}20`,
+                  }}
+                >
+                  <Inbox className="w-6 h-6 dark:text-muted-foreground/50 text-muted-foreground/70" />
+                </div>
+                <div className="text-muted-foreground text-sm font-medium mb-1">
+                  {t("AccountSelect:favourites.none")}
+                </div>
+                <div className="text-muted-foreground/60 text-xs text-center max-w-[200px] dark:text-muted-foreground/50 text-muted-foreground/70">
+                  {t("AccountSelect:favourites.noneHint")}
                 </div>
               </div>
             )}

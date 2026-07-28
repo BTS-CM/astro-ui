@@ -8,17 +8,18 @@
     "testnet": "testnet"
   },
   "noMode": {
-    "titleBTS": "Utiliser un compte Bitshares nouveau ou existant ?",
-    "titleTEST": "Utiliser un compte testnet Bitshares nouveau ou existant ?",
+    "titleBTS": "Utiliser un compte Bitshares nouveau ou existant ?",
+    "titleTEST": "Utiliser un compte testnet Bitshares nouveau ou existant ?",
     "description": "Comment veux-tu procéder?",
     "new": "Nouveau compte",
-    "existing": "Compte existant",
+    "existing": "Comptes previously utilisés",
+    "favourites": "Utilisateurs favoris",
     "back": "Dos"
   },
   "new": {
     "title": "sélection de compte",
     "initDesc": "Entrez le nom de votre compte Bitshares",
-    "description": "Continuer avec le compte suivant ?",
+    "description": "Continuer avec le compte suivant ?",
     "back": "Retourner",
     "continue": "Continuer"
   },
@@ -26,6 +27,11 @@
     "description": "Sélectionnez l'un de vos comptes précédemment utilisés",
     "none": "Aucun compte trouvé.",
     "noneHint": "Vous pouvez ajouter des comptes en utilisant l'option Nouveau compte"
+  },
+  "favourites": {
+    "description": "Sélectionnez l'un de vos utilisateurs favoris",
+    "none": "Aucun utilisateur favori trouvé",
+    "noneHint": "Vous pouvez ajouter des favoris depuis la page Favoris"
   },
   "step1": "Réseau",
   "step2": "Compte",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Recherchez n'importe quel compte sur le réseau",
   "existingAccountSubtitle": "{{count}} compte enregistré",
   "existingAccountSubtitle_plural": "{{count}} comptes enregistrés",
+  "favouritesAccountSubtitle": "{{count}} favori enregistré",
+  "favouritesAccountSubtitle_plural": "{{count}} favoris enregistrés",
   "removeAccount": "Supprimer le compte",
   "removeAccountLabel": "Supprimer {{username}}"
 }

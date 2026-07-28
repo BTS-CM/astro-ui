@@ -12,7 +12,8 @@
     "titleTEST": "Ein neues oder bestehendes Bitshares-Testnet-Konto verwenden?",
     "description": "Wie wollen Sie fortfahren?",
     "new": "Neues Konto",
-    "existing": "Bestehendes Konto",
+    "existing": "Zuvor verwendete Konten",
+    "favourites": "Favorisierte Benutzer",
     "back": "Zurück"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "Keine Konten gefunden.",
     "noneHint": "Sie können Konten hinzufügen, indem Sie die Option Neues Konto verwenden"
   },
+  "favourites": {
+    "description": "Wählen Sie einen Ihrer favorisierten Benutzer aus",
+    "none": "Keine favorisierten Benutzer gefunden",
+    "noneHint": "Sie können Favoriten von der Favoriten-Seite hinzufügen"
+  },
   "step1": "Netzwerk",
   "step2": "Konto",
   "step3": "Bestätigen",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Suchen Sie nach einem beliebigen Konto im Netzwerk",
   "existingAccountSubtitle": "{{count}} Konto gespeichert",
   "existingAccountSubtitle_plural": "{{count}} Konten gespeichert",
+  "favouritesAccountSubtitle": "{{count}} Favorit gespeichert",
+  "favouritesAccountSubtitle_plural": "{{count}} Favoriten gespeichert",
   "removeAccount": "Konto entfernen",
   "removeAccountLabel": "{{username}} entfernen"
 }

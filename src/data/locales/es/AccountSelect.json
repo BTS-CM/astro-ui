@@ -12,7 +12,8 @@
     "titleTEST": "¿Utiliza una cuenta de prueba de Bitshares nueva o existente?",
     "description": "¿Como quieres proceder?",
     "new": "Nueva cuenta",
-    "existing": "Cuenta existente",
+    "existing": "Cuentas usadas anteriormente",
+    "favourites": "Usuarios favoritos",
     "back": "Atrás"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "No se encontraron cuentas.",
     "noneHint": "Puede añadir cuentas usando la opción Nueva cuenta"
   },
+  "favourites": {
+    "description": "Seleccione uno de sus usuarios favoritos",
+    "none": "No se encontraron usuarios favoritos",
+    "noneHint": "Puede agregar favoritos desde la página de Favoritos"
+  },
   "step1": "Red",
   "step2": "Cuenta",
   "step3": "Confirmar",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Busque cualquier cuenta en la red",
   "existingAccountSubtitle": "{{count}} cuenta guardada",
   "existingAccountSubtitle_plural": "{{count}} cuentas guardadas",
+  "favouritesAccountSubtitle": "{{count}} favorito guardado",
+  "favouritesAccountSubtitle_plural": "{{count}} favoritos guardados",
   "removeAccount": "Eliminar cuenta",
   "removeAccountLabel": "Eliminar {{username}}"
 }

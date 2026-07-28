@@ -359,7 +359,7 @@ export default function Settlement(properties) {
                     <FieldLabel>{t("Settlement:account")}</FieldLabel>
                     <FieldContent>
                       <div className="grid grid-cols-8 mt-4">
-                        <div className="col-span-1 ml-5">
+                        <div className="col-span-1 flex items-center justify-center">
                           {usr && usr.username ? (
                             <Avatar
                               size={40}

@@ -339,7 +339,7 @@ export default function Transfer(properties) {
                           {t("Transfer:sendingAccount")}
                         </FieldLabel>
                         <div className="grid grid-cols-8 gap-2">
-                          <div className="col-span-1 ml-5">
+                          <div className="col-span-1 flex items-center justify-center">
                             <Avatar
                               size={40}
                               name={usr && usr.username ? usr.username : "x"}
@@ -387,7 +387,7 @@ export default function Transfer(properties) {
                           {t("Transfer:targetAccount")}
                         </FieldLabel>
                         <div className="grid grid-cols-8 mt-4">
-                          <div className="col-span-1 ml-5">
+                          <div className="col-span-1 flex items-center justify-center">
                             {targetUser && targetUser.name ? (
                               <Avatar
                                 size={40}
@@ -494,7 +494,7 @@ export default function Transfer(properties) {
                           {t("Transfer:assetToTransfer")}
                         </FieldLabel>
                         <div className="grid grid-cols-8 mt-4">
-                          <div className="col-span-1 ml-5">
+                          <div className="col-span-1 flex items-center justify-center">
                             {!selectedAsset || !foundAsset ? (
                               <Av>
                                 <AvatarFallback className="bg-card/80 text-muted-foreground text-xs">

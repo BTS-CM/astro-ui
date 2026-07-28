@@ -112,7 +112,7 @@ export default function CDPForm({
                   <FormLabel>{t("Smartcoin:borrowingAccount")}</FormLabel>
                   <FormControl>
                     <div className="grid grid-cols-12 mt-4">
-                      <div className="hidden md:block col-span-1 ml-5">
+                      <div className="hidden md:flex col-span-1 items-center justify-center">
                         {usr && usr.username ? (
                           <Avatar
                             size={40}

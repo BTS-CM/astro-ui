@@ -12,7 +12,8 @@
     "titleTEST": "How would you like to access Bitshares testnet?",
     "description": "Choose an option below",
     "new": "New Account",
-    "existing": "Existing Account",
+    "existing": "Previously used accounts",
+    "favourites": "Favourite Users",
     "back": "Back"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "No saved accounts found",
     "noneHint": "You can add accounts by using the New Account option"
   },
+  "favourites": {
+    "description": "Select one of your favourite users",
+    "none": "No favourite users found",
+    "noneHint": "You can add favourites from the Favourites page"
+  },
   "step1": "Network",
   "step2": "Account",
   "step3": "Confirm",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Search for any account on the network",
   "existingAccountSubtitle": "{{count}} account saved",
   "existingAccountSubtitle_plural": "{{count}} accounts saved",
+  "favouritesAccountSubtitle": "{{count}} favourite saved",
+  "favouritesAccountSubtitle_plural": "{{count}} favourites saved",
   "removeAccount": "Remove account",
   "removeAccountLabel": "Remove {{username}}"
 }

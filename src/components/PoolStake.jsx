@@ -601,7 +601,7 @@ export default function PoolStake(properties) {
                         <FieldLabel>{t("PoolStake:account")}</FieldLabel>
                         <FieldContent>
                           <div className="grid grid-cols-8 gap-3">
-                            <div className="col-span-1 ml-5">
+                            <div className="col-span-1 flex items-center justify-center">
                               {usr && usr.username ? (
                                 <Avatar
                                   size={40}

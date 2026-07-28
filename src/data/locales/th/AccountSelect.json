@@ -12,7 +12,8 @@
     "titleTEST": "ใช้บัญชี Bitshares testnet ใหม่หรือที่มีอยู่?",
     "description": "คุณต้องการดำเนินการอย่างไร?",
     "new": "บัญชีใหม่",
-    "existing": "บัญชีที่มีอยู่",
+    "existing": "บัญชีที่เคยใช้มาก่อน",
+    "favourites": "ผู้ใช้ที่ชื่นชอบ",
     "back": "กลับ"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "ไม่พบบัญชี",
     "noneHint": "คุณสามารถเพิ่มบัญชีได้โดยใช้ตัวเลือกบัญชีใหม่"
   },
+  "favourites": {
+    "description": "เลือกผู้ใช้ที่ชื่นชอบของคุณหนึ่งราย",
+    "none": "ไม่พบผู้ใช้ที่ชื่นชอบ",
+    "noneHint": "คุณสามารถเพิ่มรายการที่ชื่นชอบได้จากหน้ารายการที่ชื่นชอบ"
+  },
   "step1": "เครือข่าย",
   "step2": "บัญชี",
   "step3": "ยืนยัน",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "ค้นหาบัญชีใดๆ บนเครือข่าย",
   "existingAccountSubtitle": "บันทึกบัญชี {{count}} บัญชี",
   "existingAccountSubtitle_plural": "บันทึกบัญชี {{count}} บัญชี",
+  "favouritesAccountSubtitle": "บันทึก {{count}} รายการที่ชื่นชอบ",
+  "favouritesAccountSubtitle_plural": "บันทึก {{count}} รายการที่ชื่นชอบ",
   "removeAccount": "ลบบัญชี",
   "removeAccountLabel": "ลบบัญชี {{username}}"
 }

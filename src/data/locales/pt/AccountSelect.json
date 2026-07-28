@@ -12,7 +12,8 @@
     "titleTEST": "Usar uma conta testnet Bitshares nova ou existente?",
     "description": "Como você deseja proceder?",
     "new": "Nova conta",
-    "existing": "Conta existente",
+    "existing": "Contas usadas anteriormente",
+    "favourites": "Usuários favoritos",
     "back": "Voltar"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "Nenhuma conta encontrada.",
     "noneHint": "Você pode adicionar contas usando a opção Nova conta"
   },
+  "favourites": {
+    "description": "Selecione um dos seus usuários favoritos",
+    "none": "Nenhum usuário favorito encontrado",
+    "noneHint": "Você pode adicionar favoritos na página de Favoritos"
+  },
   "step1": "Rede",
   "step2": "Conta",
   "step3": "Confirmar",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Pesquise qualquer conta na rede",
   "existingAccountSubtitle": "{{count}} conta salva",
   "existingAccountSubtitle_plural": "{{count}} contas salvas",
+  "favouritesAccountSubtitle": "{{count}} favorito salvo",
+  "favouritesAccountSubtitle_plural": "{{count}} favoritos salvos",
   "removeAccount": "Remover conta",
   "removeAccountLabel": "Remover {{username}}"
 }

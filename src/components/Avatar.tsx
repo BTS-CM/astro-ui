@@ -175,12 +175,13 @@ export const Avatar = ({
   name,
   extra,
   colors,
-  size,
+  size = 40,
   title,
   square,
   expression,
   ...props
 }: AvatarProps & Omit<HTMLProps<SVGSVGElement>, keyof AvatarProps>) => {
+  const avatarSize = typeof size === "string" ? parseInt(size, 10) || 40 : size;
   const data = useMemo(
     () => generateData(name, colors, expression),
     [name, colors, expression]
@@ -336,10 +337,11 @@ export const Avatar = ({
       fill="none"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full block"
-      width="100%"
-      height="100%"
+      className="block flex-shrink-0"
       {...props}
+      width={avatarSize}
+      height={avatarSize}
+      style={{ width: avatarSize, height: avatarSize, ...props.style }}
     >
       {title && <title>{title}</title>}
       <mask

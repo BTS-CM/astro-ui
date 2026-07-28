@@ -12,7 +12,8 @@
     "titleTEST": "Utilizzi un account testnet Bitshares nuovo o esistente?",
     "description": "Come vuoi procedere?",
     "new": "Nuovo account",
-    "existing": "Account esistente",
+    "existing": "Account usati in precedenza",
+    "favourites": "Utenti preferiti",
     "back": "Indietro"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "Nessun account trovato.",
     "noneHint": "Puoi aggiungere account usando l'opzione Nuovo account"
   },
+  "favourites": {
+    "description": "Seleziona uno dei tuoi utenti preferiti",
+    "none": "Nessun utente preferito trovato",
+    "noneHint": "Puoi aggiungere preferiti dalla pagina Preferiti"
+  },
   "step1": "Rete",
   "step2": "Account",
   "step3": "Conferma",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Cerca qualsiasi account sulla rete",
   "existingAccountSubtitle": "{{count}} account salvato",
   "existingAccountSubtitle_plural": "{{count}} account salvati",
+  "favouritesAccountSubtitle": "{{count}} preferito salvato",
+  "favouritesAccountSubtitle_plural": "{{count}} preferiti salvati",
   "removeAccount": "Rimuovi account",
   "removeAccountLabel": "Rimuovi {{username}}"
 }

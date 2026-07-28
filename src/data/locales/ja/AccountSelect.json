@@ -12,7 +12,8 @@
     "titleTEST": "新規または既存の Bitshares テストネット アカウントを使用しますか?",
     "description": "どのように進めたいですか?",
     "new": "新しいアカウント",
-    "existing": "既存のアカウント",
+    "existing": "以前使用したアカウント",
+    "favourites": "お気に入りのユーザー",
     "back": "戻る"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "アカウントが見つかりませんでした。",
     "noneHint": "「新規アカウント」オプションを使用してアカウントを追加できます"
   },
+  "favourites": {
+    "description": "お気に入りのユーザーを選択してください",
+    "none": "お気に入りのユーザーが見つかりませんでした",
+    "noneHint": "お気に入りページからお気に入りを追加できます"
+  },
   "step1": "ネットワーク",
   "step2": "アカウント",
   "step3": "確認",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "ネットワーク上の任意のアカウントを検索",
   "existingAccountSubtitle": "{{count}} アカウントを保存しました",
   "existingAccountSubtitle_plural": "{{count}} アカウントを保存しました",
+  "favouritesAccountSubtitle": "{{count}} 件のお気に入りを保存しました",
+  "favouritesAccountSubtitle_plural": "{{count}} 件のお気に入りを保存しました",
   "removeAccount": "アカウントを削除",
   "removeAccountLabel": "{{username}} を削除"
 }

@@ -23,7 +23,7 @@ export const FeeSharingWhitelistRow = React.memo(({ index, style, items, onRemov
       <Card className="ml-2 mr-2 mt-1">
         <CardHeader className="pb-3 pt-3">
           <span className="grid grid-cols-12">
-            <span className="col-span-1">
+            <span className="col-span-1 flex items-center justify-center">
               <Avatar
                 size={40}
                 name={res.name}
@@ -63,7 +63,7 @@ export const WhitelistAuthorityRow = React.memo(({ index, style, items, onRemove
       <Card className="ml-2 mr-2 mt-1">
         <CardHeader className="pb-3 pt-3">
           <span className="grid grid-cols-12">
-            <span className="col-span-1">
+            <span className="col-span-1 flex items-center justify-center">
               <Avatar
                 size={40}
                 name={res.name}
@@ -103,7 +103,7 @@ export const BlacklistAuthorityRow = React.memo(({ index, style, items, onRemove
       <Card className="ml-2 mr-2 mt-1">
         <CardHeader className="pb-3 pt-3">
           <span className="grid grid-cols-12">
-            <span className="col-span-1">
+            <span className="col-span-1 flex items-center justify-center">
               <Avatar
                 size={40}
                 name={res.name ? res.name : ""}

@@ -569,7 +569,7 @@ export default function MarketOrder(properties) {
                     </FieldLabel>
                     <FieldContent>
                       <div className="grid grid-cols-8 gap-2">
-                        <div className="col-span-1 ml-5">
+                        <div className="col-span-1 flex items-center justify-center">
                           {currentLimitOrder && usr ? (
                             <Avatar
                               size={40}

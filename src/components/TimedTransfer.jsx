@@ -307,7 +307,7 @@ export default function TimedTransfer(properties) {
                     <FieldLabel>{t("Transfer:sendingAccount")}</FieldLabel>
                     <FieldContent>
                       <div className="grid grid-cols-8 gap-2">
-                        <div className="col-span-1 ml-5">
+                        <div className="col-span-1 flex items-center justify-center">
                           <Avatar
                             size={40}
                             name={usr && usr.username ? usr.username : "x"}
@@ -342,7 +342,7 @@ export default function TimedTransfer(properties) {
                     <FieldLabel>{t("Transfer:targetAccount")}</FieldLabel>
                     <FieldContent>
                       <div className="grid grid-cols-8 mt-4">
-                        <div className="col-span-1 ml-5">
+                        <div className="col-span-1 flex items-center justify-center">
                           {targetUser && targetUser.name ? (
                             <Avatar
                               size={40}

@@ -387,7 +387,7 @@ export default function AccountLists(properties) {
               </div>
 
               <div className="grid grid-cols-8 items-center gap-3">
-                <div className="hidden md:block col-span-1">
+                <div className="hidden md:flex col-span-1 items-center justify-center">
                   {targetUser && targetUser.name ? (
                     <Avatar
                       size={36}

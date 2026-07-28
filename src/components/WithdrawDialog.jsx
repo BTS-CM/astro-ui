@@ -245,7 +245,7 @@ export default function WithdrawPermissions(properties) {
                       header={t("WithdrawPermissions:targetAccount")}
                     />
                     <div className="grid grid-cols-8 mt-4">
-                      <div className="col-span-1 ml-5">
+                      <div className="col-span-1 flex items-center justify-center">
                         {targetUser && targetUser.name ? (
                           <Avatar
                             size={40}

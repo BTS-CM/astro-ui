@@ -12,7 +12,8 @@
     "titleTEST": "Kas kasutada uut või olemasolevat Bitsharesi testneti kontot?",
     "description": "Kuidas soovite edasi minna?",
     "new": "Uus konto",
-    "existing": "Olemasolev konto",
+    "existing": "Varem kasutatud kontod",
+    "favourites": "Lemmikkasutajad",
     "back": "tagasi"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "Ühtegi kontot ei leitud.",
     "noneHint": "Kontosid saate lisada, kasutades valikut Uus konto"
   },
+  "favourites": {
+    "description": "Valige oma lemmikkasutajatest üks",
+    "none": "Lemmikkasutajaid ei leitud",
+    "noneHint": "Lemmikuid saate lisada lemmikute lehelt"
+  },
   "step1": "Võrk",
   "step2": "Konto",
   "step3": "Kinnita",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Otsi mis tahes kontot võrgust",
   "existingAccountSubtitle": "{{count}} konto salvestatud",
   "existingAccountSubtitle_plural": "{{count}} kontot salvestatud",
+  "favouritesAccountSubtitle": "{{count}} lemmik salvestatud",
+  "favouritesAccountSubtitle_plural": "{{count}} lemmikut salvestatud",
   "removeAccount": "Eemalda konto",
   "removeAccountLabel": "Eemalda {{username}}"
 }

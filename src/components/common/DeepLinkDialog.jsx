@@ -664,7 +664,7 @@ export default function DeepLinkDialog(properties) {
                         type="header"
                       />
                     </div>
-                    <div className="col-span-1 ml-5">
+                    <div className="col-span-1 flex items-center justify-center">
                       {targetUser && targetUser.name ? (
                         <Avatar
                           size={40}

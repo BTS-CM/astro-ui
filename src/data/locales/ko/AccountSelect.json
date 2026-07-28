@@ -12,7 +12,8 @@
     "titleTEST": "신규 또는 기존 Bitshares 테스트넷 계정을 사용하시겠습니까?",
     "description": "어떻게 진행하시겠습니까?",
     "new": "새 계정",
-    "existing": "기존 계정",
+    "existing": "이전에 사용한 계정",
+    "favourites": "즐겨찾기 사용자",
     "back": "뒤쪽에"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "계정을 찾을 수 없습니다.",
     "noneHint": "새 계정 옵션을 사용하여 계정을 추가할 수 있습니다"
   },
+  "favourites": {
+    "description": "즐겨찾기 사용자 중 하나를 선택하세요",
+    "none": "즐겨찾기 사용자를 찾을 수 없습니다",
+    "noneHint": "즐겨찾기 페이지에서 즐겨찾기를 추가할 수 있습니다"
+  },
   "step1": "네트워크",
   "step2": "계정",
   "step3": "확인",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "네트워크에서 모든 계정을 검색",
   "existingAccountSubtitle": "{{count}} 계정 저장됨",
   "existingAccountSubtitle_plural": "{{count}} 계정 저장됨",
+  "favouritesAccountSubtitle": "{{count}}개의 즐겨찾기가 저장됨",
+  "favouritesAccountSubtitle_plural": "{{count}}개의 즐겨찾기가 저장됨",
   "removeAccount": "계정 제거",
   "removeAccountLabel": "{{username}} 제거"
 }

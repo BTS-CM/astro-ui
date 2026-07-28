@@ -157,7 +157,7 @@ export default function AccountSearch(properties) {
                 }}
               >
                 <div className="grid grid-cols-4">
-                  <div className="col-span-1 pt-6 pl-7">
+                  <div className="col-span-1 flex items-center justify-center pt-6">
                     <Avatar
                       size={40}
                       name={searchResponse.name}

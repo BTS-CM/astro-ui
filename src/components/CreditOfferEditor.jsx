@@ -67,6 +67,7 @@ import {
 } from "@/components/ui/select";
 
 import { Avatar } from "./Avatar.tsx";
+import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import CollateralDropDownCard from "./Market/CollateralDropDownCard.jsx";
@@ -118,10 +119,23 @@ export default function CreditOfferEditor(properties) {
 
   const [showDialog, setShowDialog] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState();
-  const [lendingAmount, setLendingAmount] = useState(0);
+  const [lendingAmount, setLendingAmount] = useState("");
   const [rate, setRate] = useState(0);
   const [repayPeriod, setRepayPeriod] = useState("1hr");
-  const [minimumBorowAmount, setMinimumBorowAmount] = useState(0);
+  const [minimumBorowAmount, setMinimumBorowAmount] = useState("");
+
+  const [prevSelectedAsset, setPrevSelectedAsset] = useState();
+  useEffect(() => {
+    if (selectedAsset && selectedAsset !== prevSelectedAsset) {
+      if (prevSelectedAsset !== undefined) {
+        setLendingAmount("");
+        setMinimumBorowAmount("");
+        form.setValue("lendingAmount", "");
+        form.setValue("minimumAmount", "");
+      }
+      setPrevSelectedAsset(selectedAsset);
+    }
+  }, [selectedAsset, prevSelectedAsset]);
   const [expiration, setExpiration] = useState();
   const [allowedAccounts, setAllowedAccounts] = useState([]);
   const [acceptableCollateral, setAcceptableCollateral] = useState([]);
@@ -820,35 +834,53 @@ export default function CreditOfferEditor(properties) {
                     {t("CreditOfferEditor:assetToLend")}
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
+                <div className="grid grid-cols-8 gap-2">
+                  <div className="col-span-1 flex items-center justify-center">
+                    {!selectedAsset || !foundAsset ? (
+                      <Av>
+                        <AvatarFallback className="bg-card/80 text-muted-foreground text-xs">?</AvatarFallback>
+                      </Av>
+                    ) : null}
+                    {foundAsset ? (
+                      <Av>
+                        <AvatarFallback className="bg-card/80 text-foreground/70 text-xs">
+                          {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                        </AvatarFallback>
+                      </Av>
+                    ) : null}
+                  </div>
+                  <div className="col-span-7 md:col-span-5">
                     {!selectedAsset || !foundAsset ? (
                       <Input
                         id={`targetAsset-${offerID ?? "new"}`}
                         disabled
                         placeholder="Bitshares asset (1.3.x)"
-                        className="bg-card/60"
+                        className="bg-card/40 border-border text-foreground placeholder:text-muted-foreground/60 mb-1 mt-1"
                       />
                     ) : (
                       <Input
                         id={`targetAsset-${offerID ?? "new"}`}
                         disabled
                         placeholder={`${foundAsset.symbol} (${foundAsset.id})`}
-                        className="bg-card/60"
+                        className="bg-card/40 border-border text-foreground placeholder:text-muted-foreground/60 mb-1 mt-1"
                       />
                     )}
                   </div>
                   {!offerID ? (
-                    <AssetDropDown
-                      assetSymbol={selectedAsset ?? ""}
-                      assetData={null}
-                      storeCallback={setSelectedAsset}
-                      otherAsset={null}
-                      marketSearch={marketSearch}
-                      type={null}
-                      chain={usr.chain}
-                      balances={balances}
-                    />
+                    <div className="col-span-2 mt-1 ml-3">
+                      <AssetDropDown
+                        assetSymbol={selectedAsset ?? ""}
+                        assetData={null}
+                        storeCallback={setSelectedAsset}
+                        otherAsset={null}
+                        marketSearch={marketSearch}
+                        type={null}
+                        chain={usr.chain}
+                        balances={balances}
+                        triggerVariant="outline"
+                        triggerClassName="w-auto border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.5)]"
+                      />
+                    </div>
                   ) : null}
                 </div>
                 {foundAsset &&
@@ -860,122 +892,126 @@ export default function CreditOfferEditor(properties) {
                   )}
               </div>
 
-              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4 mb-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
-                      <HandCoins className="h-3 w-3" strokeWidth={2.5} />
-                    </span>
-                    <span className="text-[11px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
-                      {t("CreditOfferEditor:amountToLend")}
-                    </span>
-                  </div>
-                  {foundAsset ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        event.preventDefault();
-                        setLendingAmount(foundAssetBalance);
-                        form.setValue("lendingAmount", foundAssetBalance);
-                      }}
-                      className="border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)]"
-                    >
-                      {t("LimitOrderCard:useBalance")}
-                    </Button>
-                  ) : null}
-                </div>
-                <Controller
-                  name="lendingAmount"
-                  control={form.control}
-                  render={({ field }) => (
-                    <Input
-                      id={`lendingAmount-${offerID ?? "new"}`}
-                      value={lendingAmount}
-                      placeholder={String(lendingAmount)}
-                      className="bg-card/60 text-lg font-semibold"
-                      onChange={(event) => {
-                        const input = event.target.value;
-                        const inputDecimals = !foundAsset
-                          ? 2
-                          : foundAsset.precision;
-                        let regex = new RegExp(
-                          `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`,
-                        );
-                        if (regex.test(input)) {
-                          setLendingAmount(input);
-                          field.onChange(input);
-                        }
-                      }}
-                    />
-                  )}
-                />
-                {((!foundAssetBalance && lendingAmount > 0) ||
-                  (foundAssetBalance && foundAssetBalance < lendingAmount)) && (
-                  <p className="text-xs text-[hsl(var(--accent-danger-fg))] mt-2">
-                    {t("Common:insufficient_funds")}
-                  </p>
-                )}
-              </div>
-
-              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4 mb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
-                    <Percent className="h-3 w-3" strokeWidth={2.5} />
-                  </span>
-                  <span className="text-[11px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
-                    {t("CreditOfferEditor:lendingRate")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="flex-1">
-                    <Input
-                      value={`${rate} %`}
-                      placeholder={`${rate} %`}
-                      disabled
-                      className="bg-card/60 text-lg font-semibold dark:text-[hsl(var(--accent-1-fg))]"
-                    />
-                  </div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)]">
-                        {t("CreditOfferEditor:editLendingRate")}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                        <HandCoins className="h-3 w-3" strokeWidth={2.5} />
+                      </span>
+                      <span className="text-[11px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
+                        {t("CreditOfferEditor:amountToLend")}
+                      </span>
+                    </div>
+                    {foundAsset ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          event.preventDefault();
+                          setLendingAmount(foundAssetBalance);
+                          form.setValue("lendingAmount", foundAssetBalance);
+                        }}
+                        className="border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)]"
+                      >
+                        {t("LimitOrderCard:useBalance")}
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <Label>{t("CreditOfferEditor:newLendingRate")}</Label>{" "}
+                    ) : null}
+                  </div>
+                  <Controller
+                    name="lendingAmount"
+                    control={form.control}
+                    render={({ field }) => (
                       <Input
-                        placeholder={String(rate)}
-                        className="mb-2 mt-1"
+                        id={`lendingAmount-${offerID ?? "new"}`}
+                        value={lendingAmount || ""}
+                        placeholder={!foundAsset ? "0" : String(lendingAmount)}
+                        disabled={!foundAsset}
+                        className="bg-card/60 text-lg font-semibold"
                         onChange={(event) => {
                           const input = event.target.value;
-                          const regex = /^[0-9]*\.?[0-9]{0,2}$/;
-                          if (input && input.length && regex.test(input)) {
-                            if (input >= 0.01 && input <= 100) {
-                              setRate(input);
-                            } else if (input > 100) {
-                              setRate(100);
-                            } else if (input < 0.01) {
-                              setRate(0.01);
-                            }
+                          const inputDecimals = !foundAsset
+                            ? 2
+                            : foundAsset.precision;
+                          let regex = new RegExp(
+                            `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`,
+                          );
+                          if (regex.test(input)) {
+                            setLendingAmount(input);
+                            field.onChange(input);
                           }
                         }}
                       />
-                    </PopoverContent>
-                  </Popover>
+                    )}
+                  />
+                  {
+                    (!foundAssetBalance && lendingAmount > 0) || (foundAssetBalance && foundAssetBalance < lendingAmount)
+                      ? <p className="text-xs text-[hsl(var(--accent-danger-fg))] mt-2">
+                          {t("Common:insufficient_funds")}
+                        </p>
+                      : null
+                  }
                 </div>
-                <Slider
-                  className="mt-3"
-                  key={`Slider${rate}`}
-                  defaultValue={[rate]}
-                  max={100}
-                  min={1}
-                  step={0.01}
-                  onValueChange={(value) => {
-                    debouncedSetRate(value[0]);
-                  }}
-                />
+
+                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                      <Percent className="h-3 w-3" strokeWidth={2.5} />
+                    </span>
+                    <span className="text-[11px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
+                      {t("CreditOfferEditor:lendingRate")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex-1">
+                      <Input
+                        value={`${rate} %`}
+                        placeholder={`${rate} %`}
+                        disabled
+                        className="bg-card/60 text-lg font-semibold dark:text-[hsl(var(--accent-1-fg))]"
+                      />
+                    </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)]">
+                          {t("CreditOfferEditor:editLendingRate")}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <Label>{t("CreditOfferEditor:newLendingRate")}</Label>{" "}
+                        <Input
+                          placeholder={String(rate)}
+                          className="mb-2 mt-1"
+                          onChange={(event) => {
+                            const input = event.target.value;
+                            const regex = /^[0-9]*\.?[0-9]{0,2}$/;
+                            if (input && input.length && regex.test(input)) {
+                              if (input >= 0.01 && input <= 100) {
+                                setRate(input);
+                              } else if (input > 100) {
+                                setRate(100);
+                              } else if (input < 0.01) {
+                                setRate(0.01);
+                              }
+                            }
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <Slider
+                    className="mt-3"
+                    key={`Slider${rate}`}
+                    defaultValue={[rate]}
+                    max={100}
+                    min={1}
+                    step={0.01}
+                    onValueChange={(value) => {
+                      debouncedSetRate(value[0]);
+                    }}
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -1040,8 +1076,9 @@ export default function CreditOfferEditor(properties) {
                   </div>
                   <Input
                     id={`minimumAmount-${offerID ?? "new"}`}
-                    value={minimumBorowAmount}
-                    placeholder={String(minimumBorowAmount)}
+                    value={minimumBorowAmount || ""}
+                    placeholder={!foundAsset ? "0" : String(minimumBorowAmount)}
+                    disabled={!foundAsset}
                     className="bg-card/60"
                     onKeyPress={(event) => {
                       if (
@@ -1309,10 +1346,10 @@ export default function CreditOfferEditor(properties) {
         />
       ) : null}
 
-      <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.1)] mt-5">
+      <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-danger)/0.1)] mt-5">
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.4)] to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-danger)/0.4)] to-transparent"
         />
         <div className="relative p-5 sm:p-6">
           <div className="flex items-center gap-2 mb-3">
@@ -1323,9 +1360,29 @@ export default function CreditOfferEditor(properties) {
               {t("CreditOfferEditor:risksTitle")}
             </h3>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mb-3">
             {t("CreditOfferEditor:risksDescription")}
           </p>
+          <ul className="space-y-2">
+            <li className="text-sm text-muted-foreground">
+              {t("CreditOfferEditor:risksPoint1")}
+            </li>
+            <li className="text-sm text-muted-foreground">
+              {t("CreditOfferEditor:risksPoint2")}
+            </li>
+            <li className="text-sm text-muted-foreground">
+              {t("CreditOfferEditor:risksPoint3")}
+            </li>
+            <li className="text-sm text-muted-foreground">
+              {t("CreditOfferEditor:risksPoint4")}
+            </li>
+            <li className="text-sm text-muted-foreground">
+              {t("CreditOfferEditor:risksPoint5")}
+            </li>
+            <li className="text-sm text-muted-foreground">
+              {t("CreditOfferEditor:risksPoint6")}
+            </li>
+          </ul>
         </div>
       </Card>
     </div>

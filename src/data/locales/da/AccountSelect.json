@@ -12,7 +12,8 @@
     "titleTEST": "Brug en ny eller eksisterende Bitshares testnet-konto?",
     "description": "Hvordan vil du gå videre?",
     "new": "Ny konto",
-    "existing": "Eksisterende konto",
+    "existing": "Tidligere brugte konti",
+    "favourites": "Favoritbrugere",
     "back": "Tilbage"
   },
   "new": {
@@ -27,6 +28,11 @@
     "none": "Ingen konti fundet.",
     "noneHint": "Du kan tilføje konti ved at bruge indstillingen Ny konto"
   },
+  "favourites": {
+    "description": "Vælg en af dine favoritbrugere",
+    "none": "Ingen favoritbrugere fundet",
+    "noneHint": "Du kan tilføje favoritter fra Favoritter-siden"
+  },
   "step1": "Netværk",
   "step2": "Konto",
   "step3": "Bekræft",
@@ -35,6 +41,8 @@
   "newAccountSubtitle": "Søg efter enhver konto på netværket",
   "existingAccountSubtitle": "{{count}} konto gemt",
   "existingAccountSubtitle_plural": "{{count}} konti gemt",
+  "favouritesAccountSubtitle": "{{count}} favorit gemt",
+  "favouritesAccountSubtitle_plural": "{{count}} favoritter gemt",
   "removeAccount": "Fjern konto",
   "removeAccountLabel": "Fjern {{username}}"
 }

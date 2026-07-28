@@ -647,7 +647,7 @@ export default function CreditOffer(properties) {
                           </FieldLabel>
                           <FieldContent>
                             <div className="grid grid-cols-8 mt-4">
-                              <div className="col-span-1 ml-5">
+                              <div className="col-span-1 flex items-center justify-center">
                                 {usr && usr.username ? (
                                   <Avatar
                                     size={40}
@@ -707,7 +707,7 @@ export default function CreditOffer(properties) {
                           </FieldLabel>
                           <FieldContent>
                             <div className="grid grid-cols-8 mt-4">
-                              <div className="col-span-1 ml-5">
+                              <div className="col-span-1 flex items-center justify-center">
                                 {creditOfferOwner && creditOfferOwner.name ? (
                                   <Avatar
                                     size={40}
