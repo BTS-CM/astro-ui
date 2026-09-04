@@ -19,5 +19,60 @@
   "addAsset": "Adicione ativo",
   "featured": "Ativos em destaque",
   "borrowed": "Emprestado",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "mode": {
+    "titleBTS": "Como queres encontrar o ativo na Bitshares?",
+    "titleTEST": "Como queres encontrar o ativo na testnet da Bitshares?",
+    "search": "Pesquisar ativo",
+    "searchSubtitle": "Pesquisar por símbolo ou ID",
+    "balances": "Os meus saldos",
+    "balancesSubtitle": "{{count}} saldos",
+    "featured": "Ativos em destaque",
+    "featuredSubtitle": "{{count}} em destaque",
+    "favourites": "Ativos favoritos",
+    "favouritesSubtitle": "{{count}} favoritos",
+    "recent": "Ativos recentes",
+    "recentSubtitle": "{{count}} recentes",
+    "back": "Voltar"
+  },
+  "searchPage": {
+    "initDesc": "Pesquisar por símbolo, ID ou emissor",
+    "description": "Seleciona um ativo para continuar",
+    "placeholder": "ex. BTS, USD, 1.3.0",
+    "back": "Voltar",
+    "noResults": "Nenhum ativo encontrado",
+    "noResultsHint": "Tenta ajustar a pesquisa"
+  },
+  "favouritesPage": {
+    "description": "Seleciona um dos teus ativos favoritos",
+    "none": "Nenhum ativo favorito encontrado",
+    "noneHint": "Podes adicionar favoritos na página de Favoritos"
+  },
+  "featuredPage": {
+    "description": "Explora os ativos em destaque nesta cadeia",
+    "none": "Nenhum ativo em destaque encontrado",
+    "noneHint": "Nenhum ativo selecionado disponível",
+    "assets": "ativos"
+  },
+  "featuredCategories": {
+    "committee": "Propriedade do comité",
+    "committeeSubtitle": "Emitido por committee-account",
+    "xbtsSubtitle": "Ativos XBTS",
+    "btwtySubtitle": "Ativos BTWTY",
+    "honestSubtitle": "Ativos HONEST",
+    "nfteaSubtitle": "Ativos NFTEA"
+  },
+  "balancesPage": {
+    "description": "Seleciona um dos teus ativos com saldo",
+    "none": "Nenhum saldo encontrado",
+    "noneHint": "Não tens ativos com saldo"
+  },
+  "recent": {
+    "description": "Seleciona um dos teus ativos selecionados recentemente",
+    "none": "Nenhum ativo recente encontrado",
+    "noneHint": "As tuas seleções recentes aparecem aqui",
+    "eraseHistory": "Limpar histórico"
+  },
+  "step1": "Método",
+  "step2": "Selecionar"
 }

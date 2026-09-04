@@ -21,5 +21,60 @@
   "laenatud": "Laenatud",
   "saldo": "saldo",
   "borrowed": "Laenatud",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "mode": {
+    "titleBTS": "Kuidas soovite Bitsharesis vara leida?",
+    "titleTEST": "Kuidas soovite Bitsharesi testnetis vara leida?",
+    "search": "Otsi vara",
+    "searchSubtitle": "Otsi sümboli või ID järgi",
+    "balances": "Minu saldod",
+    "balancesSubtitle": "{{count}} saldot",
+    "featured": "Esiletõstetud varad",
+    "featuredSubtitle": "{{count}} esiletõstetut",
+    "favourites": "Lemmikvarad",
+    "favouritesSubtitle": "{{count}} lemmikut",
+    "recent": "Hiljutised varad",
+    "recentSubtitle": "{{count}} hiljutist",
+    "back": "Tagasi"
+  },
+  "searchPage": {
+    "initDesc": "Otsi vara sümboli, ID või emiteerija järgi",
+    "description": "Jätkamiseks vali vara",
+    "placeholder": "nt BTS, USD, 1.3.0",
+    "back": "Mine tagasi",
+    "noResults": "Varasid ei leitud",
+    "noResultsHint": "Proovi otsingut täpsustada"
+  },
+  "favouritesPage": {
+    "description": "Vali üks oma lemmikvaradest",
+    "none": "Lemmikvarasid ei leitud",
+    "noneHint": "Saad lemmikuid lisada lehelt Lemmikud"
+  },
+  "featuredPage": {
+    "description": "Sirvi esiletõstetud varasid selles ahelas",
+    "none": "Esiletõstetud varasid ei leitud",
+    "noneHint": "Kureeritud varasid pole saadaval",
+    "assets": "varad"
+  },
+  "featuredCategories": {
+    "committee": "Komitee omandis",
+    "committeeSubtitle": "Emiteerija committee-account",
+    "xbtsSubtitle": "XBTS varad",
+    "btwtySubtitle": "BTWTY varad",
+    "honestSubtitle": "HONEST varad",
+    "nfteaSubtitle": "NFTEA varad"
+  },
+  "balancesPage": {
+    "description": "Vali üks oma saldoga varadest",
+    "none": "Saldosid ei leitud",
+    "noneHint": "Sul pole saldoga varasid"
+  },
+  "recent": {
+    "description": "Vali üks oma hiljuti valitud varadest",
+    "none": "Hiljutisi varasid ei leitud",
+    "noneHint": "Sinu hiljutised valikud kuvatakse siin",
+    "eraseHistory": "Kustuta ajalugu"
+  },
+  "step1": "Meetod",
+  "step2": "Vali"
 }

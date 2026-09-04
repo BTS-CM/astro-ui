@@ -19,5 +19,60 @@
   "addAsset": "Ajouter un actif",
   "featured": "Actifs en vedette",
   "borrowed": "Emprunté",
-  "balance": "Solde"
+  "balance": "Solde",
+  "mode": {
+    "titleBTS": "Comment souhaitez-vous trouver l'actif sur Bitshares ?",
+    "titleTEST": "Comment souhaitez-vous trouver l'actif sur le testnet Bitshares ?",
+    "search": "Rechercher un actif",
+    "searchSubtitle": "Rechercher par symbole ou ID",
+    "balances": "Mes soldes",
+    "balancesSubtitle": "{{count}} soldes",
+    "featured": "Actifs en vedette",
+    "featuredSubtitle": "{{count}} en vedette",
+    "favourites": "Actifs favoris",
+    "favouritesSubtitle": "{{count}} favoris",
+    "recent": "Actifs récents",
+    "recentSubtitle": "{{count}} récents",
+    "back": "Retour"
+  },
+  "searchPage": {
+    "initDesc": "Rechercher par symbole, ID ou émetteur",
+    "description": "Sélectionnez un actif pour continuer",
+    "placeholder": "ex. BTS, USD, 1.3.0",
+    "back": "Revenir",
+    "noResults": "Aucun actif trouvé",
+    "noResultsHint": "Essayez d'ajuster votre recherche"
+  },
+  "favouritesPage": {
+    "description": "Sélectionnez l'un de vos actifs favoris",
+    "none": "Aucun actif favori trouvé",
+    "noneHint": "Vous pouvez ajouter des favoris depuis la page Favoris"
+  },
+  "featuredPage": {
+    "description": "Parcourir les actifs en vedette sur cette chaîne",
+    "none": "Aucun actif en vedette trouvé",
+    "noneHint": "Aucun actif sélectionné disponible",
+    "assets": "actifs"
+  },
+  "featuredCategories": {
+    "committee": "Détenu par le comité",
+    "committeeSubtitle": "Émis par committee-account",
+    "xbtsSubtitle": "Actifs XBTS",
+    "btwtySubtitle": "Actifs BTWTY",
+    "honestSubtitle": "Actifs HONEST",
+    "nfteaSubtitle": "Actifs NFTEA"
+  },
+  "balancesPage": {
+    "description": "Sélectionnez l'un de vos actifs avec solde",
+    "none": "Aucun solde trouvé",
+    "noneHint": "Vous n'avez aucun actif avec un solde"
+  },
+  "recent": {
+    "description": "Sélectionnez l'un de vos actifs récemment sélectionnés",
+    "none": "Aucun actif récent trouvé",
+    "noneHint": "Vos sélections récentes apparaîtront ici",
+    "eraseHistory": "Effacer l'historique"
+  },
+  "step1": "Méthode",
+  "step2": "Sélection"
 }

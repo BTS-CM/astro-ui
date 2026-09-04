@@ -19,5 +19,60 @@
   "addAsset": "자산 추가",
   "featured": "추천 자산",
   "borrowed": "빌린",
-  "balance": "잔액"
+  "balance": "잔액",
+  "mode": {
+    "titleBTS": "Bitshares에서 자산을 어떻게 찾으시겠습니까?",
+    "titleTEST": "Bitshares 테스트넷에서 자산을 어떻게 찾으시겠습니까?",
+    "search": "자산 검색",
+    "searchSubtitle": "심볼 또는 ID로 검색",
+    "balances": "내 잔액",
+    "balancesSubtitle": "{{count}}개 잔액",
+    "featured": "추천 자산",
+    "featuredSubtitle": "{{count}}개 추천",
+    "favourites": "즐겨찾기 자산",
+    "favouritesSubtitle": "{{count}}개 즐겨찾기",
+    "recent": "최근 자산",
+    "recentSubtitle": "{{count}}개 최근",
+    "back": "뒤로"
+  },
+  "searchPage": {
+    "initDesc": "심볼, ID 또는 발행자로 검색",
+    "description": "계속할 자산을 선택하세요",
+    "placeholder": "예: BTS, USD, 1.3.0",
+    "back": "돌아가기",
+    "noResults": "자산을 찾을 수 없습니다",
+    "noResultsHint": "검색어를 조정해 보세요"
+  },
+  "favouritesPage": {
+    "description": "즐겨찾기 자산 중 하나를 선택하세요",
+    "none": "즐겨찾기 자산을 찾을 수 없습니다",
+    "noneHint": "즐겨찾기 페이지에서 추가할 수 있습니다"
+  },
+  "featuredPage": {
+    "description": "이 체인의 추천 자산을 찾아보세요",
+    "none": "추천 자산을 찾을 수 없습니다",
+    "noneHint": "사용 가능한 선별 자산이 없습니다",
+    "assets": "자산"
+  },
+  "featuredCategories": {
+    "committee": "위원회 소유",
+    "committeeSubtitle": "committee-account 발행",
+    "xbtsSubtitle": "XBTS 자산",
+    "btwtySubtitle": "BTWTY 자산",
+    "honestSubtitle": "HONEST 자산",
+    "nfteaSubtitle": "NFTEA 자산"
+  },
+  "balancesPage": {
+    "description": "잔액이 있는 자산 중 하나를 선택하세요",
+    "none": "잔액을 찾을 수 없습니다",
+    "noneHint": "잔액이 있는 자산이 없습니다"
+  },
+  "recent": {
+    "description": "최근에 선택한 자산 중 하나를 선택하세요",
+    "none": "최근 자산을 찾을 수 없습니다",
+    "noneHint": "최근 선택 내역이 여기에 표시됩니다",
+    "eraseHistory": "기록 삭제"
+  },
+  "step1": "방법",
+  "step2": "선택"
 }

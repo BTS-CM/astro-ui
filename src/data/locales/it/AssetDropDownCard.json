@@ -20,5 +20,60 @@
   "featured": "Risorse in evidenza",
   "borrowed": "Preso in prestito",
   "saldo": "Saldo",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "mode": {
+    "titleBTS": "Come vuoi trovare la risorsa su Bitshares?",
+    "titleTEST": "Come vuoi trovare la risorsa sulla testnet di Bitshares?",
+    "search": "Cerca risorsa",
+    "searchSubtitle": "Cerca per simbolo o ID",
+    "balances": "I miei saldi",
+    "balancesSubtitle": "{{count}} saldi",
+    "featured": "Risorse in evidenza",
+    "featuredSubtitle": "{{count}} in evidenza",
+    "favourites": "Risorse preferite",
+    "favouritesSubtitle": "{{count}} preferite",
+    "recent": "Risorse recenti",
+    "recentSubtitle": "{{count}} recenti",
+    "back": "Indietro"
+  },
+  "searchPage": {
+    "initDesc": "Cerca per simbolo, ID o emittente",
+    "description": "Seleziona una risorsa per continuare",
+    "placeholder": "es. BTS, USD, 1.3.0",
+    "back": "Torna indietro",
+    "noResults": "Nessuna risorsa trovata",
+    "noResultsHint": "Prova a modificare la ricerca"
+  },
+  "favouritesPage": {
+    "description": "Seleziona una delle tue risorse preferite",
+    "none": "Nessuna risorsa preferita trovata",
+    "noneHint": "Puoi aggiungere preferiti dalla pagina Preferiti"
+  },
+  "featuredPage": {
+    "description": "Sfoglia le risorse in evidenza su questa chain",
+    "none": "Nessuna risorsa in evidenza trovata",
+    "noneHint": "Nessuna risorsa selezionata disponibile",
+    "assets": "risorse"
+  },
+  "featuredCategories": {
+    "committee": "Di proprietà del comitato",
+    "committeeSubtitle": "Emesso da committee-account",
+    "xbtsSubtitle": "Risorse XBTS",
+    "btwtySubtitle": "Risorse BTWTY",
+    "honestSubtitle": "Risorse HONEST",
+    "nfteaSubtitle": "Risorse NFTEA"
+  },
+  "balancesPage": {
+    "description": "Seleziona una delle tue risorse con saldo",
+    "none": "Nessun saldo trovato",
+    "noneHint": "Non hai risorse con saldo"
+  },
+  "recent": {
+    "description": "Seleziona una delle tue risorse selezionate di recente",
+    "none": "Nessuna risorsa recente trovata",
+    "noneHint": "Le tue selezioni recenti appariranno qui",
+    "eraseHistory": "Cancella cronologia"
+  },
+  "step1": "Metodo",
+  "step2": "Seleziona"
 }

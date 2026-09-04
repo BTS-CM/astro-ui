@@ -19,5 +19,60 @@
   "addAsset": "Tilføj aktiv",
   "featured": "Udvalgte aktiver",
   "borrowed": "Lånt",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "mode": {
+    "titleBTS": "Hvordan vil du finde aktivet på Bitshares?",
+    "titleTEST": "Hvordan vil du finde aktivet på Bitshares testnet?",
+    "search": "Søg efter aktiv",
+    "searchSubtitle": "Søg efter symbol eller ID",
+    "balances": "Mine saldi",
+    "balancesSubtitle": "{{count}} saldi",
+    "featured": "Udvalgte aktiver",
+    "featuredSubtitle": "{{count}} udvalgte",
+    "favourites": "Favoritaktiver",
+    "favouritesSubtitle": "{{count}} favoritter",
+    "recent": "Seneste aktiver",
+    "recentSubtitle": "{{count}} seneste",
+    "back": "Tilbage"
+  },
+  "searchPage": {
+    "initDesc": "Søg efter aktivsymbol, ID eller udsteder",
+    "description": "Vælg et aktiv for at fortsætte",
+    "placeholder": "f.eks. BTS, USD, 1.3.0",
+    "back": "Gå tilbage",
+    "noResults": "Ingen aktiver fundet",
+    "noResultsHint": "Prøv at justere din søgning"
+  },
+  "favouritesPage": {
+    "description": "Vælg et af dine favoritaktiver",
+    "none": "Ingen favoritaktiver fundet",
+    "noneHint": "Du kan tilføje favoritter fra siden Favoritter"
+  },
+  "featuredPage": {
+    "description": "Gennemse udvalgte aktiver på denne chain",
+    "none": "Ingen udvalgte aktiver fundet",
+    "noneHint": "Ingen kuraterede aktiver tilgængelige",
+    "assets": "aktiver"
+  },
+  "featuredCategories": {
+    "committee": "Ejet af komitéen",
+    "committeeSubtitle": "Udstedt af committee-account",
+    "xbtsSubtitle": "XBTS-aktiver",
+    "btwtySubtitle": "BTWTY-aktiver",
+    "honestSubtitle": "HONEST-aktiver",
+    "nfteaSubtitle": "NFTEA-aktiver"
+  },
+  "balancesPage": {
+    "description": "Vælg et af dine saldoaktiver",
+    "none": "Ingen saldi fundet",
+    "noneHint": "Du har ingen aktiver med saldo"
+  },
+  "recent": {
+    "description": "Vælg et af dine senest valgte aktiver",
+    "none": "Ingen seneste aktiver fundet",
+    "noneHint": "Dine seneste aktivvalg vises her",
+    "eraseHistory": "Ryd historik"
+  },
+  "step1": "Metode",
+  "step2": "Vælg"
 }

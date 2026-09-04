@@ -351,6 +351,28 @@ export default function AssetDropDown(properties) {
   const [mode, setMode] = useState(null);
   const [featuredCategory, setFeaturedCategory] = useState(null);
 
+  // Per-page list filters — same pattern as global search but local to each pseudo-page
+  const [balancesFilter, setBalancesFilter] = useState("");
+  const [featuredFilter, setFeaturedFilter] = useState("");
+  const [favouritesFilter, setFavouritesFilter] = useState("");
+  const [recentFilter, setRecentFilter] = useState("");
+
+  // Clear per-page filters when navigating between pages or closing dialog
+  useEffect(() => {
+    setBalancesFilter("");
+    setFeaturedFilter("");
+    setFavouritesFilter("");
+    setRecentFilter("");
+  }, [mode, featuredCategory]);
+  useEffect(() => {
+    if (!dialogOpen) {
+      setBalancesFilter("");
+      setFeaturedFilter("");
+      setFavouritesFilter("");
+      setRecentFilter("");
+    }
+  }, [dialogOpen]);
+
   useEffect(() => {
     if (mode !== "featured" && featuredCategory) {
       setFeaturedCategory(null);
@@ -475,6 +497,62 @@ export default function AssetDropDown(properties) {
     );
   }, [favouriteAssets, assetSymbol, otherAsset, chain]);
 
+  // --- Derived search data & filtered lists (same Fuse pattern as global search) ---
+  // Balances: keep balance-object shape for AssetRow, but search on resolved asset s/id/u
+  const balancesSearchData = useMemo(() => {
+    if (!displayBalances.length) return [];
+    return displayBalances
+      .map((bal) => {
+        const asset = marketSearchContents.find((a) => a.id === bal.asset_id);
+        if (!asset) return null;
+        return { balance: bal, asset };
+      })
+      .filter(Boolean);
+  }, [displayBalances, marketSearchContents]);
+
+  const balancesFuse = useMemo(
+    () =>
+      new Fuse(balancesSearchData, {
+        includeScore: true,
+        keys: ["asset.s", "asset.id", "asset.u"],
+      }),
+    [balancesSearchData]
+  );
+
+  const filteredBalances = useMemo(() => {
+    if (!balancesFilter) return displayBalances;
+    const res = balancesFuse.search(balancesFilter);
+    return res.map((r) => r.item.balance);
+  }, [displayBalances, balancesFilter, balancesFuse]);
+
+  const featuredFuse = useMemo(
+    () =>
+      new Fuse(featuredCategoryAssets, {
+        includeScore: true,
+        keys: ["s", "id", "u"],
+      }),
+    [featuredCategoryAssets]
+  );
+
+  const filteredFeaturedCategoryAssets = useMemo(() => {
+    if (!featuredFilter) return featuredCategoryAssets;
+    return featuredFuse.search(featuredFilter).map((r) => r.item);
+  }, [featuredCategoryAssets, featuredFilter, featuredFuse]);
+
+  const favouritesFuse = useMemo(
+    () =>
+      new Fuse(relevantAssets, {
+        includeScore: true,
+        keys: ["symbol", "id", "issuer"],
+      }),
+    [relevantAssets]
+  );
+
+  const filteredRelevantAssets = useMemo(() => {
+    if (!favouritesFilter) return relevantAssets;
+    return favouritesFuse.search(favouritesFilter).map((r) => r.item);
+  }, [relevantAssets, favouritesFilter, favouritesFuse]);
+
   // Recent assets history
   const assetHistoryStore = useStore($assetHistory);
   const assetHistory = useMemo(() => {
@@ -518,6 +596,20 @@ export default function AssetDropDown(properties) {
     return out;
   }, [assetHistory, assetSymbol, otherAsset, otherAssets, assetData, chain, effectiveChain, blocklist]);
 
+  const recentFuse = useMemo(
+    () =>
+      new Fuse(filteredRecent, {
+        includeScore: true,
+        keys: ["symbol", "id", "issuer"],
+      }),
+    [filteredRecent]
+  );
+
+  const filteredRecentSearch = useMemo(() => {
+    if (!recentFilter) return filteredRecent;
+    return recentFuse.search(recentFilter).map((r) => r.item);
+  }, [filteredRecent, recentFilter, recentFuse]);
+
   const handleSelectAsset = useCallback(
     (asset) => {
       if (!asset) return;
@@ -559,31 +651,31 @@ export default function AssetDropDown(properties) {
       thisResult,
       featuredAssets,
       relevantAssets,
-      balances: displayBalances,
+      balances: filteredBalances,
       marketSearchContents,
       handleSelectAsset,
       t,
     }),
-    [mode, thisResult, featuredAssets, relevantAssets, displayBalances, marketSearchContents, handleSelectAsset, t]
+    [mode, thisResult, featuredAssets, relevantAssets, filteredBalances, marketSearchContents, handleSelectAsset, t]
   );
 
   const recentRowProps = useMemo(
-    () => ({ filteredRecent, handleSelectAsset, t }),
-    [filteredRecent, handleSelectAsset, t]
+    () => ({ filteredRecent: filteredRecentSearch, handleSelectAsset, t }),
+    [filteredRecentSearch, handleSelectAsset, t]
   );
 
   const favouriteRowProps = useMemo(
     () => ({
       mode: "favourites",
       featuredAssets: [],
-      relevantAssets,
+      relevantAssets: filteredRelevantAssets,
       balances: [],
       marketSearchContents,
       handleSelectAsset,
       t,
       thisResult: [],
     }),
-    [relevantAssets, marketSearchContents, handleSelectAsset, t]
+    [filteredRelevantAssets, marketSearchContents, handleSelectAsset, t]
   );
 
   return (
@@ -789,17 +881,54 @@ export default function AssetDropDown(properties) {
                 {t("AssetDropDownCard:balancesPage.description")}
               </div>
 
+              {displayBalances && displayBalances.length > 0 ? (
+                <div className="relative">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <Search className="w-4 h-4 text-muted-foreground/50" />
+                  </div>
+                  <Input
+                    value={balancesFilter}
+                    placeholder={t("AssetDropDownCard:searchPage.placeholder")}
+                    onChange={(event) => setBalancesFilter(event.target.value)}
+                    className={cn(
+                      "pl-10 pr-4 py-6 text-foreground placeholder:text-muted-foreground/50",
+                      "bg-accent/40 dark:bg-white/[0.05] border-border/80",
+                      "focus-visible:ring-2 focus-visible:ring-offset-0",
+                      "transition-all duration-200"
+                    )}
+                  />
+                </div>
+              ) : null}
+
               <div className="w-full h-[340px] rounded-xl">
-                {displayBalances && displayBalances.length ? (
+                {filteredBalances && filteredBalances.length ? (
                   <List
                     height={340}
                     width="100%"
                     rowComponent={AssetRow}
-                    rowCount={displayBalances.length}
+                    rowCount={filteredBalances.length}
                     rowHeight={72}
                     rowProps={rowProps}
-                    key={`list-balances-${chain}`}
+                    key={`list-balances-${chain}-${balancesFilter}`}
                   />
+                ) : displayBalances && displayBalances.length && balancesFilter ? (
+                  <div className="flex flex-col items-center justify-center py-12 px-4">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                      style={{
+                        background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+                        border: `1px solid ${accentColor}20`,
+                      }}
+                    >
+                      <Inbox className="w-6 h-6 text-muted-foreground/50" />
+                    </div>
+                    <div className="text-muted-foreground text-sm font-medium mb-1">
+                      {t("AssetDropDownCard:searchPage.noResults")}
+                    </div>
+                    <div className="text-muted-foreground/60 text-xs text-center max-w-[200px]">
+                      {t("AssetDropDownCard:searchPage.noResultsHint")}
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 px-4">
                     <div
@@ -879,26 +1008,63 @@ export default function AssetDropDown(properties) {
                     })()}
                   </div>
 
+                  {featuredCategoryAssets && featuredCategoryAssets.length > 0 ? (
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <Search className="w-4 h-4 text-muted-foreground/50" />
+                      </div>
+                      <Input
+                        value={featuredFilter}
+                        placeholder={t("AssetDropDownCard:searchPage.placeholder")}
+                        onChange={(event) => setFeaturedFilter(event.target.value)}
+                        className={cn(
+                          "pl-10 pr-4 py-6 text-foreground placeholder:text-muted-foreground/50",
+                          "bg-accent/40 dark:bg-white/[0.05] border-border/80",
+                          "focus-visible:ring-2 focus-visible:ring-offset-0",
+                          "transition-all duration-200"
+                        )}
+                      />
+                    </div>
+                  ) : null}
+
                   <div className="w-full h-[340px] rounded-xl">
-                    {featuredCategoryAssets && featuredCategoryAssets.length ? (
+                    {filteredFeaturedCategoryAssets && filteredFeaturedCategoryAssets.length ? (
                       <List
                         height={340}
                         width="100%"
                         rowComponent={AssetRow}
-                        rowCount={featuredCategoryAssets.length}
+                        rowCount={filteredFeaturedCategoryAssets.length}
                         rowHeight={72}
                         rowProps={{
                           mode: "featured",
                           thisResult: [],
-                          featuredAssets: featuredCategoryAssets,
+                          featuredAssets: filteredFeaturedCategoryAssets,
                           relevantAssets: [],
                           balances: [],
                           marketSearchContents,
                           handleSelectAsset,
                           t,
                         }}
-                        key={`list-featured-${featuredCategory}-${chain}`}
+                        key={`list-featured-${featuredCategory}-${chain}-${featuredFilter}`}
                       />
+                    ) : featuredCategoryAssets && featuredCategoryAssets.length && featuredFilter ? (
+                      <div className="flex flex-col items-center justify-center py-12 px-4">
+                        <div
+                          className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                          style={{
+                            background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+                            border: `1px solid ${accentColor}20`,
+                          }}
+                        >
+                          <Inbox className="w-6 h-6 text-muted-foreground/50" />
+                        </div>
+                        <div className="text-muted-foreground text-sm font-medium mb-1">
+                          {t("AssetDropDownCard:searchPage.noResults")}
+                        </div>
+                        <div className="text-muted-foreground/60 text-xs text-center max-w-[200px]">
+                          {t("AssetDropDownCard:searchPage.noResultsHint")}
+                        </div>
+                      </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 px-4">
                         <div
@@ -940,17 +1106,54 @@ export default function AssetDropDown(properties) {
                 {t("AssetDropDownCard:favouritesPage.description")}
               </div>
 
+              {relevantAssets && relevantAssets.length > 0 ? (
+                <div className="relative">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <Search className="w-4 h-4 text-muted-foreground/50" />
+                  </div>
+                  <Input
+                    value={favouritesFilter}
+                    placeholder={t("AssetDropDownCard:searchPage.placeholder")}
+                    onChange={(event) => setFavouritesFilter(event.target.value)}
+                    className={cn(
+                      "pl-10 pr-4 py-6 text-foreground placeholder:text-muted-foreground/50",
+                      "bg-accent/40 dark:bg-white/[0.05] border-border/80",
+                      "focus-visible:ring-2 focus-visible:ring-offset-0",
+                      "transition-all duration-200"
+                    )}
+                  />
+                </div>
+              ) : null}
+
               <div className="w-full h-[340px] rounded-xl">
-                {relevantAssets && relevantAssets.length ? (
+                {filteredRelevantAssets && filteredRelevantAssets.length ? (
                   <List
                     height={340}
                     width="100%"
                     rowComponent={AssetRow}
-                    rowCount={relevantAssets.length}
+                    rowCount={filteredRelevantAssets.length}
                     rowHeight={72}
                     rowProps={favouriteRowProps}
-                    key={`list-favourites-${chain}`}
+                    key={`list-favourites-${chain}-${favouritesFilter}`}
                   />
+                ) : relevantAssets && relevantAssets.length && favouritesFilter ? (
+                  <div className="flex flex-col items-center justify-center py-12 px-4">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                      style={{
+                        background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+                        border: `1px solid ${accentColor}20`,
+                      }}
+                    >
+                      <Inbox className="w-6 h-6 text-muted-foreground/50" />
+                    </div>
+                    <div className="text-muted-foreground text-sm font-medium mb-1">
+                      {t("AssetDropDownCard:searchPage.noResults")}
+                    </div>
+                    <div className="text-muted-foreground/60 text-xs text-center max-w-[200px]">
+                      {t("AssetDropDownCard:searchPage.noResultsHint")}
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 px-4">
                     <div
@@ -1005,17 +1208,54 @@ export default function AssetDropDown(properties) {
                 )}
               </div>
 
+              {filteredRecent && filteredRecent.length > 0 ? (
+                <div className="relative">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <Search className="w-4 h-4 text-muted-foreground/50" />
+                  </div>
+                  <Input
+                    value={recentFilter}
+                    placeholder={t("AssetDropDownCard:searchPage.placeholder")}
+                    onChange={(event) => setRecentFilter(event.target.value)}
+                    className={cn(
+                      "pl-10 pr-4 py-6 text-foreground placeholder:text-muted-foreground/50",
+                      "bg-accent/40 dark:bg-white/[0.05] border-border/80",
+                      "focus-visible:ring-2 focus-visible:ring-offset-0",
+                      "transition-all duration-200"
+                    )}
+                  />
+                </div>
+              ) : null}
+
               <div className="w-full h-[340px] rounded-xl">
-                {filteredRecent.length > 0 ? (
+                {filteredRecentSearch && filteredRecentSearch.length > 0 ? (
                   <List
                     rowComponent={AssetRecentRow}
-                    rowCount={filteredRecent.length}
+                    rowCount={filteredRecentSearch.length}
                     rowHeight={72}
                     height={340}
                     width="100%"
                     rowProps={recentRowProps}
-                    key={`list-recent-${effectiveChain}`}
+                    key={`list-recent-${effectiveChain}-${recentFilter}`}
                   />
+                ) : filteredRecent && filteredRecent.length && recentFilter ? (
+                  <div className="flex flex-col items-center justify-center py-12 px-4">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                      style={{
+                        background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+                        border: `1px solid ${accentColor}20`,
+                      }}
+                    >
+                      <Inbox className="w-6 h-6 text-muted-foreground/50" />
+                    </div>
+                    <div className="text-muted-foreground text-sm font-medium mb-1">
+                      {t("AssetDropDownCard:searchPage.noResults")}
+                    </div>
+                    <div className="text-muted-foreground/60 text-xs text-center max-w-[200px]">
+                      {t("AssetDropDownCard:searchPage.noResultsHint")}
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 px-4">
                     <div
