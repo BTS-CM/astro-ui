@@ -1713,7 +1713,8 @@ export default function CustomPoolTracker(properties) {
           blockNumber={liveTrackerObjects.blockNumber}
           nodeUrl={currentNode ? currentNode.url : null}
           warningThresholdSec={10}
-        />
+        
+        chain={_chain}/>
       </div>
     </>
   );

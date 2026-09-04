@@ -1,6 +1,8 @@
 import Apis from "@/bts/ws/ApiInstances";
 import chain_store from "@/bts/chain/ChainStore";
 import { acquireChainStore, nodeUrlFor } from "@/bts/chain/chainStoreReady";
+import { getObjects } from "@/nanoeffects/src/common";
+import { chains } from "@/config/chains";
 
 /**
  * Live blocks subscription - replaces the Electron main-process polling
@@ -91,6 +93,40 @@ export async function subscribeRecentBlocks(
   lookback: number = 30,
   specificNode?: string | null
 ): Promise<RecentBlocksSubscription> {
+  const testnet = (chains as any)[chain]?.testnet;
+
+  // Testnet fallback: use nanoeffects getObjects polling instead of
+  // ChainStore set_block_applied_callback (which fails on testnet with
+  // "enable_subscribe_to_all: Subscribing to universal object creation
+  // and removal is disallowed").
+  if (testnet) {
+    // Fetch recent blocks via getObjects polling (chunked 10 per call for testnet)
+    let objs: any[] = [];
+    try {
+      objs = await getObjects(chain, [], specificNode);
+    } catch (e) {
+      console.log("BlocksLive testnet fallback getObjects error", e);
+      onError(e);
+    }
+
+    if (objs && objs.length) {
+      // Convert block objects to RecentBlock format
+      const blocks: RecentBlock[] = objs
+        .filter((o: any) => o && o.id && o.id.startsWith("2."))
+        .map((o: any) => ({
+          block: blockNumberFromId(o.id) || 0,
+          ...o,
+        }));
+      onUpdate(blocks);
+    }
+
+    // Return a no-op unsubscribe since we're using polling, not subscriptions
+    return {
+      unsubscribe: () => {},
+      catchUp: async () => "failed",
+    };
+  }
+
   let releaseToken: (() => void) | null = null;
   try {
     releaseToken = await acquireChainStore(chain, specificNode);

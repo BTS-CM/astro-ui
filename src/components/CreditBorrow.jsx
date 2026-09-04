@@ -815,7 +815,8 @@ export default function CreditBorrow(properties) {
         blockNumber={liveOffers.blockNumber}
         nodeUrl={currentNode ? currentNode.url : null}
         warningThresholdSec={10}
-      />
+      
+        chain={_chain}/>
     </div>
   );
 }

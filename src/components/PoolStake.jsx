@@ -1845,7 +1845,8 @@ export default function PoolStake(properties) {
           blockNumber={liveStakePool.blockNumber}
           nodeUrl={currentNode ? currentNode.url : null}
           warningThresholdSec={10}
-        />
+        
+        chain={_chain}/>
       </div>
     </>
   );

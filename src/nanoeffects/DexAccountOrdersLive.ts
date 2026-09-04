@@ -1,5 +1,8 @@
+import { nanoquery } from "@nanostores/query";
 import chain_store from "@/bts/chain/ChainStore";
 import { acquireChainStore } from "@/bts/chain/chainStoreReady";
+import Apis from "@/bts/ws/ApiInstances";
+import { chains } from "@/config/chains";
 
 /**
  * Live account limit order subscription via ChainStore.
@@ -67,8 +70,41 @@ export async function subscribeAccountLimitOrders(
 
   let releaseToken: (() => void) | null = null;
   try {
-    // Acquire a connection token; released in the returned unsubscribe so
-    // refcounts stay balanced when the consumer unsubscribes.
+    // Testnet: never use ChainStore (REFERENCE_CODE nanoeffects polling).
+    // Poll get_limit_orders_by_account every 3.5s (mirrors
+    // REFERENCE_CODE/src/nanoeffects/AccountLimitOrders.ts).
+    const testnet = (chains as any)[chain]?.testnet;
+    if (testnet) {
+      let cancelledPoll = false;
+      let pollId: any = null;
+
+      const pollOrders = async () => {
+        if (cancelledPoll) return;
+        const node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+        let api: any = null;
+        try {
+          api = await Apis.instance(node, true, 4000, { enableDatabase: true }, () => {});
+          const apiLimit = chain === "bitshares" ? 50 : 10;
+          const orders = await api.db_api().exec("get_limit_orders_by_account", [accountId, apiLimit]);
+          if (!cancelledPoll) {
+            onUpdate(Array.isArray(orders) ? orders : []);
+          }
+        } catch (e) {
+          console.log("DexAccountOrdersLive testnet poll error", e);
+        } finally {
+          if (api) { try { api.close(); } catch {} }
+        }
+      };
+
+      pollOrders();
+      pollId = setInterval(pollOrders, 3500);
+
+      return () => {
+        cancelledPoll = true;
+        if (pollId) clearInterval(pollId);
+      };
+    }
+
     releaseToken = await acquireChainStore(chain, specificNode);
   } catch (e) {
     onError(e);

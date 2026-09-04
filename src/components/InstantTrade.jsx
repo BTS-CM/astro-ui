@@ -1562,7 +1562,8 @@ export default function InstantTrade(properties) {
               : null
           }
           warningThresholdSec={10}
-        />
+        
+        chain={usr?.chain}/>
       </div>
     </div>
   );

@@ -459,7 +459,8 @@ export default function PortfolioBalances({
           blockNumber={liveBalances.blockNumber}
           nodeUrl={currentNode ? currentNode.url : null}
           warningThresholdSec={10}
-        />
+        
+        chain={usr?.chain}/>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import { key } from "./bts/ecc/key";
 import PrivateKey from "./bts/ecc/PrivateKey";
 import Aes from "./bts/ecc/Aes";
 import Apis from "./bts/ws/ApiInstances";
+import { chains } from "./config/chains";
 import blindDictionary from "./data/blindDictionary.js";
 
 import {
@@ -109,6 +110,154 @@ const createWindow = async () => {
     tray?.popUpContextMenu(contextMenu);
   });
 
+  // ---- Testnet-only block polling (REFERENCE_CODE re-introduced) -----------
+  // Mainnet uses renderer-side set_block_applied_callback subscription
+  // (src/nanoeffects/BlocksLive.ts). Testnet nodes reject
+  // set_subscribe_callback/enable_subscribe_to_all, so we restore the
+  // pre-subscription Electron polling loop for bitshares_testnet only.
+  let continueFetching = false;
+  let latestBlockNumber = 0;
+  let isFetching = false;
+  let apisInstance = null;
+  let fetchTimeout = null;
+
+  const fetchBlocks = async () => {
+    isFetching = true;
+    while (continueFetching) {
+      let currentBlock;
+      try {
+        currentBlock = await apisInstance
+          .db_api()
+          .exec("get_block", [latestBlockNumber]);
+      } catch (error) {
+        console.log({ error });
+        continueFetching = false;
+        isFetching = false;
+        break;
+      }
+      mainWindow.webContents.send("blockResponse", {
+        ...currentBlock,
+        block: latestBlockNumber,
+      });
+      latestBlockNumber += 1;
+
+      await new Promise((resolve) => {
+        fetchTimeout = setTimeout(resolve, 4200);
+      });
+    }
+
+    if (!continueFetching) {
+      if (apisInstance) {
+        try { apisInstance.close(); } catch {}
+        apisInstance = null;
+      }
+    }
+    isFetching = false;
+  };
+
+  ipcMain.on("requestBlocks", async (event, arg) => {
+    const { url } = arg;
+
+    // Testnet-only: mainnet uses renderer subscription, ignore polling
+    const chain = arg && arg.chain ? arg.chain : "bitshares";
+    if (chain !== "bitshares_testnet") {
+      console.log("requestBlocks: mainnet uses renderer subscription, ignoring polling for chain", chain);
+      return;
+    }
+
+    if (isFetching) {
+      continueFetching = false;
+      clearTimeout(fetchTimeout);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    continueFetching = true;
+    isFetching = false;
+
+    const nodeUrls = [];
+    if (url) nodeUrls.push(url);
+    const configured = (chains[chain] && chains[chain].nodeList) || [];
+    for (const n of configured) {
+      if (n && n.url && !nodeUrls.includes(n.url)) {
+        nodeUrls.push(n.url);
+      }
+    }
+
+    let lastConnectError = null;
+    for (const nodeUrl of nodeUrls) {
+      try {
+        apisInstance = Apis.instance(nodeUrl, true);
+      } catch (error) {
+        lastConnectError = error;
+        console.log({ error, location: "Apis.instance", nodeUrl });
+        continue;
+      }
+
+      try {
+        await apisInstance.init_promise;
+        console.log("connected to:", nodeUrl, apisInstance.chain_id);
+        lastConnectError = null;
+        break;
+      } catch (err) {
+        lastConnectError = err;
+        console.log({ err, location: "init_promise", nodeUrl });
+        if (apisInstance) {
+          try { apisInstance.close(); } catch {}
+          apisInstance = null;
+        }
+      }
+    }
+
+    if (!apisInstance) {
+      console.log({ error: lastConnectError, location: "requestBlocks: all nodes failed", tried: nodeUrls });
+      continueFetching = false;
+      isFetching = false;
+      return;
+    }
+
+    let globalProperties;
+    try {
+      globalProperties = await apisInstance.db_api().exec("get_dynamic_global_properties", []);
+    } catch (error) {
+      console.log({ error, location: "globalProperties", url });
+      continueFetching = false;
+      isFetching = false;
+      return;
+    }
+
+    latestBlockNumber = globalProperties.head_block_number;
+
+    const blockPromises = [];
+    for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
+      blockPromises.push(apisInstance.db_api().exec("get_block", [i]));
+    }
+
+    let lastFewBlocks = [];
+    try {
+      lastFewBlocks = await Promise.all(blockPromises);
+    } catch (error) {
+      console.log({ error });
+    }
+
+    for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
+      mainWindow.webContents.send("blockResponse", {
+        ...lastFewBlocks[i],
+        block: latestBlockNumber - 1 - i,
+      });
+    }
+
+    fetchBlocks();
+  });
+
+  ipcMain.on("stopBlocks", () => {
+    continueFetching = false;
+    clearTimeout(fetchTimeout);
+    if (apisInstance) {
+      try { apisInstance.close(); } catch {}
+      apisInstance = null;
+    }
+    isFetching = false;
+  });
 
   ipcMain.handle("genKey", async () => {
     return key.get_random_key().toWif();

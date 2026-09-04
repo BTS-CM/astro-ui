@@ -207,6 +207,41 @@ export async function subscribeMarketOrderBook(
   specificNode?: string | null,
   accountId?: string | null
 ): Promise<() => Promise<void>> {
+  // Testnet: never use subscribe_to_market (ChainStore-adjacent). Use
+  // REFERENCE_CODE nanoeffects polling (createMarketOrderStore pattern).
+  const isTestnet = (chains as any)[chain]?.testnet;
+  if (isTestnet) {
+    let unsubscribedPoll = false;
+    let pollId: any = null;
+
+    const pollOnce = async () => {
+      if (unsubscribedPoll) return;
+      const nodePoll = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+      let pollApi: any = null;
+      try {
+        pollApi = await Apis.instance(nodePoll, true, 4000, { enableDatabase: true, enableHistory: true }, () => {});
+        const book: any = await pollApi.db_api().exec("get_order_book", [baseId, quoteId, limit]);
+        if (!book || unsubscribedPoll) return;
+        const slices = await fetchMarketSlices(pollApi, baseId, quoteId, accountId ?? null);
+        if (!unsubscribedPoll) {
+          onUpdate({ bids: book.bids ?? [], asks: book.asks ?? [], ...slices });
+        }
+      } catch (e) {
+        console.log("DexLiveOrderBook testnet poll error", e);
+      } finally {
+        if (pollApi) { try { pollApi.close(); } catch {} }
+      }
+    };
+
+    await pollOnce();
+    pollId = setInterval(pollOnce, 3500);
+
+    return async () => {
+      unsubscribedPoll = true;
+      if (pollId) clearInterval(pollId);
+    };
+  }
+
   const node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
   const api = await Apis.instance(
     node,

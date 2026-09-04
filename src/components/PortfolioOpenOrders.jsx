@@ -624,7 +624,8 @@ export default function PortfolioOpenOrders({
           blockNumber={liveOrders.blockNumber}
           nodeUrl={ooNodeUrl}
           warningThresholdSec={10}
-        />
+        
+        chain={usr?.chain}/>
       </div>
     </div>
   );

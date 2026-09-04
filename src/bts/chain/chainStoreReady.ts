@@ -76,10 +76,19 @@ function canReuse(key: string): boolean {
  *          drop this consumer's refcount. When the last token is released the
  *          socket is idled closed by ApiInstances.
  */
+export function isTestnetChain(chain: string): boolean {
+  return !!(chains as any)[chain]?.testnet;
+}
+
 export async function acquireChainStore(
   chain: string,
   specificNode?: string | null
 ): Promise<() => void> {
+  if (isTestnetChain(chain)) {
+    throw new Error(
+      `acquireChainStore disabled on testnet chain "${chain}": use nanoeffects polling instead (ChainStore set_subscribe_callback is disallowed)`
+    );
+  }
   subscribeInvalidation();
 
   const node = nodeUrlFor(chain, specificNode);

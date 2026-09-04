@@ -8,6 +8,7 @@ import {
 import { useSubscriptionGuard } from "@/hooks/useSubscriptionGuard";
 import chain_store from "@/bts/chain/ChainStore";
 import Apis from "@/bts/ws/ApiInstances";
+import { chains } from "@/config/chains";
 
 export interface UseDexLiveOptions {
   chain: string;
@@ -199,49 +200,51 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
         onError(e);
       });
 
-    // Block number subscription in SAME effect (merged) - updates lastFetchAt on every block OR dex push
-    // Use ChainStore 2.1.0 push (~3s per block) as live heartbeat instead of polling - bitshares-ui style
-    const blockCallback = () => {
-      if (cancelled) return;
-      try {
-        const obj: any = chain_store.getObject("2.1.0");
-        if (obj && obj !== true) {
-          const num = obj.head_block_number ?? obj.block_number ?? obj.head_block_num ?? obj.blockNumber;
-          if (num && num !== blockNumberRef.current) {
-            blockNumberRef.current = num;
-            setBlockNumber(num);
-            // Update lastFetchAt only when block actually advances OR dex data pushed (handled in onUpdate)
-            const now = Date.now();
-            setLastFetchAt(now);
-          }
-        }
-      } catch {}
-    };
+    const isTestnet = (chains as any)[chain]?.testnet;
 
-    // Ensure ChainStore is initialized via the shared initializer (same Apis
-    // singleton retained by market sub). Acquire a connection token for this
-    // effect's lifetime; release in cleanup so refcounts stay balanced.
+    // Block heartbeat is ChainStore mainnet-only (footer). On testnet we
+    // don't render the footer and must not touch ChainStore (REFERENCE_CODE
+    // nanoeffects polling is used instead).
     let releaseToken: (() => void) | null = null;
-    acquireChainStore(chain, specificNode)
-      .then((release) => {
-        if (cancelled) {
-          release();
-          return;
-        }
-        releaseToken = release;
-        blockCallback();
-      })
-      .catch((e) => {
-        console.log("block subscription error", e);
-        handleFailure(e);
-      });
-    try {
-      chain_store.subscribe(blockCallback);
-      blockUnsubRef.current = () => {
-        try { chain_store.unsubscribe(blockCallback); } catch {}
+    let blockCallback: (() => void) | null = null;
+    if (!isTestnet) {
+      blockCallback = () => {
+        if (cancelled) return;
+        try {
+          const obj: any = chain_store.getObject("2.1.0");
+          if (obj && obj !== true) {
+            const num = obj.head_block_number ?? obj.block_number ?? obj.head_block_num ?? obj.blockNumber;
+            if (num && num !== blockNumberRef.current) {
+              blockNumberRef.current = num;
+              setBlockNumber(num);
+              const now = Date.now();
+              setLastFetchAt(now);
+            }
+          }
+        } catch {}
       };
-    } catch (e) {
-      console.log("block subscription error", e);
+
+      acquireChainStore(chain, specificNode)
+        .then((release) => {
+          if (cancelled) {
+            release();
+            return;
+          }
+          releaseToken = release;
+          if (blockCallback) blockCallback();
+        })
+        .catch((e) => {
+          console.log("block subscription error", e);
+          handleFailure(e);
+        });
+      try {
+        chain_store.subscribe(blockCallback);
+        blockUnsubRef.current = () => {
+          try { if (blockCallback) chain_store.unsubscribe(blockCallback); } catch {}
+        };
+      } catch (e) {
+        console.log("block subscription error", e);
+      }
     }
 
     return () => {
@@ -354,26 +357,33 @@ export function useDexAccountOrdersLive(options: UseDexLiveOptions) {
       setLoading(false);
     };
 
-    // block heartbeat for footer + staleness (2.1.0 push ~every 3s)
-    const blockCallback = () => {
-      if (cancelled) return;
-      try {
-        const obj: any = chain_store.getObject("2.1.0");
-        if (obj && obj !== true) {
-          const num =
-            obj.head_block_number ??
-            obj.block_number ??
-            obj.head_block_num ??
-            obj.blockNumber;
-          if (num && num !== blockNumberRef.current) {
-            blockNumberRef.current = num;
-            setBlockNumber(num);
-            setLastFetchAt(Date.now());
-            if (!isSubscribed) setIsSubscribed(true);
+    const isTestnetOrders = (chains as any)[chain]?.testnet;
+
+    // Block heartbeat is mainnet-only (footer hidden on testnet). Do not
+    // touch ChainStore on testnet — subscribeAccountLimitOrders already
+    // falls back to nanoeffects polling (REFERENCE_CODE) there.
+    let blockCallback: (() => void) | null = null;
+    if (!isTestnetOrders) {
+      blockCallback = () => {
+        if (cancelled) return;
+        try {
+          const obj: any = chain_store.getObject("2.1.0");
+          if (obj && obj !== true) {
+            const num =
+              obj.head_block_number ??
+              obj.block_number ??
+              obj.head_block_num ??
+              obj.blockNumber;
+            if (num && num !== blockNumberRef.current) {
+              blockNumberRef.current = num;
+              setBlockNumber(num);
+              setLastFetchAt(Date.now());
+              if (!isSubscribed) setIsSubscribed(true);
+            }
           }
-        }
-      } catch {}
-    };
+        } catch {}
+      };
+    }
 
     subscribeAccountLimitOrders(chain, accountId, onUpdate, onError, specificNode)
       .then((unsub) => {
@@ -383,16 +393,20 @@ export function useDexAccountOrdersLive(options: UseDexLiveOptions) {
         }
         unsubRef.current = () => {
           unsub();
-          try {
-            chain_store.unsubscribe(blockCallback);
-          } catch {}
+          if (blockCallback) {
+            try {
+              chain_store.unsubscribe(blockCallback);
+            } catch {}
+          }
         };
       })
       .catch((e) => onError(e));
 
-    try {
-      chain_store.subscribe(blockCallback);
-    } catch {}
+    if (blockCallback) {
+      try {
+        chain_store.subscribe(blockCallback);
+      } catch {}
+    }
 
     return () => {
       cancelled = true;

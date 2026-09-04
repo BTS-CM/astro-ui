@@ -1180,7 +1180,8 @@ export default function Market(properties) {
           blockNumber={liveBlockNumber}
           nodeUrl={dexNodeUrl || (usr.chain === "bitshares" ? "wss://node.xbts.io/ws" : "wss://testnet.dex.trading/")}
           warningThresholdSec={10}
-        />
+        
+        chain={usr?.chain}/>
       </div>
     </>
   );
