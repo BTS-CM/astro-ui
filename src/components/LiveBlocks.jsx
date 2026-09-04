@@ -214,7 +214,7 @@ export default function LiveBlocks(properties) {
   const [viewJSON, setViewJSON] = useState(false);
   const [json, setJSON] = useState();
 
-  const isTestnet = (chains as any)[usr && usr.chain ? usr.chain : "bitshares"]?.testnet;
+  const isTestnet = chains[usr && usr.chain ? usr.chain : "bitshares"]?.testnet;
 
   // Mainnet: renderer-side subscription via set_block_applied_callback
   // (BlocksLive.ts). Testnet: background.js polling via window.electron

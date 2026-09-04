@@ -16,7 +16,7 @@ export default function DexLiveFooterCard({
 }) {
   // Mainnet-only: never render on testnet (ChainStore set_subscribe_callback
   // is rejected there; data comes from nanoeffects polling instead).
-  if (chain && (chains as any)[chain]?.testnet) return null;
+  if (chain && chains[chain]?.testnet) return null;
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   // Always show after first block/fetch - indicate Subscribed vs Disconnected;

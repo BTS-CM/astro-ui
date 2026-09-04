@@ -110,6 +110,7 @@ export default function Market(properties) {
   const [activeMOC, setActiveMOC] = useState("buy");
 
   const invertedMarket = useMemo(() => {
+    if (!assetAData?.id || !assetBData?.id) return false;
     return isInvertedMarket(assetAData.id, assetBData.id);
   }, [assetAData, assetBData]);
 
@@ -238,13 +239,15 @@ export default function Market(properties) {
 
   // Use the store
   const marketHistoryStore = useMemo(() => {
+    const aId = assetAData?.id ?? assetA ?? "1.3.0";
+    const bId = assetBData?.id ?? assetB ?? "1.3.0";
     return createMarketTradeHistoryStore([
       usr.chain,
-      assetAData.id,
-      assetBData.id,
+      aId,
+      bId,
       usr.id,
     ]);
-  }, [usr, assetAData, assetBData, marketItr]);
+  }, [usr, assetAData, assetBData, assetA, assetB, marketItr]);
 
   const {
     data: marketHistoryData,

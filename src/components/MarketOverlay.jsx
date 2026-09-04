@@ -133,11 +133,15 @@ export default function MarketOverlay(properties) {
     setAssetB(newAssetA);
   };
 
-  const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
-  const [assetB, setAssetB] = useState(!window.location.search ? "XBTSX.USDT" : null);
+  const isTestnetChain = _chain === "bitshares_testnet";
+  const defaultAssetA = isTestnetChain ? "TEST" : "BTS";
+  const defaultAssetB = isTestnetChain ? "NFTEA.TESTNET" : "XBTSX.USDT";
+  const defaultAssetAId = "1.3.0";
+
+  const [assetA, setAssetA] = useState(null);
+  const [assetB, setAssetB] = useState(null);
   useEffect(() => {
     async function parseUrlAssets() {
-      //console.log("Parsing market parameters");
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
       const market = params.market;
@@ -147,15 +151,14 @@ export default function MarketOverlay(properties) {
 
       if (!market || !market.length) {
         console.log("No market parameters found.");
-        finalAssetA = "1.3.0";
-        finalAssetB = "XBTSX.USDT";
+        finalAssetA = isTestnetChain ? "TEST" : "1.3.0";
+        finalAssetB = isTestnetChain ? "NFTEA.TESTNET" : "XBTSX.USDT";
       } else {
         let asset_a = market.split("_")[0].toUpperCase();
         let asset_b = market.split("_")[1].toUpperCase();
 
         if (asset_a && asset_b && asset_b.length && asset_a === asset_b) {
-          // Avoid invalid duplicate asset market pairs
-          asset_b = asset_a === "BTS" ? "XBTSX.USDT" : "1.3.0";
+          asset_b = asset_a === defaultAssetA ? defaultAssetB : defaultAssetA;
           console.log("Invalid market parameters - replaced quote asset.");
         }
 
@@ -165,7 +168,9 @@ export default function MarketOverlay(properties) {
           (!searchSymbols.includes(asset_a) && !searchIds.includes(asset_a))
         ) {
           console.log("Asset A replaced with default.");
-          finalAssetA = "1.3.0";
+          finalAssetA = isTestnetChain ? "TEST" : "1.3.0";
+        } else {
+          finalAssetA = null;
         }
 
         if (!finalAssetA) {
@@ -173,11 +178,10 @@ export default function MarketOverlay(properties) {
             (asset) => asset.id === asset_a || asset.s === asset_a
           );
           if (foundAssetA) {
-            //console.log("Setting asset A.");
             finalAssetA = foundAssetA.s;
           } else {
             console.log("Setting default asset A");
-            finalAssetA = "1.3.0";
+            finalAssetA = isTestnetChain ? "TEST" : "1.3.0";
           }
         }
 
@@ -187,7 +191,9 @@ export default function MarketOverlay(properties) {
           (!searchSymbols.includes(asset_b) && !searchIds.includes(asset_b))
         ) {
           console.log("Asset B replaced with default.");
-          finalAssetB = finalAssetA !== "XBTSX.USDT" ? "XBTSX.USDT" : "1.3.0";
+          finalAssetB = finalAssetA !== defaultAssetB ? defaultAssetB : defaultAssetA;
+        } else {
+          finalAssetB = null;
         }
 
         if (!finalAssetB) {
@@ -199,7 +205,7 @@ export default function MarketOverlay(properties) {
           } else {
             console.log("Setting default asset B");
             finalAssetB =
-              asset_a !== "BTS" && asset_a !== "1.3.0" ? "1.3.0" : "XBTSX.USDT";
+              asset_a !== defaultAssetA && asset_a !== defaultAssetAId ? defaultAssetA : defaultAssetB;
           }
         }
       }
@@ -207,13 +213,13 @@ export default function MarketOverlay(properties) {
       return { finalAssetA, finalAssetB };
     }
 
-    if (marketSearch && marketSearch.length && window.location.search) {
+    if (marketSearch && marketSearch.length) {
       parseUrlAssets().then(({ finalAssetA, finalAssetB }) => {
         setAssetA(finalAssetA);
         setAssetB(finalAssetB);
       });
     }
-  }, [marketSearch]);
+  }, [marketSearch, _chain]);
 
   const [assetAData, setAssetAData] = useState(null);
   const [assetBData, setAssetBData] = useState(null);

@@ -201,7 +201,7 @@ export default function MarketPlaceholder(properties) {
               <Card>
                 <CardHeader className="pb-2 pt-4">
                   <CardTitle>
-                    {assetA} ({assetAData.id})
+                    {assetA} ({assetAData?.id ?? "?"})
                   </CardTitle>
                   <CardDescription className="text-lg">
                     {t("Market:quoteAsset")}
@@ -224,7 +224,7 @@ export default function MarketPlaceholder(properties) {
               <Card>
                 <CardHeader className="pb-2 pt-4">
                   <CardTitle>
-                    {assetB} ({assetBData.id})
+                    {assetB} ({assetBData?.id ?? "?"})
                   </CardTitle>
                   <CardDescription className="text-lg">
                     {t("Market:baseAsset")}
