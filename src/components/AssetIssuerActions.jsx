@@ -219,6 +219,13 @@ function AssetIssuerActions(props) {
   const storedUsers = useStore($userStorage);
   const favouriteUsersStore = useStore($favouriteUsers);
 
+  // Hoisted above all early returns: hooks must run unconditionally
+  // (React #300 "Rendered fewer hooks than expected" on account switch).
+  const favouriteUsersByChain = useMemo(() => {
+    if (!favouriteUsersStore) return [];
+    return favouriteUsersStore[chain] ?? [];
+  }, [favouriteUsersStore, chain]);
+
   const [dynamicData, setDynamicData] = useState(dynamicAssetData ?? null);
   const [bitassetDetails, setBitassetDetails] = useState(bitassetData ?? null);
 
@@ -879,11 +886,6 @@ function AssetIssuerActions(props) {
   if (!dropdownItems.length) {
     return null;
   }
-
-  const favouriteUsersByChain = useMemo(() => {
-    if (!favouriteUsersStore) return [];
-    return favouriteUsersStore[chain] ?? [];
-  }, [favouriteUsersStore, chain]);
 
   const renderFavourites = (onSelect) => {
     if (!favouriteUsersByChain.length) {

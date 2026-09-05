@@ -46,16 +46,16 @@ export default function CurrentUser(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const [inView, setInView] = React.useState(false);
-  if (!usr || !usr.id || !usr.id.length) {
-    return null;
-  }
-
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (usr && usr.id && usr.id.length) {
       setOpen(false);
     }
   }, [usr]);
+
+  if (!usr || !usr.id || !usr.id.length) {
+    return null;
+  }
 
   return (
     <Dialog
