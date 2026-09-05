@@ -719,6 +719,19 @@ function AssetIssuerActions(props) {
     }
   }
 
+  if (asset && asset.for_liquidity_pool) {
+    dropdownItems.push({
+      key: "edit-pool",
+      render: (
+        <DropdownMenuItem className="hover:shadow-inner" asChild key="edit-pool">
+          <a href={`/create_pool.html?pool=${asset.for_liquidity_pool}`}>
+            {t("IssuedAssets:editPool")}
+          </a>
+        </DropdownMenuItem>
+      ),
+    });
+  }
+
   if (manageHref) {
     dropdownItems.push({
       key: "manage",
@@ -808,7 +821,10 @@ function AssetIssuerActions(props) {
     }
   }
 
-  if (isUIA || (isNFT && !asset?.bitasset_data_id)) {
+  if (
+    (isUIA || (isNFT && !asset?.bitasset_data_id)) &&
+    !asset?.for_liquidity_pool
+  ) {
     dropdownItems.push(
       {
         key: "issue-asset",

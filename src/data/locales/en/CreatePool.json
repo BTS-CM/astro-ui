@@ -30,5 +30,19 @@
   "max_supply": "Max supply",
   "step1_max_supply_note": "This asset becomes the pool's share asset. Make sure its maximum supply is large enough to represent all pool shares — an insufficient maximum can cause the pool to behave unexpectedly.",
   "duplicate_assets": "Both trading assets must be different. Please choose a distinct asset for each side of the pair.",
-  "swap_pair": "Swap pair"
+  "swap_pair": "Swap pair",
+  "edit_title": "Edit liquidity pool",
+  "edit_description": "Update the fee configuration of your existing liquidity pool. The trading assets and share asset cannot be changed.",
+  "edit_pool_id": "Liquidity pool",
+  "current_taker_fee": "Current taker fee",
+  "current_withdrawal_fee": "Current withdrawal fee",
+  "loading_pool": "Loading liquidity pool...",
+  "pool_not_found": "Liquidity pool not found. Check the pool ID in the URL.",
+  "must_be_issuer": "Only the share asset issuer ({{issuer}}) can update this pool's fees.",
+  "withdrawal_zero_only": "Withdrawal fee can only be reduced to zero — it cannot be raised or set to another value.",
+  "taker_locked": "Taker fee can only be changed once the withdrawal fee is zero. Set the withdrawal fee to zero first.",
+  "withdrawal_invalid": "Invalid withdrawal fee: it can only be set to 0%.",
+  "summary_ready_update": "Review the new fee configuration below before submitting.",
+  "no_changes": "No changes to submit yet.",
+  "deeplinkDialogTitleUpdate": "Updating Liquidity Pool"
 }
