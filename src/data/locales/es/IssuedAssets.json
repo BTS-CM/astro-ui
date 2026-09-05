@@ -13,6 +13,7 @@
   "listingPools": "Listado {{count}} Activos del fondo común de liquidez",
   "deletePool": "Eliminar grupo",
   "noUIA": "No se encontraron activos emitidos por el usuario",
+  "noPools": "No se encontraron activos del fondo común de liquidez",
   "listingSmartcoins": "Listado {{count}} Activos de monedas inteligentes",
   "noSmartcoins": "No se encontraron activos de Smartcoin",
   "listingNFTs": "Listado {{count}} Activos simbólicos no fungibles",

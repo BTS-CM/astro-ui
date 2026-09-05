@@ -13,6 +13,7 @@
   "listingPools": "รายการ {{count}} สินทรัพย์สภาพคล่องพูล",
   "deletePool": "ลบพูล",
   "noUIA": "ไม่พบเนื้อหาที่ผู้ใช้ออก",
+  "noPools": "ไม่พบสินทรัพย์สภาพคล่องพูล",
   "listingSmartcoins": "รายการ {{count}} สินทรัพย์ Smartcoin",
   "noSmartcoins": "ไม่พบสินทรัพย์ Smartcoin",
   "listingNFTs": "รายการ {{count}} สินทรัพย์โทเค็นที่ไม่สามารถทดแทนได้",

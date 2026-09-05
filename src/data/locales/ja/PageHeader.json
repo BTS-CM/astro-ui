@@ -34,6 +34,7 @@
   "issuedAssets": "発行された資産",
   "create_smartcoin": "スマートコインを作成する",
   "create_uia": "ユーザー発行アセットの作成",
+  "create_pool": "流動性プールを作成する",
   "blockExplorer": "ライブブロックチェーンデータ",
   "accountLists": "アカウントリスト",
   "proposals": "提案された操作",

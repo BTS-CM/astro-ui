@@ -13,6 +13,7 @@
   "listingPools": "Listagem {{count}} Ativos do pool de liquidez",
   "deletePool": "Excluir conjunto",
   "noUIA": "Nenhum ativo emitido pelo usuário encontrado",
+  "noPools": "Nenhum ativo do pool de liquidez encontrado",
   "listingSmartcoins": "Listagem {{count}} Ativos Smartcoin",
   "noSmartcoins": "Nenhum ativo Smartcoin encontrado",
   "listingNFTs": "Listagem {{count}} Ativos Token Não Fungíveis",

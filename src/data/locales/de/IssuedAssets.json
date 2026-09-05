@@ -13,6 +13,7 @@
   "listingPools": "Auflistung {{count}} Liquiditätspoolvermögen",
   "deletePool": "Pool löschen",
   "noUIA": "Keine vom Benutzer ausgegebenen Assets gefunden",
+  "noPools": "Keine Liquiditätspool-Assets gefunden",
   "listingSmartcoins": "Auflistung {{count}} Smartcoin-Vermögenswerte",
   "noSmartcoins": "Keine Smartcoin-Assets gefunden",
   "listingNFTs": "Auflistung {{count}} Nicht fungible Token-Vermögenswerte",

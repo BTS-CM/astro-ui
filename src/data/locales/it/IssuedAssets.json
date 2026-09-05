@@ -13,6 +13,7 @@
   "listingPools": "Elenco {{count}} Attività della riserva di liquidità",
   "deletePool": "Elimina pool",
   "noUIA": "Nessuna risorsa emessa dall'utente trovata",
+  "noPools": "Nessuna attività della riserva di liquidità trovata",
   "listingSmartcoins": "Elenco {{count}} Asset Smartcoin",
   "noSmartcoins": "Nessun asset Smartcoin trovato",
   "listingNFTs": "Elenco {{count}} Risorse token non fungibili",

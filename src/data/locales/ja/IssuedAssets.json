@@ -13,6 +13,7 @@
   "listingPools": "リスト {{count}} 流動性プール資産",
   "deletePool": "プールの削除",
   "noUIA": "ユーザー発行のアセットが見つかりませんでした",
+  "noPools": "流動性プール資産が見つかりません",
   "listingSmartcoins": "リスト {{count}} スマートコイン資産",
   "noSmartcoins": "スマートコイン資産が見つかりません",
   "listingNFTs": "リスト {{count}} 代替不可能なトークン資産",

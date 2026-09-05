@@ -13,6 +13,7 @@
   "listingPools": "Fortegnelse {{count}} Likviditetspuljeaktiver",
   "deletePool": "Slet pool",
   "noUIA": "Ingen brugerudstedte aktiver fundet",
+  "noPools": "Ingen Likviditetspuljeaktiver fundet",
   "listingSmartcoins": "Fortegnelse {{count}} Smartcoin-aktiver",
   "noSmartcoins": "Ingen Smartcoin-aktiver fundet",
   "listingNFTs": "Fortegnelse {{count}} Ikke-fungible tokenaktiver",

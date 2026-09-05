@@ -13,6 +13,7 @@
   "listingPools": "Inscription {{count}} Actifs du pool de liquidités",
   "deletePool": "Supprimer le pool",
   "noUIA": "Aucun actif émis par l'utilisateur trouvé",
+  "noPools": "Aucun actif du pool de liquidités trouvé",
   "listingSmartcoins": "Inscription {{count}} Actifs Smartcoins",
   "noSmartcoins": "Aucun actif Smartcoin trouvé",
   "listingNFTs": "Inscription {{count}} Actifs symboliques non fongibles",

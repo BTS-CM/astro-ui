@@ -34,6 +34,7 @@
   "issuedAssets": "Your issued assets",
   "create_smartcoin": "Create smartcoin",
   "create_uia": "Create user issued asset",
+  "create_pool": "Create liquidity pool",
   "blockExplorer": "Live blockchain data",
   "accountLists": "Account Lists",
   "proposals": "Proposed Operations",

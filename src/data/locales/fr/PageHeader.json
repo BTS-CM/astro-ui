@@ -34,6 +34,7 @@
   "issuedAssets": "Vos actifs émis",
   "create_smartcoin": "Créer une pièce intelligente",
   "create_uia": "Créer un actif émis par l'utilisateur",
+  "create_pool": "Créer un pool de liquidités",
   "blockExplorer": "Données blockchain en direct",
   "accountLists": "Listes de comptes",
   "proposals": "Opérations proposées",
