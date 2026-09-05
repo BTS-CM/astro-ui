@@ -24,6 +24,7 @@
   "blockNumber": "Numero di blocco",
   "timeSinceBroadcast": "Tempo dalla trasmissione",
   "viewOperationButton": "Visualizza operazione",
+  "aboutButton": "Informazioni",
   "operationJsonTitle": "Operazione JSON",
   "operationJsonDescription": "Scopri il contenuto di questa operazione",
   "viewAllButton": "Mostra tutto",

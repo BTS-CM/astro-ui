@@ -10,6 +10,7 @@ const pages = [
   "AccountSearch",
   "AccountSelect",
   "AssetDropDownCard",
+  "Beautification",
   "Blocklist",
   "CreatePool",
   "CreditOfferEditor",

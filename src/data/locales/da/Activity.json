@@ -227,7 +227,8 @@
       "narrative": "Fortælling: {{narrative}}",
       "title": "Titel: {{title}}",
       "tags": "Tags: {{tags}}",
-      "type": "Type: {{type}}"
+      "type": "Type: {{type}}",
+      "is_prediction_market": "Is prediction market: {{is_prediction_market}}"
     },
     "tooltip": "Opretter et aktiv på Bitshares blockchain"
   },
@@ -285,7 +286,8 @@
       "narrative": "Fortælling: {{narrative}}",
       "title": "Titel: {{title}}",
       "tags": "Tags: {{tags}}",
-      "type": "Type: {{type}}"
+      "type": "Type: {{type}}",
+      "is_prediction_market": "Is prediction market: {{is_prediction_market}}"
     },
     "tooltip": "Opdaterer et aktivs indstillinger"
   },
@@ -528,7 +530,7 @@
       "result": "Følgende opdateringer af vidnetilladelser blev godkendt:"
     },
     "rows": {
-      "withrdaw_from_account": "Hæv fra konto: {{withrdaw_from_account}} ({{withrdaw_from_accountOP}})",
+      "withdraw_from_account": "Hæv fra konto: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "Autoriseret konto: {{authorized_account}} ({{authorized_accountOP}})",
       "permission_to_update": "Tilladelse til at opdatere: {{permission_to_update}}",
       "withdrawal_limited": "Udbetalingsgrænse: {{withdrawal_limit}}",
@@ -738,7 +740,7 @@
     },
     "rows": {
       "deposit_to_account": "Indbetal til konto: {{deposit_to_account}} ({{deposit_to_accountOP}})",
-      "balance_to_claim": "Saldo at gøre krav på: {{balance_to_claim}} ({{asset_id}})",
+      "balance_to_claim": "Saldo at gøre krav på: {{balance_to_claim}}",
       "balance_owner_key": "Saldoejernøgle: {{balance_owner_key}}",
       "total_claimed": "Samlet krav: {{total_claimed}} ({{asset_id}})"
     },
@@ -833,7 +835,8 @@
     },
     "rows": {
       "issuer": "Udsteder: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "Beløb til krav: {{amount_to_claim}} ({{asset_id}})"
+      "amount_to_claim": "Beløb til krav: {{amount_to_claim}} ({{asset_id}})",
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Gør krav på gebyrerne fra et aktiv"
   },

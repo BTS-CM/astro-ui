@@ -24,6 +24,7 @@
   "blockNumber": "Blokeeri number",
   "timeSinceBroadcast": "Aeg alates saatest",
   "viewOperationButton": "Vaata operatsiooni",
+  "aboutButton": "Teave",
   "operationJsonTitle": "Operatsioon JSON",
   "operationJsonDescription": "Tutvuge selle toimingu sisuga",
   "viewAllButton": "Vaata kõiki",

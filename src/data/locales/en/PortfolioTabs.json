@@ -24,6 +24,7 @@
   "blockNumber": "Block number",
   "timeSinceBroadcast": "Time since broadcast",
   "viewOperationButton": "View Operation",
+  "aboutButton": "About",
   "operationJsonTitle": "Operation JSON",
   "operationJsonDescription": "Check out the contents of this operation",
   "viewAllButton": "View all",

@@ -227,7 +227,8 @@
       "narrative": "내러티브: {{narrative}}",
       "title": "제목: {{title}}",
       "tags": "태그: {{tags}}",
-      "type": "유형: {{type}}"
+      "type": "유형: {{type}}",
+      "is_prediction_market": "예측 시장: {{is_prediction_market}}"
     },
     "tooltip": "Bitshares 블록체인에 자산을 생성합니다."
   },
@@ -285,7 +286,8 @@
       "narrative": "내러티브: {{narrative}}",
       "title": "제목: {{title}}",
       "tags": "태그: {{tags}}",
-      "type": "유형: {{type}}"
+      "type": "유형: {{type}}",
+      "is_prediction_market": "예측 시장: {{is_prediction_market}}"
     },
     "tooltip": "자산 설정을 업데이트합니다."
   },
@@ -528,7 +530,7 @@
       "result": "다음 증인 권한 업데이트가 승인되었습니다."
     },
     "rows": {
-      "withrdaw_from_account": "계좌에서 인출: {{withrdaw_from_account}} ({{withrdaw_from_accountOP}})",
+      "withdraw_from_account": "계좌에서 인출: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "승인된 계정: {{authorized_account}} ({{authorized_accountOP}})",
       "permission_to_update": "업데이트 권한: {{permission_to_update}}",
       "withdrawal_limited": "출금 한도: {{withdrawal_limit}}",
@@ -738,7 +740,7 @@
     },
     "rows": {
       "deposit_to_account": "계좌 입금: {{deposit_to_account}} ({{deposit_to_accountOP}})",
-      "balance_to_claim": "청구할 잔액: {{balance_to_claim}} ({{asset_id}})",
+      "balance_to_claim": "청구할 잔액: {{balance_to_claim}}",
       "balance_owner_key": "잔액 소유자 키: {{balance_owner_key}}",
       "total_claimed": "청구된 총 금액: {{total_claimed}}({{asset_id}})"
     },
@@ -833,7 +835,8 @@
     },
     "rows": {
       "issuer": "발급자: {{issuer}}({{issuerOP}})",
-      "amount_to_claim": "청구 금액: {{amount_to_claim}} ({{asset_id}})"
+      "amount_to_claim": "청구 금액: {{amount_to_claim}} ({{asset_id}})",
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "자산에서 수수료 청구"
   },

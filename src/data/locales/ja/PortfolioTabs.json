@@ -24,6 +24,7 @@
   "blockNumber": "ブロック番号",
   "timeSinceBroadcast": "放送からの経過時間",
   "viewOperationButton": "ビュー操作",
+  "aboutButton": "について",
   "operationJsonTitle": "オペレーションJSON",
   "operationJsonDescription": "この操作の内容を確認してください",
   "viewAllButton": "すべて見る",

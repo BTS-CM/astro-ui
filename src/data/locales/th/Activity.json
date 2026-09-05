@@ -227,7 +227,8 @@
       "narrative": "เรื่องเล่า: {{narrative}}",
       "title": "ชื่อเรื่อง: {{title}}",
       "tags": "แท็ก: {{tags}}",
-      "type": "ประเภท: {{type}}"
+      "type": "ประเภท: {{type}}",
+      "is_prediction_market": "เป็นตลาดการคาดการณ์: {{is_prediction_market}}"
     },
     "tooltip": "สร้างสินทรัพย์บนบล็อกเชน Bitshares"
   },
@@ -285,7 +286,8 @@
       "narrative": "เรื่องเล่า: {{narrative}}",
       "title": "ชื่อเรื่อง: {{title}}",
       "tags": "แท็ก: {{tags}}",
-      "type": "ประเภท: {{type}}"
+      "type": "ประเภท: {{type}}",
+      "is_prediction_market": "เป็นตลาดการคาดการณ์: {{is_prediction_market}}"
     },
     "tooltip": "อัปเดตการตั้งค่าของเนื้อหา"
   },
@@ -528,7 +530,7 @@
       "result": "การอัปเดตการอนุญาตพยานต่อไปนี้ได้รับการอนุมัติ:"
     },
     "rows": {
-      "withrdaw_from_account": "ถอนออกจากบัญชี: {{withrdaw_from_account}} ({{withrdaw_from_accountOP}})",
+      "withdraw_from_account": "ถอนออกจากบัญชี: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "บัญชีที่ได้รับอนุญาต: {{authorized_account}} ({{authorized_accountOP}})",
       "permission_to_update": "การอนุญาตให้อัปเดต: {{permission_to_update}}",
       "withdrawal_limited": "ขีดจำกัดการถอน: {{withdrawal_limit}}",
@@ -738,7 +740,7 @@
     },
     "rows": {
       "deposit_to_account": "ฝากเข้าบัญชี: {{deposit_to_account}} ({{deposit_to_accountOP}})",
-      "balance_to_claim": "ยอดคงเหลือที่จะอ้างสิทธิ์: {{balance_to_claim}} ({{asset_id}})",
+      "balance_to_claim": "ยอดคงเหลือที่จะอ้างสิทธิ์: {{balance_to_claim}}",
       "balance_owner_key": "รหัสเจ้าของยอดคงเหลือ: {{balance_owner_key}}",
       "total_claimed": "อ้างสิทธิ์ทั้งหมด: {{total_claimed}} ({{asset_id}})"
     },
@@ -833,7 +835,8 @@
     },
     "rows": {
       "issuer": "ผู้ออก: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "จำนวนเงินที่จะอ้างสิทธิ์: {{amount_to_claim}} ({{asset_id}})"
+      "amount_to_claim": "จำนวนเงินที่จะอ้างสิทธิ์: {{amount_to_claim}} ({{asset_id}})",
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "เรียกร้องค่าธรรมเนียมจากสินทรัพย์"
   },

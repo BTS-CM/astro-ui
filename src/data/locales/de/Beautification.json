@@ -52,7 +52,6 @@
     },
     "rows": {
       "id": "Bestell-ID: {id}",
-      "fees": "Geschätzte Gebühren: {fees}",
       "account": "Gebührenpflichtiges Konto: {account}"
     },
     "tooltip": "Stornieren eines Limit-Order-Vorgangs"
@@ -68,10 +67,25 @@
     "rows": {
       "funding_account": "Finanzierungskonto: {funding_account}",
       "delta_collateral": "Delta-Sicherheiten: {delta_collateral} ({id})",
-      "delta_debt": "Delta-Schulden: {delta_debt} ({id})",
-      "fees": "Geschätzte Gebühren: {fees}"
+      "delta_debt": "Delta-Schulden: {delta_debt} ({id})"
     },
     "tooltip": "Aktualisieren eines bestehenden Abrufauftrags"
+  },
+  "fill_order": {
+    "method": "Bestellung ausfüllen",
+    "title": "Auftragsereignis ausführen",
+    "result": "Auftragsergebnis ausfüllen",
+    "headers": {
+      "request": "Erfassen Sie die folgende Auftragserfüllung?",
+      "result": "Die folgende Auftragsausführung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "account": "Konto: {account} ({accountOP})",
+      "order_id": "Befehl: {order_id}",
+      "pays": "Zahlt: {pays} ({paysOP})",
+      "receives": "Erhält: {receives} ({receivesOP})"
+    },
+    "tooltip": "Ausführung eines Limit-Order-Geschäfts"
   },
   "account_create": {
     "method": "Konto erstellen",
@@ -98,8 +112,7 @@
       "num_witness": "Anzahl der Zeugen: {num_witness}",
       "num_committee": "Anzahl der Ausschussmitglieder: {num_committee}",
       "votes": "Stimmen: {votes}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fees": "Geschätzte Gebühren: {fees}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Erstellen eines neuen Kontos"
   },
@@ -117,8 +130,7 @@
       "owner": "Besitzer: {owner}",
       "active": "Aktiv: {active}",
       "new_options": "Neue Optionen: {new_options}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fees": "Geschätzte Gebühr: {fees}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Mit diesem Vorgang wird ein bestehendes Konto aktualisiert. "
   },
@@ -134,8 +146,7 @@
       "authorizing_account": "Autorisierendes Konto: {authorizingAccount} (authorizingAccountOP)",
       "account_to_list": "Aufzulistendes Konto: {accountToList} (accountToListOP)",
       "new_listing": "Neuer Eintrag: {newListing}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Dieser Vorgang wird verwendet, um Konten auf die Whitelist und Blacklist zu setzen, hauptsächlich für Transaktionen mit Assets auf der Whitelist"
   },
@@ -150,8 +161,7 @@
     "rows": {
       "account_to_upgrade": "Zu aktualisierendes Konto: {accountToUpgrade} (accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "Upgrade auf lebenslanges Mitglied: {upgradeToLifetimeMember}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Dieser Vorgang wird verwendet, um ein Konto auf ein Mitglied hochzustufen oder sein Abonnement zu erneuern."
   },
@@ -166,8 +176,7 @@
     "rows": {
       "warning": "Achtung: Diese Aktion ist irreversibel!",
       "account_id": "Konto-ID: {originalOwner} ({account_id})",
-      "new_owner": "Neuer Besitzer: {newOwner} ({newOwnerOP})",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "new_owner": "Neuer Besitzer: {newOwner} ({newOwnerOP})"
     },
     "tooltip": "Überträgt das Konto auf ein anderes Konto und löscht dabei die Whitelist"
   },
@@ -308,8 +317,7 @@
       "maximum_force_settlement_volume": "Maximales Force-Settlement-Volumen: {maximum_force_settlement_volume}",
       "short_backing_asset": "Short-Backing-Asset: {symbol} ({short_backing_asset})",
       "extensions": "Erweiterungen: {extensions}",
-      "noExtensions": "Keine Erweiterungen",
-      "fee": "Geschätzte Gebühr: {fee} ({id})"
+      "noExtensions": "Keine Erweiterungen"
     },
     "tooltip": "Erstellte Bitasset-Einstellungen aktualisieren"
   },
@@ -324,8 +332,7 @@
     "rows": {
       "issuer": "Emittent: {issuer} ({issuerOP})",
       "asset_to_update": "Zu aktualisierendes Asset: {symbol} ({asset_to_update})",
-      "new_feed_producers": "Neue Feed-Produzenten: {new_feed_producers}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "new_feed_producers": "Neue Feed-Produzenten: {new_feed_producers}"
     },
     "tooltip": "Aktualisieren Sie die Liste der zugelassenen Futtermittelhersteller für das erstellte Bitasset"
   },
@@ -338,8 +345,7 @@
       "result": "Die folgende Vermögensemission wurde genehmigt:"
     },
     "rows": {
-      "prompt": "{amount} {symbol} ({assetID}) an {to} ({toID}) ausgeben?",
-      "fee": "Geschätzte Gebühr: {fee} ({id})"
+      "prompt": "{amount} {symbol} ({assetID}) an {to} ({toID}) ausgeben?"
     },
     "tooltip": "Geben Sie Ihre geschaffenen Vermögenswerte an Einzelpersonen weiter"
   },
@@ -354,8 +360,7 @@
     "rows": {
       "payer": "Zahler: {payer} ({payerOP})",
       "amount_to_reserve": "Zu reservierender Betrag: {amount_to_reserve} ({amount_to_reserveOP})",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Reservieren Sie Ihre erstellten Vermögenswerte"
   },
@@ -370,8 +375,7 @@
     "rows": {
       "from_account": "Von Konto: {from_account} ({from_accountOP})",
       "asset": "Vermögenswert: {asset} ({assetOP})",
-      "amount": "Betrag: {amount}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "amount": "Betrag: {amount}"
     },
     "tooltip": "Finanzieren Sie den Gebührenpool für Ihr erstelltes Asset"
   },
@@ -385,8 +389,7 @@
     },
     "rows": {
       "account": "Konto: {account} ({accountOP})",
-      "amount": "Betrag: {amount} ({assetID})",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "amount": "Betrag: {amount} ({assetID})"
     },
     "tooltip": "Begleichen Sie einen Vermögenswert in Ihrem Portfolio"
   },
@@ -401,8 +404,7 @@
     "rows": {
       "issuer": "Emittent: {issuer} ({issuerOP})",
       "asset_to_settle": "Zu begleichender Vermögenswert: {asset_to_settle} ({asset_to_settleOP})",
-      "settle_price": "Abrechnungspreis: {settle_price}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "settle_price": "Abrechnungspreis: {settle_price}"
     },
     "tooltip": "Rechnen Sie eines Ihrer erstellten Bitassets global ab"
   },
@@ -422,8 +424,7 @@
       "settlement_price": "Abrechnungspreis: {settlement_price}",
       "maintenance_collateral_ratio": "Verhältnis der Wartungssicherheiten: {maintenance_collateral_ratio}",
       "maximum_short_squeeze_ratio": "Maximales Short-Squeeze-Verhältnis: {maximum_short_squeeze_ratio}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Veröffentlichen Sie einen Preis-Feed für ein Bitasset"
   },
@@ -438,8 +439,7 @@
     "rows": {
       "witness_account": "Zeugenkonto: {witness_account} ({witness_accountOP})",
       "url": "URL: {url}",
-      "block_signing_key": "Signaturschlüssel blockieren: {block_signing_key}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "block_signing_key": "Signaturschlüssel blockieren: {block_signing_key}"
     },
     "tooltip": "Erstellen Sie ein Zeugenkonto"
   },
@@ -455,8 +455,7 @@
       "witness": "Zeuge: {witness}",
       "witness_account": "Zeugenkonto: {witness_account} ({witness_accountOP})",
       "new_url": "Neue URL: {new_url}",
-      "new_signing_key": "Neuer Signaturschlüssel: {new_signing_key}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "new_signing_key": "Neuer Signaturschlüssel: {new_signing_key}"
     },
     "tooltip": "Aktualisieren Sie Ihr Zeugenkonto"
   },
@@ -472,8 +471,7 @@
       "expiration_time": "Ablaufzeit: {expiration_time}",
       "proposed_ops": "Vorgeschlagene Operationen: {proposed_ops}",
       "review_period_seconds": "Sekunden des Überprüfungszeitraums: {review_period_seconds}",
-      "fee_paying_account": "Gebührenpflichtiges Konto: {fee_paying_account} ({fee_paying_accountOP})",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "fee_paying_account": "Gebührenpflichtiges Konto: {fee_paying_account} ({fee_paying_accountOP})"
     },
     "tooltip": "Erstellen Sie einen Blockchain-Betriebsvorschlag"
   },
@@ -494,8 +492,7 @@
       "key_approvals_to_add": "Wichtige hinzuzufügende Genehmigungen: {key_approvals_to_add}",
       "key_approvals_to_remove": "Zu entfernende Schlüsselgenehmigungen: {key_approvals_to_remove}",
       "fee_paying_account": "Gebührenpflichtiges Konto: {fee_paying_account} ({fee_paying_accountOP})",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Aktualisieren Sie einen Blockchain-Betriebsvorschlag"
   },
@@ -511,8 +508,7 @@
       "using_owner_authority": "Eigentümerberechtigung verwenden: {using_owner_authority}",
       "proposal": "Vorschlag: {proposal}",
       "fee_paying_account": "Gebührenpflichtiges Konto: {fee_paying_account} ({fee_paying_accountOP})",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Löschen Sie einen Blockchain-Vorgangsvorschlag"
   },
@@ -541,15 +537,14 @@
       "result": "Die folgenden Zeugenerlaubnisaktualisierungen wurden genehmigt:"
     },
     "rows": {
-      "withrdaw_from_account": "Vom Konto abheben: {withrdaw_from_account} ({withrdaw_from_accountOP})",
+      "withdraw_from_account": "Vom Konto abheben: {withdraw_from_account} ({withdraw_from_accountOP})",
       "authorized_account": "Autorisiertes Konto: {authorized_account} ({authorized_accountOP})",
       "permission_to_update": "Berechtigung zum Aktualisieren: {permission_to_update}",
       "withdrawal_limited": "Auszahlungslimit: {withdrawal_limit}",
       "withdrawal_unlimited": "Auszahlungslimit: {withdrawal_limit} ({withdrawal_limitOP})",
       "withdrawal_period_sec": "Auszahlungszeitraum (Sekunden): {withdrawal_period_sec}",
       "period_start_time": "Startzeit des Zeitraums: {period_start_time}",
-      "periods_until_expiration": "Zeiträume bis zum Ablauf: {periods_until_expiration}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "periods_until_expiration": "Zeiträume bis zum Ablauf: {periods_until_expiration}"
     },
     "tooltip": "Aktualisieren Sie eine Auszahlungsberechtigung"
   },
@@ -566,8 +561,7 @@
       "withdraw_from_account": "Vom Konto abheben: {withdraw_from_account} ({withdraw_from_accountOP})",
       "withdraw_to_account": "Auf Konto abheben: {withdraw_to_account} ({withdraw_to_accountOP})",
       "amount_to_withdraw": "Abzuhebender Betrag: {amount_to_withdraw} ({amount_to_withdrawOP})",
-      "memo": "Notiz: {memo}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "memo": "Notiz: {memo}"
     },
     "tooltip": "Anspruch aus einer Widerrufserlaubnis"
   },
@@ -582,8 +576,7 @@
     "rows": {
       "withdraw_from_account": "Vom Konto abheben: {withdraw_from_account} ({withdraw_from_accountOP})",
       "authorized_account": "Autorisiertes Konto: {authorized_account} ({authorized_accountOP})",
-      "withdrawal_permission": "Auszahlungserlaubnis: {withdrawal_permission}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "withdrawal_permission": "Auszahlungserlaubnis: {withdrawal_permission}"
     },
     "tooltip": "Löschen Sie eine Widerrufsberechtigung"
   },
@@ -597,8 +590,7 @@
     },
     "rows": {
       "committee_member_account": "Ausschussmitgliedskonto: {committee_member_account} ({committee_member_accountOP})",
-      "url": "URL: {url}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "url": "URL: {url}"
     },
     "tooltip": "Erstellen Sie ein Ausschussmitgliedskonto"
   },
@@ -613,8 +605,7 @@
     "rows": {
       "committee_member": "Ausschussmitglied: {committee_member}",
       "committee_member_account": "Ausschussmitgliedskonto: {committee_member_account} ({committee_member_accountOP})",
-      "new_url": "Neue URL: {new_url}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "new_url": "Neue URL: {new_url}"
     },
     "tooltip": "Aktualisieren Sie die Kontodaten Ihrer Ausschussmitglieder"
   },
@@ -656,8 +647,7 @@
       "accounts_per_fee_scale": "Konten pro Gebührenstaffel: {accounts_per_fee_scale}",
       "account_fee_scale_bitshifts": "Bitshifts der Kontogebührentabelle: {account_fee_scale_bitshifts}",
       "max_authority_depth": "Maximale Autoritätstiefe: {max_authority_depth}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Veröffentlichen Sie die Haltung Ihrer Ausschussmitglieder zu den globalen Parameterwerten der Bitshares-Blockchain"
   },
@@ -678,8 +668,7 @@
       "vesting_cliff_seconds": "Vesting Cliff Sekunden: {vesting_cliff_seconds}",
       "vesting_duration_seconds": "Sperrfrist in Sekunden: {vesting_duration_seconds}",
       "start_claim": "Anspruch starten: {start_claim}",
-      "vesting_seconds": "Vesting-Sekunden: {vesting_seconds}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "vesting_seconds": "Vesting-Sekunden: {vesting_seconds}"
     },
     "tooltip": "Erstellen Sie einen Freizügigkeitssaldo"
   },
@@ -712,8 +701,7 @@
       "daily_pay": "Tageslohn: {daily_pay}",
       "name": "Name {name}",
       "url": "URL: {url}",
-      "initializer": "Initialisierer: {initializer}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "initializer": "Initialisierer: {initializer}"
     },
     "tooltip": "Erstellen Sie einen Arbeitnehmervorschlag"
   },
@@ -729,8 +717,7 @@
       "payer": "Zahler: {payer} ({payerOP})",
       "required_auths": "Erforderliche Berechtigungen: {required_auths}",
       "id": "Ich {id}",
-      "data": "Daten: {data}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "data": "Daten: {data}"
     },
     "tooltip": "Bietet eine generische Möglichkeit, Protokolle höherer Ebene zusätzlich zum Zeugenkonsens hinzuzufügen"
   },
@@ -746,8 +733,7 @@
       "fee_paying_account": "Gebührenpflichtiges Konto: {fee_paying_account} ({fee_paying_accountOP})",
       "predicates": "Prädikate: {predicates}",
       "required_auths": "Erforderliche Berechtigungen: {required_auths}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Behaupten Sie, dass einige Bedingungen wahr sind."
   },
@@ -761,10 +747,9 @@
     },
     "rows": {
       "deposit_to_account": "Einzahlung auf Konto: {deposit_to_account} ({deposit_to_accountOP})",
-      "balance_to_claim": "Zu beanspruchender Saldo: {balance_to_claim} ({asset_id})",
+      "balance_to_claim": "Zu beanspruchender Saldo: {balance_to_claim}",
       "balance_owner_key": "Schlüssel des Kontoinhabers: {balance_owner_key}",
-      "total_claimed": "Insgesamt beansprucht: {total_claimed} ({asset_id})",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "total_claimed": "Insgesamt beansprucht: {total_claimed} ({asset_id})"
     },
     "tooltip": "Anspruch aus einem Saldo"
   },
@@ -781,8 +766,7 @@
       "from": "Von: {from} ({fromOP})",
       "to": "An: {to} ({toOP})",
       "amount": "Betrag: {amount} ({asset_id})",
-      "memo": "Notiz: {memo}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "memo": "Notiz: {memo}"
     },
     "tooltip": "Überschreiben Sie einen Übertragungsvorgang"
   },
@@ -798,8 +782,7 @@
       "amount": "Betrag: {amount}",
       "from": "Von: {from} ({fromOP})",
       "blinding_factor": "Blendungsfaktor: {blinding_factor}",
-      "outputs": "Ausgaben: {outputs}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "outputs": "Ausgaben: {outputs}"
     },
     "tooltip": "Übertragen Sie Vermögenswerte an ein blindes Ziel"
   },
@@ -813,8 +796,7 @@
     },
     "rows": {
       "inputs": "Eingaben: {inputs}",
-      "outputs": "Ausgaben: {outputs}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "outputs": "Ausgaben: {outputs}"
     },
     "tooltip": "Blinde Vermögenswerte blind übertragen"
   },
@@ -830,10 +812,25 @@
       "amount": "Betrag: {amount}",
       "to": "An: {to} ({toOP})",
       "blinding_factor": "Blendungsfaktor: {blinding_factor}",
-      "inputs": "Eingaben: {inputs}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "inputs": "Eingaben: {inputs}"
     },
     "tooltip": "Heben Sie Vermögenswerte von einem Blindguthaben ab"
+  },
+  "asset_settle_cancel": {
+    "method": "Asset-Abrechnung stornieren",
+    "title": "Anfrage zum Abbrechen der Vermögensabrechnung",
+    "result": "Ergebnis des Abbruchs der Anlagenabrechnung",
+    "headers": {
+      "request": "Folgende Vermögensabrechnung stornieren?",
+      "result": "Folgende Vermögensabrechnung wurde storniert:"
+    },
+    "rows": {
+      "settlement": "Siedlung: {settlement}",
+      "account": "Konto: {account} ({accountOP})",
+      "amount": "Menge: {amount} ({asset_id})",
+      "extensions": "Erweiterungen: {extensions}"
+    },
+    "tooltip": "Stornieren Sie einen ausstehenden Vermögensausgleichsauftrag"
   },
   "asset_claim_fees": {
     "method": "Gebühren für Vermögensansprüche",
@@ -846,9 +843,24 @@
     "rows": {
       "issuer": "Emittent: {issuer} ({issuerOP})",
       "amount_to_claim": "Anspruchsbetrag: {amount_to_claim} ({asset_id})",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Fordern Sie die Gebühren von einem Vermögenswert an"
+  },
+  "fba_distribute": {
+    "method": "Versand durch Amazon",
+    "title": "Versandanfrage für Versand durch Amazon",
+    "result": "FBA-Verteilungsergebnis",
+    "headers": {
+      "request": "Gebühren aus dem folgenden FBA-Akkumulator verteilen?",
+      "result": "Die folgende FBA-Verteilung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "account": "Konto: {account} ({accountOP})",
+      "fba_id": "FBA-Akku: {fba_id}",
+      "amount": "Menge: {amount} ({asset_id})"
+    },
+    "tooltip": "Verteilen Sie Gebühren aus einem gebührenbesicherten Vermögensakkumulator"
   },
   "bid_collateral": {
     "method": "Bieten Sie Sicherheiten",
@@ -861,10 +873,24 @@
     "rows": {
       "bidder": "Bieter: {bidder} ({bidderOP})",
       "additional_collateral": "Zusätzliche Sicherheiten: {additional_collateral}",
-      "debt_covered": "Schulden gedeckt: {debt_covered}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "debt_covered": "Schulden gedeckt: {debt_covered}"
     },
     "tooltip": "Bieten Sie bei globaler Abwicklung auf eine Bitassets-Besicherungssicherheit"
+  },
+  "execute_bid": {
+    "method": "Gebot ausführen",
+    "title": "Gebotsereignis ausführen",
+    "result": "Gebotsergebnis ausführen",
+    "headers": {
+      "request": "Das folgende ausgeführte Gebot aufzeichnen?",
+      "result": "Die folgende Angebotsausführung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "bidder": "Bieter: {bidder} ({bidderOP})",
+      "debt": "Schulden: {debt}",
+      "collateral": "Sicherheit: {collateral}"
+    },
+    "tooltip": "Durchführung eines Sicherheitenangebots nach globaler Abwicklung"
   },
   "asset_claim_pool": {
     "method": "Pool von Vermögensansprüchen",
@@ -877,8 +903,7 @@
     "rows": {
       "issuer": "Emittent: {issuer} ({issuerOP})",
       "asset_id": "Vermögenswert: {asset_id}",
-      "amount_to_claim": "Anspruchsbetrag: {amount_to_claim}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "amount_to_claim": "Anspruchsbetrag: {amount_to_claim}"
     },
     "tooltip": "Überträgt BTS aus dem Gebührenpool eines bestimmten Vermögenswerts zurück auf das Guthaben des Emittenten"
   },
@@ -893,8 +918,7 @@
     "rows": {
       "issuer": "Emittent: {issuer} ({issuerOP})",
       "asset_to_update": "Zu aktualisierendes Asset: {asset_to_update}",
-      "new_issuer": "Neuer Emittent: {new_issuer} ({new_issuerOP})",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "new_issuer": "Neuer Emittent: {new_issuer} ({new_issuerOP})"
     },
     "tooltip": "Aktualisieren Sie den Aussteller eines Vermögenswerts auf ein neues Administratorkonto."
   },
@@ -912,8 +936,7 @@
       "amount": "Betrag: {amount}",
       "preimage_hash": "Vorbild-Hash: {preimage_hash}",
       "preimage_size": "Größe des Vorbilds: {preimage_size}",
-      "claim_period_seconds": "Anspruchszeitraum (Sekunden): {claim_period_seconds}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "claim_period_seconds": "Anspruchszeitraum (Sekunden): {claim_period_seconds}"
     },
     "tooltip": "Erstellen Sie einen HTLC-Vorgang (Hash Time Locked Contract)."
   },
@@ -929,10 +952,25 @@
       "htlc_id": "HTLC-ID: {htlc_id}",
       "redeemer": "Erlöser: {redeemer} ({redeemerOP})",
       "preimage": "Vorbild: {preimage}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Den Inhalt einer HTLC-Operation einlösen"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC eingelöst",
+    "title": "HTLC eingelöstes Ereignis",
+    "result": "HTLC Eingelöstes Ergebnis",
+    "headers": {
+      "request": "Die folgende HTLC-Einlösung aufzeichnen?",
+      "result": "Die folgende HTLC-Einlösung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "htlc_id": "HTLC-ID: {htlc_id}",
+      "from": "Aus: {from} ({fromOP})",
+      "to": "Zu: {to} ({toOP})",
+      "amount": "Menge: {amount} ({asset_id})"
+    },
+    "tooltip": "Aufzeichnung einer HTLC-Einlösung"
   },
   "htlc_extend": {
     "method": "HTLC-Erweiterung",
@@ -946,10 +984,23 @@
       "htlc_id": "HTLC-ID: {htlc_id}",
       "update_issuer": "Update-Aussteller: {update_issuer} ({update_issuerOP})",
       "seconds_to_add": "Sekunden zum Hinzufügen: {seconds_to_add}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Verlängern Sie die Dauer eines HTLC-Vorgangs"
+  },
+  "htlc_refund": {
+    "method": "HTLC-Rückerstattung",
+    "title": "HTLC-Rückerstattungsereignis",
+    "result": "HTLC-Rückerstattungsergebnis",
+    "headers": {
+      "request": "Die folgende HTLC-Rückerstattung aufzeichnen?",
+      "result": "Die folgende HTLC-Rückerstattung wurde erfasst:"
+    },
+    "rows": {
+      "htlc_id": "HTLC-ID: {htlc_id}",
+      "to": "Zu: {to} ({toOP})"
+    },
+    "tooltip": "Aufzeichnung einer HTLC-Rückerstattung aufgrund des Ablaufs"
   },
   "custom_authority_create": {
     "method": "Benutzerdefinierte Autorität erstellen",
@@ -967,8 +1018,7 @@
       "operation_type": "Operationstyp: {operation_type}",
       "auth": "Autorität: {auth}",
       "restrictions": "Einschränkungen: {restrictions}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Erstellen Sie eine neue benutzerdefinierte Autorität."
   },
@@ -989,8 +1039,7 @@
       "new_auth": "Neue Autorität: {new_auth}",
       "restrictions_to_remove": "Zu entfernende Einschränkungen: {restrictions_to_remove}",
       "restrictions_to_add": "Einschränkungen zum Hinzufügen: {restrictions_to_add}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Aktualisieren Sie eine benutzerdefinierte Autorität."
   },
@@ -1005,8 +1054,7 @@
     "rows": {
       "account": "Konto: {account} ({accountOP})",
       "authority_to_delete": "Löschberechtigung: {authority_to_delete}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Löschen Sie eine benutzerdefinierte Autorität."
   },
@@ -1022,8 +1070,7 @@
       "account": "Konto: {account} ({accountOP})",
       "target_type": "Zieltyp: {target_type}",
       "amount": "Betrag: {amount}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Erstellen Sie ein neues Ticket."
   },
@@ -1059,8 +1106,7 @@
       "share_asset": "Asset teilen: {share_asset} ({share_assetOP})",
       "taker_fee_percent": "Prozentsatz der Abnehmergebühr: {taker_fee_percent}",
       "withdrawal_fee_percent": "Auszahlungsgebühr in Prozent: {withdrawal_fee_percent}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Erstellen Sie einen Liquiditätspool"
   },
@@ -1075,8 +1121,7 @@
     "rows": {
       "account": "Konto: {account} ({accountOP})",
       "pool_id": "Pool-ID: {pool_id}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Löschen Sie einen Liquiditätspool"
   },
@@ -1093,8 +1138,7 @@
       "pool": "Pool: {pool}",
       "asset_a": "Anlage A: {asset_a} ({asset_aOP})",
       "asset_b": "Vermögenswert B: {asset_b} ({asset_bOP})",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Zahlen Sie Gelder in einen Liquiditätspool ein"
   },
@@ -1110,8 +1154,7 @@
       "account": "Konto: {account} ({accountOP})",
       "pool": "Pool: {pool}",
       "share_asset": "Asset teilen: {share_asset} ({share_assetOP})",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Ziehen Sie Gelder aus einem Liquiditätspool ab"
   },
@@ -1128,8 +1171,7 @@
       "pool": "Pool: {pool}",
       "amount_to_sell": "Zu verkaufender Betrag: {amount_to_sell}",
       "min_to_receive": "Min. bis zum Empfang: {min_to_receive}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Austausch mit einem Liquiditätspool."
   },
@@ -1146,8 +1188,7 @@
       "asset_type": "Asset-Typ: {asset_type}",
       "balance": "Kontostand: {balance}",
       "fee_rate": "Gebührensatz: {fee_rate}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Erstellen Sie einen neuen SameT-Fonds. "
   },
@@ -1162,8 +1203,7 @@
     "rows": {
       "owner_account": "Eigentümerkonto: {owner_account} ({owner_accountOP})",
       "fund_id": "Fonds-ID: {fund_id}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Löschen Sie ein SameT-Fondsobjekt."
   },
@@ -1180,8 +1220,7 @@
       "fund_id": "Fonds-ID: {fund_id}",
       "delta_amount": "Delta-Betrag: {delta_amount}",
       "new_fee_rate": "Neuer Gebührensatz: {new_fee_rate}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Aktualisieren Sie ein SameT-Fondsobjekt."
   },
@@ -1197,8 +1236,7 @@
       "borrower": "Kreditnehmer: {borrower} ({borrowerOP})",
       "fund_id": "Fonds-ID: {fund_id}",
       "borrow_amount": "Kreditbetrag: {borrow_amount}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Leihen Sie sich einen Kredit bei einem SameT-Fonds."
   },
@@ -1215,8 +1253,7 @@
       "fund_id": "Fonds-ID: {fund_id}",
       "repay_amount": "Rückzahlungsbetrag: {repay_amount}",
       "fund_fee": "Fondsgebühr: {fund_fee}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Schulden an einen SameT-Fonds zurückzahlen."
   },
@@ -1239,8 +1276,7 @@
       "auto_disable_time": "Zeit der automatischen Deaktivierung: {auto_disable_time}",
       "acceptable_collateral": "Akzeptable Sicherheiten: {acceptable_collateral}",
       "acceptable_borrowers": "Akzeptable Kreditnehmer: {acceptable_borrowers}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Erstellen Sie ein neues Kreditangebot. "
   },
@@ -1255,8 +1291,7 @@
     "rows": {
       "owner_account": "Eigentümerkonto: {owner_account} ({owner_accountOP})",
       "offer_id": "Angebots-ID: {offer_id}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Kreditangebot löschen."
   },
@@ -1279,8 +1314,7 @@
       "auto_disable_time": "Zeit der automatischen Deaktivierung: {auto_disable_time}",
       "acceptable_collateral": "Akzeptable Sicherheiten: {acceptable_collateral}",
       "acceptable_borrowers": "Akzeptable Kreditnehmer: {acceptable_borrowers}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Aktualisieren Sie ein Kreditangebot"
   },
@@ -1299,8 +1333,7 @@
       "collateral": "Sicherheiten: {collateral}",
       "max_fee_rate": "Maximaler Gebührensatz: {max_fee_rate}",
       "min_duration_seconds": "Mindestdauer in Sekunden: {min_duration_seconds}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Akzeptieren Sie ein Kreditangebot und erstellen Sie einen Kreditvertrag."
   },
@@ -1317,10 +1350,28 @@
       "deal_id": "Deal-ID: {deal_id}",
       "repay_amount": "Rückzahlungsbetrag: {repay_amount}",
       "credit_fee": "Kreditgebühr: {credit_fee}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Einen Kreditvertrag zurückzahlen."
+  },
+  "credit_deal_expired": {
+    "method": "Kreditvertrag abgelaufen",
+    "title": "Ereignis „Kreditvertrag abgelaufen“.",
+    "result": "Ergebnis: Kreditvertrag abgelaufen",
+    "headers": {
+      "request": "Den folgenden abgelaufenen Kreditvertrag erfassen?",
+      "result": "Der folgende Ablauf des Kreditvertrags wurde erfasst:"
+    },
+    "rows": {
+      "deal_id": "Deal-ID: {deal_id}",
+      "offer_id": "Angebots-ID: {offer_id}",
+      "offer_owner": "Angebotsinhaber: {offer_owner} ({offer_ownerOP})",
+      "borrower": "Kreditnehmer: {borrower} ({borrowerOP})",
+      "unpaid_amount": "Unbezahlter Betrag: {unpaid_amount} ({unpaid_amountOP})",
+      "collateral": "Sicherheit: {collateral} ({collateralOP})",
+      "fee_rate": "Gebührensatz: {fee_rate}"
+    },
+    "tooltip": "Aufzeichnung eines abgelaufenen Kreditgeschäfts und der daraus resultierenden Beträge"
   },
   "liquidity_pool_update_operation": {
     "method": "Aktualisierung des Liquiditätspools",
@@ -1334,8 +1385,7 @@
       "owner_account": "Eigentümerkonto: {owner_account} ({owner_accountOP})",
       "pool_id": "Pool-ID: {pool_id}",
       "new_parameters": "Neue Parameter: {new_parameters}",
-      "extensions": "Erweiterungen: {extensions}",
-      "fee": "Geschätzte Gebühr: {fee}"
+      "extensions": "Erweiterungen: {extensions}"
     },
     "tooltip": "Aktualisieren Sie einen Liquiditätspool"
   },
@@ -1348,7 +1398,6 @@
       "result": "Der folgende Kreditvertrag wurde aktualisiert:"
     },
     "rows": {
-      "fee": "Geschätzte Gebühr: {fee}",
       "account": "Konto: {account} ({accountOP})",
       "deal_id": "Deal-ID: {deal_id}",
       "auto_repay": "Automatische Rückzahlung: {auto_repay}"
@@ -1364,7 +1413,6 @@
       "result": "Die folgende Limit-Order wurde aktualisiert:"
     },
     "rows": {
-      "fee": "Geschätzte Gebühr: {fee}",
       "seller": "Verkäufer: {seller} ({sellerOP})",
       "order": "Bestellung: {order}",
       "new_price": "Neuer Preis: {new_price}",

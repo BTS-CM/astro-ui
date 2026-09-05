@@ -100,6 +100,13 @@ const operationTypes = [
     from: "funding_account",
     method: "call_order_update",
   },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 4,
+    from: "account_id",
+    method: "fill_order",
+    virtual: true,
+  },
   {
     id: 5,
     from: "registrar",
@@ -285,15 +292,36 @@ const operationTypes = [
     from: "",
     method: "transfer_from_blind",
   },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 42,
+    from: "account",
+    method: "asset_settle_cancel",
+    virtual: true,
+  },
   {
     id: 43,
     from: "issuer",
     method: "asset_claim_fees",
   },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 44,
+    from: "account_id",
+    method: "fba_distribute",
+    virtual: true,
+  },
   {
     id: 45,
     from: "bidder",
     method: "bid_collateral",
+  },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 46,
+    from: "bidder",
+    method: "execute_bid",
+    virtual: true,
   },
   {
     id: 47,
@@ -315,10 +343,24 @@ const operationTypes = [
     from: "redeemer",
     method: "htlc_redeem",
   },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 51,
+    from: "from",
+    method: "htlc_redeemed",
+    virtual: true,
+  },
   {
     id: 52,
     from: "update_issuer",
     method: "htlc_extend",
+  },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 53,
+    from: "to",
+    method: "htlc_refund",
+    virtual: true,
   },
   {
     id: 54,
@@ -419,6 +461,13 @@ const operationTypes = [
     id: 73,
     from: "account",
     method: "credit_deal_repay",
+  },
+  // Virtual operation: produced by the chain, cannot be signed/submitted.
+  {
+    id: 74,
+    from: "borrower",
+    method: "credit_deal_expired",
+    virtual: true,
   },
   {
     id: 75,
