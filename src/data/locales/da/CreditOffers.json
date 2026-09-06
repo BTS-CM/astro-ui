@@ -4,6 +4,7 @@
     "description": "Herfra kan du overvåge dine aktive kredittilbud og administrere deres indstillinger.",
     "noResults": "Ingen aktive kredittilbud fundet.",
     "noResultsDesc": "Du har i øjeblikket ingen aktive kredittilbud. ",
-    "create": "Opret kredittilbud"
+    "create": "Opret kredittilbud",
+    "acceptedCollateral": "Accepteret sikkerhed"
   }
 }

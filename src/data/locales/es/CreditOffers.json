@@ -4,6 +4,7 @@
     "description": "Desde aquí puede monitorear sus ofertas de crédito activas y administrar su configuración.",
     "noResults": "No se encontraron ofertas de crédito activas.",
     "noResultsDesc": "Actualmente no tienes ofertas de crédito activas. ",
-    "create": "Crear oferta de crédito"
+    "create": "Crear oferta de crédito",
+    "acceptedCollateral": "Colateral aceptado"
   }
 }

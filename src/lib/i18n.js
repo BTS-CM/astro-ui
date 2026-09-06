@@ -17,6 +17,7 @@ const pages = [
   "CreditBorrow",
   "CreditOffers",
   "CreditDeals",
+  "CreditDealUpdate",
   "CreditOffer",
   "CurrentUser",
   "DeepLinkDialog",

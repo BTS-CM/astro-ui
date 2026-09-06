@@ -4,6 +4,7 @@
     "description": "Siit saate jälgida oma aktiivseid krediidipakkumisi ja hallata nende seadeid.",
     "noResults": "Aktiivseid krediidipakkumisi ei leitud.",
     "noResultsDesc": "Teil pole praegu aktiivseid krediidipakkumisi. ",
-    "create": "Loo krediidipakkumine"
+    "create": "Loo krediidipakkumine",
+    "acceptedCollateral": "Aktsepteeritud tagatis"
   }
 }
