@@ -1,12 +1,19 @@
 import { nanoquery } from "@nanostores/query";
+import DOMPurify from "dompurify";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
-import { decodeTrollboxValue } from "@/bts/serializer/customOperations";
+import {
+  DEFAULT_MAX_TRANSACTION_SIZE,
+  decodeTrollboxValue,
+  maxMessageBytes,
+} from "@/bts/serializer/customOperations";
 
 export const TROLLBOX_CHANNELS = [
   { id: "general", catalog: "trollbox-general" },
   { id: "trading", catalog: "trollbox-trading" },
-  { id: "help", catalog: "trollbox-help" },
+  { id: "pools", catalog: "trollbox-pools" },
+  { id: "smartcoins", catalog: "trollbox-smartcoins" },
+  { id: "lend", catalog: "trollbox-lend" },
 ];
 
 export const TROLLBOX_META_CATALOG = "trollbox-meta";
@@ -77,6 +84,52 @@ async function withApi<T>(node: string, fn: (api: any) => Promise<T>): Promise<T
 
 function defaultNode(chain: string): string {
   return (chains as any)[chain].nodeList[0].url;
+}
+
+/**
+ * Strip all markup so messages render as inert plain text: no links,
+ * no HTML, no XSS vectors. Mirrors the DOMPurify pattern used by
+ * PortfolioRecentActivity. Belt-and-braces on top of React's escaping
+ * (we never use dangerouslySetInnerHTML or linkify).
+ */
+export function cleanMessageText(input: unknown): string {
+  if (input === null || input === undefined) {
+    return "";
+  }
+  try {
+    const sanitized = DOMPurify.sanitize(String(input), {
+      ALLOWED_TAGS: [],
+      ALLOWED_ATTR: [],
+    });
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = sanitized;
+    return textarea.value;
+  } catch {
+    return String(input);
+  }
+}
+
+/**
+ * Live message-text budget in UTF-8 bytes, derived from the chain's
+ * maximum_transaction_size (global properties 2.0.0). Falls back to the
+ * protocol default when the value cannot be read.
+ */
+export async function fetchMaxMessageBytes(
+  chain: string,
+  node: string
+): Promise<number> {
+  try {
+    const result = await withApi(node, async (api) =>
+      api.db_api().exec("get_global_properties", [])
+    );
+    const maxTx = Number(result?.parameters?.maximum_transaction_size);
+    if (Number.isFinite(maxTx) && maxTx > 0) {
+      return maxMessageBytes(maxTx);
+    }
+  } catch (error) {
+    console.warn(`Trollbox: could not read maximum_transaction_size:`, error);
+  }
+  return maxMessageBytes(DEFAULT_MAX_TRANSACTION_SIZE);
 }
 
 function nodeListFor(chain: string): string[] {
@@ -174,7 +227,13 @@ export async function fetchChannelMessages(
         seen.add(o.id);
         const decoded = decodeTrollboxValue(o);
         if (decoded) {
-          out.push({ ...decoded, displayAuthor: decoded.author ?? decoded.account });
+          const author = cleanMessageText(decoded.author);
+          out.push({
+            ...decoded,
+            author,
+            text: cleanMessageText(decoded.text),
+            displayAuthor: author || decoded.account,
+          });
         }
       }
       if (res.length < TROLLBOX_STORAGE_PAGE_LIMIT) {
@@ -199,7 +258,9 @@ export async function fetchChannelMessages(
           }
         }
         for (const m of out) {
-          m.displayAuthor = names[m.account] ?? m.author ?? m.account;
+          m.displayAuthor = cleanMessageText(
+            names[m.account] ?? m.author ?? m.account
+          );
         }
       } catch {
         // keep embedded/ raw ids

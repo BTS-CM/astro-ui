@@ -1,6 +1,14 @@
+import { Buffer } from "buffer";
 import ByteBuffer from "./ByteBuffer.js";
 import types from "./types.js";
 import SerializerImpl from "./serializer.js";
+
+// types.js / ByteBuffer.js use the bare Buffer global, which browsers do
+// not provide. Same per-module polyfill as AirdropCalculate.jsx: install it
+// here so packing works wherever this module is imported.
+if (typeof globalThis !== "undefined" && !globalThis.Buffer) {
+  globalThis.Buffer = Buffer;
+}
 
 var {
   bool,
@@ -41,8 +49,31 @@ export const CUSTOM_OPERATION_ID = 35;
 // Matches CUSTOM_OPERATIONS_MAX_KEY_SIZE in custom_objects.hpp.
 export const MAX_KEY_SIZE = 200;
 
-// Client-side cap for chat text so fees stay near the ~1 BTS base fee.
-export const MAX_MESSAGE_CHARS = 280;
+// BitShares chain default for maximum_transaction_size (see
+// CommitteeParams defaults and protocol chain_parameters). The live value
+// can differ by chain — callers should read parameters.maximum_transaction_size
+// from global properties and derive the budget with maxMessageBytes().
+export const DEFAULT_MAX_TRANSACTION_SIZE = 2048;
+
+// Bytes reserved for everything around the message text: the outer
+// custom_operation framing, the account_storage_map packing, the catalog,
+// the message key, and the JSON wrapper around the text.
+export const TX_SIZE_RESERVE = 256;
+
+/** Byte length of a string as UTF-8. */
+export function utf8Length(str) {
+  return new TextEncoder().encode(str).length;
+}
+
+/**
+ * Max message-text size in UTF-8 bytes such that the packed custom
+ * operation stays within the chain's maximum transaction size.
+ */
+export function maxMessageBytes(maxTransactionSize = DEFAULT_MAX_TRANSACTION_SIZE) {
+  const size = Number(maxTransactionSize);
+  const budget = (Number.isFinite(size) ? size : DEFAULT_MAX_TRANSACTION_SIZE) - TX_SIZE_RESERVE;
+  return Math.max(256, budget);
+}
 
 function assertCatalog(catalog) {
   if (typeof catalog !== "string" || catalog.length === 0) {
@@ -136,13 +167,15 @@ export function buildMessageKey(nowMs = Date.now(), rand = Math.floor(Math.rando
 /**
  * Encode a chat message into custom_operation.data hex.
  * The stored value is a JSON string so the plugin parses it into an object.
+ * Size is enforced in UTF-8 bytes against the chain transaction budget.
  */
-export function buildTrollboxData({ channel, catalog, key, username, text, timestamp }) {
+export function buildTrollboxData({ channel, catalog, key, username, text, timestamp, maxBytes = maxMessageBytes() }) {
   if (!text || !text.trim()) {
     throw new Error("message text is empty");
   }
-  if (text.length > MAX_MESSAGE_CHARS) {
-    throw new Error(`message exceeds ${MAX_MESSAGE_CHARS} characters`);
+  const bytes = utf8Length(text);
+  if (bytes > maxBytes) {
+    throw new Error(`message is ${bytes - maxBytes} bytes over the size limit (${maxBytes} bytes)`);
   }
   assertKey(key);
   const value = JSON.stringify({

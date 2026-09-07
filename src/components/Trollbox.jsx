@@ -14,9 +14,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
@@ -43,21 +59,27 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import {
   TROLLBOX_CHANNELS,
   fetchChannelMessages,
+  fetchMaxMessageBytes,
   findSupportingNode,
   isPluginMissingError,
   probeTrollboxSupport,
 } from "@/nanoeffects/Trollbox.ts";
 import {
-  MAX_MESSAGE_CHARS,
   TROLLBOX_OP_ID,
   buildMessageKey,
   buildTrollboxData,
+  maxMessageBytes,
+  utf8Length,
 } from "@/bts/serializer/customOperations.js";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import { Avatar } from "@/components/Avatar.tsx";
 
 const POLL_MS = 15000;
 const TROLLBOX_ROW_HEIGHT = 76;
 const TROLLBOX_MAX_MESSAGES = 100;
+const TROLLBOX_MIN_ROWS = 7;
+const TROLLBOX_MAX_ROWS = 9;
+const TROLLBOX_PREVIEW_CHARS = 140;
 
 function formatTime(ts) {
   if (!ts) {
@@ -70,6 +92,13 @@ function formatTime(ts) {
   }
 }
 
+function truncatePreview(text, max = TROLLBOX_PREVIEW_CHARS) {
+  if (!text) {
+    return "";
+  }
+  return text.length > max ? `${text.slice(0, max)}…` : text;
+}
+
 const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   index,
   style,
@@ -78,22 +107,41 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   currentUserId,
   blockLabel,
   onBlockUser,
+  onOpenMessage,
 }) {
   const m = visibleMessages[index];
   if (!m) {
     return null;
   }
   return (
-    <div style={{ ...style, paddingRight: "8px" }}>
-      <div className="h-full overflow-hidden px-3 py-2 border-b border-border">
-        <div className="flex items-baseline gap-2">
-          <span className="text-sm font-semibold text-foreground truncate">
-            {m.displayAuthor}
-          </span>
-          <span className="text-xs text-muted-foreground shrink-0">
-            {formatTime(m.timestamp)}
-          </span>
-          {canBlock && m.account !== currentUserId ? (
+    <div style={{ ...style, padding: "0 2px 8px" }}>
+      <Item
+        variant="outline"
+        size="sm"
+        className="h-full cursor-pointer overflow-hidden hover:bg-accent/50"
+        onClick={() => onOpenMessage(m)}
+      >
+        <ItemMedia>
+          <Avatar
+            size={36}
+            name={m.displayAuthor}
+            extra="trollbox"
+            expression={{ eye: "normal", mouth: "open" }}
+          />
+        </ItemMedia>
+        <ItemContent className="min-w-0">
+          <ItemTitle className="min-w-0">
+            <span className="truncate">{m.displayAuthor}</span>
+            <span className="text-xs font-normal text-muted-foreground shrink-0">
+              {formatTime(m.timestamp)}
+            </span>
+          </ItemTitle>
+          <ItemDescription className="line-clamp-none truncate">
+            {truncatePreview(m.text)}
+          </ItemDescription>
+        </ItemContent>
+        {canBlock && m.account !== currentUserId ? (
+          <ItemActions>
             <TooltipProvider delayDuration={300}>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -102,8 +150,11 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
                     variant="ghost"
                     size="icon"
                     aria-label={blockLabel}
-                    onClick={() => onBlockUser(m)}
-                    className="ml-auto h-6 w-6 shrink-0 rounded-full text-muted-foreground/60 hover:text-destructive"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onBlockUser(m);
+                    }}
+                    className="h-6 w-6 shrink-0 rounded-full text-muted-foreground/60 hover:text-destructive"
                   >
                     <Ban className="h-3.5 w-3.5" />
                   </Button>
@@ -113,12 +164,9 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          ) : null}
-        </div>
-        <p className="mt-0.5 text-sm text-foreground/90 line-clamp-2 break-words">
-          {m.text}
-        </p>
-      </div>
+          </ItemActions>
+        ) : null}
+      </Item>
     </div>
   );
 });
@@ -145,11 +193,29 @@ export default function Trollbox() {
   const [composeError, setComposeError] = useState(null);
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [openMessage, setOpenMessage] = useState(null);
+  const [maxBytes, setMaxBytes] = useState(() => maxMessageBytes());
 
   const channelInfo = useMemo(
     () => TROLLBOX_CHANNELS.find((c) => c.id === activeChannel),
     [activeChannel]
   );
+
+  // 1b. Live message budget from the chain's maximum transaction size.
+  useEffect(() => {
+    let cancelled = false;
+    if (!nodeUrl) {
+      return undefined;
+    }
+    fetchMaxMessageBytes(chain, nodeUrl).then((bytes) => {
+      if (!cancelled) {
+        setMaxBytes(bytes);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [chain, nodeUrl]);
 
   // 1. Probe the connected node for the custom_operations plugin.
   useEffect(() => {
@@ -247,11 +313,14 @@ export default function Trollbox() {
       setComposeError(t("Trollbox:errorEmpty", "Message text is empty."));
       return;
     }
-    if (text.length > MAX_MESSAGE_CHARS) {
+    const textBytes = utf8Length(text);
+    if (textBytes > maxBytes) {
       setComposeError(
-        t("Trollbox:errorTooLong", "Message exceeds {{max}} characters.", {
-          max: MAX_MESSAGE_CHARS,
-        })
+        t(
+          "Trollbox:errorTooLong",
+          "Message is {{over}} bytes over the size limit ({{max}} bytes).",
+          { over: textBytes - maxBytes, max: maxBytes }
+        )
       );
       return;
     }
@@ -266,6 +335,7 @@ export default function Trollbox() {
         username: currentUser.username,
         text,
         timestamp: Date.now(),
+        maxBytes,
       });
       setPendingOp([
         {
@@ -341,6 +411,9 @@ export default function Trollbox() {
   const hiddenBlockedCount = messages.length - filteredMessages.length;
 
   const blockLabel = t("Trollbox:blockUser", "Block user");
+  const handleOpenMessage = useCallback((m) => {
+    setOpenMessage(m);
+  }, []);
   const handleBlockUser = useCallback(
     (m) => {
       if (!m || !m.account) {
@@ -357,20 +430,40 @@ export default function Trollbox() {
       currentUserId,
       blockLabel,
       onBlockUser: handleBlockUser,
+      onOpenMessage: handleOpenMessage,
     }),
-    [visibleMessages, loggedIn, currentUserId, blockLabel, handleBlockUser]
+    [
+      visibleMessages,
+      loggedIn,
+      currentUserId,
+      blockLabel,
+      handleBlockUser,
+      handleOpenMessage,
+    ]
   );
 
   return (
     <div className="container mx-auto mt-3 mb-5 px-3 sm:px-4 max-w-5xl">
-      <Card className="mb-4">
-        <CardHeader>
+      <Card className="mb-4 relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-xl shadow-black/30">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl"
+        />
+        <CardHeader className="relative">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-accent/50">
-              <MessageSquare className="h-5 w-5" />
+            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+              <MessageSquare className="h-5 w-5" strokeWidth={2.25} />
             </span>
             <div className="min-w-0">
-              <CardTitle className="text-lg sm:text-xl">
+              <CardTitle className="text-lg sm:text-xl tracking-tight">
                 {t("Trollbox:title", "Trollbox (concept)")}
               </CardTitle>
               <CardDescription>
@@ -454,8 +547,16 @@ export default function Trollbox() {
         </Alert>
       ) : null}
 
+      <Tabs
+        value={activeChannel}
+        onValueChange={(v) => {
+          setActiveChannel(v);
+          setMessages([]);
+          setMessagesError(null);
+        }}
+      >
       <Card className="mb-4">
-        <CardHeader>
+        <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-base">
             <Radio className="h-4 w-4" />
             {t("Trollbox:channelsTitle", "Channels")}
@@ -467,38 +568,31 @@ export default function Trollbox() {
             )}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Tabs
-            value={activeChannel}
-            onValueChange={(v) => {
-              setActiveChannel(v);
-              setMessages([]);
-              setMessagesError(null);
-            }}
-          >
-            <TabsList className="mb-3">
+        <CardContent className="pt-0">
+            <TabsList className="mb-1 flex-wrap h-auto">
               {TROLLBOX_CHANNELS.map((c) => (
                 <TabsTrigger key={c.id} value={c.id}>
                   #{c.id}
                 </TabsTrigger>
               ))}
             </TabsList>
-            {TROLLBOX_CHANNELS.map((c) => (
-              <TabsContent key={c.id} value={c.id} className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-auto h-6 px-2"
-                    disabled={probe.state !== "live" || loadingMessages}
-                    onClick={() => setRefreshNonce((n) => n + 1)}
-                    title={t("Trollbox:refresh", "Refresh")}
-                  >
-                    <RefreshCw className="h-3 w-3" />
-                  </Button>
-                </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-4">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">
+            {t("Trollbox:viewingTitle", "Viewing the {{tag}} trollbox", {
+              tag: `#${activeChannel}`,
+            })}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
                 {probe.state === "live" ? (
-                  <div className="rounded-xl border border-border min-h-[120px]">
+                  <div
+                    className="rounded-xl border border-border p-2"
+                    style={{ minHeight: TROLLBOX_MIN_ROWS * TROLLBOX_ROW_HEIGHT }}
+                  >
                     {loadingMessages && messages.length === 0 ? (
                       <div className="flex items-center justify-center gap-2 p-6 text-sm text-muted-foreground">
                         <Spinner className="h-4 w-4" />
@@ -523,7 +617,7 @@ export default function Trollbox() {
                         {t(
                           "Trollbox:messagesEmpty",
                           "No messages in {{channel}} yet — be the first.",
-                          { channel: c.id }
+                          { channel: activeChannel }
                         )}
                         {hiddenBlockedCount > 0 ? (
                           <span className="mt-1 block text-xs">
@@ -551,9 +645,11 @@ export default function Trollbox() {
                           rowCount={visibleMessages.length}
                           rowHeight={TROLLBOX_ROW_HEIGHT}
                           height={Math.min(
-                            Math.max(visibleMessages.length, 1) *
-                              TROLLBOX_ROW_HEIGHT,
-                            480
+                            Math.max(
+                              visibleMessages.length,
+                              TROLLBOX_MIN_ROWS
+                            ) * TROLLBOX_ROW_HEIGHT,
+                            TROLLBOX_MAX_ROWS * TROLLBOX_ROW_HEIGHT
                           )}
                           width="100%"
                           rowProps={messageRowProps}
@@ -571,15 +667,11 @@ export default function Trollbox() {
                         )}
                   </div>
                 )}
-              </TabsContent>
-            ))}
-          </Tabs>
-
           <div className="mt-3 flex gap-2">
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              maxLength={MAX_MESSAGE_CHARS + 20}
+              maxLength={maxBytes}
               placeholder={
                 loggedIn
                   ? t("Trollbox:composerPlaceholder", "Message {{channel}}…", {
@@ -602,6 +694,17 @@ export default function Trollbox() {
             >
               <Send className="mr-1 h-4 w-4" />
               {t("Trollbox:send", "Send")}
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0"
+              disabled={probe.state !== "live" || loadingMessages}
+              onClick={() => setRefreshNonce((n) => n + 1)}
+              title={t("Trollbox:refresh", "Refresh")}
+              aria-label={t("Trollbox:refresh", "Refresh")}
+            >
+              <RefreshCw className="h-4 w-4" />
             </Button>
           </div>
           {composeError ? (
@@ -642,6 +745,52 @@ export default function Trollbox() {
           ) : null}
         </CardContent>
       </Card>
+      </Tabs>
+
+      <Dialog
+        open={!!openMessage}
+        onOpenChange={(open) => {
+          if (!open) {
+            setOpenMessage(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[480px]">
+          {openMessage ? (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    size={44}
+                    name={openMessage.displayAuthor}
+                    extra="trollbox-dialog"
+                    expression={{ eye: "normal", mouth: "open" }}
+                  />
+                  <div className="min-w-0">
+                    <DialogTitle className="truncate">
+                      {openMessage.displayAuthor}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {formatTime(openMessage.timestamp)}
+                    </DialogDescription>
+                  </div>
+                  <Badge variant="secondary" className="ml-auto shrink-0">
+                    #{openMessage.channel ?? activeChannel}
+                  </Badge>
+                </div>
+              </DialogHeader>
+              <ScrollArea className="max-h-[50vh] rounded-md border border-border p-3">
+                <p className="whitespace-pre-wrap break-words text-sm text-foreground">
+                  {openMessage.text}
+                </p>
+              </ScrollArea>
+              <p className="text-xs text-muted-foreground">
+                {openMessage.account}
+              </p>
+            </>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
