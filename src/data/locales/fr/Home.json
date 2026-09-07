@@ -55,6 +55,12 @@
         "hover2": "Voir pour qui les membres du comité ont voté pour.",
         "hover3": "Voir les soldes de jeton de base du comité."
     },
+    "committee_parameters": {
+        "title": "Paramètres globaux",
+        "subtitle": "Proposez de nouveaux paramètres globaux.",
+        "hover1": "Modifiez temps, limites et répartition des frais.",
+        "hover2": "Soumettez via une proposition du comité."
+    },
     "governance": {
         "title": "Inscription aux rôles",
         "subtitle": "Créer / mettre à jour les rôles de témoignage et de comité.",

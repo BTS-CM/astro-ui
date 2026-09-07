@@ -184,10 +184,11 @@ export default function CollateralDropDownCard(properties) {
       {lendingAsset && marketSearch ? (
         <DialogTrigger asChild>
           <Button
+            type="button"
             variant="outline"
             size="sm"
-            onClick={(event) => {
-              event.preventDefault();
+            onClick={() => {
+              setDialogOpen(true);
             }}
             className="border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)]"
           >

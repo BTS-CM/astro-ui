@@ -63,5 +63,10 @@
   "risk4": "As taxas de câmbio do pool de liquidez podem diferir das taxas de mercado DEX em tempo real. Monitore regularmente as taxas de câmbio para evitar perturbações.",
   "risk5": "Alguns dos ativos trocáveis ​​dentro dos pools de liquidez são ativos garantidos por exchanges e, como tal, têm fatores de risco externos a serem considerados se forem movimentados por longos períodos de tempo. Pesquise os termos de serviço do gateway e considere o uso de ativos descentralizados sempre que possível.",
   "risk6": "As estimativas fornecidas acima podem não ser precisas, a lógica do blockchain determinará quanto ativo de compartilhamento de pool você receberá em troca de seus ativos apostados e, da mesma forma, quanto ativo A e ativo B você receberá em troca de seu ativo de compartilhamento de pool.",
-  "risk7": "Se você perder a custódia dos ativos de ações do pool, não poderá retirar seus ativos do pool de liquidez."
+  "risk7": "Se você perder a custódia dos ativos de ações do pool, não poderá retirar seus ativos do pool de liquidez.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

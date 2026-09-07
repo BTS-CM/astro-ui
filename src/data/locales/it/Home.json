@@ -55,6 +55,12 @@
         "hover2": "Visualizza i membri del comitato per cui hanno votato.",
         "hover3": "Visualizza i saldi dei token core del comitato."
     },
+    "committee_parameters": {
+        "title": "Parametri globali",
+        "subtitle": "Proponi nuovi parametri globali.",
+        "hover1": "Modifica tempi, limiti e suddivisione commissioni.",
+        "hover2": "Invia modifiche tramite proposta del comitato."
+    },
     "governance": {
         "title": "Registrazione del ruolo",
         "subtitle": "Crea/aggiorna i ruoli di testimoni e del comitato.",

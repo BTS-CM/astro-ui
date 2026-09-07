@@ -77,6 +77,7 @@ import {
   Database,
   ListOrdered,
   Clock,
+  SlidersHorizontal,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -128,6 +129,7 @@ const ITEM_ICONS = {
   vote: Vote,
   witnesses: Eye,
   committee: Users,
+  committee_parameters: SlidersHorizontal,
   governance: Vote,
   create_worker: Pickaxe,
   create_ticket: Ticket,
@@ -293,6 +295,7 @@ export default function Home(properties) {
     { key: "vote", href: "/vote.html", titleKey: "Home:vote.title", subtitleKey: "Home:vote.subtitle", hoverKeys: ["Home:vote.hover1", "Home:vote.hover2", "Home:vote.hover3"] },
     { key: "witnesses", href: "/witnesses.html", titleKey: "Home:witnesses.title", subtitleKey: "Home:witnesses.subtitle", hoverKeys: ["Home:witnesses.hover1", "Home:witnesses.hover2", "Home:witnesses.hover3"] },
     { key: "committee", href: "/committee.html", titleKey: "Home:committee.title", subtitleKey: "Home:committee.subtitle", hoverKeys: ["Home:committee.hover1", "Home:committee.hover2", "Home:committee.hover3"] },
+    { key: "committee_parameters", href: "/committee_parameters.html", titleKey: "Home:committee_parameters.title", subtitleKey: "Home:committee_parameters.subtitle", hoverKeys: ["Home:committee_parameters.hover1", "Home:committee_parameters.hover2"] },
     { key: "governance", href: "/governance.html", titleKey: "Home:governance.title", subtitleKey: "Home:governance.subtitle", hoverKeys: ["Home:governance.hover1", "Home:governance.hover2"] },
     { key: "create_worker", href: "/create_worker.html", titleKey: "Home:create_worker.title", subtitleKey: "Home:create_worker.subtitle", hoverKeys: ["Home:create_worker.hover1", "Home:create_worker.hover2", "Home:create_worker.hover3"] },
     { key: "create_ticket", href: "/create_ticket.html", titleKey: "Home:create_ticket.title", subtitleKey: "Home:create_ticket.subtitle", hoverKeys: ["Home:create_ticket.hover1", "Home:create_ticket.hover2", "Home:create_ticket.hover3"] },

@@ -22,6 +22,24 @@
     "description": "Forhåndsvisning af nyligt hentede billetter.",
     "note": "Henter et lille udsnit af de seneste billetter for at give kontekst."
   },
+  "requestCard": {
+    "title": "Anmod om THUMBSUP.1",
+    "description": "Billetter kræver en tilsvarende THUMBSUP.1-beholdning.",
+    "btsBalance": "Dine BTS",
+    "thumbsupBalance": "Dine THUMBSUP.1",
+    "deficit": "I alt kræves {{need}} THUMBSUP.1 ({{locked}} allerede låst + {{new}} ny); dit underskud er {{deficit}}.",
+    "useDeficit": "Brug underskud",
+    "amountHeader": "Beløb at anmode om",
+    "amountDescription": "Må ikke overstige din BTS-beholdning. 'abit' sender dig denne mængde THUMBSUP.1, hvis forslaget godkendes.",
+    "max": "Maks",
+    "maxHint": "Maksimalt anmodningsbart: {{max}} THUMBSUP.1 (din BTS-beholdning).",
+    "exceedsBalance": "Det anmodede beløb må ikke overstige din BTS-beholdning.",
+    "loginRequired": "Log ind for at anmode om THUMBSUP.1.",
+    "resolvingAbit": "Finder 'abit'-kontoen…",
+    "proposalNote": "Dette opretter et forslag (7 dages udløb, 1 times gennemgang), hvor 'abit' betaler gebyret. Det skal godkendes, før du modtager tokens.",
+    "submit": "Anmod om THUMBSUP.1",
+    "dialogHeader": "Anmod om THUMBSUP.1 fra abit"
+  },
   "myTickets": {
     "title": "Mine billetter",
     "description": "Dine nuværende billetter, totaler og effektive stemmestyrke.",
@@ -54,6 +72,10 @@
     "newType": "Ny type",
     "amountNewTarget": "Yderligere beløb (valgfrit)",
     "cancel": "Ophæve",
-    "continue": "Fortsætte"
+    "continue": "Fortsætte",
+    "lockedAmount": "Låst beløb",
+    "votingPower": "Nuværende stemmestyrke",
+    "frozenWarning": "Denne billet er låst for evigt og kan ikke opdateres eller hæves on-chain.",
+    "sameTargetHint": "Ny type svarer til billettens nuværende mål — vælg en anden type for at fortsætte."
   }
 }

@@ -55,6 +55,12 @@
         "hover2": "Ver quem os membros do comitê votaram.",
         "hover3": "Veja os saldos do token do comitê."
     },
+    "committee_parameters": {
+        "title": "Parâmetros globais",
+        "subtitle": "Proponha novos parâmetros globais.",
+        "hover1": "Edite tempos, limites e divisão de taxas.",
+        "hover2": "Envie alterações via proposta do comitê."
+    },
     "governance": {
         "title": "Registro de função",
         "subtitle": "Crie/atualize as funções de testemunha e comitê.",

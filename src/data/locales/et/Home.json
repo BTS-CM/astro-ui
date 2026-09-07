@@ -55,6 +55,12 @@
         "hover2": "Vaadake, kelle poolt komitee liikmed on hääletanud.",
         "hover3": "Vaatekomitee põhisilmajäägid."
     },
+    "committee_parameters": {
+        "title": "Globaalsed parameetrid",
+        "subtitle": "Tee ettepanek uute globaalsete parameetrite kohta.",
+        "hover1": "Muuda ajastust, piiranguid ja tasude jaotust.",
+        "hover2": "Esita muudatused komitee ettepanekuga."
+    },
     "governance": {
         "title": "Rolli registreerimine",
         "subtitle": "Looge/värskendage nii tunnistajate kui ka komisjoni rolle.",

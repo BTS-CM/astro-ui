@@ -63,5 +63,10 @@
   "risk4": "Likviidsusfondi vahetuskursid võivad erineda reaalajas DEX-i turukurssidest. Jälgige regulaarselt vahetuskursse, et vältida ärritusi.",
   "risk5": "Mõned likviidsuskogumite vahetatavad varad on börsil tagatud varad ja seetõttu on neil pikaajalisel käitlemisel välised riskitegurid. Uurige lüüsi teenusetingimusi ja kaaluge võimaluse korral detsentraliseeritud varade kasutamist.",
   "risk6": "Ülaltoodud hinnangud ei pruugi olla täpsed, plokiahela loogika määrab, kui palju kogumisaktsia vara saate oma panustatud varade eest ja kui palju vara A ja vara B saate oma kogumi aktsiavara eest vastutasuks.",
-  "risk7": "Kui kaotate oma fondiosaku varade hoiuõiguse, ei saa te oma varasid likviidsusfondist välja võtta."
+  "risk7": "Kui kaotate oma fondiosaku varade hoiuõiguse, ei saa te oma varasid likviidsusfondist välja võtta.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

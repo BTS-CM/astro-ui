@@ -340,6 +340,29 @@ export default function CreditOfferEditor(properties) {
       (target - offerTotalBalance).toFixed(foundAsset.precision),
     );
   }, [offerID, offerJSON, foundAsset, lendingAmount, offerTotalBalance]);
+
+  const isMinimumExceedsLending = useMemo(() => {
+    const lend = parseFloat(lendingAmount);
+    const min = parseFloat(minimumBorowAmount);
+    return Number.isFinite(lend) && Number.isFinite(min) && min > lend;
+  }, [lendingAmount, minimumBorowAmount]);
+
+  // Let the user see what they typed, then snap the minimum back down to
+  // the lending amount shortly after they stop typing (debounced).
+  useEffect(() => {
+    if (!isMinimumExceedsLending) {
+      return;
+    }
+    const lend = parseFloat(lendingAmount);
+    if (!Number.isFinite(lend)) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setMinimumBorowAmount(lendingAmount);
+      form.setValue("minimumAmount", lendingAmount);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [isMinimumExceedsLending, lendingAmount, minimumBorowAmount]);
   useEffect(() => {
     let unsub;
 
@@ -604,6 +627,9 @@ export default function CreditOfferEditor(properties) {
 
           <form
             onSubmit={form.handleSubmit(() => {
+              if (isMinimumExceedsLending) {
+                return;
+              }
               setShowDialog(true);
             })}
           >
@@ -979,12 +1005,27 @@ export default function CreditOfferEditor(properties) {
                     onChange={(event) => {
                       const input = event.target.value;
                       const regex = assetAmountRegex(foundAsset);
-                      if (regex.test(input) && input > 0) {
-                        setMinimumBorowAmount(input);
-                        form.setValue("minimumAmount", input);
+                      if (!regex.test(input)) {
+                        return;
                       }
+                      if (input !== "" && !(parseFloat(input) > 0)) {
+                        return;
+                      }
+                      // Allow temporarily exceeding the lending amount so the
+                      // last typed digit registers; the snap-back effect above
+                      // clamps it back down shortly after typing stops.
+                      setMinimumBorowAmount(input);
+                      form.setValue("minimumAmount", input);
                     }}
                   />
+                  {isMinimumExceedsLending ? (
+                    <p className="text-xs text-[hsl(var(--accent-danger-fg))] mt-2">
+                      {t("CreditOfferEditor:minimumExceedsLending", {
+                        defaultValue:
+                          "Minimum amount cannot exceed the amount to lend.",
+                      })}
+                    </p>
+                  ) : null}
                   <p className="text-[10px] text-muted-foreground mt-2">
                     {t("CreditOfferEditor:minimumBorrowableAmount")}
                   </p>
@@ -1197,6 +1238,7 @@ export default function CreditOfferEditor(properties) {
 
               <Button
                 type="submit"
+                disabled={isMinimumExceedsLending}
                 className="w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] shadow-[0_8px_30px_-4px_rgba(139,92,246,0.6)] hover:shadow-[0_12px_40px_-4px_rgba(139,92,246,0.8)] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-base"
               >
               <HandCoins className="h-4.5 w-4.5" strokeWidth={2.25} />

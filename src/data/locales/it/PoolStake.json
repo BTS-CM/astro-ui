@@ -63,5 +63,10 @@
   "risk4": "I tassi di cambio della liquidità possono differire dai tassi di mercato DEX in tempo reale. Monitorare regolarmente i tassi di cambio per evitare turbamenti.",
   "risk5": "Alcuni degli asset scambiabili all'interno dei pool di liquidità sono asset garantiti da cambio e come tali presentano fattori di rischio esterni da considerare in caso di gestione per lunghi periodi di tempo. Ricercare i termini di servizio del gateway e prendere in considerazione l'utilizzo di asset decentralizzati ove possibile.",
   "risk6": "Le stime sopra riportate potrebbero non essere accurate, la logica blockchain determinerà la quantità di asset di condivisione del pool che riceverai in cambio dei tuoi asset di condivisione del pool e, allo stesso modo, la quantità di asset A e B che riceverai in cambio del tuo asset di condivisione del pool.",
-  "risk7": "Se perdi la custodia delle tue attività azionarie del pool, non sarai in grado di rimuovere le tue attività dal pool di liquidità."
+  "risk7": "Se perdi la custodia delle tue attività azionarie del pool, non sarai in grado di rimuovere le tue attività dal pool di liquidità.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

@@ -55,6 +55,12 @@
         "hover2": "View who committee members have voted for.",
         "hover3": "View committee core token balances."
     },
+    "committee_parameters": {
+        "title": "Global Parameters",
+        "subtitle": "Propose new global blockchain parameters.",
+        "hover1": "Edit timing, limits and fee splits.",
+        "hover2": "Submit changes via committee proposal."
+    },
     "governance": {
         "title": "Role Registration",
         "subtitle": "Create/Update both witness and committee roles.",

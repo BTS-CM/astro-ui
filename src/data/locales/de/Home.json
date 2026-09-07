@@ -48,6 +48,12 @@
         "hover2": "Stellen Sie sich an, für wen die Mitglieder des Ausschusses gestimmt haben.",
         "hover3": "View Committee Core Token Balances."
     },
+    "committee_parameters": {
+        "title": "Globale Parameter",
+        "subtitle": "Neue globale Blockchain-Parameter vorschlagen.",
+        "hover1": "Timing, Limits und Gebührenaufteilung bearbeiten.",
+        "hover2": "Änderungen per Komitee-Vorschlag einreichen."
+    },
     "governance": {
         "title": "Rollenregistrierung",
         "subtitle": "Erstellen/Aktualisieren sowohl Zeugen- als auch Ausschussrollen.",

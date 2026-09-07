@@ -63,5 +63,10 @@
   "risk4": "Die Wechselkurse des Liquiditätspools können von den Echtzeitkursen des DEX-Marktes abweichen. Überwachen Sie die Wechselkurse regelmäßig, um Störungen zu vermeiden.",
   "risk5": "Bei einigen der austauschbaren Vermögenswerte in Liquiditätspools handelt es sich um börsenbesicherte Vermögenswerte. Daher sind bei der Handhabung über einen längeren Zeitraum externe Risikofaktoren zu berücksichtigen. Informieren Sie sich über die Nutzungsbedingungen des Gateways und erwägen Sie nach Möglichkeit die Verwendung dezentraler Vermögenswerte.",
   "risk6": "Die oben angegebenen Schätzungen sind möglicherweise nicht korrekt. Die Blockchain-Logik bestimmt, wie viel Pool-Share-Asset Sie als Gegenleistung für Ihre eingesetzten Vermögenswerte erhalten, und ebenso, wie viel Asset A und Asset B Sie als Gegenleistung für Ihr Pool-Share-Asset erhalten.",
-  "risk7": "Wenn Sie das Sorgerecht für Ihr Pool-Anteilsvermögen verlieren, können Sie Ihr Vermögen nicht aus dem Liquiditätspool herausnehmen."
+  "risk7": "Wenn Sie das Sorgerecht für Ihr Pool-Anteilsvermögen verlieren, können Sie Ihr Vermögen nicht aus dem Liquiditätspool herausnehmen.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

@@ -55,6 +55,12 @@
         "hover2": "Se, hvem udvalgsmedlemmer har stemt for.",
         "hover3": "Se udvalgs kernetokenbalancer."
     },
+    "committee_parameters": {
+        "title": "Globale parametre",
+        "subtitle": "Foreslå nye globale blockchain-parametre.",
+        "hover1": "Rediger tidsindstillinger, grænser og gebyrfordeling.",
+        "hover2": "Indsend ændringer via komitéforslag."
+    },
     "governance": {
         "title": "Rolleregistrering",
         "subtitle": "Opret/opdater både vidne- og udvalgsroller.",

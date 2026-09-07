@@ -43,6 +43,7 @@ export const THEMABLE_PAGES = [
   { slug: "vote", label: "Vote" },
   { slug: "witnesses", label: "Witnesses" },
   { slug: "committee", label: "Committee" },
+  { slug: "committee_parameters", label: "Committee Parameters" },
   { slug: "governance", label: "Governance" },
   { slug: "create_worker", label: "Create Worker" },
   { slug: "ticket_leaderboard", label: "Ticket Leaderboard" },

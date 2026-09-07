@@ -12,6 +12,8 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar } from "./Avatar.tsx";
 import { DateTimePicker, TimePicker } from "@/components/ui/datetime-picker";
 
 import {
@@ -301,15 +303,43 @@ export default function CreateVestingBalance(properties) {
                   </div>
                 </span>
                 <span className="col-span-2">
-                  <Input
-                    disabled
-                    placeholder={
-                      targetUser
-                        ? `${targetUser.name} (${targetUser.id})`
-                        : "??? (1.2.x)"
-                    }
-                    className="bg-[hsl(var(--accent-1)/0.05)] border-[hsl(var(--accent-1)/0.2)]"
-                  />
+                  <div className="flex items-center gap-2">
+                    <div className="flex-shrink-0">
+                      {targetUser && targetUser.name ? (
+                        <Avatar
+                          size={40}
+                          name={targetUser.name}
+                          extra="Target"
+                          expression={{
+                            eye: "normal",
+                            mouth: "open",
+                          }}
+                          colors={[
+                            "#92A1C6",
+                            "#146A7C",
+                            "#F0AB3D",
+                            "#C271B4",
+                            "#C20D90",
+                          ]}
+                        />
+                      ) : (
+                        <Av>
+                          <AvatarFallback className="bg-card/80 text-muted-foreground text-xs">
+                            ?
+                          </AvatarFallback>
+                        </Av>
+                      )}
+                    </div>
+                    <Input
+                      disabled
+                      placeholder={
+                        targetUser
+                          ? `${targetUser.name} (${targetUser.id})`
+                          : "??? (1.2.x)"
+                      }
+                      className="flex-grow bg-[hsl(var(--accent-1)/0.05)] border-[hsl(var(--accent-1)/0.2)]"
+                    />
+                  </div>
                 </span>
               </div>
               <div className="grid grid-cols-1 gap-2 mt-1">

@@ -63,5 +63,10 @@
   "risk4": "유동성 풀 환율은 실시간 DEX 시장 환율과 다를 수 있습니다. 환율을 정기적으로 모니터링하여 혼란을 피하십시오.",
   "risk5": "유동성 풀 내의 스왑 가능한 자산 중 일부는 거래소 담보 자산이므로 장기간 처리할 경우 고려해야 할 외부 위험 요소가 있습니다. 게이트웨이의 서비스 약관을 조사하고 가능한 경우 분산 자산 사용을 고려하십시오.",
   "risk6": "위에 제시된 추정치는 정확하지 않을 수 있습니다. 블록체인 논리는 귀하가 스테이킹된 자산에 대한 대가로 받는 풀 공유 자산의 양과 마찬가지로 풀 공유 자산에 대한 대가로 받는 자산 A와 자산 B의 양을 결정합니다.",
-  "risk7": "풀 공유 자산에 대한 관리권을 잃으면 유동성 풀에서 자산을 분리할 수 없습니다."
+  "risk7": "풀 공유 자산에 대한 관리권을 잃으면 유동성 풀에서 자산을 분리할 수 없습니다.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

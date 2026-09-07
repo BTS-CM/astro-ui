@@ -662,13 +662,69 @@ export default function CreditDeals(properties) {
     fetchCounterpartyNames();
   }, [borrowerDeals, lenderDeals, usr, currentNode]);
 
+  const [summaryParty, setSummaryParty] = useState({
+    borrowings: "all",
+    lendings: "all",
+  });
+
+  const summaryBorrowDeals = useMemo(() => {
+    if (!borrowerDeals) return undefined;
+    const p = summaryParty.borrowings;
+    return p === "all"
+      ? borrowerDeals
+      : borrowerDeals.filter((d) => d.offer_owner === p);
+  }, [borrowerDeals, summaryParty]);
+
+  const summaryLendDeals = useMemo(() => {
+    if (!lenderDeals) return undefined;
+    const p = summaryParty.lendings;
+    return p === "all"
+      ? lenderDeals
+      : lenderDeals.filter((d) => d.borrower === p);
+  }, [lenderDeals, summaryParty]);
+
+  const borrowLenderOptions = useMemo(() => {
+    const ids = Array.from(
+      new Set((borrowerDeals ?? []).map((d) => d.offer_owner).filter(Boolean))
+    );
+    return ids
+      .map((id) => ({
+        value: id,
+        label:
+          accountNames && accountNames[id]
+            ? `${accountNames[id]} (${id})`
+            : id,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [borrowerDeals, accountNames]);
+
+  const lendBorrowerOptions = useMemo(() => {
+    const ids = Array.from(
+      new Set((lenderDeals ?? []).map((d) => d.borrower).filter(Boolean))
+    );
+    return ids
+      .map((id) => ({
+        value: id,
+        label:
+          accountNames && accountNames[id]
+            ? `${accountNames[id]} (${id})`
+            : id,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [lenderDeals, accountNames]);
+
   const borrowSummary = useMemo(() => {
     const grouped = { debt: [], collateral: [], fees: [] };
-    if (!borrowerDeals || !borrowerDeals.length || !assets.length) return grouped;
+    if (
+      !summaryBorrowDeals ||
+      !summaryBorrowDeals.length ||
+      !assets.length
+    )
+      return grouped;
     const debtTotals = {};
     const collateralTotals = {};
     const feeTotals = {};
-    borrowerDeals.forEach((d) => {
+    summaryBorrowDeals.forEach((d) => {
       const debtAsset = assets.find((x) => x.id === d.debt_asset);
       if (debtAsset) {
         debtTotals[d.debt_asset] = (debtTotals[d.debt_asset] ?? 0) + Number(d.debt_amount);
@@ -693,15 +749,16 @@ export default function CreditDeals(properties) {
       grouped.fees.push({ amount: total.toFixed(found.precision), symbol: found.symbol, assetId });
     });
     return grouped;
-  }, [borrowerDeals, assets]);
+  }, [summaryBorrowDeals, assets]);
 
   const lendSummary = useMemo(() => {
     const grouped = { lent: [], collateral: [], earnings: [] };
-    if (!lenderDeals || !lenderDeals.length || !assets.length) return grouped;
+    if (!summaryLendDeals || !summaryLendDeals.length || !assets.length)
+      return grouped;
     const lentTotals = {};
     const collateralTotals = {};
     const earningsTotals = {};
-    lenderDeals.forEach((d) => {
+    summaryLendDeals.forEach((d) => {
       const debtAsset = assets.find((x) => x.id === d.debt_asset);
       if (debtAsset) {
         lentTotals[d.debt_asset] = (lentTotals[d.debt_asset] ?? 0) + Number(d.debt_amount);
@@ -726,7 +783,7 @@ export default function CreditDeals(properties) {
       grouped.earnings.push({ amount: total.toFixed(found.precision), symbol: found.symbol, assetId });
     });
     return grouped;
-  }, [lenderDeals, assets]);
+  }, [summaryLendDeals, assets]);
 
   const [activeTab, setActiveTab] = useState("borrowings");
 
@@ -953,7 +1010,7 @@ export default function CreditDeals(properties) {
                         <List
                           rowComponent={CreditDealsOwnerRow}
                           rowCount={visibleLenderDeals.length}
-                          rowHeight={160}
+                          rowHeight={200}
                           rowProps={visibleOwnerRowProps}
                           height={500}
                           width="100%"
@@ -963,7 +1020,7 @@ export default function CreditDeals(properties) {
                         <List
                           rowComponent={CreditDealsOwnerRow}
                           rowCount={visibleLenderDeals.length}
-                          rowHeight={210}
+                          rowHeight={250}
                           rowProps={visibleOwnerRowProps}
                           height={500}
                           width="100%"
@@ -1047,8 +1104,38 @@ export default function CreditDeals(properties) {
                 <TabsContent value="borrowings">
                   {!borrowerDeals ? t("CreditDeals:card.loading") : (
                     <>
+                      {borrowerDeals.length ? (
+                        <div className="flex w-1/2 min-w-[180px] flex-col gap-1 px-2 pb-2">
+                          <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                            {t("CreditDeals:filterLender")}
+                          </span>
+                          <Select
+                            value={summaryParty.borrowings}
+                            onValueChange={(v) =>
+                              setSummaryParty((prev) => ({
+                                ...prev,
+                                borrowings: v,
+                              }))
+                            }
+                          >
+                            <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">
+                                {t("CreditDeals:filterAll")}
+                              </SelectItem>
+                              {borrowLenderOptions.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ) : null}
                       <p className="text-sm text-muted-foreground px-2 pt-1 pb-2">
-                        {t("CreditDeals:summary.dealCountBorrow", { count: borrowerDeals.length })}
+                        {t("CreditDeals:summary.dealCountBorrow", { count: summaryBorrowDeals.length })}
                       </p>
                       {!borrowSummary.debt.length && !borrowSummary.collateral.length && !borrowSummary.fees.length ? (
                         <p className="text-sm text-muted-foreground px-2 pb-2">{t("CreditDeals:summary.empty")}</p>
@@ -1065,8 +1152,38 @@ export default function CreditDeals(properties) {
                 <TabsContent value="lendings">
                   {!lenderDeals ? t("CreditDeals:card.loading") : (
                     <>
+                      {lenderDeals.length ? (
+                        <div className="flex w-1/2 min-w-[180px] flex-col gap-1 px-2 pb-2">
+                          <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                            {t("CreditDeals:filterBorrower")}
+                          </span>
+                          <Select
+                            value={summaryParty.lendings}
+                            onValueChange={(v) =>
+                              setSummaryParty((prev) => ({
+                                ...prev,
+                                lendings: v,
+                              }))
+                            }
+                          >
+                            <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">
+                                {t("CreditDeals:filterAll")}
+                              </SelectItem>
+                              {lendBorrowerOptions.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ) : null}
                       <p className="text-sm text-muted-foreground px-2 pt-1 pb-2">
-                        {t("CreditDeals:summary.dealCountLend", { count: lenderDeals.length })}
+                        {t("CreditDeals:summary.dealCountLend", { count: summaryLendDeals.length })}
                       </p>
                       {!lendSummary.lent.length && !lendSummary.collateral.length && !lendSummary.earnings.length ? (
                         <p className="text-sm text-muted-foreground px-2 pb-2">{t("CreditDeals:summary.empty")}</p>

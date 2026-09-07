@@ -227,6 +227,7 @@ export const DEFAULT_ITEM_ACCENTS: Record<string, AccentPair> = {
   vote: { primary: "#6366f1", secondary: "#8b5cf6" },
   witnesses: { primary: "#f59e0b", secondary: "#f97316" },
   committee: { primary: "#10b981", secondary: "#14b8a6" },
+  committee_parameters: { primary: "#8b5cf6", secondary: "#a855f7" },
   governance: { primary: "#8b5cf6", secondary: "#a855f7" },
   create_worker: { primary: "#0ea5e9", secondary: "#3b82f6" },
   create_ticket: { primary: "#d946ef", secondary: "#ec4899" },

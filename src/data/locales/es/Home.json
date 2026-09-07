@@ -55,6 +55,12 @@
         "hover2": "Ver a quién han votado los miembros del comité.",
         "hover3": "Ver saldos de fichas principales del comité."
     },
+    "committee_parameters": {
+        "title": "Parámetros globales",
+        "subtitle": "Propón nuevos parámetros globales de la blockchain.",
+        "hover1": "Edita tiempos, límites y reparto de tarifas.",
+        "hover2": "Envía cambios mediante propuesta del comité."
+    },
     "governance": {
         "title": "Registro de roles",
         "subtitle": "Crear/actualizar los roles de testigo y comité.",

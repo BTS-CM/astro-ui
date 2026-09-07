@@ -63,5 +63,10 @@
   "risk4": "Los tipos de cambio del fondo de liquidez pueden diferir de los tipos de cambio del mercado DEX en tiempo real. Supervise periódicamente los tipos de cambio para evitar molestias.",
   "risk5": "Algunos de los activos intercambiables dentro de los fondos comunes de liquidez son activos respaldados por bolsas y, como tales, tienen factores de riesgo externos a considerar si se manejan durante largos períodos de tiempo. Investigue los términos de servicio de la puerta de enlace y considere el uso de activos descentralizados cuando sea posible.",
   "risk6": "Es posible que las estimaciones proporcionadas anteriormente no sean precisas, la lógica de blockchain determinará cuántos activos de acciones del grupo recibirá a cambio de sus activos apostados y, de la misma manera, cuántos activos A y activos B recibirá a cambio de sus activos de acciones del grupo.",
-  "risk7": "Si pierde la custodia de los activos de acciones de su grupo, no podrá retirar sus activos del grupo de liquidez."
+  "risk7": "Si pierde la custodia de los activos de acciones de su grupo, no podrá retirar sus activos del grupo de liquidez.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

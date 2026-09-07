@@ -63,5 +63,10 @@
   "risk4": "Les taux de change du pool de liquidité peuvent différer des taux du marché DEX en temps réel. Surveillez régulièrement les taux de change pour éviter toute perturbation.",
   "risk5": "Certains des actifs échangeables au sein des pools de liquidité sont des actifs adossés à des bourses et, en tant que tels, présentent des facteurs de risque externes à prendre en compte en cas de manipulation sur de longues périodes. Recherchez les conditions de service de la passerelle et envisagez d'utiliser des actifs décentralisés lorsque cela est possible.",
   "risk6": "Les estimations données ci-dessus peuvent ne pas être exactes, la logique de la blockchain déterminera la quantité d'actifs de partage de pool que vous recevez en échange de vos actifs mis en jeu, ainsi que la quantité d'actifs A et d'actif B que vous recevez en échange de votre actif de partage de pool.",
-  "risk7": "Si vous perdez la garde de vos actifs en actions du pool, vous ne pourrez pas retirer vos actifs du pool de liquidité."
+  "risk7": "Si vous perdez la garde de vos actifs en actions du pool, vous ne pourrez pas retirer vos actifs du pool de liquidité.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

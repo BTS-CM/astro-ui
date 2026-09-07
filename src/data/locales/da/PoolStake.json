@@ -63,5 +63,10 @@
   "risk4": "Valutakurser for likviditetspuljer kan afvige fra DEX-markedskurserne i realtid. Overvåg regelmæssigt valutakurser for at undgå forstyrrelser.",
   "risk5": "Nogle af de ombyttelige aktiver inden for likviditetspuljer er børsstøttede aktiver og har som sådan eksterne risikofaktorer at overveje, hvis de håndteres i lange perioder. Undersøg gatewayens servicevilkår og overvej at bruge decentraliserede aktiver, hvor det er muligt.",
   "risk6": "De estimater, der er givet ovenfor, er muligvis ikke nøjagtige, blockchain-logik vil bestemme, hvor meget poolandelsaktiv du modtager til gengæld for dine satsede aktiver, og ligeledes hvor meget aktiv A og aktiv B du modtager til gengæld for dit poolandelsaktiv.",
-  "risk7": "Hvis du mister depotet over dine puljeaktieaktiver, vil du ikke være i stand til at fjerne dine aktiver fra likviditetspuljen."
+  "risk7": "Hvis du mister depotet over dine puljeaktieaktiver, vil du ikke være i stand til at fjerne dine aktiver fra likviditetspuljen.",
+  "stakeMax": "Max",
+  "unstakeMax": "Max",
+  "balance": "Balance: {{amount}} {{symbol}}",
+  "adjustedToMax": "Entered amount exceeded your balance, reduced to the max affordable pair.",
+  "insufficientBalance": "Insufficient balance."
 }

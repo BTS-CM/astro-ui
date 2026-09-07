@@ -22,6 +22,24 @@
     "description": "최근에 가져온 티켓을 미리 보세요.",
     "note": "맥락을 제공하기 위해 최근 티켓의 작은 샘플을 가져오는 중입니다."
   },
+  "requestCard": {
+    "title": "THUMBSUP.1 요청",
+    "description": "티켓에는 동등한 THUMBSUP.1 잔액이 필요합니다.",
+    "btsBalance": "내 BTS",
+    "thumbsupBalance": "내 THUMBSUP.1",
+    "deficit": "필요한 총량: {{need}} THUMBSUP.1(잠긴 {{locked}} + 신규 {{new}}). 부족분은 {{deficit}}입니다.",
+    "useDeficit": "부족분 사용",
+    "amountHeader": "요청 금액",
+    "amountDescription": "BTS 잔액을 초과할 수 없습니다. 제안이 승인되면 'abit'이 이만큼의 THUMBSUP.1을 보냅니다.",
+    "max": "최대",
+    "maxHint": "요청 가능한 최대값: {{max}} THUMBSUP.1(내 BTS 잔액).",
+    "exceedsBalance": "요청 금액은 BTS 잔액을 초과할 수 없습니다.",
+    "loginRequired": "THUMBSUP.1을 요청하려면 로그인하세요.",
+    "resolvingAbit": "'abit' 계정을 확인하는 중…",
+    "proposalNote": "이렇게 하면 'abit'이 수수료를 지불하는 제안(만료 7일, 검토 1시간)이 생성됩니다. 토큰을 받기 전에 승인이 필요합니다.",
+    "submit": "THUMBSUP.1 요청",
+    "dialogHeader": "abit에게 THUMBSUP.1 요청"
+  },
   "myTickets": {
     "title": "내 티켓",
     "description": "현재 티켓, 총계, 유효 투표권.",
@@ -54,6 +72,10 @@
     "newType": "새로운 유형",
     "amountNewTarget": "추가금액(선택)",
     "cancel": "취소",
-    "continue": "계속하다"
+    "continue": "계속하다",
+    "lockedAmount": "잠긴 금액",
+    "votingPower": "현재 투표권",
+    "frozenWarning": "이 티켓은 영구 잠금 상태이므로 온체인에서 업데이트하거나 인출할 수 없습니다.",
+    "sameTargetHint": "새 유형이 티켓의 현재 목표와 같습니다. 계속하려면 다른 유형을 선택하세요."
   }
 }
