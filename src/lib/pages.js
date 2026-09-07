@@ -60,4 +60,5 @@ export const THEMABLE_PAGES = [
   { slug: "configure_visuals", label: "Configure Visuals" },
   { slug: "theme_customizer", label: "Theme Customization" },
   { slug: "airdrop_calculate", label: "Airdrop" },
+  { slug: "top-operations", label: "Top Operations" },
 ];

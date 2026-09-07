@@ -176,6 +176,7 @@ export const PAGE_ACCENTS: Record<string, AccentTriple> = {
   pools: { primary: "#a855f7", secondary: "#6366f1", tertiary: "#d946ef" },
   configure_visuals: { primary: "#8b5cf6", secondary: "#6366f1", tertiary: "#d946ef" },
   airdrop_calculate: { primary: "#8b5cf6", secondary: "#d946ef", tertiary: "#6366f1" },
+  "top-operations": { primary: "#10b981", secondary: "#0ea5e9", tertiary: "#8b5cf6" },
 };
 
 // Fallback triple derived from the brand pair for pages not yet catalogued.

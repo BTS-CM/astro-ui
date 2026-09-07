@@ -168,6 +168,9 @@ export default function DeepLinkDialog(properties) {
     disableQR = false,
     // When true, hides the deeplink tab (useful when the deeplink URL exceeds the webview's character limit)
     disableDeeplink = false,
+    // When true, hides the TOTP tab (encrypted deeplink alternative, also
+    // unsuitable for very large transactions)
+    disableTotp = false,
     // When true, only the transaction object view and proposal tabs are shown,
     // forcing the operation through a committee proposal (required for
     // operations like committee_member_update_global_parameters).
@@ -258,9 +261,19 @@ export default function DeepLinkDialog(properties) {
     }
   }, [expiryType, date]);
 
-  const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(
-    initialReviewPeriodSeconds ?? 60000
-  );
+  const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(() => {
+    // Clamp the initial value to a selectable option: a raw chain value
+    // (e.g. review period 0) may match no item, which renders a blank field.
+    const min = Number(minReviewPeriodSeconds);
+    const floor = Number.isFinite(min) ? min : -Infinity;
+    const init = Number(initialReviewPeriodSeconds ?? 60000);
+    const candidate = REVIEW_PERIOD_OPTIONS.find(
+      (o) => o >= Math.max(Number.isFinite(init) ? init : 60000, floor)
+    );
+    return String(
+      candidate ?? REVIEW_PERIOD_OPTIONS[REVIEW_PERIOD_OPTIONS.length - 1]
+    );
+  });
 
   const [deeplinkJSON, setDeeplinkJSON] = useState(null);
 
@@ -493,7 +506,7 @@ export default function DeepLinkDialog(properties) {
                     {t("DeepLinkDialog:tabs.propose")}
                   </Button>
                 ) : null}
-                {!forcePropose ? (
+                {!forcePropose && !disableTotp ? (
                 <Button
                   className="col-span-1"
                   onClick={() => setActiveTab("totp")}
@@ -1002,11 +1015,14 @@ export default function DeepLinkDialog(properties) {
                         dismissCallback={dismissCallback}
                         headerText={headerText}
                         proposal={true}
+                        disableQR={disableQR}
+                        disableDeeplink={disableDeeplink}
+                        disableTotp={disableTotp}
                       />
                     )}
                 </>
               ) : null}
-              {activeTab === "totp" && !forcePropose ? (
+              {activeTab === "totp" && !forcePropose && !disableTotp ? (
                 <>
                   <Label className="text-left text-md font-bold">
                     {t("DeepLinkDialog:totp.title")}

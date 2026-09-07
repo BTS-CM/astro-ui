@@ -1,8 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSyncExternalStore } from "react";
+import { useStore } from "@nanostores/react";
+import { TinyColor } from "@ctrl/tinycolor";
 import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import {
+  $customTheme,
+  $currentPage,
+  getThemeForPage,
+  resolvePageAccent,
+  resolveStatusAll,
+} from "@/stores/customTheme.ts";
 import { PieChart as RePieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 import { Activity, RefreshCw, PieChart as PieChartIcon } from "lucide-react";
@@ -13,6 +22,93 @@ import { Spinner } from "@/components/ui/spinner";
 import { $currentUser } from "@/stores/users.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createTopOperationsStore } from "@/nanoeffects/TopOperations.ts";
+
+// Minimum hue separation (degrees) between pie slices, so chunks stay visually
+// distinct even when a theme sets primary/secondary/tertiary to near-identical
+// colors (e.g. the default slate seed, which previously painted three large
+// slices the same dark navy).
+const PIE_MIN_HUE_SEP = 30;
+
+function pieHueDistance(a, b) {
+  const d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+}
+
+// Keep the theme's hue but enforce vivid saturation + mode-appropriate
+// lightness, so slices stay legible on both light and dark cards.
+function normalizePieColor(hex, isDark) {
+  const tc = new TinyColor(hex);
+  if (!tc.isValid) {
+    return new TinyColor(isDark ? "#38bdf8" : "#0284c7");
+  }
+  const { h, s } = tc.toHsl();
+  return new TinyColor({ h, s: Math.max(s, 0.62), l: isDark ? 0.62 : 0.5 });
+}
+
+// Build a categorical palette from the active theme's roles. Candidates that
+// clash in hue with an already-picked slice are rotated away (+47° steps,
+// which cycle through many distinct hues), and any overflow beyond the roles
+// is generated via golden-angle rotation from the page primary. The result is
+// deterministic: same theme + mode + count always yields the same colors.
+function buildDistinctPiePalette(roleHexes, isDark, count) {
+  const norm360 = (h) => ((h % 360) + 360) % 360;
+  const picked = [];
+  const pushSeparated = (tc) => {
+    // Try hue rotations; keep the clash-free candidate when one exists,
+    // otherwise the rotation maximizing distance to its nearest neighbour
+    // (best effort once the wheel fills up with many slices).
+    let best = tc;
+    let bestMin = -1;
+    let c = tc;
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const h = norm360(c.toHsl().h);
+      let nearest = Infinity;
+      for (const p of picked) nearest = Math.min(nearest, pieHueDistance(norm360(p.toHsl().h), h));
+      if (nearest > bestMin) {
+        bestMin = nearest;
+        best = c;
+      }
+      if (nearest >= PIE_MIN_HUE_SEP) break;
+      const hsl = c.toHsl();
+      c = new TinyColor({ h: (hsl.h + 47) % 360, s: hsl.s, l: hsl.l });
+    }
+    picked.push(best);
+  };
+  for (const hex of roleHexes) {
+    if (picked.length >= count) break;
+    pushSeparated(normalizePieColor(hex, isDark));
+  }
+  const anchorHsl = picked.length ? picked[0].toHsl() : { h: 160, s: 0.7, l: isDark ? 0.62 : 0.5 };
+  let n = 1;
+  while (picked.length < count) {
+    pushSeparated(
+      new TinyColor({
+        h: (anchorHsl.h + n * 137.508) % 360,
+        s: 0.7,
+        l: isDark ? 0.62 : 0.5,
+      })
+    );
+    n += 1;
+  }
+  return picked.map((c) => c.toHexString());
+}
+
+// Tracks light/dark via the .dark class (covers the toggle + system mode).
+function useIsDark() {
+  const [isDark, setIsDark] = useState(
+    () => typeof document !== "undefined" && document.documentElement.classList.contains("dark")
+  );
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const el = document.documentElement;
+    const update = () => setIsDark(el.classList.contains("dark"));
+    update();
+    const obs = new MutationObserver(update);
+    obs.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+  return isDark;
+}
 
 const Row = ({ index, style, operations, t, data }) => {
   // react-window v2 spreads rowProps directly, but be defensive: support both {operations,t} and {data:{operations,t}}
@@ -59,19 +155,10 @@ export default function BlockchainTopOperations() {
   const [refreshCounter, setRefreshCounter] = useState(0);
   const [operations, setOperations] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const PIE_COLORS = [
-    "hsl(var(--accent-success))",
-    "hsl(var(--accent-1))",
-    "hsl(var(--accent-2))",
-    "hsl(var(--accent-3))",
-    "hsl(var(--accent-warning))",
-    "hsl(var(--accent-info))",
-    "hsl(var(--accent-danger))",
-    "hsl(var(--accent-success) / 0.7)",
-    "hsl(var(--accent-1) / 0.7)",
-    "hsl(var(--accent-2) / 0.7)",
-  ];
+  const isDark = useIsDark();
+  // Subscribe so the palette rebuilds live when the theme/page theme changes.
+  const themeState = useStore($customTheme);
+  const pageThemeState = useStore($currentPage);
 
   const pieData = useMemo(() => {
     if (!operations || !operations.length) return [];
@@ -104,6 +191,27 @@ export default function BlockchainTopOperations() {
     }
     return major;
   }, [operations, t]);
+
+  // Theme-tied but collision-proof slice colors. Role order keeps the largest
+  // slice on the page's success green (as before), then spreads across the
+  // page primary + status hues; any hue clashes are rotated away and overflow
+  // slices are generated by golden-angle rotation. "Other" keeps its gray.
+  const piePalette = useMemo(() => {
+    const theme = getThemeForPage("top-operations");
+    const accent = resolvePageAccent(theme, "top-operations");
+    const status = resolveStatusAll(theme);
+    const roles = [
+      status.success,
+      accent.primary,
+      status.warning,
+      status.info,
+      status.danger,
+      accent.secondary,
+      accent.tertiary,
+    ];
+    const count = pieData.filter((d) => d.key !== "other").length;
+    return buildDistinctPiePalette(roles, isDark, Math.max(count, 1));
+  }, [pieData, isDark, themeState, pageThemeState]);
 
   useEffect(() => {
     if (isTestnet) return;
@@ -274,20 +382,25 @@ export default function BlockchainTopOperations() {
                         cy="50%"
                         outerRadius={130}
                         innerRadius={45}
-                        paddingAngle={1}
-                        stroke="hsl(var(--border))"
-                        strokeWidth={1}
+                        paddingAngle={1.5}
+                        stroke="hsl(var(--card))"
+                        strokeWidth={2}
                       >
-                        {pieData.map((entry, idx) => (
-                          <Cell
-                            key={`cell-${entry.key}-${idx}`}
-                            fill={
+                        {(() => {
+                          let colorIdx = 0;
+                          return pieData.map((entry, idx) => {
+                            const fill =
                               entry.key === "other"
                                 ? "hsl(var(--muted-foreground) / 0.55)"
-                                : PIE_COLORS[idx % PIE_COLORS.length]
-                            }
-                          />
-                        ))}
+                                : piePalette[colorIdx++ % piePalette.length];
+                            return (
+                              <Cell
+                                key={`cell-${entry.key}-${idx}`}
+                                fill={fill}
+                              />
+                            );
+                          });
+                        })()}
                       </Pie>
                       <Tooltip
                         formatter={(value, name, props) => {

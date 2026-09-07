@@ -1730,6 +1730,8 @@ export default function CommitteeParams() {
             originalParams.committee_proposal_review_period
           }
           disableQR={true}
+          disableDeeplink={true}
+          disableTotp={true}
         />
       ) : null}
     </>
