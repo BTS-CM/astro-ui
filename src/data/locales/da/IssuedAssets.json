@@ -102,5 +102,6 @@
   "useMax": "Brug max",
   "noAssetInBalance": "Denne konto indeholder ikke dette aktiv.",
   "overrideHeader": "Minde om {{amount}} {{symbol}} fra {{account}}",
-  "collateralBid": "Byde på sikkerhed"
+  "collateralBid": "Byde på sikkerhed",
+  "publishFeed": "Publish feed"
 }

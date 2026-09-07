@@ -1241,7 +1241,7 @@
     },
     "tooltip": "SameT 펀드에서 빌리세요."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "SameT 자금 상환",
     "title": "SameT 자금 상환 요청",
     "result": "SameT 펀드 상환 결과",

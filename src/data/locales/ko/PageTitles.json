@@ -51,6 +51,7 @@
                 "/pay_invoice": "Bitshares 송장 결제",
                 "/pools": "사용자 지정 풀 개요",
                 "/proposals": "Bitshares Astro UI - 제안된 계정 작업 개요",
+                "/publish_feed": "Bitshares - Publish price feed",
                 "/recent-activity": "최근 활동",
                 "/settlement": "Bitshares 스마트코인 발행 양식",
                 "/smartcoin": "Bitshares 스마트코인 발행 양식",
@@ -70,6 +71,7 @@
                 "/visuals": "Bitshares UI - 비주얼 설정",
                 "/vote": "Bitshares Delegated Proof of Stake 투표 시스템",
                 "/withdraw_permissions": "Bitshares 출금 권한 양식",
-                "/witnesses": "Bitshares 증인"
+                "/witnesses": "Bitshares 증인",
+                "/trollbox": "Trollbox"
         }
 }

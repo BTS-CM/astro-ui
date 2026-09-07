@@ -528,5 +528,11 @@
         "subtitle": "Cambia la password del tuo cloud wallet.",
         "hover1": "Singolo account_update atomico che sostituisce le chiavi owner, active e memo.",
         "hover2": "Password generata o personalizzata — stessa derivazione della creazione account."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

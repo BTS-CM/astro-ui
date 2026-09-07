@@ -229,6 +229,14 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
                 </DropdownMenuItem>
               </a>
             ) : null}
+            {activeTab === "smartcoins" ? (
+              <a href={`/publish_feed.html?id=${issuedAsset.id}`}>
+                <DropdownMenuItem>
+                  <ArrowRight className="h-3.5 w-3.5 mr-2" />
+                  {t("IssuedAssets:publishFeed")}
+                </DropdownMenuItem>
+              </a>
+            ) : null}
           </DropdownMenuContent>
         </DropdownMenu>
 

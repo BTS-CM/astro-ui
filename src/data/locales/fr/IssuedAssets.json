@@ -102,5 +102,6 @@
   "useMax": "Utiliser au maximum",
   "noAssetInBalance": "Ce compte ne détient pas cet actif.",
   "overrideHeader": "Rappel {{amount}} {{symbol}} depuis {{account}}",
-  "collateralBid": "Enchérir sur la garantie"
+  "collateralBid": "Enchérir sur la garantie",
+  "publishFeed": "Publish feed"
 }

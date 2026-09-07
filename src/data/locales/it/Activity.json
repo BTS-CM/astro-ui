@@ -1241,7 +1241,7 @@
     },
     "tooltip": "Prendi in prestito da un fondo SameT."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "Rimborso del fondo SameT",
     "title": "Richiesta di rimborso del fondo SameT",
     "result": "Risultato del rimborso del fondo SameT",

@@ -102,5 +102,6 @@
   "useMax": "최대 사용",
   "noAssetInBalance": "이 계정에는 이 자산이 보관되어 있지 않습니다.",
   "overrideHeader": "상기하다 {{amount}} {{symbol}} ~에서 {{account}}",
-  "collateralBid": "담보에 입찰"
+  "collateralBid": "담보에 입찰",
+  "publishFeed": "Publish feed"
 }

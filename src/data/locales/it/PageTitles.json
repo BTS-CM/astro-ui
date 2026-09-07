@@ -51,6 +51,7 @@
                 "/pay_invoice": "Paga fattura Bitshares",
                 "/pools": "Panoramica dei pool personalizzati",
                 "/proposals": "Bitshares Astro UI - Panoramica delle operazioni di account proposte",
+                "/publish_feed": "Bitshares - Publish price feed",
                 "/recent-activity": "Attività recente",
                 "/settlement": "Modulo di emissione smartcoin Bitshares",
                 "/smartcoin": "Modulo di emissione smartcoin Bitshares",
@@ -70,6 +71,7 @@
                 "/visuals": "Bitshares UI - Configura elementi visivi",
                 "/vote": "Sistema di voto Delegated Proof of Stake Bitshares",
                 "/withdraw_permissions": "Modulo delle autorizzazioni di prelievo Bitshares",
-                "/witnesses": "Testimoni Bitshares"
+                "/witnesses": "Testimoni Bitshares",
+                "/trollbox": "Trollbox"
         }
 }

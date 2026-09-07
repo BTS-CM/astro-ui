@@ -51,6 +51,7 @@
                 "/pay_invoice": "Tasa Bitsharese arve",
                 "/pools": "Kohandatud puulide ülevaade",
                 "/proposals": "Bitshares Astro UI - Konto operatsioonide ettepanekute ülevaade",
+                "/publish_feed": "Bitshares - Publish price feed",
                 "/recent-activity": "Hiljutine tegevus",
                 "/settlement": "Bitsharese smartcoini väljalaske vorm",
                 "/smartcoin": "Bitsharese smartcoini väljalaske vorm",
@@ -70,6 +71,7 @@
                 "/visuals": "Bitshares UI - Visuaali seadistamine",
                 "/vote": "Bitsharese Delegated Proof of Stake hääletussüsteem",
                 "/withdraw_permissions": "Bitsharese väljavõtmisõiguste vorm",
-                "/witnesses": "Bitsharese tunnistajad"
+                "/witnesses": "Bitsharese tunnistajad",
+                "/trollbox": "Trollbox"
         }
 }

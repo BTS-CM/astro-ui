@@ -51,6 +51,7 @@
                 "/pay_invoice": "Bitshares betal faktura",
                 "/pools": "Oversigt over brugerdefinerede puljer",
                 "/proposals": "Bitshares Astro UI - Oversigt over foreslåede kontooperationer",
+                "/publish_feed": "Bitshares - Publish price feed",
                 "/recent-activity": "Seneste aktivitet",
                 "/settlement": "Bitshares smartcoin-udstedelsesformular",
                 "/smartcoin": "Bitshares smartcoin-udstedelsesformular",
@@ -70,6 +71,7 @@
                 "/visuals": "Bitshares UI - Konfigurer visuals",
                 "/vote": "Bitshares Delegated Proof of Stake-afstemningssystem",
                 "/withdraw_permissions": "Bitshares formular til hævetilladelser",
-                "/witnesses": "Bitshares vidner"
+                "/witnesses": "Bitshares vidner",
+                "/trollbox": "Trollbox"
         }
 }

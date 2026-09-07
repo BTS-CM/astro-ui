@@ -528,5 +528,11 @@
         "subtitle": "Altere a senha da sua carteira na nuvem.",
         "hover1": "account_update atômico único substituindo as chaves owner, active e memo.",
         "hover2": "Senha gerada ou personalizada — mesma derivação da criação de conta."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

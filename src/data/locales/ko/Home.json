@@ -528,5 +528,11 @@
         "subtitle": "클라우드 지갑 비밀번호를 변경하세요.",
         "hover1": "단일 원자적 account_update로 owner, active, memo 키를 교체.",
         "hover2": "생성된 비밀번호 또는 사용자 지정 비밀번호 — 계정 생성과 동일한 유도 방식."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

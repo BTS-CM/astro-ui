@@ -529,5 +529,11 @@
         "subtitle": "Cambie la contraseña de su billetera en la nube.",
         "hover1": "account_update atómico único que reemplaza las claves owner, active y memo.",
         "hover2": "Contraseña generada o personalizada — misma derivación que al crear la cuenta."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

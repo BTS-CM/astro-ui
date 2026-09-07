@@ -528,5 +528,11 @@
         "subtitle": "クラウドウォレットのパスワードを変更します。",
         "hover1": "単一のアトミックなaccount_updateでowner、active、memoキーを置換。",
         "hover2": "生成パスワードまたはカスタムパスワード — アカウント作成と同じ導出方式。"
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

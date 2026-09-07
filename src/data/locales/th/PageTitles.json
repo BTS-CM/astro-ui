@@ -51,6 +51,7 @@
                 "/pay_invoice": "ชำระใบแจ้งหนี้ Bitshares",
                 "/pools": "ภาพรวมพูลแบบกำหนดเอง",
                 "/proposals": "Bitshares Astro UI - ภาพรวมการดำเนินการบัญชีที่เสนอ",
+                "/publish_feed": "Bitshares - Publish price feed",
                 "/recent-activity": "กิจกรรมล่าสุด",
                 "/settlement": "แบบฟอร์มออกสมาร์ตคอยน์ Bitshares",
                 "/smartcoin": "แบบฟอร์มออกสมาร์ตคอยน์ Bitshares",
@@ -70,6 +71,7 @@
                 "/visuals": "Bitshares UI - ตั้งค่าภาพกราฟิก",
                 "/vote": "ระบบโหวต Delegated Proof of Stake ของ Bitshares",
                 "/withdraw_permissions": "แบบฟอร์มสิทธิ์การถอน Bitshares",
-                "/witnesses": "พยานบล็อกเชน Bitshares"
+                "/witnesses": "พยานบล็อกเชน Bitshares",
+                "/trollbox": "Trollbox"
         }
 }

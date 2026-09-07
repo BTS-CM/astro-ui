@@ -102,5 +102,6 @@
   "useMax": "Usar máx.",
   "noAssetInBalance": "Esta conta não contém este ativo.",
   "overrideHeader": "Lembrar {{amount}} {{symbol}} de {{account}}",
-  "collateralBid": "Dar lance na garantia"
+  "collateralBid": "Dar lance na garantia",
+  "publishFeed": "Publish feed"
 }

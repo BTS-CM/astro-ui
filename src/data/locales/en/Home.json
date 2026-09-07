@@ -529,5 +529,11 @@
         "hover1": "Search any account or asset by name or ID and favourite them.",
         "hover2": "Inspect raw x.x.x objects and blocks via one-shot WS calls.",
         "hover3": "Fetch transactions by hash from Elasticsearch."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

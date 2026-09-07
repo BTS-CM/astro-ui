@@ -3,6 +3,7 @@
   "creditBorrow": "Borrow",
   "creditLend": "Lend",
   "proceedToBorrow": "Issue",
+  "publishFeed": "Publish feed",
   "collateralBid": "Bid on collateral",
   "issueAssetDescription": "As the the issuer of this asset, you can issue this asset to yourself or to another account on the blockchain, up to the configured maximum supply.",
   "manageUIA": "Edit asset",

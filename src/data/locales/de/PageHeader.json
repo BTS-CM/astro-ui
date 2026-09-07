@@ -120,7 +120,8 @@
     "network_fees": "Alle Netzwerkgebühren im Überblick — Standardkosten, Gebühren pro KByte und Tarife für lebenslange Mitglieder.",
     "explorer": "Nutze die Seite um Konten, Assets, Objekte, Transaktions-Hashes oder Blocknummern nachzuschlagen und rohes JSON mit Kopie und Favoriten anzuzeigen.",
     "top-operations": "Nutzen Sie diese Seite, um die am häufigsten ausgeführten Blockchain-Operationen der letzten 30 Tage nach Häufigkeit sortiert anzuzeigen.",
-    "change_password": "Verwenden Sie das Formular unten, um Ihr Cloud-Wallet-Passwort via account_update-Operation zu ändern."
+    "change_password": "Verwenden Sie das Formular unten, um Ihr Cloud-Wallet-Passwort via account_update-Operation zu ändern.",
+    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

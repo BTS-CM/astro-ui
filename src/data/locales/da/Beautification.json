@@ -1241,7 +1241,7 @@
     },
     "tooltip": "Borrow from a SameT fund."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "SameT fund repay",
     "title": "SameT fund repay request",
     "result": "SameT fund repay result",

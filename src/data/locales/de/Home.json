@@ -517,5 +517,11 @@
         "subtitle": "Ändern Sie Ihr Cloud-Wallet-Passwort.",
         "hover1": "Einzelner atomarer account_update ersetzt Owner-, Active- und Memo-Schlüssel.",
         "hover2": "Generiertes oder eigenes Passwort — gleiche Ableitung wie bei der Kontoerstellung."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

@@ -102,5 +102,6 @@
   "useMax": "Usar máximo",
   "noAssetInBalance": "Esta cuenta no contiene este activo.",
   "overrideHeader": "Recordar {{amount}} {{symbol}} de {{account}}",
-  "collateralBid": "Pujar por la garantía"
+  "collateralBid": "Pujar por la garantía",
+  "publishFeed": "Publish feed"
 }

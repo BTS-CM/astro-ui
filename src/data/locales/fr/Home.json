@@ -528,5 +528,11 @@
         "subtitle": "Changez le mot de passe de votre portefeuille cloud.",
         "hover1": "account_update atomique unique remplaçant les clés owner, active et memo.",
         "hover2": "Mot de passe généré ou personnalisé — même dérivation que lors de la création du compte."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

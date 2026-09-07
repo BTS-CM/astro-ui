@@ -435,7 +435,7 @@ const operationTypes = [
   {
     id: 68,
     from: "account",
-    method: "samt_fund_repay",
+    method: "samet_fund_repay",
   },
   {
     id: 69,

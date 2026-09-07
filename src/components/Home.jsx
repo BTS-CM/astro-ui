@@ -81,6 +81,7 @@ import {
   Package,
   CreditCard,
   Database,
+  MessageSquare,
   ListOrdered,
   Clock,
   SlidersHorizontal,
@@ -170,6 +171,7 @@ const ITEM_ICONS = {
   recent_activity: Activity,
   top_markets: TrendingUp,
   top_pools: Droplets,
+  trollbox: MessageSquare,
   docs: BookOpen,
 };
 
@@ -367,6 +369,7 @@ export default function Home(properties) {
     { key: "top_markets", href: "/top-markets.html", titleKey: "Home:top_markets.title", subtitleKey: "Home:top_markets.subtitle", hoverKeys: ["Home:top_markets.hover1", "Home:top_markets.hover2"] },
     { key: "top_pools", href: "/top-pools.html", titleKey: "Home:top_pools.title", subtitleKey: "Home:top_pools.subtitle", hoverKeys: ["Home:top_pools.hover1", "Home:top_pools.hover2"] },
     { key: "top_operations", href: "/top-operations.html", titleKey: "Home:top_operations.title", subtitleKey: "Home:top_operations.subtitle", hoverKeys: ["Home:top_operations.hover1", "Home:top_operations.hover2"] },
+    { key: "trollbox", href: "/trollbox.html", titleKey: "Home:trollbox.title", subtitleKey: "Home:trollbox.subtitle", hoverKeys: ["Home:trollbox.hover1", "Home:trollbox.hover2"] },
   ];
 
   const governance = [

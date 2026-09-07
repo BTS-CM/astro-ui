@@ -102,5 +102,6 @@
   "useMax": "最大値を使用",
   "noAssetInBalance": "このアカウントはこの資産を保持していません。",
   "overrideHeader": "想起 {{amount}} {{symbol}} から {{account}}",
-  "collateralBid": "担保で入札"
+  "collateralBid": "担保で入札",
+  "publishFeed": "Publish feed"
 }

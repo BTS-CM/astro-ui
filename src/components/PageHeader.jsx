@@ -71,6 +71,7 @@ import {
   Database,
   ListOrdered,
   Clock,
+  MessageSquare,
   Home,
   Layers,
   Menu,
@@ -154,6 +155,7 @@ const ICONS = {
   create_liquidity_pool: Droplets,
   airdrop_calculate: Calculator,
   blocked_users: UserX,
+  trollbox: MessageSquare,
 };
 
 // Matches a nav item href against the current path. The root ("/") must match
@@ -366,6 +368,7 @@ export default function PageHeader(properties) {
         { slug: "custom_pool_tracker", title: "Home:custom_pool_tracker.title", description: "Home:custom_pool_tracker.subtitle", href: "/custom_pool_overview.html" },
         { slug: "pools", title: "Home:pools.title", description: "Home:pools.subtitle", href: "/pools.html" },
         { slug: "top_operations", title: "Home:top_operations.title", description: "Home:top_operations.subtitle", href: "/top-operations.html" },
+        { slug: "trollbox", title: "Home:trollbox.title", description: "Home:trollbox.subtitle", href: "/trollbox.html" },
       ],
     },
     {

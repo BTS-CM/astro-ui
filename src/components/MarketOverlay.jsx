@@ -245,16 +245,6 @@ export default function MarketOverlay(properties) {
     if (usr && usr.chain && assets && assets.length && assetA) {
       _resetA();
 
-      /*
-      // TODO: re factor 
-      const foundAsset = assets.find((asset) => asset.symbol === assetA);
-      if (foundAsset) {
-        console.log("Retrieved asset A from local cache");
-        setAssetAData(foundAsset);
-        return;
-      }
-      */
-
       const assetSymbolStore = createAssetFromSymbolStore([usr.chain, assetA]);
       assetSymbolStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -275,16 +265,6 @@ export default function MarketOverlay(properties) {
   useEffect(() => {
     if (usr && usr.chain && assets && assets.length && assetB) {
       _resetB();
-
-      /*
-      // TODO: refactor
-      const foundAsset = assets.find((asset) => asset.symbol === assetB);
-      if (foundAsset) {
-        console.log("Retrieved asset B from local cache");
-        setAssetBData(foundAsset);
-        return;
-      }
-      */
 
       const assetSymbolStore = createAssetFromSymbolStore([usr.chain, assetB]);
       assetSymbolStore.subscribe(({ data, error, loading }) => {

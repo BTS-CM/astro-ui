@@ -121,7 +121,8 @@
     "network_fees": "Sfoglia tutte le commissioni di rete in dettaglio — costi standard, costi per KByte e tariffe per membri a vita.",
     "explorer": "Usa questa pagina per cercare qualsiasi account, asset, oggetto, hash di transazione o numero di blocco e visualizzare il JSON con copia e preferiti.",
     "top-operations": "Usa questa pagina per vedere le operazioni blockchain più frequentemente eseguite negli ultimi 30 giorni, classificate per occorrenza.",
-    "change_password": "Usa il modulo qui sotto per cambiare la password del tuo cloud wallet tramite un'operazione account_update."
+    "change_password": "Usa il modulo qui sotto per cambiare la password del tuo cloud wallet tramite un'operazione account_update.",
+    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

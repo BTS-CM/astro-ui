@@ -1241,7 +1241,7 @@
     },
     "tooltip": "ยืมจากกองทุน SameT"
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "การชำระคืนกองทุน SameT",
     "title": "คำขอชำระคืนกองทุน SameT",
     "result": "ผลการชำระคืนกองทุน SameT",

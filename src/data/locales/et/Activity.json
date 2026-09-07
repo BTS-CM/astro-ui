@@ -1242,7 +1242,7 @@
     },
     "tooltip": "Laena SameT fondist."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "SameT fondi tagasimakse",
     "title": "SameT fondi tagasimaksetaotlus",
     "result": "SameT fondi tagasimakse tulemus",

@@ -51,6 +51,7 @@
                 "/pay_invoice": "Bitshares請求書の支払い",
                 "/pools": "カスタムプール概要",
                 "/proposals": "Bitshares Astro UI - 提案されたアカウント操作の概要",
+                "/publish_feed": "Bitshares - Publish price feed",
                 "/recent-activity": "最近のアクティビティ",
                 "/settlement": "Bitsharesスマートコイン発行フォーム",
                 "/smartcoin": "Bitsharesスマートコイン発行フォーム",
@@ -70,6 +71,7 @@
                 "/visuals": "Bitshares UI - ビジュアル設定",
                 "/vote": "Bitshares Delegated Proof of Stake投票システム",
                 "/withdraw_permissions": "Bitshares引き出し権限フォーム",
-                "/witnesses": "Bitshares証人"
+                "/witnesses": "Bitshares証人",
+                "/trollbox": "Trollbox"
         }
 }

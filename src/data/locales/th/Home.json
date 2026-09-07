@@ -528,5 +528,11 @@
         "subtitle": "เปลี่ยนรหัสผ่านกระเป๋าเงินคลาวด์ของคุณ",
         "hover1": "account_update แบบอะตอมเดี่ยวแทนที่คีย์ owner, active และ memo",
         "hover2": "รหัสผ่านที่สร้างขึ้นหรือกำหนดเอง — การอนุมานเดียวกับการสร้างบัญชี"
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

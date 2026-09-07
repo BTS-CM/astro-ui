@@ -1241,7 +1241,7 @@
     },
     "tooltip": "Leihen Sie sich einen Kredit bei einem SameT-Fonds."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "Gleiche Fondsrückzahlung",
     "title": "SameT-Fondsrückzahlungsantrag",
     "result": "Gleiches Ergebnis der Fondsrückzahlung",

@@ -529,5 +529,11 @@
         "subtitle": "Muuda oma pilverahakoti parooli.",
         "hover1": "Üks aatomiline account_update asendab owner-, active- ja memo-võtmed.",
         "hover2": "Genereeritud või kohandatud parool — sama tuletus nagu konto loomisel."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

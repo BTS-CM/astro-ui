@@ -1240,7 +1240,7 @@
     },
     "tooltip": "Préstamo de un fondo SameT."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "Reembolso del fondo SameT",
     "title": "Solicitud de reembolso de fondos SameT",
     "result": "Resultado de reembolso del fondo SameT",

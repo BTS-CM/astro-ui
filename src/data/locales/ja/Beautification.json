@@ -1240,7 +1240,7 @@
     },
     "tooltip": "SameT ファンドから借ります。"
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "SameT 基金の返済",
     "title": "SameT 資金の返済リクエスト",
     "result": "SameTファンド返済結果",

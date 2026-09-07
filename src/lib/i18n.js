@@ -43,6 +43,7 @@ const pages = [
   "PoolForm",
   "PoolStake",
   "PortfolioTabs",
+  "PublishFeed",
   "Settlement",
   "Smartcoin",
   "Smartcoins",
@@ -101,6 +102,7 @@ const pages = [
   "Explorer",
   "Common",
   "Charts",
+  "Trollbox",
   "PageTitles"
 ];
 

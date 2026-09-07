@@ -1241,7 +1241,7 @@
     },
     "tooltip": "Lån fra en SameT-fond."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "SameT fonds tilbagebetaling",
     "title": "Anmodning om tilbagebetaling af SameT-fond",
     "result": "SameT fonds tilbagebetalingsresultat",
