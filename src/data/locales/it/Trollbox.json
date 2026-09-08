@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Asset prendibile in prestito",
     "filterLender": "Prestatore",
     "filterAllOption": "Tutti",
-    "offersResultCount": "{{count}} trovati"
+    "offersResultCount": "{{count}} trovati",
+    "languageLabel": "Lingua",
+    "favourite": "Preferito",
+    "unfavourite": "Rimuovi"
 }

@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Borrowable asset",
     "filterLender": "Lender",
     "filterAllOption": "All",
-    "offersResultCount": "{{count}} found"
+    "offersResultCount": "{{count}} found",
+    "languageLabel": "Language",
+    "favourite": "Favourite",
+    "unfavourite": "Unfavourite"
 }

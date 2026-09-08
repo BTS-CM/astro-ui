@@ -21,7 +21,7 @@
         "hover3": "Tildel omfangede rettigheder til konti eller nøgler."
     },
     "blind_transfers": {
-        "title": "Blind Transfers",
+        "title": "Blinde overførsler",
         "subtitle": "Opbyg fortrolige blind transfer-operationer",
         "hover1": "Flyt midler til eller fra blind commitments.",
         "hover2": "Overfør værdi mellem blind commitments.",
@@ -444,6 +444,11 @@
         "subtitle": "Tildel specifikke temaer til individuelle sider",
         "hover1": "Tilsidesæt det aktuelle tema for enhver side i appen."
     },
+    "docs": {
+        "title": "Dokumentation",
+        "subtitle": "Vejledninger og reference til brug af appen",
+        "hover1": "Gennemse Starlight-dokumentationen for opsætning, funktioner og vejledninger."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Fordel et aktiv massevis til mange konti på én gang.",
@@ -517,7 +522,7 @@
         "other": "Øvrige"
     },
     "explorer": {
-        "title": "Blockchain Explorer",
+        "title": "Blockchainudforsker",
         "subtitle": "Slå konti, aktiver, objekter, transaktioner og blokke op",
         "hover1": "Søg enhver konto eller aktiv via navn/ID og favoritér.",
         "hover2": "Inspicér rå x.x.x objekter og blokke via WS.",
@@ -531,8 +536,8 @@
     },
     "trollbox": {
         "title": "Trollbox",
-        "subtitle": "On-chain chat on the BitShares blockchain.",
-        "hover1": "Chat with other users, stored permanently on the blockchain.",
-        "hover2": "The sender pays a small network fee per message."
+        "subtitle": "On-chain chat på BitShares-blockchainen.",
+        "hover1": "Chat med andre brugere, gemt permanent på blockchainen.",
+        "hover2": "Afsenderen betaler et lille netværksgebyr pr. besked."
     }
 }

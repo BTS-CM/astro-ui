@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Actif empruntable",
     "filterLender": "Prêteur",
     "filterAllOption": "Tous",
-    "offersResultCount": "{{count}} trouvés"
+    "offersResultCount": "{{count}} trouvés",
+    "languageLabel": "Langue",
+    "favourite": "Favori",
+    "unfavourite": "Retirer"
 }

@@ -172,7 +172,7 @@ export function buildMessageKey(nowMs = Date.now(), rand = Math.floor(Math.rando
  * NOTE: no timestamp is stored — client clocks can't be trusted, so ordering
  * uses the plugin-assigned storage ID ("7.0.x", write order) instead.
  */
-export function buildTrollboxData({ channel, catalog, key, username, text, attach = null, maxBytes = maxMessageBytes() }) {
+export function buildTrollboxData({ channel, catalog, key, username, text, lang = "en", attach = null, maxBytes = maxMessageBytes() }) {
   if (!text || !text.trim()) {
     throw new Error("message text is empty");
   }
@@ -180,6 +180,7 @@ export function buildTrollboxData({ channel, catalog, key, username, text, attac
     v: 1,
     ch: channel,
     u: username,
+    ln: typeof lang === "string" && /^[a-z]{2}$/.test(lang) ? lang : "en",
     text,
   };
   if (attach !== null && attach !== undefined) {

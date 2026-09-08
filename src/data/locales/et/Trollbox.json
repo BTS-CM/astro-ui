@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Laenatav vara",
     "filterLender": "Laenuandja",
     "filterAllOption": "Kõik",
-    "offersResultCount": "{{count}} leitud"
+    "offersResultCount": "{{count}} leitud",
+    "languageLabel": "Keel",
+    "favourite": "Lemmik",
+    "unfavourite": "Eemalda"
 }

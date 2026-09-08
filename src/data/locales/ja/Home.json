@@ -444,6 +444,11 @@
         "subtitle": "個別のページに特定のテーマを割り当てる",
         "hover1": "アプリの任意のページでアクティブなテーマを上書きします。"
     },
+    "docs": {
+        "title": "ドキュメント",
+        "subtitle": "アプリの使い方ガイドとリファレンス",
+        "hover1": "セットアップ、機能、チュートリアルはStarlightドキュメントを参照。"
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "1回で多くのアカウントに資産を一括配布します。",
@@ -531,8 +536,8 @@
     },
     "trollbox": {
         "title": "Trollbox",
-        "subtitle": "On-chain chat on the BitShares blockchain.",
-        "hover1": "Chat with other users, stored permanently on the blockchain.",
-        "hover2": "The sender pays a small network fee per message."
+        "subtitle": "BitSharesブロックチェーン上のオンチャーンチャット。",
+        "hover1": "他のユーザーとチャット。ブロックチェーンに永久保存されます。",
+        "hover2": "送信者はメッセージごとに少額のネットワーク手数料を支払うため、スパムを防げます。"
     }
 }

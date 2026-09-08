@@ -1,10 +1,10 @@
 {
-  "lastUpdate": "最終更新",
-  "secondsAgo": "{{count}}s ago",
-  "staleWarning": "更新が長時間ありません",
-  "title": "ライブ購読",
-  "subscribed": "購読中",
-  "disconnected": "切断されました",
-  "block": "ブロック",
-  "node": "ノード"
+    "lastUpdate": "最終更新",
+    "secondsAgo": "{{count}}秒前",
+    "staleWarning": "更新が長時間ありません",
+    "title": "ライブ購読",
+    "subscribed": "購読中",
+    "disconnected": "切断されました",
+    "block": "ブロック",
+    "node": "ノード"
 }

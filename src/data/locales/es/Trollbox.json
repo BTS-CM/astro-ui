@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Activo prestable",
     "filterLender": "Prestamista",
     "filterAllOption": "Todos",
-    "offersResultCount": "{{count}} encontrados"
+    "offersResultCount": "{{count}} encontrados",
+    "languageLabel": "Idioma",
+    "favourite": "Favorito",
+    "unfavourite": "Quitar"
 }

@@ -75,5 +75,8 @@
     "filterBorrowAsset": "สินทรัพย์ที่กู้ได้",
     "filterLender": "ผู้ให้กู้",
     "filterAllOption": "ทั้งหมด",
-    "offersResultCount": "พบ {{count}}"
+    "offersResultCount": "พบ {{count}}",
+    "languageLabel": "ภาษา",
+    "favourite": "รายการโปรด",
+    "unfavourite": "ลบออก"
 }

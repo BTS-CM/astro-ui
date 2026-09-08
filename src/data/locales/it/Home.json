@@ -444,6 +444,11 @@
         "subtitle": "Assegna temi specifici a singole pagine",
         "hover1": "Sovrascrivi il tema attivo per qualsiasi pagina dell'app."
     },
+    "docs": {
+        "title": "Documentazione",
+        "subtitle": "Guide e riferimenti per usare l'app",
+        "hover1": "Sfoglia la documentazione Starlight per configurazione, funzionalità e tutorial."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Distribuisci un asset in massa a molti account in un'unica operazione.",
@@ -531,8 +536,8 @@
     },
     "trollbox": {
         "title": "Trollbox",
-        "subtitle": "On-chain chat on the BitShares blockchain.",
-        "hover1": "Chat with other users, stored permanently on the blockchain.",
-        "hover2": "The sender pays a small network fee per message."
+        "subtitle": "Chat on-chain sulla blockchain BitShares.",
+        "hover1": "Chatta con altri utenti, memorizzato in modo permanente sulla blockchain.",
+        "hover2": "Il mittente paga una piccola commissione di rete per messaggio."
     }
 }

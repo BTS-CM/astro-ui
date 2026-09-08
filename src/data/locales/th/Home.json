@@ -444,6 +444,11 @@
         "subtitle": "กำหนดธีมเฉพาะให้กับหน้าแต่ละหน้า",
         "hover1": "แทนที่ธีมที่ใช้งานอยู่สำหรับหน้าใดก็ได้ในแอป"
     },
+    "docs": {
+        "title": "เอกสาร",
+        "subtitle": "คู่มือและข้อมูลอ้างอิงการใช้งานแอป",
+        "hover1": "เรียกดูเอกสาร Starlight สำหรับการตั้งค่า ฟีเจอร์ และบทช่วยสอน"
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "กระจายสินทรัพย์ให้บัญชีจำนวนมากได้ในครั้งเดียว",
@@ -531,8 +536,8 @@
     },
     "trollbox": {
         "title": "Trollbox",
-        "subtitle": "On-chain chat on the BitShares blockchain.",
-        "hover1": "Chat with other users, stored permanently on the blockchain.",
-        "hover2": "The sender pays a small network fee per message."
+        "subtitle": "แชทออนเชนบนบล็อกเชน BitShares",
+        "hover1": "แชทกับผู้ใช้อื่น บันทึกถาวรบนบล็อกเชน",
+        "hover2": "ผู้ส่งจ่ายค่าธรรมเนียมเครือข่ายเล็กน้อยต่อข้อความเพื่อป้องกันสแปม"
     }
 }

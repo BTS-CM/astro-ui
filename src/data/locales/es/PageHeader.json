@@ -122,7 +122,7 @@
     "explorer": "Usa esta página para buscar cualquier cuenta, activo, objeto, hash de transacción o número de bloque y ver el JSON con copia y favoritos.",
     "top-operations": "Usa esta página para ver las operaciones de blockchain más ejecutadas en los últimos 30 días, ordenadas por frecuencia.",
     "change_password": "Use el formulario a continuación para cambiar la contraseña de su billetera en la nube mediante una operación account_update.",
-    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
+    "trollbox": "Chatea con la comunidad en canales que viven por completo en la blockchain de BitShares."
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

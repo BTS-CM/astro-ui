@@ -1,10 +1,10 @@
 {
-  "lastUpdate": "Dernière mise à jour",
-  "secondsAgo": "{{count}}s ago",
-  "staleWarning": "Obsolète – aucune mise à jour depuis un moment",
-  "title": "Abonnement en direct",
-  "subscribed": "Abonné",
-  "disconnected": "Déconnecté",
-  "block": "Bloc",
-  "node": "Nœud"
+    "lastUpdate": "Dernière mise à jour",
+    "secondsAgo": "il y a {{count}}s",
+    "staleWarning": "Obsolète – aucune mise à jour depuis un moment",
+    "title": "Abonnement en direct",
+    "subscribed": "Abonné",
+    "disconnected": "Déconnecté",
+    "block": "Bloc",
+    "node": "Nœud"
 }

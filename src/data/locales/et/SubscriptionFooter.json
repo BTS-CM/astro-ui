@@ -1,10 +1,10 @@
 {
-  "lastUpdate": "Viimane uuendus",
-  "secondsAgo": "{{count}}s ago",
-  "staleWarning": "Aegunud – mõnda aega uuendusi pole",
-  "title": "Reaalajas tellimus",
-  "subscribed": "Tellitud",
-  "disconnected": "Ühendus katkenud",
-  "block": "Plokk",
-  "node": "Sõlm"
+    "lastUpdate": "Viimane uuendus",
+    "secondsAgo": "{{count}}s tagasi",
+    "staleWarning": "Aegunud – mõnda aega uuendusi pole",
+    "title": "Reaalajas tellimus",
+    "subscribed": "Tellitud",
+    "disconnected": "Ühendus katkenud",
+    "block": "Plokk",
+    "node": "Sõlm"
 }

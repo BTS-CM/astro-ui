@@ -75,5 +75,8 @@
     "filterBorrowAsset": "借入可能なアセット",
     "filterLender": "貸し手",
     "filterAllOption": "すべて",
-    "offersResultCount": "{{count}}件見つかりました"
+    "offersResultCount": "{{count}}件見つかりました",
+    "languageLabel": "言語",
+    "favourite": "お気に入り",
+    "unfavourite": "解除"
 }

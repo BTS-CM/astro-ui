@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "กรุณากรอกชื่อบัญชีบล็อคเชน",
-    "placeholder": "ชื่อบัญชีหรือรหัสประจำตัว",
-    "continue": "ดำเนินการต่อ",
-    "error": "ไม่พบบัญชี",
-    "selfError": "ไม่สามารถโอนสินทรัพย์ไปยังบัญชีนี้ได้"
-  },
-  "searchResponse": {
-    "promptBTS": "ดำเนินการต่อด้วยบัญชี Bitshares ต่อไปนี้หรือไม่",
-    "promptTEST": "ดำเนินการต่อด้วยบัญชี Bitshares testnet (TEST) ต่อไปนี้หรือไม่",
-    "back": "กลับไป",
-    "proceed": "ดำเนินการ"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "การค้นหาล่าสุด",
-    "recentSubtitle": "{{count}} การค้นหาล่าสุด",
-    "recentSubtitle_plural": "{{count}} การค้นหาล่าสุด",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "เลือกหนึ่งในผู้ใช้ที่ค้นหาล่าสุดของคุณ",
-    "none": "ไม่พบการค้นหาล่าสุด",
-    "noneHint": "ประวัติการค้นหาของคุณจะปรากฏที่นี่",
-    "eraseHistory": "ลบประวัติ"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "กรุณากรอกชื่อบัญชีบล็อคเชน",
+        "placeholder": "ชื่อบัญชีหรือรหัสประจำตัว",
+        "continue": "ดำเนินการต่อ",
+        "error": "ไม่พบบัญชี",
+        "selfError": "ไม่สามารถโอนสินทรัพย์ไปยังบัญชีนี้ได้"
+    },
+    "searchResponse": {
+        "promptBTS": "ดำเนินการต่อด้วยบัญชี Bitshares ต่อไปนี้หรือไม่",
+        "promptTEST": "ดำเนินการต่อด้วยบัญชี Bitshares testnet (TEST) ต่อไปนี้หรือไม่",
+        "back": "กลับไป",
+        "proceed": "ดำเนินการ"
+    },
+    "mode": {
+        "titleBTS": "คุณต้องการค้นหาบัญชีบน Bitshares อย่างไร?",
+        "titleTEST": "คุณต้องการค้นหาบัญชีบน Bitshares testnet อย่างไร?",
+        "search": "ค้นหาบัญชี",
+        "searchSubtitle": "ป้อนชื่อบัญชีหรือ ID",
+        "favourites": "ผู้ใช้โปรด",
+        "favouritesSubtitle": "บันทึกโปรดแล้ว {{count}}",
+        "favouritesSubtitle_plural": "บันทึกโปรดแล้ว {{count}}",
+        "recent": "การค้นหาล่าสุด",
+        "recentSubtitle": "{{count}} การค้นหาล่าสุด",
+        "recentSubtitle_plural": "{{count}} การค้นหาล่าสุด",
+        "back": "กลับ"
+    },
+    "search": {
+        "initDesc": "ป้อนชื่อบัญชีหรือ ID",
+        "description": "นี่คือบัญชีที่ถูกต้องหรือไม่?",
+        "back": "กลับไป",
+        "continue": "ดำเนินการต่อ"
+    },
+    "favourites": {
+        "description": "เลือกหนึ่งในผู้ใช้โปรดของคุณ",
+        "none": "ไม่พบผู้ใช้โปรด",
+        "noneHint": "คุณเพิ่มรายการโปรดได้จากหน้าโปรด"
+    },
+    "recent": {
+        "description": "เลือกหนึ่งในผู้ใช้ที่ค้นหาล่าสุดของคุณ",
+        "none": "ไม่พบการค้นหาล่าสุด",
+        "noneHint": "ประวัติการค้นหาของคุณจะปรากฏที่นี่",
+        "eraseHistory": "ลบประวัติ"
+    },
+    "step1": "วิธีการ",
+    "step2": "เลือก",
+    "noAccount": "หาบัญชีไม่พบ"
 }

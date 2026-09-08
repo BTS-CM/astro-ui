@@ -75,5 +75,8 @@
     "filterBorrowAsset": "대출 가능 에셋",
     "filterLender": "대출자",
     "filterAllOption": "전체",
-    "offersResultCount": "{{count}}개 찾음"
+    "offersResultCount": "{{count}}개 찾음",
+    "languageLabel": "언어",
+    "favourite": "즐겨찾기",
+    "unfavourite": "제거"
 }

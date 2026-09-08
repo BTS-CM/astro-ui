@@ -122,7 +122,7 @@
     "explorer": "Brug siden til at slå enhver konto, aktiv, objekt, transaktionshash eller bloknummer op og se rå JSON med kopi og favoritter.",
     "top-operations": "Brug denne side til at se de mest udførte blockchain-operationer over de sidste 30 dage, rangeret efter forekomst.",
     "change_password": "Brug formularen nedenfor til at ændre din cloud-tegnebogs adgangskode via en account_update-operation.",
-    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
+    "trollbox": "Chat med fællesskabet i kanaler, der lever fuldstændigt på BitShares-blockchainen."
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Ativo emprestável",
     "filterLender": "Credor",
     "filterAllOption": "Todos",
-    "offersResultCount": "{{count}} encontrados"
+    "offersResultCount": "{{count}} encontrados",
+    "languageLabel": "Idioma",
+    "favourite": "Favorito",
+    "unfavourite": "Remover"
 }

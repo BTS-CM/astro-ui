@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Lånebart aktiv",
     "filterLender": "Långiver",
     "filterAllOption": "Alle",
-    "offersResultCount": "{{count}} fundet"
+    "offersResultCount": "{{count}} fundet",
+    "languageLabel": "Sprog",
+    "favourite": "Favorit",
+    "unfavourite": "Fjern favorit"
 }

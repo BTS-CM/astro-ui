@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "블록체인 계정 이름을 입력하세요.",
-    "placeholder": "계정 이름 또는 ID",
-    "continue": "계속하다",
-    "error": "계정을 찾을 수 없습니다.",
-    "selfError": "이 계정으로 자산을 이전할 수 없습니다."
-  },
-  "searchResponse": {
-    "promptBTS": "다음 Bitshares 계정으로 진행하시겠습니까?",
-    "promptTEST": "다음 Bitshares 테스트넷(TEST) 계정으로 진행하시겠습니까?",
-    "back": "돌아가기",
-    "proceed": "진행하다"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "최근 검색",
-    "recentSubtitle": "{{count}}개의 최근 검색",
-    "recentSubtitle_plural": "{{count}}개의 최근 검색",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "최근 검색한 사용자 중 선택하세요",
-    "none": "최근 검색 기록이 없습니다",
-    "noneHint": "검색 기록이 여기에 표시됩니다",
-    "eraseHistory": "기록 삭제"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "블록체인 계정 이름을 입력하세요.",
+        "placeholder": "계정 이름 또는 ID",
+        "continue": "계속하다",
+        "error": "계정을 찾을 수 없습니다.",
+        "selfError": "이 계정으로 자산을 이전할 수 없습니다."
+    },
+    "searchResponse": {
+        "promptBTS": "다음 Bitshares 계정으로 진행하시겠습니까?",
+        "promptTEST": "다음 Bitshares 테스트넷(TEST) 계정으로 진행하시겠습니까?",
+        "back": "돌아가기",
+        "proceed": "진행하다"
+    },
+    "mode": {
+        "titleBTS": "Bitshares에서 계정을 어떻게 찾으시겠습니까?",
+        "titleTEST": "Bitshares 테스트넷에서 계정을 어떻게 찾으시겠습니까?",
+        "search": "계정 검색",
+        "searchSubtitle": "계정 이름 또는 ID 입력",
+        "favourites": "즐겨찾는 사용자",
+        "favouritesSubtitle": "저장된 즐겨찾기 {{count}}개",
+        "favouritesSubtitle_plural": "저장된 즐겨찾기 {{count}}개",
+        "recent": "최근 검색",
+        "recentSubtitle": "{{count}}개의 최근 검색",
+        "recentSubtitle_plural": "{{count}}개의 최근 검색",
+        "back": "뒤로"
+    },
+    "search": {
+        "initDesc": "계정 이름 또는 ID 입력",
+        "description": "이 계정이 맞습니까?",
+        "back": "뒤로 가기",
+        "continue": "계속"
+    },
+    "favourites": {
+        "description": "즐겨찾는 사용자 중 한 명 선택",
+        "none": "즐겨찾는 사용자를 찾을 수 없습니다",
+        "noneHint": "즐겨찾기 페이지에서 추가할 수 있습니다"
+    },
+    "recent": {
+        "description": "최근 검색한 사용자 중 선택하세요",
+        "none": "최근 검색 기록이 없습니다",
+        "noneHint": "검색 기록이 여기에 표시됩니다",
+        "eraseHistory": "기록 삭제"
+    },
+    "step1": "방법",
+    "step2": "선택",
+    "noAccount": "계정을 찾을 수 없습니다."
 }

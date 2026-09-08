@@ -1,10 +1,10 @@
 {
-  "lastUpdate": "Seneste opdatering",
-  "secondsAgo": "{{count}}s ago",
-  "staleWarning": "Forældet - ingen opdatering i et stykke tid",
-  "title": "Live-abonnement",
-  "subscribed": "Abonneret",
-  "disconnected": "Ikke forbundet",
-  "block": "Blok",
-  "node": "Node"
+    "lastUpdate": "Seneste opdatering",
+    "secondsAgo": "{{count}}s siden",
+    "staleWarning": "Forældet - ingen opdatering i et stykke tid",
+    "title": "Live-abonnement",
+    "subscribed": "Abonneret",
+    "disconnected": "Ikke forbundet",
+    "block": "Blok",
+    "node": "Node"
 }

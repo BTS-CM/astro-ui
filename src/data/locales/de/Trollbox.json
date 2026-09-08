@@ -75,5 +75,8 @@
     "filterBorrowAsset": "Leihbares Asset",
     "filterLender": "Kreditgeber",
     "filterAllOption": "Alle",
-    "offersResultCount": "{{count}} gefunden"
+    "offersResultCount": "{{count}} gefunden",
+    "languageLabel": "Sprache",
+    "favourite": "Favorit",
+    "unfavourite": "Entfernen"
 }

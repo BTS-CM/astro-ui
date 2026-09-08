@@ -444,6 +444,11 @@
         "subtitle": "개별 페이지에 특정 테마를 할당",
         "hover1": "앱의 모든 페이지에서 활성 테마를 재정의합니다."
     },
+    "docs": {
+        "title": "문서",
+        "subtitle": "앱 사용 가이드 및 참조",
+        "hover1": "설정, 기능, 튜토리얼은 Starlight 문서를 찾아보세요."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "한 번에 여러 계정에 자산을 대량 배포합니다.",
@@ -531,8 +536,8 @@
     },
     "trollbox": {
         "title": "Trollbox",
-        "subtitle": "On-chain chat on the BitShares blockchain.",
-        "hover1": "Chat with other users, stored permanently on the blockchain.",
-        "hover2": "The sender pays a small network fee per message."
+        "subtitle": "BitShares 블록체인의 온체인 채팅.",
+        "hover1": "다른 사용자와 채팅하고 블록체인에 영구 저장됩니다.",
+        "hover2": "발신자는 메시지마다 소액의 네트워크 수수료를 지불하므로 스팸을 방지할 수 있습니다."
     }
 }

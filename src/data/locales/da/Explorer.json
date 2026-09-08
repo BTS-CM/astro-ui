@@ -1,56 +1,56 @@
 {
-  "title": "Blockchain Explorer",
-  "subtitle": "Slå konti, aktiver, objekter, transaktioner og blokke op. Resultater vises i en dialog med kopierbar JSON.",
-  "search": "Søg",
-  "copy": "Kopiér JSON",
-  "copied": "Kopieret",
-  "favourite": "Favorit",
-  "removeFavourite": "Fjern favorit",
-  "sampleLabel": "eksempel:",
-  "jsonPlaceholder": "JSON vises her",
-  "account": {
-    "title": "Kontoopslag",
-    "description": "Søg efter kontonavn eller ID — viser fuld JSON & favorit",
-    "placeholder": "f.eks. nathan eller 1.2.123",
-    "hint": "ws: get_accounts + get_full_accounts",
-    "errorEmpty": "Indtast et kontonavn",
-    "dialogTitle": "Konto: {{name}} ({{id}})",
-    "dialogSubtitle": "Kæde: {{chain}} • Fuld konto JSON"
-  },
-  "asset": {
-    "title": "Aktivopslag",
-    "description": "Søg efter symbol eller ID — viser aktiv JSON & favorit",
-    "placeholder": "f.eks. BTS eller 1.3.0",
-    "hint": "ws: get_asset_id_from_string + get_objects",
-    "errorEmpty": "Indtast et aktivsymbol",
-    "dialogTitle": "Aktiv: {{symbol}} ({{id}})",
-    "dialogSubtitle": "Kæde: {{chain}} • Aktiv JSON"
-  },
-  "object": {
-    "title": "Objekt-ID opslag",
-    "description": "Søg ethvert x.x.x objekt — viser rå objekt JSON",
-    "placeholder": "f.eks. 1.2.123 eller 2.1.0",
-    "hint": "ws: get_objects (ingen abonnement)",
-    "errorInvalid": "Indtast et gyldigt objekt-ID som 1.2.123 eller 2.1.0",
-    "dialogTitle": "Objekt: {{id}}",
-    "dialogSubtitle": "Kæde: {{chain}}"
-  },
-  "tx": {
-    "title": "Transaktionshash-opslag",
-    "description": "Søg efter hash — hentet fra Elasticsearch",
-    "placeholder": "40 hex-tegn",
-    "errorEmpty": "Indtast en transaktionshash",
-    "errorInvalid": "Forventede 40 eller 64 hex-tegn",
-    "dialogTitle": "Transaktion: {{hash}}",
-    "dialogSubtitle": "Kæde: {{chain}}"
-  },
-  "block": {
-    "title": "Bloknummer-opslag",
-    "description": "Søg efter bloknummer — viser blok JSON",
-    "placeholder": "f.eks. 19446934",
-    "hint": "ws: get_block + get_block_header",
-    "errorInvalid": "Indtast et gyldigt bloknummer",
-    "dialogTitle": "Blok #{{num}}",
-    "dialogSubtitle": "Kæde: {{chain}}"
-  }
+    "title": "Blockchainudforsker",
+    "subtitle": "Slå konti, aktiver, objekter, transaktioner og blokke op. Resultater vises i en dialog med kopierbar JSON.",
+    "search": "Søg",
+    "copy": "Kopiér JSON",
+    "copied": "Kopieret",
+    "favourite": "Favorit",
+    "removeFavourite": "Fjern favorit",
+    "sampleLabel": "eksempel:",
+    "jsonPlaceholder": "JSON vises her",
+    "account": {
+        "title": "Kontoopslag",
+        "description": "Søg efter kontonavn eller ID — viser fuld JSON & favorit",
+        "placeholder": "f.eks. nathan eller 1.2.123",
+        "hint": "ws: get_accounts + get_full_accounts",
+        "errorEmpty": "Indtast et kontonavn",
+        "dialogTitle": "Konto: {{name}} ({{id}})",
+        "dialogSubtitle": "Kæde: {{chain}} • Fuld konto JSON"
+    },
+    "asset": {
+        "title": "Aktivopslag",
+        "description": "Søg efter symbol eller ID — viser aktiv JSON & favorit",
+        "placeholder": "f.eks. BTS eller 1.3.0",
+        "hint": "ws: get_asset_id_from_string + get_objects",
+        "errorEmpty": "Indtast et aktivsymbol",
+        "dialogTitle": "Aktiv: {{symbol}} ({{id}})",
+        "dialogSubtitle": "Kæde: {{chain}} • Aktiv JSON"
+    },
+    "object": {
+        "title": "Objekt-ID opslag",
+        "description": "Søg ethvert x.x.x objekt — viser rå objekt JSON",
+        "placeholder": "f.eks. 1.2.123 eller 2.1.0",
+        "hint": "ws: get_objects (ingen abonnement)",
+        "errorInvalid": "Indtast et gyldigt objekt-ID som 1.2.123 eller 2.1.0",
+        "dialogTitle": "Objekt: {{id}}",
+        "dialogSubtitle": "Kæde: {{chain}}"
+    },
+    "tx": {
+        "title": "Transaktionshash-opslag",
+        "description": "Søg efter hash — hentet fra Elasticsearch",
+        "placeholder": "40 hex-tegn",
+        "errorEmpty": "Indtast en transaktionshash",
+        "errorInvalid": "Forventede 40 eller 64 hex-tegn",
+        "dialogTitle": "Transaktion: {{hash}}",
+        "dialogSubtitle": "Kæde: {{chain}}"
+    },
+    "block": {
+        "title": "Bloknummer-opslag",
+        "description": "Søg efter bloknummer — viser blok JSON",
+        "placeholder": "f.eks. 19446934",
+        "hint": "ws: get_block + get_block_header",
+        "errorInvalid": "Indtast et gyldigt bloknummer",
+        "dialogTitle": "Blok #{{num}}",
+        "dialogSubtitle": "Kæde: {{chain}}"
+    }
 }

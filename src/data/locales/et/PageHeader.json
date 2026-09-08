@@ -122,7 +122,7 @@
     "explorer": "Kasuta lehte iga konto, vara, objekti, tehingu räsi või ploki numbri otsimiseks ja vaata toor JSON-i kopeerimise ja lemmikutega.",
     "top-operations": "Kasuta seda lehte, et vaadata viimase 30 päeva jooksul enim teostatud plokiahela toiminguid, järjestatuna esinemissageduse järgi.",
     "change_password": "Kasuta allolevat vormi oma pilverahakoti parooli muutmiseks account_update operatsiooni kaudu.",
-    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
+    "trollbox": "Vestle kogukonnaga kanalites, mis elavad täielikult BitSharesi plokiahelas."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

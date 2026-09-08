@@ -122,7 +122,7 @@
     "explorer": "このページで任意のアカウント、資産、オブジェクト、トランザクションハッシュ、ブロック番号を検索し、コピーとお気に入り付きの生JSONを表示します。",
     "top-operations": "このページを使用して、過去30日間で最も頻繁に実行されたブロックチェーン操作を発生回数順に表示します。",
     "change_password": "下のフォームを使用して、account_update操作でクラウドウォレットのパスワードを変更します。",
-    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
+    "trollbox": "BitSharesブロックチェーン上に存在するチャンネルでコミュニティとチャット。"
   },
   "back": "戻る",
   "usage": "で使用するように設計されています ",

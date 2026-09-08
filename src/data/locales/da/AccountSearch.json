@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "Indtast venligst et blockchain-kontonavn",
-    "placeholder": "Kontonavn eller ID",
-    "continue": "Blive ved",
-    "error": "Kontoen kunne ikke findes.",
-    "selfError": "Kan ikke overføre aktiver til denne konto."
-  },
-  "searchResponse": {
-    "promptBTS": "Fortsæt med følgende Bitshares-konto?",
-    "promptTEST": "Fortsæt med følgende Bitshares testnet (TEST) konto?",
-    "back": "Gå tilbage",
-    "proceed": "Fortsæt"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "Seneste søgninger",
-    "recentSubtitle": "{{count}} seneste søgning",
-    "recentSubtitle_plural": "{{count}} seneste søgninger",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "Vælg en af dine nyligt søgte brugere",
-    "none": "Ingen seneste søgninger fundet",
-    "noneHint": "Din søgehistorik vises her",
-    "eraseHistory": "Slet historik"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "Indtast venligst et blockchain-kontonavn",
+        "placeholder": "Kontonavn eller ID",
+        "continue": "Blive ved",
+        "error": "Kontoen kunne ikke findes.",
+        "selfError": "Kan ikke overføre aktiver til denne konto."
+    },
+    "searchResponse": {
+        "promptBTS": "Fortsæt med følgende Bitshares-konto?",
+        "promptTEST": "Fortsæt med følgende Bitshares testnet (TEST) konto?",
+        "back": "Gå tilbage",
+        "proceed": "Fortsæt"
+    },
+    "mode": {
+        "titleBTS": "Hvordan vil du finde kontoen på Bitshares?",
+        "titleTEST": "Hvordan vil du finde kontoen på Bitshares testnet?",
+        "search": "Søg efter konto",
+        "searchSubtitle": "Indtast et kontonavn eller ID",
+        "favourites": "Favoritbrugere",
+        "favouritesSubtitle": "{{count}} favorit gemt",
+        "favouritesSubtitle_plural": "{{count}} favoritter gemt",
+        "recent": "Seneste søgninger",
+        "recentSubtitle": "{{count}} seneste søgning",
+        "recentSubtitle_plural": "{{count}} seneste søgninger",
+        "back": "Tilbage"
+    },
+    "search": {
+        "initDesc": "Indtast kontonavnet eller ID",
+        "description": "Er dette den korrekte konto?",
+        "back": "Gå tilbage",
+        "continue": "Fortsæt"
+    },
+    "favourites": {
+        "description": "Vælg en af dine favoritbrugere",
+        "none": "Ingen favoritbrugere fundet",
+        "noneHint": "Du kan tilføje favoritter fra siden Favoritter"
+    },
+    "recent": {
+        "description": "Vælg en af dine nyligt søgte brugere",
+        "none": "Ingen seneste søgninger fundet",
+        "noneHint": "Din søgehistorik vises her",
+        "eraseHistory": "Slet historik"
+    },
+    "step1": "Metode",
+    "step2": "Vælg",
+    "noAccount": "Kunne ikke finde kontoen."
 }

@@ -1,1427 +1,1427 @@
 {
-  "injectedCall": {
-    "method": "injectedCall",
-    "title": "Injected Call Request",
-    "result": "Injected call result",
-    "headers": {
-      "request": "Approve the following injected call?",
-      "result": "The following injected call was approved:"
-    },
-    "tooltip": "Asks your wallet to handle an injected blockchain operation"
-  },
-  "transfer": {
-    "method": "Transfer",
-    "title": "Transfer Request",
-    "result": "Transfer result",
-    "headers": {
-      "request": "Do you want to approve the following transfer request?",
-      "result": "The following transfer request was approved:"
-    },
-    "rows": {
-      "from": "From: {from} ({opFrom})",
-      "to": "To: {to} ({opTo})",
-      "amount": "Amount: {amount}"
-    },
-    "tooltip": "Send assets from one account to another"
-  },
-  "limit_order_create": {
-    "method": "Limit order create",
-    "title": "Limit order create request",
-    "result": "Limit order create result",
-    "headers": {
-      "request": "Approve the following limit order creation request?",
-      "result": "The following limit order was created:"
-    },
-    "rows": {
-      "trade": "Trade",
-      "tradeFK": "Trade (Fill or kill)",
-      "seller": "Seller: {seller} ({opSeller})",
-      "selling": "Selling: {amount}",
-      "buying": "Buying: {amount}",
-      "price": "Price: {price} {sellSymbol}/{buySymbol}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "An offer to sell an amount of an asset at a specified exchange rate by a certain time"
-  },
-  "limit_order_cancel": {
-    "method": "Limit order cancel",
-    "title": "Limit order cancel request",
-    "result": "Limit order cancel result",
-    "headers": {
-      "request": "Cancel the following limit order?",
-      "result": "The following limit order was cancelled:"
-    },
-    "rows": {
-      "id": "Order ID: {id}",
-      "account": "Fee paying account: {account}"
-    },
-    "tooltip": "Cancelling a limit order operation"
-  },
-  "call_order_update": {
-    "method": "Call order update",
-    "title": "Call order update request",
-    "result": "Call order update result",
-    "headers": {
-      "request": "Update your call order to the following?",
-      "result": "The following call order was updated:"
-    },
-    "rows": {
-      "funding_account": "Funding account: {funding_account}",
-      "delta_collateral": "Delta collateral: {delta_collateral} ({id})",
-      "delta_debt": "Delta debt: {delta_debt} ({id})"
-    },
-    "tooltip": "Updating an existing call order"
-  },
-  "fill_order": {
-    "method": "Udfyld ordre",
-    "title": "Fyld ordrebegivenhed",
-    "result": "Fyld ordre resultat",
-    "headers": {
-      "request": "Optage følgende ordreudfyldning?",
-      "result": "Følgende ordreudfyldning blev registreret:"
-    },
-    "rows": {
-      "account": "Konto: {account} ({accountOP})",
-      "order_id": "Bestille: {order_id}",
-      "pays": "Betaler: {pays} ({paysOP})",
-      "receives": "Modtager: {receives} ({receivesOP})"
-    },
-    "tooltip": "Udførelse af en limiteret handel"
-  },
-  "account_create": {
-    "method": "Account create",
-    "title": "Account create request",
-    "result": "Account create result",
-    "headers": {
-      "request": "Do you want to create the following account?",
-      "result": "The following account was created:"
-    },
-    "rows": {
-      "registrar": "Registrar: {registrar} ({opRegistrar})",
-      "referrer": "Referrer: {referrer} ({opReferrer})",
-      "referrer_percent": "Refferrer percent: {referrer_percent}",
-      "name": "Name: {name}",
-      "ownerHeader": "Owner:",
-      "activeHeader": "Active:",
-      "weight_threshold": "Weight threshold: {weight_threshold}",
-      "account_auths": "Account auths: {account_auths}",
-      "key_auths": "Key auths: {key_auths}",
-      "address_auths": "Address auths: {address_auths}",
-      "optionsHeader": "Options:",
-      "memo_key": "Memo key: {memo_key}",
-      "voting_account": "Voting account: {voting_account} ({opVotingAccount})",
-      "num_witness": "Number of witnesses: {num_witness}",
-      "num_committee": "Number of committee members: {num_committee}",
-      "votes": "Votes: {votes}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Creating a new account"
-  },
-  "account_update": {
-    "method": "Account update",
-    "title": "Account update request",
-    "result": "Account update result",
-    "headers": {
-      "request": "Do you want to update the following account?",
-      "result": "The following account was updated:"
-    },
-    "rows": {
-      "warning": "Warning: This operation is irreversible!",
-      "account": "Account: {account} ({opAccount})",
-      "owner": "Owner: {owner}",
-      "active": "Active: {active}",
-      "new_options": "New options: {new_options}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "This operation is used to update an existing account. It can be used to update the authorities, or adjust the options on the account."
-  },
-  "account_whitelist": {
-    "method": "Account whitelist",
-    "title": "Account whitelist request",
-    "result": "Account whitelist result",
-    "headers": {
-      "request": "Update your account whitelist to the following?",
-      "result": "Your account whitelist was updated to the following:"
-    },
-    "rows": {
-      "authorizing_account": "Authorizing account: {authorizingAccount} (authorizingAccountOP)",
-      "account_to_list": "Account to list: {accountToList} (accountToListOP)",
-      "new_listing": "New listing: {newListing}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "This operation is used to whitelist and blacklist accounts, primarily for transacting in whitelisted assets"
-  },
-  "account_upgrade": {
-    "method": "Account upgrade",
-    "title": "Account upgrade request",
-    "result": "Account upgrade result",
-    "headers": {
-      "request": "Upgrade your account to lifetime member?",
-      "result": "Your account was upgraded to lifetime member!"
-    },
-    "rows": {
-      "account_to_upgrade": "Account to upgrade: {accountToUpgrade} (accountToUpgradeOP)",
-      "upgrade_to_lifetime_member": "Upgrade to lifetime member: {upgradeToLifetimeMember}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "This operation is used to upgrade an account to a member, or renew its subscription."
-  },
-  "account_transfer": {
-    "method": "Account transfer",
-    "title": "Account transfer request",
-    "result": "Account transfer result",
-    "headers": {
-      "request": "Transfer account to a new owner?",
-      "result": "The following account was transferred to a new owner:"
-    },
-    "rows": {
-      "warning": "Warning: This action is irreversible!",
-      "account_id": "Account ID: {originalOwner} ({account_id})",
-      "new_owner": "New owner: {newOwner} ({newOwnerOP})"
-    },
-    "tooltip": "Transfers the account to another account while clearing the white list"
-  },
-  "asset_create": {
-    "method": "Asset create",
-    "title": "Asset create request",
-    "result": "Asset create result",
-    "headers": {
-      "request": "Create the following asset?",
-      "result": "The following asset was created:"
-    },
-    "rows": {
-      "symbol": "Symbol: {symbol}",
-      "main": "Main: {main}",
-      "market": "Market: {market}",
-      "short_name": "Short name: {short_name}",
-      "precision": "Precision: {precision}",
-      "max_supply": "Max supply: {max_supply}",
-      "market_fee_percent": "Market fee percent: {market_fee_percent}",
-      "max_market_fee": "Max market fee: {max_market_fee}",
-      "cer": "Core exchange rates:",
-      "cer_base_amount": "Base amount: {cer_base_amount}",
-      "cer_base_id": "Base asset ID: {cer_base_id}",
-      "cer_quote_amount": "Quote amount: {cer_quote_amount}",
-      "cer_quote_id": "Quote asset ID: {cer_quote_id}",
-      "whitelist_authorities": "Whitelist authorities: {whitelist_authorities}",
-      "blacklist_authorities": "Blacklist authorities: {blacklist_authorities}",
-      "whitelist_markets": "Whitelist markets: {whitelist_markets}",
-      "blacklist_markets": "Blacklist markets: {blacklist_markets}",
-      "is_prediction_market": "Is prediction market: {is_prediction_market}",
-      "permissions": "Permissions:",
-      "perm_charge_market_fee": "Charge market fee: {charge_market_fee}",
-      "perm_white_list": "White list: {white_list}",
-      "perm_override_authority": "Override authority: {override_authority}",
-      "perm_transfer_restricted": "Transfer restricted: {transfer_restricted}",
-      "perm_disable_confidential": "Disable confidential: {disable_confidential}",
-      "flags": "Flags:",
-      "flag_charge_market_fee": "Charge market fee: {charge_market_fee}",
-      "flag_white_list": "White list: {white_list}",
-      "flag_override_authority": "Override authority: {override_authority}",
-      "flag_transfer_restricted": "Transfer restricted: {transfer_restricted}",
-      "flag_disable_confidential": "Disable confidential: {disable_confidential}",
-      "bitasset": "Bitasset info:",
-      "feed_lifetime_sec": "Feed lifetime (seconds): {feed_lifetime_sec}",
-      "force_settlement_delay_sec": "Force settlement delay (seconds): {force_settlement_delay_sec}",
-      "force_settlement_offset_percent": "Force settlement offset percent: {force_settlement_offset_percent}",
-      "maximum_force_settlement_volume": "Maximum force settlement volume: {maximum_force_settlement_volume}",
-      "minimum_feeds": "Minimum feeds: {minimum_feeds}",
-      "short_backing_asset": "Short backing asset: {short_backing_asset}",
-      "nft": "NFT Contents:",
-      "acknowledgements": "Acknowledgements: {acknowledgements}",
-      "artist": "Artist: {artist}",
-      "attestation": "Attestation: {attestation}",
-      "holder_license": "Holder license: {holder_license}",
-      "license": "License: {license}",
-      "narrative": "Narrative: {narrative}",
-      "title": "Title: {title}",
-      "tags": "Tags: {tags}",
-      "type": "Type: {type}"
-    },
-    "tooltip": "Creates an asset on the Bitshares blockchain"
-  },
-  "asset_update": {
-    "method": "Asset update",
-    "title": "Asset update request",
-    "result": "Asset update result",
-    "headers": {
-      "request": "Update the following asset?",
-      "result": "The asset was updated with the following details:"
-    },
-    "rows": {
-      "symbol": "Symbol: {symbol}",
-      "main": "Main: {main}",
-      "market": "Market: {market}",
-      "short_name": "Short name: {short_name}",
-      "precision": "Precision: {precision}",
-      "max_supply": "Max supply: {max_supply}",
-      "market_fee_percent": "Market fee percent: {market_fee_percent}",
-      "max_market_fee": "Max market fee: {max_market_fee}",
-      "cer": "Core exchange rates:",
-      "cer_base_amount": "Base amount: {cer_base_amount}",
-      "cer_base_id": "Base asset ID: {cer_base_id}",
-      "cer_quote_amount": "Quote amount: {cer_quote_amount}",
-      "cer_quote_id": "Quote asset ID: {cer_quote_id}",
-      "whitelist_authorities": "Whitelist authorities: {whitelist_authorities}",
-      "blacklist_authorities": "Blacklist authorities: {blacklist_authorities}",
-      "whitelist_markets": "Whitelist markets: {whitelist_markets}",
-      "blacklist_markets": "Blacklist markets: {blacklist_markets}",
-      "is_prediction_market": "Is prediction market: {is_prediction_market}",
-      "permissions": "Permissions:",
-      "perm_charge_market_fee": "Charge market fee: {charge_market_fee}",
-      "perm_white_list": "White list: {white_list}",
-      "perm_override_authority": "Override authority: {override_authority}",
-      "perm_transfer_restricted": "Transfer restricted: {transfer_restricted}",
-      "perm_disable_confidential": "Disable confidential: {disable_confidential}",
-      "flags": "Flags:",
-      "flag_charge_market_fee": "Charge market fee: {charge_market_fee}",
-      "flag_white_list": "White list: {white_list}",
-      "flag_override_authority": "Override authority: {override_authority}",
-      "flag_transfer_restricted": "Transfer restricted: {transfer_restricted}",
-      "flag_disable_confidential": "Disable confidential: {disable_confidential}",
-      "bitasset": "Bitasset info:",
-      "feed_lifetime_sec": "Feed lifetime (seconds): {feed_lifetime_sec}",
-      "force_settlement_delay_sec": "Force settlement delay (seconds): {force_settlement_delay_sec}",
-      "force_settlement_offset_percent": "Force settlement offset percent: {force_settlement_offset_percent}",
-      "maximum_force_settlement_volume": "Maximum force settlement volume: {maximum_force_settlement_volume}",
-      "minimum_feeds": "Minimum feeds: {minimum_feeds}",
-      "short_backing_asset": "Short backing asset: {short_backing_asset}",
-      "nft": "NFT Contents:",
-      "acknowledgements": "Acknowledgements: {acknowledgements}",
-      "artist": "Artist: {artist}",
-      "attestation": "Attestation: {attestation}",
-      "holder_license": "Holder license: {holder_license}",
-      "license": "License: {license}",
-      "narrative": "Narrative: {narrative}",
-      "title": "Title: {title}",
-      "tags": "Tags: {tags}",
-      "type": "Type: {type}"
-    },
-    "tooltip": "Updates an asset's settings"
-  },
-  "asset_update_bitasset": {
-    "method": "Asset update bitasset",
-    "title": "Asset update bitasset request",
-    "result": "Asset update bitasset result",
-    "headers": {
-      "request": "Approve bitasset update?",
-      "result": "The following bitasset update was approved:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer}",
-      "asset_to_update": "Asset to update: {asset_to_update}",
-      "new_options": "New options:",
-      "feed_lifetime_sec": "Feed lifetime (seconds): {feed_lifetime_sec}",
-      "minimum_feeds": "Minimum feeds: {minimum_feeds}",
-      "force_settlement_delay_sec": "Force settlement delay (seconds): {force_settlement_delay_sec}",
-      "force_settlement_offset_percent": "Force settlement offset percent: {force_settlement_offset_percent}",
-      "maximum_force_settlement_volume": "Maximum force settlement volume: {maximum_force_settlement_volume}",
-      "short_backing_asset": "Short backing asset: {symbol} ({short_backing_asset})",
-      "extensions": "Extensions: {extensions}",
-      "noExtensions": "No extensions"
-    },
-    "tooltip": "Update created bitasset settings"
-  },
-  "asset_update_feed_producers": {
-    "method": "Asset update feed producers",
-    "title": "Asset update feed producers request",
-    "result": "Asset update feed producers result",
-    "headers": {
-      "request": "Approve change to bitasset feed producers?",
-      "result": "The following change to bitasset feed producers was approved:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer} ({issuerOP})",
-      "asset_to_update": "Asset to update: {symbol} ({asset_to_update})",
-      "new_feed_producers": "New feed producers: {new_feed_producers}"
-    },
-    "tooltip": "Update the list of approved feed producers for created bitasset"
-  },
-  "asset_issue": {
-    "method": "Asset issue",
-    "title": "Asset issue request",
-    "result": "Asset issue result",
-    "headers": {
-      "request": "Approve the following asset issuance?",
-      "result": "The following asset issuance was approved:"
-    },
-    "rows": {
-      "prompt": "Issue {amount} {symbol} ({assetID}) to {to} ({toID})?"
-    },
-    "tooltip": "Issue your created assets to individuals"
-  },
-  "asset_reserve": {
-    "method": "Asset reserve",
-    "title": "Asset reserve request",
-    "result": "Asset reserve result",
-    "headers": {
-      "request": "Approve the following asset reservation?",
-      "result": "The following asset reservation was approved:"
-    },
-    "rows": {
-      "payer": "Payer: {payer} ({payerOP})",
-      "amount_to_reserve": "Amount to reserve: {amount_to_reserve} ({amount_to_reserveOP})",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Reserve your created assets"
-  },
-  "asset_fund_fee_pool": {
-    "method": "Asset fund fee pool",
-    "title": "Asset fund fee pool request",
-    "result": "Asset fund fee pool result",
-    "headers": {
-      "request": "Fund the following asset's fee pool?",
-      "result": "The following asset's fee pool funding was approved:"
-    },
-    "rows": {
-      "from_account": "From account: {from_account} ({from_accountOP})",
-      "asset": "Asset: {asset} ({assetOP})",
-      "amount": "Amount: {amount}"
-    },
-    "tooltip": "Fund the fee pool for your created asset"
-  },
-  "asset_settle": {
-    "method": "Asset settle",
-    "title": "Asset settle request",
-    "result": "Asset settle result",
-    "headers": {
-      "request": "Settle the following asset for its backing collateral?",
-      "result": "The following asset was settled for its backing collateral:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "amount": "Amount: {amount} ({assetID})"
-    },
-    "tooltip": "Settle an asset in your portfolio"
-  },
-  "asset_global_settle": {
-    "method": "Asset global settle",
-    "title": "Asset global settle request",
-    "result": "Asset global settle result",
-    "headers": {
-      "request": "Perform global settlement on the following asset?",
-      "result": "The following asset was globally settled:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer} ({issuerOP})",
-      "asset_to_settle": "Asset to settle: {asset_to_settle} ({asset_to_settleOP})",
-      "settle_price": "Settle price: {settle_price}"
-    },
-    "tooltip": "Globally settle one of your created bitassets"
-  },
-  "asset_publish_feed": {
-    "method": "Asset publish feed",
-    "title": "Asset publish feed request",
-    "result": "Asset publish feed result",
-    "headers": {
-      "request": "Publish a price feed for the following asset?",
-      "result": "The following asset price feed update was published:"
-    },
-    "rows": {
-      "publisher": "Publisher: {publisher} ({publisherOP})",
-      "asset_id": "Asset ID: {symbol} ({asset_idOP})",
-      "feed": "Feed:",
-      "core_exchange_rate": "Core exchange rate: {core_exchange_rate}",
-      "settlement_price": "Settlement price: {settlement_price}",
-      "maintenance_collateral_ratio": "Maintenance collateral ratio: {maintenance_collateral_ratio}",
-      "maximum_short_squeeze_ratio": "Maximum short squeeze ratio: {maximum_short_squeeze_ratio}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Publish a price feed for a bitasset"
-  },
-  "witness_create": {
-    "method": "Witness create",
-    "title": "Witness create request",
-    "result": "Witness create result",
-    "headers": {
-      "request": "Create a witness with the following details?",
-      "result": "The following witness was created:"
-    },
-    "rows": {
-      "witness_account": "Witness account: {witness_account} ({witness_accountOP})",
-      "url": "URL: {url}",
-      "block_signing_key": "Block signing key: {block_signing_key}"
-    },
-    "tooltip": "Create a witness account"
-  },
-  "witness_update": {
-    "method": "Witness update",
-    "title": "Witness update request",
-    "result": "Witness update result",
-    "headers": {
-      "request": "Update witness details to the following?",
-      "result": "The following witness details were updated:"
-    },
-    "rows": {
-      "witness": "Witness: {witness}",
-      "witness_account": "Witness account: {witness_account} ({witness_accountOP})",
-      "new_url": "New URL: {new_url}",
-      "new_signing_key": "New signing key: {new_signing_key}"
-    },
-    "tooltip": "Update your witness account"
-  },
-  "proposal_create": {
-    "method": "Proposal create",
-    "title": "Proposal create request",
-    "result": "Proposal create result",
-    "headers": {
-      "request": "Create the following proposal?",
-      "result": "The following proposal was created:"
-    },
-    "rows": {
-      "expiration_time": "Expiration time: {expiration_time}",
-      "proposed_ops": "Proposed operations: {proposed_ops}",
-      "review_period_seconds": "Review period seconds: {review_period_seconds}",
-      "fee_paying_account": "Fee paying account: {fee_paying_account} ({fee_paying_accountOP})"
-    },
-    "tooltip": "Create a blockchain operation proposal"
-  },
-  "proposal_update": {
-    "method": "Proposal update",
-    "title": "Proposal update request",
-    "result": "Proposal update result",
-    "headers": {
-      "request": "Update the following proposal?",
-      "result": "The following proposal was updated:"
-    },
-    "rows": {
-      "proposal": "Proposal: {proposal}",
-      "active_approvals_to_add": "Active approvals to add: {active_approvals_to_add}",
-      "active_approvals_to_remove": "Active approvals to remove: {active_approvals_to_remove}",
-      "owner_approvals_to_add": "Owner approvals to add: {owner_approvals_to_add}",
-      "owner_approvals_to_remove": "Owner approvals to remove: {owner_approvals_to_remove}",
-      "key_approvals_to_add": "Key approvals to add: {key_approvals_to_add}",
-      "key_approvals_to_remove": "Key approvals to remove: {key_approvals_to_remove}",
-      "fee_paying_account": "Fee paying account: {fee_paying_account} ({fee_paying_accountOP})",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update a blockchain operation proposal"
-  },
-  "proposal_delete": {
-    "method": "Proposal delete",
-    "title": "Proposal delete request",
-    "result": "Proposal delete result",
-    "headers": {
-      "request": "Delete the following proposal?",
-      "result": "The following proposal was deleted:"
-    },
-    "rows": {
-      "using_owner_authority": "Using owner authority: {using_owner_authority}",
-      "proposal": "Proposal: {proposal}",
-      "fee_paying_account": "Fee paying account: {fee_paying_account} ({fee_paying_accountOP})",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Delete a blockchain operation proposal"
-  },
-  "withdraw_permission_create": {
-    "method": "Withdraw permission create",
-    "title": "Withdraw permission create request",
-    "result": "Withdraw permission create result",
-    "headers": {
-      "request": "Direct Debit Authorization",
-      "result": "The following direct debit authorization was approved:"
-    },
-    "rows": {
-      "recipient": "Recipient: {recipient} ({recipientOP})",
-      "withdraw_from": "Account to withdraw from: {withdraw_from} ({withdraw_fromOP})",
-      "taking": "Take {amount} every {period_sec} seconds, for {period_qty} periods",
-      "start": "Starting: {start}"
-    },
-    "tooltip": "Create a withdraw permission"
-  },
-  "withdraw_permission_update": {
-    "method": "Withdraw permission update",
-    "title": "Withdraw permission update request",
-    "result": "Withdraw permission update result",
-    "headers": {
-      "request": "Update witness permissions to the following?",
-      "result": "The following witness permission updates were approved:"
-    },
-    "rows": {
-      "withdraw_from_account": "Withdraw from account: {withdraw_from_account} ({withdraw_from_accountOP})",
-      "authorized_account": "Authorized account: {authorized_account} ({authorized_accountOP})",
-      "permission_to_update": "Permission to update: {permission_to_update}",
-      "withdrawal_limited": "Withdrawal limit: {withdrawal_limit}",
-      "withdrawal_unlimited": "Withdrawal limit: {withdrawal_limit} ({withdrawal_limitOP})",
-      "withdrawal_period_sec": "Withdrawal period (seconds): {withdrawal_period_sec}",
-      "period_start_time": "Period start time: {period_start_time}",
-      "periods_until_expiration": "Periods until expiration: {periods_until_expiration}"
-    },
-    "tooltip": "Update a withdraw permission"
-  },
-  "withdraw_permission_claim": {
-    "method": "Withdraw permission claim",
-    "title": "Withdraw permission claim request",
-    "result": "Withdraw permission claim result",
-    "headers": {
-      "request": "Claim the following withdrawal permission",
-      "result": "The following withdrawal permission was claimed:"
-    },
-    "rows": {
-      "withdraw_permission": "Withdraw permission: {withdraw_permission}",
-      "withdraw_from_account": "Withdraw from account: {withdraw_from_account} ({withdraw_from_accountOP})",
-      "withdraw_to_account": "Withdraw to account: {withdraw_to_account} ({withdraw_to_accountOP})",
-      "amount_to_withdraw": "Amount to withdraw: {amount_to_withdraw} ({amount_to_withdrawOP})",
-      "memo": "Memo: {memo}"
-    },
-    "tooltip": "Claim from a withdraw permission"
-  },
-  "withdraw_permission_delete": {
-    "method": "Withdraw permission delete",
-    "title": "Withdraw permission delete request",
-    "result": "Withdraw permission delete result",
-    "headers": {
-      "request": "Delete the following withdraw permission?",
-      "result": "The following withdraw permission was deleted:"
-    },
-    "rows": {
-      "withdraw_from_account": "Withdraw from account: {withdraw_from_account} ({withdraw_from_accountOP})",
-      "authorized_account": "Authorized account: {authorized_account} ({authorized_accountOP})",
-      "withdrawal_permission": "Withdrawal permission: {withdrawal_permission}"
-    },
-    "tooltip": "Delete a withdraw permission"
-  },
-  "committee_member_create": {
-    "method": "Committee member create",
-    "title": "Committee member create request",
-    "result": "Committee member create result",
-    "headers": {
-      "request": "Create a committee member?",
-      "result": "The following committee member was created:"
-    },
-    "rows": {
-      "committee_member_account": "Committee member account: {committee_member_account} ({committee_member_accountOP})",
-      "url": "URL: {url}"
-    },
-    "tooltip": "Create a committee member account"
-  },
-  "committee_member_update": {
-    "method": "Committee member update",
-    "title": "Committee member update request",
-    "result": "Committee member update result",
-    "headers": {
-      "request": "Update the following committee member's details?",
-      "result": "The following committee member's detail updates were approved:"
-    },
-    "rows": {
-      "committee_member": "Committee member: {committee_member}",
-      "committee_member_account": "Committee member account: {committee_member_account} ({committee_member_accountOP})",
-      "new_url": "New URL: {new_url}"
-    },
-    "tooltip": "Update your committee member account details"
-  },
-  "committee_member_update_global_parameters": {
-    "method": "Committee member update global parameters",
-    "title": "Committee member update global parameters request",
-    "result": "Committee member update global parameters result",
-    "headers": {
-      "request": "Approve of following global parameters as a committee?",
-      "result": "The following global committee parameters were approved:"
-    },
-    "rows": {
-      "new_parameters": "New parameters:",
-      "current_fees": "Current fees: {current_fees}",
-      "block_interval": "Block interval: {block_interval}",
-      "maintenance_interval": "Maintenance interval: {maintenance_interval}",
-      "maintenance_skip_slots": "Maintenance skip slots: {maintenance_skip_slots}",
-      "committee_proposal_review_period": "Committee proposal review period: {committee_proposal_review_period}",
-      "maximum_transaction_size": "Maximum transaction size: {maximum_transaction_size}",
-      "maximum_block_size": "Maximum block size: {maximum_block_size}",
-      "maximum_time_until_expiration": "Maximum time until expiration: {maximum_time_until_expiration}",
-      "maximum_proposal_lifetime": "Maximum proposal lifetime: {maximum_proposal_lifetime}",
-      "maximum_asset_whitelist_authorities": "Maximum asset whitelist authorities: {maximum_asset_whitelist_authorities}",
-      "maximum_asset_feed_publishers": "Maximum asset feed publishers: {maximum_asset_feed_publishers}",
-      "maximum_witness_count": "Maximum witness count: {maximum_witness_count}",
-      "maximum_committee_count": "Maximum committee count: {maximum_committee_count}",
-      "maximum_authority_membership": "Maximum authority membership: {maximum_authority_membership}",
-      "reserve_percent_of_fee": "Reserve percent of fee: {reserve_percent_of_fee}",
-      "network_percent_of_fee": "Network percent of fee: {network_percent_of_fee}",
-      "lifetime_referrer_percent_of_fee": "Lifetime referrer percent of fee: {lifetime_referrer_percent_of_fee}",
-      "cashback_vesting_period_seconds": "Cashback vesting period seconds: {cashback_vesting_period_seconds}",
-      "cashback_vesting_threshold": "Cashback vesting threshold: {cashback_vesting_threshold}",
-      "count_non_member_votes": "Count non member votes: {count_non_member_votes}",
-      "allow_non_member_whitelists": "Allow non member whitelists: {allow_non_member_whitelists}",
-      "witness_pay_per_block": "Witness pay per block: {witness_pay_per_block}",
-      "worker_budget_per_day": "Worker budget per day: {worker_budget_per_day}",
-      "max_predicate_opcode": "Max predicate opcode: {max_predicate_opcode}",
-      "fee_liquidation_threshold": "Fee liquidation threshold: {fee_liquidation_threshold}",
-      "accounts_per_fee_scale": "Accounts per fee scale: {accounts_per_fee_scale}",
-      "account_fee_scale_bitshifts": "Account fee scale bitshifts: {account_fee_scale_bitshifts}",
-      "max_authority_depth": "Max authority depth: {max_authority_depth}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Publish your committee member stance on Bitshares blockchain global parameter values"
-  },
-  "vesting_balance_create": {
-    "method": "Vesting balance create",
-    "title": "Vesting balance create request",
-    "result": "Vesting balance create result",
-    "headers": {
-      "request": "Create the following vesting balance?",
-      "result": "The following vesting balance was created:"
-    },
-    "rows": {
-      "creator": "Creator: {creator} ({creatorOP})",
-      "owner": "Owner: {owner} ({ownerOP})",
-      "amount": "Amount: {amount} ({asset_id})",
-      "policy": "Policy:",
-      "begin_timestamp": "Begin timestamp: {begin_timestamp}",
-      "vesting_cliff_seconds": "Vesting cliff seconds: {vesting_cliff_seconds}",
-      "vesting_duration_seconds": "Vesting duration seconds: {vesting_duration_seconds}",
-      "start_claim": "Start claim: {start_claim}",
-      "vesting_seconds": "Vesting seconds: {vesting_seconds}"
-    },
-    "tooltip": "Create a vesting balance"
-  },
-  "vesting_balance_withdraw": {
-    "method": "Vesting balance withdraw",
-    "title": "Vesting balance withdraw request",
-    "result": "Vesting balance withdraw result",
-    "headers": {
-      "request": "Withdraw the following vesting balance?",
-      "result": "The following vesting balance was withdrawn:"
-    },
-    "rows": {
-      "owner": "Owner: {owner} ({ownerOP})",
-      "claim": "Claim: {claim} ({asset_id})"
-    },
-    "tooltip": "Withdraw from a vesting balance"
-  },
-  "worker_create": {
-    "method": "Worker create",
-    "title": "Worker create request",
-    "result": "Worker create result",
-    "headers": {
-      "request": "Create the following worker proposal?",
-      "result": "The following worker proposal was created:"
-    },
-    "rows": {
-      "owner": "Owner: {owner} ({ownerOP})",
-      "work_begin_date": "Work begin date: {work_begin_date}",
-      "work_end_date": "Work end date: {work_end_date}",
-      "daily_pay": "Daily pay: {daily_pay}",
-      "name": "Name: {name}",
-      "url": "URL: {url}",
-      "initializer": "Initializer: {initializer}"
-    },
-    "tooltip": "Create a worker proposal"
-  },
-  "custom": {
-    "method": "Custom",
-    "title": "Custom request",
-    "result": "Custom result",
-    "headers": {
-      "request": "Create the following custom operation?",
-      "result": "The following custom operation was created:"
-    },
-    "rows": {
-      "payer": "Payer: {payer} ({payerOP})",
-      "required_auths": "Required authorities: {required_auths}",
-      "id": "ID: {id}",
-      "data": "Data: {data}"
-    },
-    "tooltip": "Provides a generic way to add higher level protocols on top of witness consensus"
-  },
-  "assert": {
-    "method": "Assert",
-    "title": "Assert request",
-    "result": "Assert result",
-    "headers": {
-      "request": "Approve the following assert request operation?",
-      "result": "The following assert request operation was approved:"
-    },
-    "rows": {
-      "fee_paying_account": "Fee paying account: {fee_paying_account} ({fee_paying_accountOP})",
-      "predicates": "Predicates: {predicates}",
-      "required_auths": "Required authorities: {required_auths}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Assert that some conditions are true."
-  },
-  "balance_claim": {
-    "method": "Balance claim",
-    "title": "Balance claim request",
-    "result": "Balance claim result",
-    "headers": {
-      "request": "Claim the following balance?",
-      "result": "The following balance was claimed:"
-    },
-    "rows": {
-      "deposit_to_account": "Deposit to account: {deposit_to_account} ({deposit_to_accountOP})",
-      "balance_to_claim": "Balance to claim: {balance_to_claim}",
-      "balance_owner_key": "Balance owner key: {balance_owner_key}",
-      "total_claimed": "Total claimed: {total_claimed} ({asset_id})"
-    },
-    "tooltip": "Claim from a balance"
-  },
-  "override_transfer": {
-    "method": "Override transfer",
-    "title": "Override transfer request",
-    "result": "Override transfer result",
-    "headers": {
-      "request": "Override the following transfer?",
-      "result": "The following transfer was overridden:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer} ({issuerOP})",
-      "from": "From: {from} ({fromOP})",
-      "to": "To: {to} ({toOP})",
-      "amount": "Amount: {amount} ({asset_id})",
-      "memo": "Memo: {memo}"
-    },
-    "tooltip": "Override a transfer operation"
-  },
-  "transfer_to_blind": {
-    "method": "Transfer to blind",
-    "title": "Transfer to blind request",
-    "result": "Transfer to blind result",
-    "headers": {
-      "request": "Transfer the following to blind?",
-      "result": "The following was transferred to blind:"
-    },
-    "rows": {
-      "amount": "Amount: {amount}",
-      "from": "From: {from} ({fromOP})",
-      "blinding_factor": "Blinding factor: {blinding_factor}",
-      "outputs": "Outputs: {outputs}"
-    },
-    "tooltip": "Transfer assets to a blind destination"
-  },
-  "blind_transfer": {
-    "method": "Blind transfer",
-    "title": "Blind transfer request",
-    "result": "Blind transfer result",
-    "headers": {
-      "request": "Approve the following blind transfer?",
-      "result": "The following blind transfer was approved:"
-    },
-    "rows": {
-      "inputs": "Inputs: {inputs}",
-      "outputs": "Outputs: {outputs}"
-    },
-    "tooltip": "Transfer blind assets in a blind manner"
-  },
-  "transfer_from_blind": {
-    "method": "Transfer from blind",
-    "title": "Transfer from blind request",
-    "result": "Transfer from blind result",
-    "headers": {
-      "request": "Transfer the following from blind?",
-      "result": "The following was transferred from blind:"
-    },
-    "rows": {
-      "amount": "Amount: {amount}",
-      "to": "To: {to} ({toOP})",
-      "blinding_factor": "Blinding factor: {blinding_factor}",
-      "inputs": "Inputs: {inputs}"
-    },
-    "tooltip": "Withdraw assets from a blind balance"
-  },
-  "asset_settle_cancel": {
-    "method": "Aktivafregning annuller",
-    "title": "Anmodning om annullering af aktivafregning",
-    "result": "Annulleringsresultat for aktivafregning",
-    "headers": {
-      "request": "Annullere følgende aktivafregning?",
-      "result": "Følgende aktivafregning blev annulleret:"
-    },
-    "rows": {
-      "settlement": "Afregning: {settlement}",
-      "account": "Konto: {account} ({accountOP})",
-      "amount": "Beløb: {amount} ({asset_id})",
-      "extensions": "Udvidelser: {extensions}"
-    },
-    "tooltip": "Annuller en afventende aktivafviklingsordre"
-  },
-  "asset_claim_fees": {
-    "method": "Asset claim fees",
-    "title": "Asset claim fees request",
-    "result": "Asset claim fees result",
-    "headers": {
-      "request": "Withdraw the fees from the following asset?",
-      "result": "The following asset's fees were claimed:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer} ({issuerOP})",
-      "amount_to_claim": "Amount to claim: {amount_to_claim} ({asset_id})",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Claim the fees from an asset"
-  },
-  "fba_distribute": {
-    "method": "FBA distribuere",
-    "title": "FBA distribuere anmodning",
-    "result": "FBA distribuer resultatet",
-    "headers": {
-      "request": "Fordele gebyrer fra følgende FBA-akkumulator?",
-      "result": "Følgende FBA-fordeling blev registreret:"
-    },
-    "rows": {
-      "account": "Konto: {account} ({accountOP})",
-      "fba_id": "FBA akkumulator: {fba_id}",
-      "amount": "Beløb: {amount} ({asset_id})"
-    },
-    "tooltip": "Fordel gebyrer fra en Fee-Backed Asset-akkumulator"
-  },
-  "bid_collateral": {
-    "method": "Bid collateral",
-    "title": "Bid collateral request",
-    "result": "Bid collateral result",
-    "headers": {
-      "request": "Approve the following collateral bid?",
-      "result": "The following collateral bid was approved:"
-    },
-    "rows": {
-      "bidder": "Bidder: {bidder} ({bidderOP})",
-      "additional_collateral": "Additional collateral: {additional_collateral}",
-      "debt_covered": "Debt covered: {debt_covered}"
-    },
-    "tooltip": "Bid on a bitassets backing collateral when globally settled"
-  },
-  "execute_bid": {
-    "method": "Udfør bud",
-    "title": "Udfør budbegivenhed",
-    "result": "Udfør budresultat",
-    "headers": {
-      "request": "Optage følgende udførte bud?",
-      "result": "Følgende bududførelse blev registreret:"
-    },
-    "rows": {
-      "bidder": "Budgiver: {bidder} ({bidderOP})",
-      "debt": "Gæld: {debt}",
-      "collateral": "Sikkerhed: {collateral}"
-    },
-    "tooltip": "Udførelse af et sikkerhedsstillelsesbud efter global afvikling"
-  },
-  "asset_claim_pool": {
-    "method": "Asset claim pool",
-    "title": "Asset claim pool request",
-    "result": "Asset claim pool result",
-    "headers": {
-      "request": "Claim the following asset pool?",
-      "result": "The following asset pool was claimed:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer} ({issuerOP})",
-      "asset_id": "Asset: {asset_id}",
-      "amount_to_claim": "Amount to claim: {amount_to_claim}"
-    },
-    "tooltip": "Transfers BTS from the fee pool of a specified asset back to the issuer's balance"
-  },
-  "asset_update_issuer": {
-    "method": "Asset update issuer",
-    "title": "Asset update issuer request",
-    "result": "Asset update issuer result",
-    "headers": {
-      "request": "Update the issuer of the following asset?",
-      "result": "The following asset's issuer was updated:"
-    },
-    "rows": {
-      "issuer": "Issuer: {issuer} ({issuerOP})",
-      "asset_to_update": "Asset to update: {asset_to_update}",
-      "new_issuer": "New issuer: {new_issuer} ({new_issuerOP})"
-    },
-    "tooltip": "Update issuer of an asset to a new administrator account."
-  },
-  "htlc_create": {
-    "method": "HTLC create",
-    "title": "HTLC create request",
-    "result": "HTLC create result",
-    "headers": {
-      "request": "Create the following hashed timelock contract operation?",
-      "result": "The creation of the following hashed timelock contract operation was approved:"
-    },
-    "rows": {
-      "from": "From: {from} ({fromOP})",
-      "to": "To: {to} ({toOP})",
-      "amount": "Amount: {amount}",
-      "preimage_hash": "Preimage hash: {preimage_hash}",
-      "preimage_size": "Preimage size: {preimage_size}",
-      "claim_period_seconds": "Claim period (seconds): {claim_period_seconds}"
-    },
-    "tooltip": "Create a hash time locked contract (HTLC) operation"
-  },
-  "htlc_redeem": {
-    "method": "HTLC Redeem",
-    "title": "HTLC Redeem request",
-    "result": "HTLC Redeem result",
-    "headers": {
-      "request": "Redeem the following hash time locked contract operation?",
-      "result": "The redemption of the following hash time locked contract operation was approved:"
-    },
-    "rows": {
-      "htlc_id": "HTLC ID: {htlc_id}",
-      "redeemer": "Redeemer: {redeemer} ({redeemerOP})",
-      "preimage": "Preimage: {preimage}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Redeem the contents of a HTLC operation"
-  },
-  "htlc_redeemed": {
-    "method": "HTLC indløst",
-    "title": "HTLC Redeemed begivenhed",
-    "result": "HTLC indløst resultat",
-    "headers": {
-      "request": "Optage følgende HTLC-indløsning?",
-      "result": "Følgende HTLC-indløsning blev registreret:"
-    },
-    "rows": {
-      "htlc_id": "HTC ID: {htlc_id}",
-      "from": "Fra: {from} ({fromOP})",
-      "to": "Til: {to} ({toOP})",
-      "amount": "Beløb: {amount} ({asset_id})"
-    },
-    "tooltip": "Registrering af en HTLC-indløsning"
-  },
-  "htlc_extend": {
-    "method": "HTLC Extend",
-    "title": "HTLC Extend request",
-    "result": "HTLC Extend result",
-    "headers": {
-      "request": "Approve the following hash timelocked contract extension?",
-      "result": "The extension of the following hash timelocked contract was approved:"
-    },
-    "rows": {
-      "htlc_id": "HTLC ID: {htlc_id}",
-      "update_issuer": "Update issuer: {update_issuer} ({update_issuerOP})",
-      "seconds_to_add": "Seconds to add: {seconds_to_add}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Extend the duration of an HTLC operation"
-  },
-  "htlc_refund": {
-    "method": "HTC Refusion",
-    "title": "HTC Refusion begivenhed",
-    "result": "Resultat af HTC Refusion",
-    "headers": {
-      "request": "Optage følgende HTTP-refusion?",
-      "result": "Følgende HTLC-refusion blev registreret:"
-    },
-    "rows": {
-      "htlc_id": "HTC ID: {htlc_id}",
-      "to": "Til: {to} ({toOP})"
-    },
-    "tooltip": "Registrering af en HTLC-refusion på grund af udløb"
-  },
-  "custom_authority_create": {
-    "method": "Custom authority create",
-    "title": "Custom authority create request",
-    "result": "Custom authority create result",
-    "headers": {
-      "request": "Create the following custom authority?",
-      "result": "The following custom authority was created:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "enabled": "Enabled: {enabled}",
-      "valid_from": "Valid from: {valid_from}",
-      "valid_to": "Valid to: {valid_to}",
-      "operation_type": "Operation type: {operation_type}",
-      "auth": "Authority: {auth}",
-      "restrictions": "Restrictions: {restrictions}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Create a new custom authority."
-  },
-  "custom_authority_update": {
-    "method": "Custom authority update",
-    "title": "Custom authority update request",
-    "result": "Custom authority update result",
-    "headers": {
-      "request": "Update the following custom authority?",
-      "result": "The following custom authority was updated:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "authority_to_update": "Authority to update: {authority_to_update}",
-      "new_enabled": "New enabled: {new_enabled}",
-      "new_valid_from": "New valid from: {new_valid_from}",
-      "new_valid_to": "New valid to: {new_valid_to}",
-      "new_auth": "New authority: {new_auth}",
-      "restrictions_to_remove": "Restrictions to remove: {restrictions_to_remove}",
-      "restrictions_to_add": "Restrictions to add: {restrictions_to_add}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update a custom authority."
-  },
-  "custom_authority_delete": {
-    "method": "Custom authority delete",
-    "title": "Custom authority delete request",
-    "result": "Custom authority delete result",
-    "headers": {
-      "request": "Delete the following custom authority?",
-      "result": "The following custom authority was deleted:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "authority_to_delete": "Authority to delete: {authority_to_delete}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Delete a custom authority."
-  },
-  "ticket_create": {
-    "method": "Ticket create",
-    "title": "Ticket create request",
-    "result": "Ticket create result",
-    "headers": {
-      "request": "Create the following ticket?",
-      "result": "The following ticket was created:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "target_type": "Target type: {target_type}",
-      "amount": "Amount: {amount}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Create a new ticket."
-  },
-  "ticket_update": {
-    "method": "Ticket update",
-    "title": "Ticket update request",
-    "result": "Ticket update result",
-    "headers": {
-      "request": "Update the following ticket?",
-      "result": "The following ticket was updated:"
-    },
-    "rows": {
-      "ticket": "Ticket: {ticket}",
-      "account": "Account: {account} ({accountOP})",
-      "target_type": "Target type: {target_type}",
-      "amount_for_new_target": "Amount for new target: {amount_for_new_target}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update an existing ticket."
-  },
-  "liquidity_pool_create": {
-    "method": "Liquidity pool create",
-    "title": "Liquidity pool create request",
-    "result": "Liquidity pool create result",
-    "headers": {
-      "request": "Create a liquidity pool with the following details?",
-      "result": "The following liquidity pool was created:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "asset_a": "Asset A: {asset_a} ({asset_aOP})",
-      "asset_b": "Asset B: {asset_b} ({asset_bOP})",
-      "share_asset": "Share asset: {share_asset} ({share_assetOP})",
-      "taker_fee_percent": "Taker fee percent: {taker_fee_percent}",
-      "withdrawal_fee_percent": "Withdrawal fee percent: {withdrawal_fee_percent}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Create a liquidity pool"
-  },
-  "liquidity_pool_delete": {
-    "method": "Liquidity pool delete",
-    "title": "Liquidity pool delete request",
-    "result": "Liquidity pool delete result",
-    "headers": {
-      "request": "Delete the following liquidity pool?",
-      "result": "The following liquidity pool was deleted:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "pool_id": "Pool ID: {pool_id}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Delete a liquidity pool"
-  },
-  "liquidity_pool_deposit": {
-    "method": "Liquidity pool deposit",
-    "title": "Liquidity pool deposit request",
-    "result": "Liquidity pool deposit result",
-    "headers": {
-      "request": "Deposit the following assets into the liquidity pool?",
-      "result": "The following assets were deposited into the liquidity pool:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "pool": "Pool: {pool}",
-      "asset_a": "Asset A: {asset_a} ({asset_aOP})",
-      "asset_b": "Asset B: {asset_b} ({asset_bOP})",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Deposit funds into a liquidity pool"
-  },
-  "liquidity_pool_withdraw": {
-    "method": "Liquidity pool withdraw",
-    "title": "Liquidity pool withdraw request",
-    "result": "Liquidity pool withdraw result",
-    "headers": {
-      "request": "Withdraw the following assets from the liquidity pool?",
-      "result": "The following assets were withdrawn from the liquidity pool:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "pool": "Pool: {pool}",
-      "share_asset": "Share asset: {share_asset} ({share_assetOP})",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Withdraw funds from a liquidity pool"
-  },
-  "liquidity_pool_exchange": {
-    "method": "Liquidity pool exchange",
-    "title": "Liquidity pool exchange request",
-    "result": "Liquidity pool exchange result",
-    "headers": {
-      "request": "Approve of the following liquidity pool exchange?",
-      "result": "The following liquidity pool exchange was approved:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "pool": "Pool: {pool}",
-      "amount_to_sell": "Amount to sell: {amount_to_sell}",
-      "min_to_receive": "Min to receive: {min_to_receive}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Exchange with a liquidity pool."
-  },
-  "samet_fund_create": {
-    "method": "SameT fund create",
-    "title": "SameT fund create request",
-    "result": "SameT fund create result",
-    "headers": {
-      "request": "Approve of the following samet fund creation?",
-      "result": "The following samet fund was created:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "asset_type": "Asset type: {asset_type}",
-      "balance": "Balance: {balance}",
-      "fee_rate": "Fee rate: {fee_rate}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Create a new SameT Fund. A SameT Fund is a fund which can be used by a borrower and have to be repaid in the same transaction."
-  },
-  "samet_fund_delete": {
-    "method": "SameT fund delete",
-    "title": "SameT fund delete request",
-    "result": "SameT fund delete result",
-    "headers": {
-      "request": "Delete the following samet fund?",
-      "result": "The following samet fund was deleted:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "fund_id": "Fund ID: {fund_id}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Delete a SameT fund object."
-  },
-  "samet_fund_update": {
-    "method": "SameT fund update",
-    "title": "SameT fund update request",
-    "result": "SameT fund update result",
-    "headers": {
-      "request": "Update the following samet fund?",
-      "result": "The following samet fund was updated:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "fund_id": "Fund ID: {fund_id}",
-      "delta_amount": "Delta amount: {delta_amount}",
-      "new_fee_rate": "New fee rate: {new_fee_rate}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update a SameT fund object."
-  },
-  "samet_fund_borrow": {
-    "method": "SameT fund borrow",
-    "title": "SameT fund borrow request",
-    "result": "SameT fund borrow result",
-    "headers": {
-      "request": "Borrow from the following samet fund?",
-      "result": "Successfully borrowed from the following samet fund:"
-    },
-    "rows": {
-      "borrower": "Borrower: {borrower} ({borrowerOP})",
-      "fund_id": "Fund ID: {fund_id}",
-      "borrow_amount": "Borrow amount: {borrow_amount}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Borrow from a SameT fund."
-  },
-  "samet_fund_repay": {
-    "method": "SameT fund repay",
-    "title": "SameT fund repay request",
-    "result": "SameT fund repay result",
-    "headers": {
-      "request": "Repay the following samet fund",
-      "result": "Successfully repaid the following samet fund"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "fund_id": "Fund ID: {fund_id}",
-      "repay_amount": "Repay amount: {repay_amount}",
-      "fund_fee": "Fund fee: {fund_fee}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Repay debt to a SameT fund."
-  },
-  "credit_offer_create": {
-    "method": "Credit offer create",
-    "title": "Credit offer create request",
-    "result": "Credit offer create result",
-    "headers": {
-      "request": "Approve the creation of the following credit offer?",
-      "result": "The following credit offer was created:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "asset_type": "Asset type: {asset_type}",
-      "balance": "Balance: {balance}",
-      "fee_rate": "Fee rate: {fee_rate}",
-      "max_duration_seconds": "Max duration seconds: {max_duration_seconds}",
-      "min_deal_amount": "Min deal amount: {min_deal_amount}",
-      "enabled": "Enabled: {enabled}",
-      "auto_disable_time": "Auto disable time: {auto_disable_time}",
-      "acceptable_collateral": "Acceptable collateral: {acceptable_collateral}",
-      "acceptable_borrowers": "Acceptable borrowers: {acceptable_borrowers}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Create a new credit offer. A credit offer is a fund that can be used by other accounts who provide certain collateral."
-  },
-  "credit_offer_delete": {
-    "method": "Credit offer delete",
-    "title": "Credit offer delete request",
-    "result": "Credit offer delete result",
-    "headers": {
-      "request": "Delete the following credit offer?",
-      "result": "The following credit offer was deleted:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "offer_id": "Offer ID: {offer_id}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Delete a credit offer."
-  },
-  "credit_offer_update": {
-    "method": "Credit offer update",
-    "title": "Credit offer update request",
-    "result": "Credit offer update result",
-    "headers": {
-      "request": "Update the following credit offer?",
-      "result": "The following credit offer was updated:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "offer_id": "Offer ID: {offer_id}",
-      "delta_amount": "Delta amount: {delta_amount}",
-      "fee_rate": "Fee rate: {fee_rate}",
-      "max_duration_seconds": "Max duration seconds: {max_duration_seconds}",
-      "min_deal_amount": "Min deal amount: {min_deal_amount}",
-      "enabled": "Enabled: {enabled}",
-      "auto_disable_time": "Auto disable time: {auto_disable_time}",
-      "acceptable_collateral": "Acceptable collateral: {acceptable_collateral}",
-      "acceptable_borrowers": "Acceptable borrowers: {acceptable_borrowers}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update a credit offer"
-  },
-  "credit_offer_accept": {
-    "method": "Credit offer accept",
-    "title": "Credit offer accept request",
-    "result": "Credit offer accept result",
-    "headers": {
-      "request": "Approve of the following credit offer?",
-      "result": "The following credit offer was approved:"
-    },
-    "rows": {
-      "borrower": "Borrower: {borrower} ({borrowerOP})",
-      "offer_id": "Offer ID: {offer_id}",
-      "borrow_amount": "Borrow amount: {borrow_amount}",
-      "collateral": "Collateral: {collateral}",
-      "max_fee_rate": "Max fee rate: {max_fee_rate}",
-      "min_duration_seconds": "Min duration seconds: {min_duration_seconds}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Accept a credit offer and create a credit deal."
-  },
-  "credit_deal_repay": {
-    "method": "Credit deal repay",
-    "title": "Credit deal repay request",
-    "result": "Credit deal repay result",
-    "headers": {
-      "request": "Repay the following credit deal?",
-      "result": "You repayed the following credit deal"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "deal_id": "Deal ID: {deal_id}",
-      "repay_amount": "Repay amount: {repay_amount}",
-      "credit_fee": "Credit fee: {credit_fee}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Repay a credit deal."
-  },
-  "credit_deal_expired": {
-    "method": "Kreditaftalen udløb",
-    "title": "Begivenhed for kreditaftale udløb",
-    "result": "Resultat af kreditaftale udløbet",
-    "headers": {
-      "request": "Registrere følgende udløbne kreditaftale?",
-      "result": "Følgende kreditaftales udløb blev registreret:"
-    },
-    "rows": {
-      "deal_id": "Aftale-id: {deal_id}",
-      "offer_id": "Tilbuds-id: {offer_id}",
-      "offer_owner": "Tilbyd ejer: {offer_owner} ({offer_ownerOP})",
-      "borrower": "Låntager: {borrower} ({borrowerOP})",
-      "unpaid_amount": "Ubetalt beløb: {unpaid_amount} ({unpaid_amountOP})",
-      "collateral": "Sikkerhed: {collateral} ({collateralOP})",
-      "fee_rate": "Gebyrsats: {fee_rate}"
-    },
-    "tooltip": "Registrering af en udløbet kreditaftale og de resulterende beløb"
-  },
-  "liquidity_pool_update_operation": {
-    "method": "Liquidity pool update",
-    "title": "Liquidity pool update request",
-    "result": "Liquidity pool update result",
-    "headers": {
-      "request": "Update the following liquidity pool?",
-      "result": "The following liquidity pool was updated:"
-    },
-    "rows": {
-      "owner_account": "Owner account: {owner_account} ({owner_accountOP})",
-      "pool_id": "Pool ID: {pool_id}",
-      "new_parameters": "New parameters: {new_parameters}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update a liquidity pool"
-  },
-  "credit_deal_update_operation": {
-    "method": "Credit deal update",
-    "title": "Credit deal update request",
-    "result": "Credit deal update result",
-    "headers": {
-      "request": "Update the following credit deal?",
-      "result": "The following credit deal was updated:"
-    },
-    "rows": {
-      "account": "Account: {account} ({accountOP})",
-      "deal_id": "Deal ID: {deal_id}",
-      "auto_repay": "Auto repay: {auto_repay}"
-    },
-    "tooltip": "Update a credit deal"
-  },
-  "limit_order_update_operation": {
-    "method": "Limit order update",
-    "title": "Limit order update request",
-    "result": "Limit order update result",
-    "headers": {
-      "request": "Update the following limit order?",
-      "result": "The following limit order was updated:"
-    },
-    "rows": {
-      "seller": "Seller: {seller} ({sellerOP})",
-      "order": "Order: {order}",
-      "new_price": "New price: {new_price}",
-      "delta_amount_to_sell": "Delta amount to sell: {delta_amount_to_sell}",
-      "new_expiration": "New expiration: {new_expiration}",
-      "on_fill": "On fill: {on_fill}",
-      "extensions": "Extensions: {extensions}"
-    },
-    "tooltip": "Update a limit order"
-  }
+    "injectedCall": {
+        "method": "Injiceret kald",
+        "title": "Injiceret kald anmodning",
+        "result": "Injiceret kald resultat",
+        "headers": {
+            "request": "Godkend følgende injicerede kald?",
+            "result": "Følgende injicerede kald blev godkendt:"
+        },
+        "tooltip": "Beder din wallet om at håndtere en injiceret blockchainoperation"
+    },
+    "transfer": {
+        "method": "Overførsel",
+        "title": "Overførselsanmodning",
+        "result": "Overførselsresultat",
+        "headers": {
+            "request": "Vil du godkende følgende overførselsanmodning?",
+            "result": "Følgende overførselsanmodning blev godkendt:"
+        },
+        "rows": {
+            "from": "Fra: {from} ({opFrom})",
+            "to": "Til: {to} ({opTo})",
+            "amount": "Beløb: {amount}"
+        },
+        "tooltip": "Send aktiver fra en konto til en anden"
+    },
+    "limit_order_create": {
+        "method": "Opret limitordre",
+        "title": "Opret limitordre anmodning",
+        "result": "Opret limitordre resultat",
+        "headers": {
+            "request": "Godkend anmodning om oprettelse af følgende limitordre?",
+            "result": "Følgende limitordre blev oprettet:"
+        },
+        "rows": {
+            "trade": "Handel",
+            "tradeFK": "Handel (Fill or kill)",
+            "seller": "Sælger: {seller} ({opSeller})",
+            "selling": "Sælger: {amount}",
+            "buying": "Køber: {amount}",
+            "price": "Pris: {price} {sellSymbol}/{buySymbol}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Et tilbud om at sælge et beløb af et aktiv til en given kurs inden et bestemt tidspunkt"
+    },
+    "limit_order_cancel": {
+        "method": "Annuller limitordre",
+        "title": "Annuller limitordre anmodning",
+        "result": "Annuller limitordre resultat",
+        "headers": {
+            "request": "Annuller følgende limitordre?",
+            "result": "Følgende limitordre blev annulleret:"
+        },
+        "rows": {
+            "id": "Ordre-ID: {id}",
+            "account": "Gebyrbetalende konto: {account}"
+        },
+        "tooltip": "Annullering af en limitordreoperation"
+    },
+    "call_order_update": {
+        "method": "Opdater call-ordre",
+        "title": "Opdater call-ordre anmodning",
+        "result": "Opdater call-ordre resultat",
+        "headers": {
+            "request": "Opdater din call-ordre til følgende?",
+            "result": "Følgende call-ordre blev opdateret:"
+        },
+        "rows": {
+            "funding_account": "Finansieringskonto: {funding_account}",
+            "delta_collateral": "Delta-sikkerhed: {delta_collateral} ({id})",
+            "delta_debt": "Delta-gæld: {delta_debt} ({id})"
+        },
+        "tooltip": "Opdaterer en eksisterende call-ordre"
+    },
+    "fill_order": {
+        "method": "Udfyld ordre",
+        "title": "Fyld ordrebegivenhed",
+        "result": "Fyld ordre resultat",
+        "headers": {
+            "request": "Optage følgende ordreudfyldning?",
+            "result": "Følgende ordreudfyldning blev registreret:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "order_id": "Bestille: {order_id}",
+            "pays": "Betaler: {pays} ({paysOP})",
+            "receives": "Modtager: {receives} ({receivesOP})"
+        },
+        "tooltip": "Udførelse af en limiteret handel"
+    },
+    "account_create": {
+        "method": "Opret konto",
+        "title": "Opret konto anmodning",
+        "result": "Opret konto resultat",
+        "headers": {
+            "request": "Vil du oprette følgende konto?",
+            "result": "Følgende konto blev oprettet:"
+        },
+        "rows": {
+            "registrar": "Registrator: {registrar} ({opRegistrar})",
+            "referrer": "Henviser: {referrer} ({opReferrer})",
+            "referrer_percent": "Henviserprocent: {referrer_percent}",
+            "name": "Navn: {name}",
+            "ownerHeader": "Ejer:",
+            "activeHeader": "Aktiv:",
+            "weight_threshold": "Vægttærskel: {weight_threshold}",
+            "account_auths": "Kontoautorisationer: {account_auths}",
+            "key_auths": "Nøgleautorisationer: {key_auths}",
+            "address_auths": "Adresseautorisationer: {address_auths}",
+            "optionsHeader": "Indstillinger:",
+            "memo_key": "Memonøgle: {memo_key}",
+            "voting_account": "Afstemningskonto: {voting_account} ({opVotingAccount})",
+            "num_witness": "Antal vidner: {num_witness}",
+            "num_committee": "Antal komitémedlemmer: {num_committee}",
+            "votes": "Stemmer: {votes}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opretter en ny konto"
+    },
+    "account_update": {
+        "method": "Opdater konto",
+        "title": "Opdater konto anmodning",
+        "result": "Opdater konto resultat",
+        "headers": {
+            "request": "Vil du opdatere følgende konto?",
+            "result": "Følgende konto blev opdateret:"
+        },
+        "rows": {
+            "warning": "Advarsel: Denne operation er irreversibel!",
+            "account": "Konto: {account} ({opAccount})",
+            "owner": "Ejer: {owner}",
+            "active": "Aktiv: {active}",
+            "new_options": "Nye indstillinger: {new_options}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Denne operation bruges til at opdatere en eksisterende konto. Den kan bruges til at opdatere fuldmagterne eller justere indstillingerne på kontoen."
+    },
+    "account_whitelist": {
+        "method": "Kontowhitelist",
+        "title": "Kontowhitelist anmodning",
+        "result": "Kontowhitelist resultat",
+        "headers": {
+            "request": "Opdater din kontowhitelist til følgende?",
+            "result": "Din kontowhitelist blev opdateret til følgende:"
+        },
+        "rows": {
+            "authorizing_account": "Autoriserende konto: {authorizingAccount} (authorizingAccountOP)",
+            "account_to_list": "Konto til liste: {accountToList} (accountToListOP)",
+            "new_listing": "Ny listning: {newListing}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Denne operation bruges til at whiteliste og blackliste konti, primært for at handle med whitelistede aktiver"
+    },
+    "account_upgrade": {
+        "method": "Opgrader konto",
+        "title": "Opgrader konto anmodning",
+        "result": "Opgrader konto resultat",
+        "headers": {
+            "request": "Opgrader din konto til livstidsmedlem?",
+            "result": "Din konto blev opgraderet til livstidsmedlem!"
+        },
+        "rows": {
+            "account_to_upgrade": "Konto til opgradering: {accountToUpgrade} (accountToUpgradeOP)",
+            "upgrade_to_lifetime_member": "Opgrader til livstidsmedlem: {upgradeToLifetimeMember}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Denne operation bruges til at opgradere en konto til medlem eller forny dens abonnement."
+    },
+    "account_transfer": {
+        "method": "Overfør konto",
+        "title": "Overfør konto anmodning",
+        "result": "Overfør konto resultat",
+        "headers": {
+            "request": "Overfør konto til en ny ejer?",
+            "result": "Følgende konto blev overført til en ny ejer:"
+        },
+        "rows": {
+            "warning": "Advarsel: Denne handling er irreversibel!",
+            "account_id": "Konto-ID: {originalOwner} ({account_id})",
+            "new_owner": "Ny ejer: {newOwner} ({newOwnerOP})"
+        },
+        "tooltip": "Overfører kontoen til en anden konto og rydder samtidig whitelisten"
+    },
+    "asset_create": {
+        "method": "Opret aktiv",
+        "title": "Opret aktiv anmodning",
+        "result": "Opret aktiv resultat",
+        "headers": {
+            "request": "Opret følgende aktiv?",
+            "result": "Følgende aktiv blev oprettet:"
+        },
+        "rows": {
+            "symbol": "Symbol: {symbol}",
+            "main": "Main: {main}",
+            "market": "Marked: {market}",
+            "short_name": "Kort navn: {short_name}",
+            "precision": "Præcision: {precision}",
+            "max_supply": "Maks udbud: {max_supply}",
+            "market_fee_percent": "Markedsgebyrprocent: {market_fee_percent}",
+            "max_market_fee": "Maks markedsgebyr: {max_market_fee}",
+            "cer": "Core exchange rates:",
+            "cer_base_amount": "Basisbeløb: {cer_base_amount}",
+            "cer_base_id": "Basisaktiv-ID: {cer_base_id}",
+            "cer_quote_amount": "Quotebeløb: {cer_quote_amount}",
+            "cer_quote_id": "Quoteaktiv-ID: {cer_quote_id}",
+            "whitelist_authorities": "Whitelist-myndigheder: {whitelist_authorities}",
+            "blacklist_authorities": "Blacklist-myndigheder: {blacklist_authorities}",
+            "whitelist_markets": "Whitelist-markeder: {whitelist_markets}",
+            "blacklist_markets": "Blacklist-markeder: {blacklist_markets}",
+            "is_prediction_market": "Er prædiktionsmarked: {is_prediction_market}",
+            "permissions": "Tilladelser:",
+            "perm_charge_market_fee": "Opkræv markedsgebyr: {charge_market_fee}",
+            "perm_white_list": "Whitelist: {white_list}",
+            "perm_override_authority": "Tilsidesættelsesmyndighed: {override_authority}",
+            "perm_transfer_restricted": "Overførsel begrænset: {transfer_restricted}",
+            "perm_disable_confidential": "Deaktiver fortrolig: {disable_confidential}",
+            "flags": "Flag:",
+            "flag_charge_market_fee": "Opkræv markedsgebyr: {charge_market_fee}",
+            "flag_white_list": "Whitelist: {white_list}",
+            "flag_override_authority": "Tilsidesættelsesmyndighed: {override_authority}",
+            "flag_transfer_restricted": "Overførsel begrænset: {transfer_restricted}",
+            "flag_disable_confidential": "Deaktiver fortrolig: {disable_confidential}",
+            "bitasset": "Bitasset-info:",
+            "feed_lifetime_sec": "Feedlevetid (sekunder): {feed_lifetime_sec}",
+            "force_settlement_delay_sec": "Tvangsafregningsforsinkelse (sekunder): {force_settlement_delay_sec}",
+            "force_settlement_offset_percent": "Tvangsafregnings-offset procent: {force_settlement_offset_percent}",
+            "maximum_force_settlement_volume": "Maksimal tvangsafregningsvolumen: {maximum_force_settlement_volume}",
+            "minimum_feeds": "Minimumsfeeds: {minimum_feeds}",
+            "short_backing_asset": "Short bagvedliggende aktiv: {short_backing_asset}",
+            "nft": "NFT-indhold:",
+            "acknowledgements": "Anerkendelser: {acknowledgements}",
+            "artist": "Kunstner: {artist}",
+            "attestation": "Attestering: {attestation}",
+            "holder_license": "Holderlicens: {holder_license}",
+            "license": "Licens: {license}",
+            "narrative": "Narrativ: {narrative}",
+            "title": "Titel: {title}",
+            "tags": "Tags: {tags}",
+            "type": "Type: {type}"
+        },
+        "tooltip": "Opretter et aktiv på Bitshares-blockchainen"
+    },
+    "asset_update": {
+        "method": "Opdater aktiv",
+        "title": "Opdater aktiv anmodning",
+        "result": "Opdater aktiv resultat",
+        "headers": {
+            "request": "Opdater følgende aktiv?",
+            "result": "Aktivet blev opdateret med følgende detaljer:"
+        },
+        "rows": {
+            "symbol": "Symbol: {symbol}",
+            "main": "Main: {main}",
+            "market": "Marked: {market}",
+            "short_name": "Kort navn: {short_name}",
+            "precision": "Præcision: {precision}",
+            "max_supply": "Maks udbud: {max_supply}",
+            "market_fee_percent": "Markedsgebyrprocent: {market_fee_percent}",
+            "max_market_fee": "Maks markedsgebyr: {max_market_fee}",
+            "cer": "Core exchange rates:",
+            "cer_base_amount": "Basisbeløb: {cer_base_amount}",
+            "cer_base_id": "Basisaktiv-ID: {cer_base_id}",
+            "cer_quote_amount": "Quotebeløb: {cer_quote_amount}",
+            "cer_quote_id": "Quoteaktiv-ID: {cer_quote_id}",
+            "whitelist_authorities": "Whitelist-myndigheder: {whitelist_authorities}",
+            "blacklist_authorities": "Blacklist-myndigheder: {blacklist_authorities}",
+            "whitelist_markets": "Whitelist-markeder: {whitelist_markets}",
+            "blacklist_markets": "Blacklist-markeder: {blacklist_markets}",
+            "is_prediction_market": "Er prædiktionsmarked: {is_prediction_market}",
+            "permissions": "Tilladelser:",
+            "perm_charge_market_fee": "Opkræv markedsgebyr: {charge_market_fee}",
+            "perm_white_list": "Whitelist: {white_list}",
+            "perm_override_authority": "Tilsidesættelsesmyndighed: {override_authority}",
+            "perm_transfer_restricted": "Overførsel begrænset: {transfer_restricted}",
+            "perm_disable_confidential": "Deaktiver fortrolig: {disable_confidential}",
+            "flags": "Flag:",
+            "flag_charge_market_fee": "Opkræv markedsgebyr: {charge_market_fee}",
+            "flag_white_list": "Whitelist: {white_list}",
+            "flag_override_authority": "Tilsidesættelsesmyndighed: {override_authority}",
+            "flag_transfer_restricted": "Overførsel begrænset: {transfer_restricted}",
+            "flag_disable_confidential": "Deaktiver fortrolig: {disable_confidential}",
+            "bitasset": "Bitasset-info:",
+            "feed_lifetime_sec": "Feedlevetid (sekunder): {feed_lifetime_sec}",
+            "force_settlement_delay_sec": "Tvangsafregningsforsinkelse (sekunder): {force_settlement_delay_sec}",
+            "force_settlement_offset_percent": "Tvangsafregnings-offset procent: {force_settlement_offset_percent}",
+            "maximum_force_settlement_volume": "Maksimal tvangsafregningsvolumen: {maximum_force_settlement_volume}",
+            "minimum_feeds": "Minimumsfeeds: {minimum_feeds}",
+            "short_backing_asset": "Short bagvedliggende aktiv: {short_backing_asset}",
+            "nft": "NFT-indhold:",
+            "acknowledgements": "Anerkendelser: {acknowledgements}",
+            "artist": "Kunstner: {artist}",
+            "attestation": "Attestering: {attestation}",
+            "holder_license": "Holderlicens: {holder_license}",
+            "license": "Licens: {license}",
+            "narrative": "Narrativ: {narrative}",
+            "title": "Titel: {title}",
+            "tags": "Tags: {tags}",
+            "type": "Type: {type}"
+        },
+        "tooltip": "Opdaterer et aktivs indstillinger"
+    },
+    "asset_update_bitasset": {
+        "method": "Opdater aktiv bitasset",
+        "title": "Opdater aktiv bitasset anmodning",
+        "result": "Opdater aktiv bitasset resultat",
+        "headers": {
+            "request": "Godkend opdatering af bitasset?",
+            "result": "Følgende bitasset-opdatering blev godkendt:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer}",
+            "asset_to_update": "Aktiv at opdatere: {asset_to_update}",
+            "new_options": "Nye indstillinger:",
+            "feed_lifetime_sec": "Feedlevetid (sekunder): {feed_lifetime_sec}",
+            "minimum_feeds": "Minimumsfeeds: {minimum_feeds}",
+            "force_settlement_delay_sec": "Tvangsafregningsforsinkelse (sekunder): {force_settlement_delay_sec}",
+            "force_settlement_offset_percent": "Tvangsafregnings-offset procent: {force_settlement_offset_percent}",
+            "maximum_force_settlement_volume": "Maksimal tvangsafregningsvolumen: {maximum_force_settlement_volume}",
+            "short_backing_asset": "Short bagvedliggende aktiv: {symbol} ({short_backing_asset})",
+            "extensions": "Udvidelser: {extensions}",
+            "noExtensions": "Ingen udvidelser"
+        },
+        "tooltip": "Opdater indstillinger for oprettet bitasset"
+    },
+    "asset_update_feed_producers": {
+        "method": "Opdater aktiv feedproducenter",
+        "title": "Opdater aktiv feedproducenter anmodning",
+        "result": "Opdater aktiv feedproducenter resultat",
+        "headers": {
+            "request": "Godkend ændring af bitassets feedproducenter?",
+            "result": "Følgende ændring af bitassets feedproducenter blev godkendt:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer} ({issuerOP})",
+            "asset_to_update": "Aktiv at opdatere: {symbol} ({asset_to_update})",
+            "new_feed_producers": "Nye feedproducenter: {new_feed_producers}"
+        },
+        "tooltip": "Opdater listen over godkendte feedproducenter for oprettet bitasset"
+    },
+    "asset_issue": {
+        "method": "Udsted aktiv",
+        "title": "Udsted aktiv anmodning",
+        "result": "Udsted aktiv resultat",
+        "headers": {
+            "request": "Godkend følgende aktivudstedelse?",
+            "result": "Følgende aktivudstedelse blev godkendt:"
+        },
+        "rows": {
+            "prompt": "Udsted {amount} {symbol} ({assetID}) til {to} ({toID})?"
+        },
+        "tooltip": "Udsted dine oprettede aktiver til enkeltpersoner"
+    },
+    "asset_reserve": {
+        "method": "Reserver aktiv",
+        "title": "Reserver aktiv anmodning",
+        "result": "Reserver aktiv resultat",
+        "headers": {
+            "request": "Godkend følgende aktivreservation?",
+            "result": "Følgende aktivreservation blev godkendt:"
+        },
+        "rows": {
+            "payer": "Betaler: {payer} ({payerOP})",
+            "amount_to_reserve": "Beløb at reservere: {amount_to_reserve} ({amount_to_reserveOP})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Reserver dine oprettede aktiver"
+    },
+    "asset_fund_fee_pool": {
+        "method": "Finansier aktivgebyrpool",
+        "title": "Finansier aktivgebyrpool anmodning",
+        "result": "Finansier aktivgebyrpool resultat",
+        "headers": {
+            "request": "Finansier følgende aktivs gebyrpool?",
+            "result": "Følgende aktivs gebyrpoolfinansiering blev godkendt:"
+        },
+        "rows": {
+            "from_account": "Fra konto: {from_account} ({from_accountOP})",
+            "asset": "Aktiv: {asset} ({assetOP})",
+            "amount": "Beløb: {amount}"
+        },
+        "tooltip": "Finansier gebyrpoolen for dit oprettede aktiv"
+    },
+    "asset_settle": {
+        "method": "Afregn aktiv",
+        "title": "Afregn aktiv anmodning",
+        "result": "Afregn aktiv resultat",
+        "headers": {
+            "request": "Afregn følgende aktiv for dets bagvedliggende sikkerhed?",
+            "result": "Følgende aktiv blev afregnet for dets bagvedliggende sikkerhed:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "amount": "Beløb: {amount} ({assetID})"
+        },
+        "tooltip": "Afregn et aktiv i din portefølje"
+    },
+    "asset_global_settle": {
+        "method": "Global afregn aktiv",
+        "title": "Global afregn aktiv anmodning",
+        "result": "Global afregn aktiv resultat",
+        "headers": {
+            "request": "Foretag global afregning af følgende aktiv?",
+            "result": "Følgende aktiv blev globalt afregnet:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer} ({issuerOP})",
+            "asset_to_settle": "Aktiv at afregne: {asset_to_settle} ({asset_to_settleOP})",
+            "settle_price": "Afregningspris: {settle_price}"
+        },
+        "tooltip": "Afregn globalt en af dine oprettede bitassets"
+    },
+    "asset_publish_feed": {
+        "method": "Publicér aktivfeed",
+        "title": "Publicér aktivfeed anmodning",
+        "result": "Publicér aktivfeed resultat",
+        "headers": {
+            "request": "Publicér et prisfeed for følgende aktiv?",
+            "result": "Følgende aktivprisfeed-opdatering blev publiceret:"
+        },
+        "rows": {
+            "publisher": "Udgiver: {publisher} ({publisherOP})",
+            "asset_id": "Aktiv-ID: {symbol} ({asset_idOP})",
+            "feed": "Feed:",
+            "core_exchange_rate": "Core exchange rate: {core_exchange_rate}",
+            "settlement_price": "Afregningspris: {settlement_price}",
+            "maintenance_collateral_ratio": "Vedligeholdelsessikkerhedsgrad: {maintenance_collateral_ratio}",
+            "maximum_short_squeeze_ratio": "Maksimal short squeeze-ratio: {maximum_short_squeeze_ratio}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Publicér et prisfeed for en bitasset"
+    },
+    "witness_create": {
+        "method": "Opret vidne",
+        "title": "Opret vidne anmodning",
+        "result": "Opret vidne resultat",
+        "headers": {
+            "request": "Opret et vidne med følgende detaljer?",
+            "result": "Følgende vidne blev oprettet:"
+        },
+        "rows": {
+            "witness_account": "Vidnekonto: {witness_account} ({witness_accountOP})",
+            "url": "URL: {url}",
+            "block_signing_key": "Bloksigneringsnøgle: {block_signing_key}"
+        },
+        "tooltip": "Opret en vidnekonto"
+    },
+    "witness_update": {
+        "method": "Opdater vidne",
+        "title": "Opdater vidne anmodning",
+        "result": "Opdater vidne resultat",
+        "headers": {
+            "request": "Opdater vidnedetaljer til følgende?",
+            "result": "Følgende vidnedetaljer blev opdateret:"
+        },
+        "rows": {
+            "witness": "Vidne: {witness}",
+            "witness_account": "Vidnekonto: {witness_account} ({witness_accountOP})",
+            "new_url": "Ny URL: {new_url}",
+            "new_signing_key": "Ny signeringsnøgle: {new_signing_key}"
+        },
+        "tooltip": "Opdater din vidnekonto"
+    },
+    "proposal_create": {
+        "method": "Opret forslag",
+        "title": "Opret forslag anmodning",
+        "result": "Opret forslag resultat",
+        "headers": {
+            "request": "Opret følgende forslag?",
+            "result": "Følgende forslag blev oprettet:"
+        },
+        "rows": {
+            "expiration_time": "Udløbstidspunkt: {expiration_time}",
+            "proposed_ops": "Foreslåede operationer: {proposed_ops}",
+            "review_period_seconds": "Revisionsperiode sekunder: {review_period_seconds}",
+            "fee_paying_account": "Gebyrbetalende konto: {fee_paying_account} ({fee_paying_accountOP})"
+        },
+        "tooltip": "Opret et blockchainoperationsforslag"
+    },
+    "proposal_update": {
+        "method": "Opdater forslag",
+        "title": "Opdater forslag anmodning",
+        "result": "Opdater forslag resultat",
+        "headers": {
+            "request": "Opdater følgende forslag?",
+            "result": "Følgende forslag blev opdateret:"
+        },
+        "rows": {
+            "proposal": "Forslag: {proposal}",
+            "active_approvals_to_add": "Aktive godkendelser at tilføje: {active_approvals_to_add}",
+            "active_approvals_to_remove": "Aktive godkendelser at fjerne: {active_approvals_to_remove}",
+            "owner_approvals_to_add": "Ejergodkendelser at tilføje: {owner_approvals_to_add}",
+            "owner_approvals_to_remove": "Ejergodkendelser at fjerne: {owner_approvals_to_remove}",
+            "key_approvals_to_add": "Nøglegodkendelser at tilføje: {key_approvals_to_add}",
+            "key_approvals_to_remove": "Nøglegodkendelser at fjerne: {key_approvals_to_remove}",
+            "fee_paying_account": "Gebyrbetalende konto: {fee_paying_account} ({fee_paying_accountOP})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater et blockchainoperationsforslag"
+    },
+    "proposal_delete": {
+        "method": "Slet forslag",
+        "title": "Slet forslag anmodning",
+        "result": "Slet forslag resultat",
+        "headers": {
+            "request": "Slet følgende forslag?",
+            "result": "Følgende forslag blev slettet:"
+        },
+        "rows": {
+            "using_owner_authority": "Bruger ejerfuldmagt: {using_owner_authority}",
+            "proposal": "Forslag: {proposal}",
+            "fee_paying_account": "Gebyrbetalende konto: {fee_paying_account} ({fee_paying_accountOP})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Slet et blockchainoperationsforslag"
+    },
+    "withdraw_permission_create": {
+        "method": "Opret hævetilladelse",
+        "title": "Opret hævetilladelse anmodning",
+        "result": "Opret hævetilladelse resultat",
+        "headers": {
+            "request": "Direct Debit-autorisation",
+            "result": "Følgende Direct Debit-autorisation blev godkendt:"
+        },
+        "rows": {
+            "recipient": "Modtager: {recipient} ({recipientOP})",
+            "withdraw_from": "Konto at hæve fra: {withdraw_from} ({withdraw_fromOP})",
+            "taking": "Tag {amount} hver {period_sec} sekund, i {period_qty} perioder",
+            "start": "Starter: {start}"
+        },
+        "tooltip": "Opret en hævetilladelse"
+    },
+    "withdraw_permission_update": {
+        "method": "Opdater hævetilladelse",
+        "title": "Opdater hævetilladelse anmodning",
+        "result": "Opdater hævetilladelse resultat",
+        "headers": {
+            "request": "Opdater vidnetilladelser til følgende?",
+            "result": "Følgende vidnetilladelsesopdateringer blev godkendt:"
+        },
+        "rows": {
+            "withdraw_from_account": "Hæv fra konto: {withdraw_from_account} ({withdraw_from_accountOP})",
+            "authorized_account": "Autoriseret konto: {authorized_account} ({authorized_accountOP})",
+            "permission_to_update": "Tilladelse at opdatere: {permission_to_update}",
+            "withdrawal_limited": "Hævegrænse: {withdrawal_limit}",
+            "withdrawal_unlimited": "Hævegrænse: {withdrawal_limit} ({withdrawal_limitOP})",
+            "withdrawal_period_sec": "Hæveperiode (sekunder): {withdrawal_period_sec}",
+            "period_start_time": "Periodestarttidspunkt: {period_start_time}",
+            "periods_until_expiration": "Perioder til udløb: {periods_until_expiration}"
+        },
+        "tooltip": "Opdater en hævetilladelse"
+    },
+    "withdraw_permission_claim": {
+        "method": "Gør krav via hævetilladelse",
+        "title": "Gør krav via hævetilladelse anmodning",
+        "result": "Gør krav via hævetilladelse resultat",
+        "headers": {
+            "request": "Gør krav på følgende hævetilladelse",
+            "result": "Følgende hævetilladelse blev krævet:"
+        },
+        "rows": {
+            "withdraw_permission": "Hævetilladelse: {withdraw_permission}",
+            "withdraw_from_account": "Hæv fra konto: {withdraw_from_account} ({withdraw_from_accountOP})",
+            "withdraw_to_account": "Hæv til konto: {withdraw_to_account} ({withdraw_to_accountOP})",
+            "amount_to_withdraw": "Beløb at hæve: {amount_to_withdraw} ({amount_to_withdrawOP})",
+            "memo": "Memo: {memo}"
+        },
+        "tooltip": "Gør krav fra en hævetilladelse"
+    },
+    "withdraw_permission_delete": {
+        "method": "Slet hævetilladelse",
+        "title": "Slet hævetilladelse anmodning",
+        "result": "Slet hævetilladelse resultat",
+        "headers": {
+            "request": "Slet følgende hævetilladelse?",
+            "result": "Følgende hævetilladelse blev slettet:"
+        },
+        "rows": {
+            "withdraw_from_account": "Hæv fra konto: {withdraw_from_account} ({withdraw_from_accountOP})",
+            "authorized_account": "Autoriseret konto: {authorized_account} ({authorized_accountOP})",
+            "withdrawal_permission": "Hævetilladelse: {withdrawal_permission}"
+        },
+        "tooltip": "Slet en hævetilladelse"
+    },
+    "committee_member_create": {
+        "method": "Opret komitémedlem",
+        "title": "Opret komitémedlem anmodning",
+        "result": "Opret komitémedlem resultat",
+        "headers": {
+            "request": "Opret et komitémedlem?",
+            "result": "Følgende komitémedlem blev oprettet:"
+        },
+        "rows": {
+            "committee_member_account": "Komitémedlemskonto: {committee_member_account} ({committee_member_accountOP})",
+            "url": "URL: {url}"
+        },
+        "tooltip": "Opret en komitémedlemskonto"
+    },
+    "committee_member_update": {
+        "method": "Opdater komitémedlem",
+        "title": "Opdater komitémedlem anmodning",
+        "result": "Opdater komitémedlem resultat",
+        "headers": {
+            "request": "Opdater følgende komitémedlems detaljer?",
+            "result": "Følgende komitémedlems detaljeopdateringer blev godkendt:"
+        },
+        "rows": {
+            "committee_member": "Komitémedlem: {committee_member}",
+            "committee_member_account": "Komitémedlemskonto: {committee_member_account} ({committee_member_accountOP})",
+            "new_url": "Ny URL: {new_url}"
+        },
+        "tooltip": "Opdater dine komitémedlemskontooplysninger"
+    },
+    "committee_member_update_global_parameters": {
+        "method": "Opdater komitéens globale parametre",
+        "title": "Opdater komitéens globale parametre anmodning",
+        "result": "Opdater komitéens globale parametre resultat",
+        "headers": {
+            "request": "Godkend følgende globale parametre som komité?",
+            "result": "Følgende globale komitéparametre blev godkendt:"
+        },
+        "rows": {
+            "new_parameters": "Nye parametre:",
+            "current_fees": "Aktuelle gebyrer: {current_fees}",
+            "block_interval": "Blokinterval: {block_interval}",
+            "maintenance_interval": "Vedligeholdelsesinterval: {maintenance_interval}",
+            "maintenance_skip_slots": "Vedligeholdelses spring-slots: {maintenance_skip_slots}",
+            "committee_proposal_review_period": "Komitéforslags revisionsperiode: {committee_proposal_review_period}",
+            "maximum_transaction_size": "Maksimal transaktionsstørrelse: {maximum_transaction_size}",
+            "maximum_block_size": "Maksimal blokstørrelse: {maximum_block_size}",
+            "maximum_time_until_expiration": "Maksimal tid til udløb: {maximum_time_until_expiration}",
+            "maximum_proposal_lifetime": "Maksimal forslagslevetid: {maximum_proposal_lifetime}",
+            "maximum_asset_whitelist_authorities": "Maksimale aktivwhitelist-myndigheder: {maximum_asset_whitelist_authorities}",
+            "maximum_asset_feed_publishers": "Maksimale aktivfeedudgivere: {maximum_asset_feed_publishers}",
+            "maximum_witness_count": "Maksimalt vidneantal: {maximum_witness_count}",
+            "maximum_committee_count": "Maksimalt komitéantal: {maximum_committee_count}",
+            "maximum_authority_membership": "Maksimalt autoritetsmedlemskab: {maximum_authority_membership}",
+            "reserve_percent_of_fee": "Reserveprocent af gebyr: {reserve_percent_of_fee}",
+            "network_percent_of_fee": "Netværksprocent af gebyr: {network_percent_of_fee}",
+            "lifetime_referrer_percent_of_fee": "Livstids henviserprocent af gebyr: {lifetime_referrer_percent_of_fee}",
+            "cashback_vesting_period_seconds": "Cashback vestingperiode sekunder: {cashback_vesting_period_seconds}",
+            "cashback_vesting_threshold": "Cashback vestingtærskel: {cashback_vesting_threshold}",
+            "count_non_member_votes": "Tæl ikke-medlems stemmer: {count_non_member_votes}",
+            "allow_non_member_whitelists": "Tillad ikke-medlems whitelists: {allow_non_member_whitelists}",
+            "witness_pay_per_block": "Vidnebetaling pr. blok: {witness_pay_per_block}",
+            "worker_budget_per_day": "Workerbudget pr. dag: {worker_budget_per_day}",
+            "max_predicate_opcode": "Maks prædikat-opcode: {max_predicate_opcode}",
+            "fee_liquidation_threshold": "Gebyr likvidationstærskel: {fee_liquidation_threshold}",
+            "accounts_per_fee_scale": "Konti pr. gebyrskala: {accounts_per_fee_scale}",
+            "account_fee_scale_bitshifts": "Kontogebyrskala bitshifts: {account_fee_scale_bitshifts}",
+            "max_authority_depth": "Maks autoritetsdybde: {max_authority_depth}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Publicér dit komitémedlems holdning til Bitshares-blockchainens globale parameterværdier"
+    },
+    "vesting_balance_create": {
+        "method": "Opret vesting-balance",
+        "title": "Opret vesting-balance anmodning",
+        "result": "Opret vesting-balance resultat",
+        "headers": {
+            "request": "Opret følgende vesting-balance?",
+            "result": "Følgende vesting-balance blev oprettet:"
+        },
+        "rows": {
+            "creator": "Opretter: {creator} ({creatorOP})",
+            "owner": "Ejer: {owner} ({ownerOP})",
+            "amount": "Beløb: {amount} ({asset_id})",
+            "policy": "Politik:",
+            "begin_timestamp": "Starttidsstempel: {begin_timestamp}",
+            "vesting_cliff_seconds": "Vesting-cliff sekunder: {vesting_cliff_seconds}",
+            "vesting_duration_seconds": "Vesting-varighed sekunder: {vesting_duration_seconds}",
+            "start_claim": "Start krav: {start_claim}",
+            "vesting_seconds": "Vesting sekunder: {vesting_seconds}"
+        },
+        "tooltip": "Opret en vesting-balance"
+    },
+    "vesting_balance_withdraw": {
+        "method": "Hæv vesting-balance",
+        "title": "Hæv vesting-balance anmodning",
+        "result": "Hæv vesting-balance resultat",
+        "headers": {
+            "request": "Hæv følgende vesting-balance?",
+            "result": "Følgende vesting-balance blev hævet:"
+        },
+        "rows": {
+            "owner": "Ejer: {owner} ({ownerOP})",
+            "claim": "Krav: {claim} ({asset_id})"
+        },
+        "tooltip": "Hæv fra en vesting-balance"
+    },
+    "worker_create": {
+        "method": "Opret worker",
+        "title": "Opret worker anmodning",
+        "result": "Opret worker resultat",
+        "headers": {
+            "request": "Opret følgende workerforslag?",
+            "result": "Følgende workerforslag blev oprettet:"
+        },
+        "rows": {
+            "owner": "Ejer: {owner} ({ownerOP})",
+            "work_begin_date": "Arbejdsstartdato: {work_begin_date}",
+            "work_end_date": "Arbejdsslutdato: {work_end_date}",
+            "daily_pay": "Daglig betaling: {daily_pay}",
+            "name": "Navn: {name}",
+            "url": "URL: {url}",
+            "initializer": "Initialisering: {initializer}"
+        },
+        "tooltip": "Opret et workerforslag"
+    },
+    "custom": {
+        "method": "Brugerdefineret",
+        "title": "Brugerdefineret anmodning",
+        "result": "Brugerdefineret resultat",
+        "headers": {
+            "request": "Opret følgende brugerdefinerede operation?",
+            "result": "Følgende brugerdefinerede operation blev oprettet:"
+        },
+        "rows": {
+            "payer": "Betaler: {payer} ({payerOP})",
+            "required_auths": "Krævede myndigheder: {required_auths}",
+            "id": "ID: {id}",
+            "data": "Data: {data}"
+        },
+        "tooltip": "Giver en generisk måde at tilføje protokoller på højere niveau oven på vidnekonsensus"
+    },
+    "assert": {
+        "method": "Hævd",
+        "title": "Assert anmodning",
+        "result": "Assert resultat",
+        "headers": {
+            "request": "Godkend følgende assert-anmodningsoperation?",
+            "result": "Følgende assert-anmodningsoperation blev godkendt:"
+        },
+        "rows": {
+            "fee_paying_account": "Gebyrbetalende konto: {fee_paying_account} ({fee_paying_accountOP})",
+            "predicates": "Prædikater: {predicates}",
+            "required_auths": "Krævede myndigheder: {required_auths}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Assert at visse betingelser er sande."
+    },
+    "balance_claim": {
+        "method": "Balancekrav",
+        "title": "Balancekrav anmodning",
+        "result": "Balancekrav resultat",
+        "headers": {
+            "request": "Kræv følgende balance?",
+            "result": "Følgende balance blev krævet:"
+        },
+        "rows": {
+            "deposit_to_account": "Indbetalingskonto: {deposit_to_account} ({deposit_to_accountOP})",
+            "balance_to_claim": "Balance at kræve: {balance_to_claim}",
+            "balance_owner_key": "Balanceejers nøgle: {balance_owner_key}",
+            "total_claimed": "Total krævet: {total_claimed} ({asset_id})"
+        },
+        "tooltip": "Gør krav fra en balance"
+    },
+    "override_transfer": {
+        "method": "Tilsidesæt overførsel",
+        "title": "Tilsidesæt overførsel anmodning",
+        "result": "Tilsidesæt overførsel resultat",
+        "headers": {
+            "request": "Tilsidesæt følgende overførsel?",
+            "result": "Følgende overførsel blev tilsidesat:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer} ({issuerOP})",
+            "from": "Fra: {from} ({fromOP})",
+            "to": "Til: {to} ({toOP})",
+            "amount": "Beløb: {amount} ({asset_id})",
+            "memo": "Memo: {memo}"
+        },
+        "tooltip": "Tilsidesæt en overførselsoperation"
+    },
+    "transfer_to_blind": {
+        "method": "Overfør til blind",
+        "title": "Overfør til blind anmodning",
+        "result": "Overfør til blind resultat",
+        "headers": {
+            "request": "Overfør følgende til blind?",
+            "result": "Følgende blev overført til blind:"
+        },
+        "rows": {
+            "amount": "Beløb: {amount}",
+            "from": "Fra: {from} ({fromOP})",
+            "blinding_factor": "Blinding-faktor: {blinding_factor}",
+            "outputs": "Outputs: {outputs}"
+        },
+        "tooltip": "Overfør aktiver til en blind destination"
+    },
+    "blind_transfer": {
+        "method": "Blind overførsel",
+        "title": "Blind overførsel anmodning",
+        "result": "Blind overførsel resultat",
+        "headers": {
+            "request": "Godkend følgende blinde overførsel?",
+            "result": "Følgende blinde overførsel blev godkendt:"
+        },
+        "rows": {
+            "inputs": "Inputs: {inputs}",
+            "outputs": "Outputs: {outputs}"
+        },
+        "tooltip": "Overfør blinde aktiver på blind vis"
+    },
+    "transfer_from_blind": {
+        "method": "Overfør fra blind",
+        "title": "Overfør fra blind anmodning",
+        "result": "Overfør fra blind resultat",
+        "headers": {
+            "request": "Overfør følgende fra blind?",
+            "result": "Følgende blev overført fra blind:"
+        },
+        "rows": {
+            "amount": "Beløb: {amount}",
+            "to": "Til: {to} ({toOP})",
+            "blinding_factor": "Blinding-faktor: {blinding_factor}",
+            "inputs": "Inputs: {inputs}"
+        },
+        "tooltip": "Hæv aktiver fra en blind balance"
+    },
+    "asset_settle_cancel": {
+        "method": "Aktivafregning annuller",
+        "title": "Anmodning om annullering af aktivafregning",
+        "result": "Annulleringsresultat for aktivafregning",
+        "headers": {
+            "request": "Annullere følgende aktivafregning?",
+            "result": "Følgende aktivafregning blev annulleret:"
+        },
+        "rows": {
+            "settlement": "Afregning: {settlement}",
+            "account": "Konto: {account} ({accountOP})",
+            "amount": "Beløb: {amount} ({asset_id})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Annuller en afventende aktivafviklingsordre"
+    },
+    "asset_claim_fees": {
+        "method": "Kræv aktivgebyrer",
+        "title": "Kræv aktivgebyrer anmodning",
+        "result": "Kræv aktivgebyrer resultat",
+        "headers": {
+            "request": "Hæv gebyrerne fra følgende aktiv?",
+            "result": "Følgende aktivs gebyrer blev krævet:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer} ({issuerOP})",
+            "amount_to_claim": "Beløb at kræve: {amount_to_claim} ({asset_id})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Kræv gebyrerne fra et aktiv"
+    },
+    "fba_distribute": {
+        "method": "FBA distribuere",
+        "title": "FBA distribuere anmodning",
+        "result": "FBA distribuer resultatet",
+        "headers": {
+            "request": "Fordele gebyrer fra følgende FBA-akkumulator?",
+            "result": "Følgende FBA-fordeling blev registreret:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "fba_id": "FBA akkumulator: {fba_id}",
+            "amount": "Beløb: {amount} ({asset_id})"
+        },
+        "tooltip": "Fordel gebyrer fra en Fee-Backed Asset-akkumulator"
+    },
+    "bid_collateral": {
+        "method": "Byd sikkerhed",
+        "title": "Byd sikkerhed anmodning",
+        "result": "Byd sikkerhed resultat",
+        "headers": {
+            "request": "Godkend følgende sikkerhedsbud?",
+            "result": "Følgende sikkerhedsbud blev godkendt:"
+        },
+        "rows": {
+            "bidder": "Budgiver: {bidder} ({bidderOP})",
+            "additional_collateral": "Yderligere sikkerhed: {additional_collateral}",
+            "debt_covered": "Dækket gæld: {debt_covered}"
+        },
+        "tooltip": "Byd på en bitassets bagvedliggende sikkerhed ved global afregning"
+    },
+    "execute_bid": {
+        "method": "Udfør bud",
+        "title": "Udfør budbegivenhed",
+        "result": "Udfør budresultat",
+        "headers": {
+            "request": "Optage følgende udførte bud?",
+            "result": "Følgende bududførelse blev registreret:"
+        },
+        "rows": {
+            "bidder": "Budgiver: {bidder} ({bidderOP})",
+            "debt": "Gæld: {debt}",
+            "collateral": "Sikkerhed: {collateral}"
+        },
+        "tooltip": "Udførelse af et sikkerhedsstillelsesbud efter global afvikling"
+    },
+    "asset_claim_pool": {
+        "method": "Kræv aktivpool",
+        "title": "Kræv aktivpool anmodning",
+        "result": "Kræv aktivpool resultat",
+        "headers": {
+            "request": "Kræv følgende aktivpool?",
+            "result": "Følgende aktivpool blev krævet:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer} ({issuerOP})",
+            "asset_id": "Aktiv: {asset_id}",
+            "amount_to_claim": "Beløb at kræve: {amount_to_claim}"
+        },
+        "tooltip": "Overfører BTS fra gebyrpoolen for et givent aktiv tilbage til udstederens balance"
+    },
+    "asset_update_issuer": {
+        "method": "Opdater aktivudsteder",
+        "title": "Opdater aktivudsteder anmodning",
+        "result": "Opdater aktivudsteder resultat",
+        "headers": {
+            "request": "Opdater udstederen af følgende aktiv?",
+            "result": "Følgende aktivs udsteder blev opdateret:"
+        },
+        "rows": {
+            "issuer": "Udsteder: {issuer} ({issuerOP})",
+            "asset_to_update": "Aktiv at opdatere: {asset_to_update}",
+            "new_issuer": "Ny udsteder: {new_issuer} ({new_issuerOP})"
+        },
+        "tooltip": "Opdater udsteder af et aktiv til en ny administratorkonto."
+    },
+    "htlc_create": {
+        "method": "Opret HTLC",
+        "title": "Opret HTLC anmodning",
+        "result": "Opret HTLC resultat",
+        "headers": {
+            "request": "Opret følgende hashede timelock-kontraktoperation?",
+            "result": "Oprettelsen af følgende hashede timelock-kontraktoperation blev godkendt:"
+        },
+        "rows": {
+            "from": "Fra: {from} ({fromOP})",
+            "to": "Til: {to} ({toOP})",
+            "amount": "Beløb: {amount}",
+            "preimage_hash": "Preimage-hash: {preimage_hash}",
+            "preimage_size": "Preimage-størrelse: {preimage_size}",
+            "claim_period_seconds": "Kravperiode (sekunder): {claim_period_seconds}"
+        },
+        "tooltip": "Opret en hash-tidslåst kontrakt (HTLC) operation"
+    },
+    "htlc_redeem": {
+        "method": "Indløs HTLC",
+        "title": "Indløs HTLC anmodning",
+        "result": "Indløs HTLC resultat",
+        "headers": {
+            "request": "Indløs følgende hash-tidslåste kontraktoperation?",
+            "result": "Indløsningen af følgende hash-tidslåste kontraktoperation blev godkendt:"
+        },
+        "rows": {
+            "htlc_id": "HTLC-ID: {htlc_id}",
+            "redeemer": "Indløser: {redeemer} ({redeemerOP})",
+            "preimage": "Preimage: {preimage}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Indløs indholdet af en HTLC-operation"
+    },
+    "htlc_redeemed": {
+        "method": "HTLC indløst",
+        "title": "HTLC Redeemed begivenhed",
+        "result": "HTLC indløst resultat",
+        "headers": {
+            "request": "Optage følgende HTLC-indløsning?",
+            "result": "Følgende HTLC-indløsning blev registreret:"
+        },
+        "rows": {
+            "htlc_id": "HTC ID: {htlc_id}",
+            "from": "Fra: {from} ({fromOP})",
+            "to": "Til: {to} ({toOP})",
+            "amount": "Beløb: {amount} ({asset_id})"
+        },
+        "tooltip": "Registrering af en HTLC-indløsning"
+    },
+    "htlc_extend": {
+        "method": "Forlæng HTLC",
+        "title": "Forlæng HTLC anmodning",
+        "result": "Forlæng HTLC resultat",
+        "headers": {
+            "request": "Godkend forlængelse af følgende hash-tidslåste kontrakt?",
+            "result": "Forlængelsen af følgende hash-tidslåste kontrakt blev godkendt:"
+        },
+        "rows": {
+            "htlc_id": "HTLC-ID: {htlc_id}",
+            "update_issuer": "Opdater udsteder: {update_issuer} ({update_issuerOP})",
+            "seconds_to_add": "Sekunder at tilføje: {seconds_to_add}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Forlæng varigheden af en HTLC-operation"
+    },
+    "htlc_refund": {
+        "method": "HTC Refusion",
+        "title": "HTC Refusion begivenhed",
+        "result": "Resultat af HTC Refusion",
+        "headers": {
+            "request": "Optage følgende HTTP-refusion?",
+            "result": "Følgende HTLC-refusion blev registreret:"
+        },
+        "rows": {
+            "htlc_id": "HTC ID: {htlc_id}",
+            "to": "Til: {to} ({toOP})"
+        },
+        "tooltip": "Registrering af en HTLC-refusion på grund af udløb"
+    },
+    "custom_authority_create": {
+        "method": "Opret brugerdefineret fuldmagt",
+        "title": "Opret brugerdefineret fuldmagt anmodning",
+        "result": "Opret brugerdefineret fuldmagt resultat",
+        "headers": {
+            "request": "Opret følgende brugerdefinerede fuldmagt?",
+            "result": "Følgende brugerdefinerede fuldmagt blev oprettet:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "enabled": "Aktiveret: {enabled}",
+            "valid_from": "Gyldig fra: {valid_from}",
+            "valid_to": "Gyldig til: {valid_to}",
+            "operation_type": "Operationstype: {operation_type}",
+            "auth": "Fuldmagt: {auth}",
+            "restrictions": "Restriktioner: {restrictions}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opret en ny brugerdefineret fuldmagt."
+    },
+    "custom_authority_update": {
+        "method": "Opdater brugerdefineret fuldmagt",
+        "title": "Opdater brugerdefineret fuldmagt anmodning",
+        "result": "Opdater brugerdefineret fuldmagt resultat",
+        "headers": {
+            "request": "Opdater følgende brugerdefinerede fuldmagt?",
+            "result": "Følgende brugerdefinerede fuldmagt blev opdateret:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "authority_to_update": "Fuldmagt at opdatere: {authority_to_update}",
+            "new_enabled": "Ny aktiveret: {new_enabled}",
+            "new_valid_from": "Ny gyldig fra: {new_valid_from}",
+            "new_valid_to": "Ny gyldig til: {new_valid_to}",
+            "new_auth": "Ny fuldmagt: {new_auth}",
+            "restrictions_to_remove": "Restriktioner at fjerne: {restrictions_to_remove}",
+            "restrictions_to_add": "Restriktioner at tilføje: {restrictions_to_add}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater en brugerdefineret fuldmagt."
+    },
+    "custom_authority_delete": {
+        "method": "Slet brugerdefineret fuldmagt",
+        "title": "Slet brugerdefineret fuldmagt anmodning",
+        "result": "Slet brugerdefineret fuldmagt resultat",
+        "headers": {
+            "request": "Slet følgende brugerdefinerede fuldmagt?",
+            "result": "Følgende brugerdefinerede fuldmagt blev slettet:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "authority_to_delete": "Fuldmagt at slette: {authority_to_delete}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Slet en brugerdefineret fuldmagt."
+    },
+    "ticket_create": {
+        "method": "Opret billet",
+        "title": "Opret billet anmodning",
+        "result": "Opret billet resultat",
+        "headers": {
+            "request": "Opret følgende billet?",
+            "result": "Følgende billet blev oprettet:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "target_type": "Måltype: {target_type}",
+            "amount": "Beløb: {amount}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opret en ny billet."
+    },
+    "ticket_update": {
+        "method": "Opdater billet",
+        "title": "Opdater billet anmodning",
+        "result": "Opdater billet resultat",
+        "headers": {
+            "request": "Opdater følgende billet?",
+            "result": "Følgende billet blev opdateret:"
+        },
+        "rows": {
+            "ticket": "Billet: {ticket}",
+            "account": "Konto: {account} ({accountOP})",
+            "target_type": "Måltype: {target_type}",
+            "amount_for_new_target": "Beløb for nyt mål: {amount_for_new_target}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater en eksisterende billet."
+    },
+    "liquidity_pool_create": {
+        "method": "Opret likviditetspool",
+        "title": "Opret likviditetspool anmodning",
+        "result": "Opret likviditetspool resultat",
+        "headers": {
+            "request": "Opret en likviditetspool med følgende detaljer?",
+            "result": "Følgende likviditetspool blev oprettet:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "asset_a": "Aktiv A: {asset_a} ({asset_aOP})",
+            "asset_b": "Aktiv B: {asset_b} ({asset_bOP})",
+            "share_asset": "Share-aktiv: {share_asset} ({share_assetOP})",
+            "taker_fee_percent": "Takergebyrprocent: {taker_fee_percent}",
+            "withdrawal_fee_percent": "Hævegebyrprocent: {withdrawal_fee_percent}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opret en likviditetspool"
+    },
+    "liquidity_pool_delete": {
+        "method": "Slet likviditetspool",
+        "title": "Slet likviditetspool anmodning",
+        "result": "Slet likviditetspool resultat",
+        "headers": {
+            "request": "Slet følgende likviditetspool?",
+            "result": "Følgende likviditetspool blev slettet:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "pool_id": "Pool-ID: {pool_id}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Slet en likviditetspool"
+    },
+    "liquidity_pool_deposit": {
+        "method": "Indbetal i likviditetspool",
+        "title": "Indbetal i likviditetspool anmodning",
+        "result": "Indbetal i likviditetspool resultat",
+        "headers": {
+            "request": "Indbetal følgende aktiver i likviditetspoolen?",
+            "result": "Følgende aktiver blev indbetalt i likviditetspoolen:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "pool": "Pool: {pool}",
+            "asset_a": "Aktiv A: {asset_a} ({asset_aOP})",
+            "asset_b": "Aktiv B: {asset_b} ({asset_bOP})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Indbetal midler i en likviditetspool"
+    },
+    "liquidity_pool_withdraw": {
+        "method": "Hæv fra likviditetspool",
+        "title": "Hæv fra likviditetspool anmodning",
+        "result": "Hæv fra likviditetspool resultat",
+        "headers": {
+            "request": "Hæv følgende aktiver fra likviditetspoolen?",
+            "result": "Følgende aktiver blev hævet fra likviditetspoolen:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "pool": "Pool: {pool}",
+            "share_asset": "Share-aktiv: {share_asset} ({share_assetOP})",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Hæv midler fra en likviditetspool"
+    },
+    "liquidity_pool_exchange": {
+        "method": "Veksl i likviditetspool",
+        "title": "Veksl i likviditetspool anmodning",
+        "result": "Veksl i likviditetspool resultat",
+        "headers": {
+            "request": "Godkend følgende veksling i likviditetspool?",
+            "result": "Følgende veksling i likviditetspool blev godkendt:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "pool": "Pool: {pool}",
+            "amount_to_sell": "Beløb at sælge: {amount_to_sell}",
+            "min_to_receive": "Min at modtage: {min_to_receive}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Veksl med en likviditetspool."
+    },
+    "samet_fund_create": {
+        "method": "Opret SameT-fond",
+        "title": "Opret SameT-fond anmodning",
+        "result": "Opret SameT-fond resultat",
+        "headers": {
+            "request": "Godkend oprettelse af følgende SameT-fond?",
+            "result": "Følgende SameT-fond blev oprettet:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "asset_type": "Aktivtype: {asset_type}",
+            "balance": "Balance: {balance}",
+            "fee_rate": "Gebyrsats: {fee_rate}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opret en ny SameT-fond. En SameT-fond er en fond, som en låntager kan bruge, og som skal tilbagebetales i samme transaktion."
+    },
+    "samet_fund_delete": {
+        "method": "Slet SameT-fond",
+        "title": "Slet SameT-fond anmodning",
+        "result": "Slet SameT-fond resultat",
+        "headers": {
+            "request": "Slet følgende SameT-fond?",
+            "result": "Følgende SameT-fond blev slettet:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "fund_id": "Fond-ID: {fund_id}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Slet et SameT-fondobjekt."
+    },
+    "samet_fund_update": {
+        "method": "Opdater SameT-fond",
+        "title": "Opdater SameT-fond anmodning",
+        "result": "Opdater SameT-fond resultat",
+        "headers": {
+            "request": "Opdater følgende SameT-fond?",
+            "result": "Følgende SameT-fond blev opdateret:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "fund_id": "Fond-ID: {fund_id}",
+            "delta_amount": "Delta-beløb: {delta_amount}",
+            "new_fee_rate": "Ny gebyrsats: {new_fee_rate}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater et SameT-fondobjekt."
+    },
+    "samet_fund_borrow": {
+        "method": "Lån fra SameT-fond",
+        "title": "Lån fra SameT-fond anmodning",
+        "result": "Lån fra SameT-fond resultat",
+        "headers": {
+            "request": "Lån fra følgende SameT-fond?",
+            "result": "Lånte med succes fra følgende SameT-fond:"
+        },
+        "rows": {
+            "borrower": "Låntager: {borrower} ({borrowerOP})",
+            "fund_id": "Fond-ID: {fund_id}",
+            "borrow_amount": "Lånebeløb: {borrow_amount}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Lån fra en SameT-fond."
+    },
+    "samet_fund_repay": {
+        "method": "Tilbagebetal SameT-fond",
+        "title": "Tilbagebetal SameT-fond anmodning",
+        "result": "Tilbagebetal SameT-fond resultat",
+        "headers": {
+            "request": "Tilbagebetal følgende SameT-fond",
+            "result": "Tilbagebetalte med succes følgende SameT-fond"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "fund_id": "Fond-ID: {fund_id}",
+            "repay_amount": "Tilbagebetalingsbeløb: {repay_amount}",
+            "fund_fee": "Fondgebyr: {fund_fee}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Tilbagebetal gæld til en SameT-fond."
+    },
+    "credit_offer_create": {
+        "method": "Opret kredittilbud",
+        "title": "Opret kredittilbud anmodning",
+        "result": "Opret kredittilbud resultat",
+        "headers": {
+            "request": "Godkend oprettelsen af følgende kredittilbud?",
+            "result": "Følgende kredittilbud blev oprettet:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "asset_type": "Aktivtype: {asset_type}",
+            "balance": "Balance: {balance}",
+            "fee_rate": "Gebyrsats: {fee_rate}",
+            "max_duration_seconds": "Maks varighed sekunder: {max_duration_seconds}",
+            "min_deal_amount": "Min aftalebeløb: {min_deal_amount}",
+            "enabled": "Aktiveret: {enabled}",
+            "auto_disable_time": "Auto-deaktiveringstid: {auto_disable_time}",
+            "acceptable_collateral": "Acceptabel sikkerhed: {acceptable_collateral}",
+            "acceptable_borrowers": "Acceptable låntagere: {acceptable_borrowers}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opret et nyt kredittilbud. Et kredittilbud er en fond, som andre konti kan bruge mod en vis sikkerhed."
+    },
+    "credit_offer_delete": {
+        "method": "Slet kredittilbud",
+        "title": "Slet kredittilbud anmodning",
+        "result": "Slet kredittilbud resultat",
+        "headers": {
+            "request": "Slet følgende kredittilbud?",
+            "result": "Følgende kredittilbud blev slettet:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "offer_id": "Tilbuds-ID: {offer_id}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Slet et kredittilbud."
+    },
+    "credit_offer_update": {
+        "method": "Opdater kredittilbud",
+        "title": "Opdater kredittilbud anmodning",
+        "result": "Opdater kredittilbud resultat",
+        "headers": {
+            "request": "Opdater følgende kredittilbud?",
+            "result": "Følgende kredittilbud blev opdateret:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "offer_id": "Tilbuds-ID: {offer_id}",
+            "delta_amount": "Delta-beløb: {delta_amount}",
+            "fee_rate": "Gebyrsats: {fee_rate}",
+            "max_duration_seconds": "Maks varighed sekunder: {max_duration_seconds}",
+            "min_deal_amount": "Min aftalebeløb: {min_deal_amount}",
+            "enabled": "Aktiveret: {enabled}",
+            "auto_disable_time": "Auto-deaktiveringstid: {auto_disable_time}",
+            "acceptable_collateral": "Acceptabel sikkerhed: {acceptable_collateral}",
+            "acceptable_borrowers": "Acceptable låntagere: {acceptable_borrowers}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater et kredittilbud"
+    },
+    "credit_offer_accept": {
+        "method": "Accepter kredittilbud",
+        "title": "Accepter kredittilbud anmodning",
+        "result": "Accepter kredittilbud resultat",
+        "headers": {
+            "request": "Godkend følgende kredittilbud?",
+            "result": "Følgende kredittilbud blev godkendt:"
+        },
+        "rows": {
+            "borrower": "Låntager: {borrower} ({borrowerOP})",
+            "offer_id": "Tilbuds-ID: {offer_id}",
+            "borrow_amount": "Lånebeløb: {borrow_amount}",
+            "collateral": "Sikkerhed: {collateral}",
+            "max_fee_rate": "Maks gebyrsats: {max_fee_rate}",
+            "min_duration_seconds": "Min varighed sekunder: {min_duration_seconds}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Accepter et kredittilbud og opret en kreditaftale."
+    },
+    "credit_deal_repay": {
+        "method": "Tilbagebetal kreditaftale",
+        "title": "Tilbagebetal kreditaftale anmodning",
+        "result": "Tilbagebetal kreditaftale resultat",
+        "headers": {
+            "request": "Tilbagebetal følgende kreditaftale?",
+            "result": "Du tilbagebetalte følgende kreditaftale"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "deal_id": "Aftale-ID: {deal_id}",
+            "repay_amount": "Tilbagebetalingsbeløb: {repay_amount}",
+            "credit_fee": "Kreditgebyr: {credit_fee}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Tilbagebetal en kreditaftale."
+    },
+    "credit_deal_expired": {
+        "method": "Kreditaftalen udløb",
+        "title": "Begivenhed for kreditaftale udløb",
+        "result": "Resultat af kreditaftale udløbet",
+        "headers": {
+            "request": "Registrere følgende udløbne kreditaftale?",
+            "result": "Følgende kreditaftales udløb blev registreret:"
+        },
+        "rows": {
+            "deal_id": "Aftale-id: {deal_id}",
+            "offer_id": "Tilbuds-id: {offer_id}",
+            "offer_owner": "Tilbyd ejer: {offer_owner} ({offer_ownerOP})",
+            "borrower": "Låntager: {borrower} ({borrowerOP})",
+            "unpaid_amount": "Ubetalt beløb: {unpaid_amount} ({unpaid_amountOP})",
+            "collateral": "Sikkerhed: {collateral} ({collateralOP})",
+            "fee_rate": "Gebyrsats: {fee_rate}"
+        },
+        "tooltip": "Registrering af en udløbet kreditaftale og de resulterende beløb"
+    },
+    "liquidity_pool_update_operation": {
+        "method": "Opdater likviditetspool",
+        "title": "Opdater likviditetspool anmodning",
+        "result": "Opdater likviditetspool resultat",
+        "headers": {
+            "request": "Opdater følgende likviditetspool?",
+            "result": "Følgende likviditetspool blev opdateret:"
+        },
+        "rows": {
+            "owner_account": "Ejerkonto: {owner_account} ({owner_accountOP})",
+            "pool_id": "Pool-ID: {pool_id}",
+            "new_parameters": "Nye parametre: {new_parameters}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater en likviditetspool"
+    },
+    "credit_deal_update_operation": {
+        "method": "Opdater kreditaftale",
+        "title": "Opdater kreditaftale anmodning",
+        "result": "Opdater kreditaftale resultat",
+        "headers": {
+            "request": "Opdater følgende kreditaftale?",
+            "result": "Følgende kreditaftale blev opdateret:"
+        },
+        "rows": {
+            "account": "Konto: {account} ({accountOP})",
+            "deal_id": "Aftale-ID: {deal_id}",
+            "auto_repay": "Auto-tilbagebetaling: {auto_repay}"
+        },
+        "tooltip": "Opdater en kreditaftale"
+    },
+    "limit_order_update_operation": {
+        "method": "Opdater limitordre",
+        "title": "Opdater limitordre anmodning",
+        "result": "Opdater limitordre resultat",
+        "headers": {
+            "request": "Opdater følgende limitordre?",
+            "result": "Følgende limitordre blev opdateret:"
+        },
+        "rows": {
+            "seller": "Sælger: {seller} ({sellerOP})",
+            "order": "Ordre: {order}",
+            "new_price": "Ny pris: {new_price}",
+            "delta_amount_to_sell": "Delta-beløb at sælge: {delta_amount_to_sell}",
+            "new_expiration": "Nyt udløb: {new_expiration}",
+            "on_fill": "Ved udførelse: {on_fill}",
+            "extensions": "Udvidelser: {extensions}"
+        },
+        "tooltip": "Opdater en limitordre"
+    }
 }

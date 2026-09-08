@@ -444,6 +444,11 @@
         "subtitle": "Määrake kindlad teemad üksikutele lehtedele",
         "hover1": "Kirjutage aktiivne teema üle mis tahes lehel rakenduses."
     },
+    "docs": {
+        "title": "Dokumentatsioon",
+        "subtitle": "Juhendid ja teatmematerjal rakenduse kasutamiseks",
+        "hover1": "Sirvi Starlighti dokumente seadistamise, funktsioonide ja õpetuste kohta."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Jaota vara hulgiväliselt paljudele kontodele korraga.",
@@ -532,8 +537,8 @@
     },
     "trollbox": {
         "title": "Trollbox",
-        "subtitle": "On-chain chat on the BitShares blockchain.",
-        "hover1": "Chat with other users, stored permanently on the blockchain.",
-        "hover2": "The sender pays a small network fee per message."
+        "subtitle": "Ahelasisene vestlus BitSharesi plokiahelas.",
+        "hover1": "Vestle teiste kasutajatega, salvestatud jäädavalt plokiahelasse.",
+        "hover2": "Saatja maksab iga sõnumi eest väikest võrgutasu."
     }
 }

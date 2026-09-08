@@ -1,4 +1,5 @@
 import { nanoquery } from "@nanostores/query";
+import { persistentAtom } from "@nanostores/persistent";
 import DOMPurify from "dompurify";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
@@ -10,19 +11,94 @@ import {
 import { attachmentObjectIds } from "@/lib/trollboxAttach.js";
 
 export const TROLLBOX_CHANNELS = [
-  { id: "general", catalog: "trollbox-general" },
-  { id: "announcements", catalog: "trollbox-announcements" },
-  { id: "trading", catalog: "trollbox-trading" },
-  { id: "pools", catalog: "trollbox-pools" },
-  { id: "smartcoins", catalog: "trollbox-smartcoins" },
-  { id: "credit", catalog: "trollbox-credit" },
-  { id: "assets", catalog: "trollbox-assets" },
-  { id: "governance", catalog: "trollbox-governance" },
-  { id: "proposals", catalog: "trollbox-proposals" },
-  { id: "dev", catalog: "trollbox-dev" },
+  { id: "general" },
+  { id: "announcements" },
+  { id: "trading" },
+  { id: "pools" },
+  { id: "smartcoins" },
+  { id: "credit" },
+  { id: "assets" },
+  { id: "governance" },
+  { id: "proposals" },
+  { id: "dev" },
 ];
 
+// Content-language partitions. English keeps the legacy unprefixed
+// catalogs above (all existing history); other languages append their
+// code: trollbox-<channel>-<lang>. The op id is ignored by the plugin,
+// so the catalog suffix is the partition mechanism.
+export const TROLLBOX_LANGS = [
+  "en",
+  "da",
+  "de",
+  "es",
+  "et",
+  "fr",
+  "it",
+  "ja",
+  "ko",
+  "pt",
+  "th",
+];
+
+export const NATIVE_LANG_NAMES: Record<string, string> = {
+  en: "English",
+  da: "Dansk",
+  de: "Deutsch",
+  es: "Español",
+  et: "Eesti",
+  fr: "Français",
+  it: "Italiano",
+  ja: "日本語",
+  ko: "한국어",
+  pt: "Português",
+  th: "ไทย",
+};
+
+export function normalizeTrollboxLang(value: unknown): string {
+  return typeof value === "string" && TROLLBOX_LANGS.includes(value)
+    ? value
+    : "en";
+}
+
+export function trollboxCatalog(channelId: string, lang: string): string {
+  const normalized = normalizeTrollboxLang(lang);
+  return normalized === "en"
+    ? `trollbox-${channelId}`
+    : `trollbox-${channelId}-${normalized}`;
+}
+
 export const TROLLBOX_META_CATALOG = "trollbox-meta";
+
+export function isSupportedTrollboxLang(lang: unknown): lang is string {
+  return typeof lang === "string" && (TROLLBOX_LANGS as string[]).includes(lang);
+}
+
+/**
+ * Last content language the user picked, persisted across page visits.
+ * Precedence everywhere: ?lang= URL param → persisted selection →
+ * app UI locale → "en". The URL param always wins so a shared/deep link
+ * is never overridden by stored or locale state.
+ */
+export const $trollboxLang = persistentAtom<string>("trollboxLang", "");
+
+export function resolveContentLang(
+  urlLang: unknown,
+  fallbackLocale?: unknown
+): string {
+  if (isSupportedTrollboxLang(urlLang)) {
+    return urlLang;
+  }
+  try {
+    const stored = $trollboxLang.get();
+    if (isSupportedTrollboxLang(stored)) {
+      return stored;
+    }
+  } catch {
+    // storage unavailable: fall through to locale default
+  }
+  return isSupportedTrollboxLang(fallbackLocale) ? fallbackLocale : "en";
+}
 export const TROLLBOX_STORAGE_PAGE_LIMIT = 100;
 const TROLLBOX_MAX_PAGES = 10;
 

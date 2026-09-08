@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "Bitte geben Sie einen Blockchain-Kontonamen ein",
-    "placeholder": "Kontoname oder ID",
-    "continue": "Weitermachen",
-    "error": "Konto konnte nicht gefunden werden.",
-    "selfError": "Es können keine Vermögenswerte auf dieses Konto übertragen werden."
-  },
-  "searchResponse": {
-    "promptBTS": "Mit dem folgenden Bitshares-Konto fortfahren?",
-    "promptTEST": "Mit dem folgenden Bitshares-Testnet-Konto (TEST) fortfahren?",
-    "back": "Geh zurück",
-    "proceed": "Fortfahren"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "Letzte Suchen",
-    "recentSubtitle": "{{count}} letzte Suche",
-    "recentSubtitle_plural": "{{count}} letzte Suchen",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "Wählen Sie einen Ihrer zuletzt gesuchten Benutzer",
-    "none": "Keine letzten Suchen gefunden",
-    "noneHint": "Ihre Suchverlauf erscheint hier",
-    "eraseHistory": "Verlauf löschen"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "Bitte geben Sie einen Blockchain-Kontonamen ein",
+        "placeholder": "Kontoname oder ID",
+        "continue": "Weitermachen",
+        "error": "Konto konnte nicht gefunden werden.",
+        "selfError": "Es können keine Vermögenswerte auf dieses Konto übertragen werden."
+    },
+    "searchResponse": {
+        "promptBTS": "Mit dem folgenden Bitshares-Konto fortfahren?",
+        "promptTEST": "Mit dem folgenden Bitshares-Testnet-Konto (TEST) fortfahren?",
+        "back": "Geh zurück",
+        "proceed": "Fortfahren"
+    },
+    "mode": {
+        "titleBTS": "Wie möchtest du das Konto auf Bitshares finden?",
+        "titleTEST": "Wie möchtest du das Konto im Bitshares-Testnet finden?",
+        "search": "Nach Konto suchen",
+        "searchSubtitle": "Kontonamen oder ID eingeben",
+        "favourites": "Favorisierte Benutzer",
+        "favouritesSubtitle": "{{count}} Favorit gespeichert",
+        "favouritesSubtitle_plural": "{{count}} Favoriten gespeichert",
+        "recent": "Letzte Suchen",
+        "recentSubtitle": "{{count}} letzte Suche",
+        "recentSubtitle_plural": "{{count}} letzte Suchen",
+        "back": "Zurück"
+    },
+    "search": {
+        "initDesc": "Kontonamen oder ID eingeben",
+        "description": "Ist dies das korrekte Konto?",
+        "back": "Zurück",
+        "continue": "Weiter"
+    },
+    "favourites": {
+        "description": "Wähle einen deiner favorisierten Benutzer",
+        "none": "Keine favorisierten Benutzer gefunden",
+        "noneHint": "Du kannst Favoriten auf der Favoriten-Seite hinzufügen"
+    },
+    "recent": {
+        "description": "Wählen Sie einen Ihrer zuletzt gesuchten Benutzer",
+        "none": "Keine letzten Suchen gefunden",
+        "noneHint": "Ihre Suchverlauf erscheint hier",
+        "eraseHistory": "Verlauf löschen"
+    },
+    "step1": "Methode",
+    "step2": "Auswählen",
+    "noAccount": "Konto konnte nicht gefunden werden."
 }

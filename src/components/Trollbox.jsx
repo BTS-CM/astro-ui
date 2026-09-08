@@ -21,13 +21,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Item,
   ItemContent,
-  ItemDescription,
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
@@ -77,6 +84,14 @@ import {
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode, setCurrentNode } from "@/stores/node.ts";
 import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
+import {
+  $favouriteAssets,
+  $favouritePairs,
+  addFavouriteAsset,
+  addFavouritePair,
+  removeFavouriteAsset,
+  removeFavouritePair,
+} from "@/stores/favourites.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
 import {
   $customTheme,
@@ -87,15 +102,22 @@ import { sectionAccentStyles } from "@/lib/accentStyles.js";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import {
   TROLLBOX_CHANNELS,
+  TROLLBOX_LANGS,
+  NATIVE_LANG_NAMES,
+  $trollboxLang,
   fetchChannelMessages,
   fetchMaxMessageBytes,
   findSupportingNode,
   isPluginMissingError,
+  isSupportedTrollboxLang,
   probeTrollboxSupport,
+  resolveContentLang,
+  trollboxCatalog,
   verifyAttachmentOnChain,
 } from "@/nanoeffects/Trollbox.ts";
 import {
   attachKind,
+  fullObjectId,
   resolveAttachmentMeta,
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
@@ -120,6 +142,7 @@ const POLL_MS = 15000;
 const TROLLBOX_ROW_HEIGHT = 96;
 const TROLLBOX_MAX_MESSAGES = 100;
 const TROLLBOX_CHANNEL_PARAM = "channel";
+const TROLLBOX_LANG_PARAM = "lang";
 
 function channelFromUrl() {
   try {
@@ -129,6 +152,17 @@ function channelFromUrl() {
     return TROLLBOX_CHANNELS.some((c) => c.id === v) ? v : "general";
   } catch {
     return "general";
+  }
+}
+
+function langFromUrl() {
+  try {
+    const v = new URLSearchParams(window.location.search).get(
+      TROLLBOX_LANG_PARAM
+    );
+    return isSupportedTrollboxLang(v) ? v : null;
+  } catch {
+    return null;
   }
 }
 const TROLLBOX_MIN_ROWS = 7;
@@ -214,9 +248,9 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
                 </span>
               ) : null}
             </ItemTitle>
-          <ItemDescription>
+          <p className="w-full pr-2 text-sm font-normal leading-normal text-muted-foreground line-clamp-2">
             {truncatePreview(m.text)}
-          </ItemDescription>
+          </p>
             </ItemContent>
           </Item>
         </div>
@@ -296,6 +330,26 @@ export default function Trollbox(properties) {
   );
   const activeChannelRef = useRef(activeChannel);
   activeChannelRef.current = activeChannel;
+  const [activeLang, setActiveLang] = useState(() =>
+    resolveContentLang(langFromUrl(), locale.get())
+  );
+  const activeLangRef = useRef(activeLang);
+  activeLangRef.current = activeLang;
+
+  // Persist the pick so returning via a bare /trollbox.html link (sidebar)
+  // keeps the last language instead of falling back to the app locale.
+  // The ?lang= URL param still takes precedence on load (see initializer).
+  useEffect(() => {
+    try {
+      $trollboxLang.set(activeLang);
+    } catch {
+      // storage unavailable: selection simply won't persist
+    }
+  }, [activeLang]);
+  const activeCatalog = useMemo(
+    () => trollboxCatalog(activeChannel, activeLang),
+    [activeChannel, activeLang]
+  );
   const [draft, setDraft] = useState("");
   const [probe, setProbe] = useState({ state: "probing", node: nodeUrl });
   const [messages, setMessages] = useState([]);
@@ -336,19 +390,29 @@ export default function Trollbox(properties) {
     };
   }, [chain, nodeUrl]);
 
-  // Keep the selected channel in the URL so back/forward navigation
-  // (and returning to the page) restores it. replaceState avoids
-  // spamming history on every tab switch. CRITICAL: preserve the entry's
-  // existing history.state object — ClientRouter stores {index, ...} there
-  // and ignores popstate events whose state is null, so replaceState(null)
-  // would strand the page content on Back navigation.
+  // Keep the selected channel + language in the URL so back/forward
+  // navigation (and returning to the page) restores them. replaceState
+  // avoids spamming history on every switch. CRITICAL: preserve the
+  // entry's existing history.state object — ClientRouter stores
+  // {index, ...} there and ignores popstate events whose state is null,
+  // so replaceState(null) would strand the page content on Back
+  // navigation. English omits the lang param (canonical legacy URLs).
   useEffect(() => {
     try {
       const url = new URL(window.location.href);
-      if (url.searchParams.get(TROLLBOX_CHANNEL_PARAM) === activeChannel) {
+      const wantLang = activeLang === "en" ? null : activeLang;
+      if (
+        url.searchParams.get(TROLLBOX_CHANNEL_PARAM) === activeChannel &&
+        url.searchParams.get(TROLLBOX_LANG_PARAM) === wantLang
+      ) {
         return;
       }
       url.searchParams.set(TROLLBOX_CHANNEL_PARAM, activeChannel);
+      if (wantLang === null) {
+        url.searchParams.delete(TROLLBOX_LANG_PARAM);
+      } else {
+        url.searchParams.set(TROLLBOX_LANG_PARAM, wantLang);
+      }
       window.history.replaceState(
         { ...(window.history.state ?? {}), trollboxChannel: activeChannel },
         "",
@@ -357,15 +421,17 @@ export default function Trollbox(properties) {
     } catch {
       // non-browser or restricted context: channel simply isn't shared
     }
-  }, [activeChannel]);
+  }, [activeChannel, activeLang]);
 
   useEffect(() => {
     const onPopState = () => {
       const v = channelFromUrl();
-      if (activeChannelRef.current !== v) {
+      const l = resolveContentLang(langFromUrl(), locale.get());
+      if (activeChannelRef.current !== v || activeLangRef.current !== l) {
         setMessages([]);
         setMessagesError(null);
         setActiveChannel(v);
+        setActiveLang(l);
       }
     };
     window.addEventListener("popstate", onPopState);
@@ -406,7 +472,7 @@ export default function Trollbox(properties) {
     let cancelled = false;
     setLoadingMessages(true);
     setMessagesError(null);
-    fetchChannelMessages(chain, probe.node, channelInfo.catalog)
+    fetchChannelMessages(chain, probe.node, activeCatalog)
       .then((msgs) => {
         if (!cancelled) {
           setMessages(msgs);
@@ -439,7 +505,7 @@ export default function Trollbox(properties) {
       cancelled = true;
       clearInterval(timer);
     };
-  }, [chain, probe.state, probe.node, channelInfo, refreshNonce]);
+  }, [chain, probe.state, probe.node, channelInfo, activeCatalog, refreshNonce]);
 
   const handleFindNode = async () => {
     setFinding(true);
@@ -515,10 +581,11 @@ export default function Trollbox(properties) {
     try {
       const data = buildTrollboxData({
         channel: activeChannel,
-        catalog: channelInfo.catalog,
+        catalog: activeCatalog,
         key: buildMessageKey(),
         username: currentUser.username,
         text,
+        lang: activeLang,
         attach,
         maxBytes,
       });
@@ -728,12 +795,75 @@ export default function Trollbox(properties) {
     };
   }, [openMessage, openAttachMeta, chain, probe.state, probe.node, nodeUrl]);
 
-  const openAttachActions =
-    !openAttachMeta ||
-    (openAttachMeta.type === "offer" &&
-      offerVerified !== (openMessage && openMessage.attach.id))
-      ? []
-      : openAttachMeta.actions;
+  const favouriteAssets = useStore($favouriteAssets);
+  const favouritePairs = useStore($favouritePairs);
+
+  const openAttachActions = (() => {
+    if (
+      !openAttachMeta ||
+      !openMessage ||
+      !openMessage.attach ||
+      (openAttachMeta.type === "offer" &&
+        offerVerified !== openMessage.attach.id)
+    ) {
+      return [];
+    }
+    const actions = [...openAttachMeta.actions];
+    const attach = openMessage.attach;
+    if (openAttachMeta.type === "asset") {
+      const fullId = fullObjectId(3, attach.id);
+      const asset = chainAssets.find((a) => a && a.id === fullId);
+      const isFav = ((favouriteAssets && favouriteAssets[chain]) || []).some(
+        (a) => a.id === fullId
+      );
+      actions.push({
+        key: "favourite",
+        label: isFav
+          ? t("Trollbox:unfavourite", "Unfavourite")
+          : t("Trollbox:favourite", "Favourite"),
+        onSelect: () => {
+          const entry = {
+            symbol: asset ? asset.symbol : fullId,
+            id: fullId,
+            issuer: (asset && asset.issuer) || "",
+          };
+          if (isFav) {
+            removeFavouriteAsset(chain, entry);
+          } else {
+            addFavouriteAsset(chain, entry);
+          }
+        },
+      });
+    }
+    if (openAttachMeta.type === "pair") {
+      const aSym = chainAssets.find(
+        (a) => a && a.id === fullObjectId(3, attach.a)
+      )?.symbol;
+      const bSym = chainAssets.find(
+        (a) => a && a.id === fullObjectId(3, attach.b)
+      )?.symbol;
+      if (aSym && bSym) {
+        const pairKey = `${aSym}_${bSym}`.toUpperCase();
+        const isFav = ((favouritePairs && favouritePairs[chain]) || []).includes(
+          pairKey
+        );
+        actions.push({
+          key: "favourite",
+          label: isFav
+            ? t("Trollbox:unfavourite", "Unfavourite")
+            : t("Trollbox:favourite", "Favourite"),
+          onSelect: () => {
+            if (isFav) {
+              removeFavouritePair(chain, pairKey);
+            } else {
+              addFavouritePair(chain, pairKey);
+            }
+          },
+        });
+      }
+    }
+    return actions;
+  })();
 
   return (
     <div className="container mx-auto mt-3 mb-5 px-3 sm:px-4 max-w-5xl">
@@ -854,18 +984,52 @@ export default function Trollbox(properties) {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
         />
         <CardHeader className="pb-2 relative">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <span
-              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border"
-              style={{ ...accent.iconBg, ...accent.iconBorder }}
-            >
-              <Radio
-                className="h-3.5 w-3.5"
-                style={isDark ? undefined : accent.iconText}
-              />
-            </span>
-            {t("Trollbox:channelsTitle", "Channels")}
-          </CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base flex-1 min-w-0">
+              <span
+                className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border"
+                style={{ ...accent.iconBg, ...accent.iconBorder }}
+              >
+                <Radio
+                  className="h-3.5 w-3.5"
+                  style={isDark ? undefined : accent.iconText}
+                />
+              </span>
+              <span className="truncate">
+                {t("Trollbox:channelsTitle", "Channels")}
+              </span>
+            </CardTitle>
+            <div className="ml-auto flex shrink-0 items-center gap-2">
+              <Label
+                htmlFor="trollbox-language"
+                className="text-xs text-muted-foreground"
+              >
+                {t("Trollbox:languageLabel", "Language")}
+              </Label>
+              <Select
+                value={activeLang}
+                onValueChange={(v) => {
+                  if (!isSupportedTrollboxLang(v) || v === activeLang) {
+                    return;
+                  }
+                  setMessages([]);
+                  setMessagesError(null);
+                  setActiveLang(v);
+                }}
+              >
+                <SelectTrigger id="trollbox-language" className="h-8 w-[130px] text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[240px]">
+                  {TROLLBOX_LANGS.map((lang) => (
+                    <SelectItem key={lang} value={lang}>
+                      {NATIVE_LANG_NAMES[lang] ?? lang}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <CardDescription>
             {t(
               "Trollbox:channelsSubtitle",
@@ -1105,7 +1269,7 @@ export default function Trollbox(properties) {
                   : "Posting as {{user}} to {{catalog}} would cost a small network fee.",
                 {
                   user: (currentUser && currentUser.username) || "not-logged-in",
-                  catalog: channelInfo.catalog,
+                  catalog: activeCatalog,
                 }
               )}
             </p>
@@ -1122,7 +1286,7 @@ export default function Trollbox(properties) {
                 setPendingAttach(null);
                 setRefreshNonce((n) => n + 1);
               }}
-              key={`trollbox-${activeChannel}-${pendingOp[0].data.slice(0, 32)}`}
+              key={`trollbox-${activeChannel}-${activeLang}-${pendingOp[0].data.slice(0, 32)}`}
               headerText={t("Trollbox:dialogHeader", "Posting to {{channel}} as {{user}}", {
                 channel: activeChannel,
                 user: currentUser.username,
@@ -1205,11 +1369,20 @@ export default function Trollbox(properties) {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {openAttachActions.map((a) => (
-                            <DropdownMenuItem key={a.key} asChild>
-                              <a href={a.href}>{a.label}</a>
-                            </DropdownMenuItem>
-                          ))}
+                          {openAttachActions.map((a) =>
+                            a.href ? (
+                              <DropdownMenuItem key={a.key} asChild>
+                                <a href={a.href}>{a.label}</a>
+                              </DropdownMenuItem>
+                            ) : (
+                              <DropdownMenuItem
+                                key={a.key}
+                                onSelect={() => a.onSelect && a.onSelect()}
+                              >
+                                {a.label}
+                              </DropdownMenuItem>
+                            )
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     ) : null}
