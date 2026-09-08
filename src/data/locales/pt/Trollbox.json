@@ -71,5 +71,9 @@
     "poolAssetA": "Ativo A",
     "poolAssetB": "Ativo B",
     "attachLoadingOffers": "A carregar ofertas de crédito…",
-    "attachAttachedTitle": "{{type}} anexado: {{label}}"
+    "attachAttachedTitle": "{{type}} anexado: {{label}}",
+    "filterBorrowAsset": "Ativo emprestável",
+    "filterLender": "Credor",
+    "filterAllOption": "Todos",
+    "offersResultCount": "{{count}} encontrados"
 }

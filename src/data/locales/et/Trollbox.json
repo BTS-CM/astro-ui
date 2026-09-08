@@ -71,5 +71,9 @@
     "poolAssetA": "Vara A",
     "poolAssetB": "Vara B",
     "attachLoadingOffers": "Krediidipakkumiste laadimine…",
-    "attachAttachedTitle": "Lisatud {{type}}: {{label}}"
+    "attachAttachedTitle": "Lisatud {{type}}: {{label}}",
+    "filterBorrowAsset": "Laenatav vara",
+    "filterLender": "Laenuandja",
+    "filterAllOption": "Kõik",
+    "offersResultCount": "{{count}} leitud"
 }

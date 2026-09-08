@@ -71,5 +71,9 @@
     "poolAssetA": "アセットA",
     "poolAssetB": "アセットB",
     "attachLoadingOffers": "クレジットオファーを読み込み中…",
-    "attachAttachedTitle": "添付済み{{type}}：{{label}}"
+    "attachAttachedTitle": "添付済み{{type}}：{{label}}",
+    "filterBorrowAsset": "借入可能なアセット",
+    "filterLender": "貸し手",
+    "filterAllOption": "すべて",
+    "offersResultCount": "{{count}}件見つかりました"
 }

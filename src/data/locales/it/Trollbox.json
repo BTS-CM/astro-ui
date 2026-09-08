@@ -71,5 +71,9 @@
     "poolAssetA": "Asset A",
     "poolAssetB": "Asset B",
     "attachLoadingOffers": "Caricamento offerte di credito…",
-    "attachAttachedTitle": "{{type}} allegato: {{label}}"
+    "attachAttachedTitle": "{{type}} allegato: {{label}}",
+    "filterBorrowAsset": "Asset prendibile in prestito",
+    "filterLender": "Prestatore",
+    "filterAllOption": "Tutti",
+    "offersResultCount": "{{count}} trovati"
 }

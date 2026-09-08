@@ -71,5 +71,9 @@
     "poolAssetA": "Aktiv A",
     "poolAssetB": "Aktiv B",
     "attachLoadingOffers": "Indlæser kredittilbud…",
-    "attachAttachedTitle": "Vedhæftet {{type}}: {{label}}"
+    "attachAttachedTitle": "Vedhæftet {{type}}: {{label}}",
+    "filterBorrowAsset": "Lånebart aktiv",
+    "filterLender": "Långiver",
+    "filterAllOption": "Alle",
+    "offersResultCount": "{{count}} fundet"
 }

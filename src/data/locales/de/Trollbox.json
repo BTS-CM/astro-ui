@@ -71,5 +71,9 @@
     "poolAssetA": "Asset A",
     "poolAssetB": "Asset B",
     "attachLoadingOffers": "Kreditangebote werden geladen…",
-    "attachAttachedTitle": "Angehängt {{type}}: {{label}}"
+    "attachAttachedTitle": "Angehängt {{type}}: {{label}}",
+    "filterBorrowAsset": "Leihbares Asset",
+    "filterLender": "Kreditgeber",
+    "filterAllOption": "Alle",
+    "offersResultCount": "{{count}} gefunden"
 }

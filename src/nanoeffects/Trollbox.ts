@@ -43,7 +43,7 @@ export type TrollboxMessage = {
   channel: string | null;
   text: string;
   isLtm: boolean;
-  attach: { t: string; [k: string]: string } | null;
+  attach: { t: string; [k: string]: string | number } | null;
 };
 
 /**

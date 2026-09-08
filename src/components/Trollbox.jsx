@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
@@ -89,6 +95,7 @@ import {
   verifyAttachmentOnChain,
 } from "@/nanoeffects/Trollbox.ts";
 import {
+  attachKind,
   resolveAttachmentMeta,
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
@@ -110,8 +117,20 @@ import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
 import { Avatar } from "@/components/Avatar.tsx";
 
 const POLL_MS = 15000;
-const TROLLBOX_ROW_HEIGHT = 76;
+const TROLLBOX_ROW_HEIGHT = 96;
 const TROLLBOX_MAX_MESSAGES = 100;
+const TROLLBOX_CHANNEL_PARAM = "channel";
+
+function channelFromUrl() {
+  try {
+    const v = new URLSearchParams(window.location.search).get(
+      TROLLBOX_CHANNEL_PARAM
+    );
+    return TROLLBOX_CHANNELS.some((c) => c.id === v) ? v : "general";
+  } catch {
+    return "general";
+  }
+}
 const TROLLBOX_MIN_ROWS = 7;
 const TROLLBOX_MAX_ROWS = 9;
 const TROLLBOX_PREVIEW_CHARS = 140;
@@ -195,9 +214,9 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
                 </span>
               ) : null}
             </ItemTitle>
-              <ItemDescription className="line-clamp-none truncate">
-                {truncatePreview(m.text)}
-              </ItemDescription>
+          <ItemDescription>
+            {truncatePreview(m.text)}
+          </ItemDescription>
             </ItemContent>
           </Item>
         </div>
@@ -272,7 +291,11 @@ export default function Trollbox(properties) {
 
   useInitCache(chain, []);
 
-  const [activeChannel, setActiveChannel] = useState("general");
+  const [activeChannel, setActiveChannel] = useState(() =>
+    channelFromUrl()
+  );
+  const activeChannelRef = useRef(activeChannel);
+  activeChannelRef.current = activeChannel;
   const [draft, setDraft] = useState("");
   const [probe, setProbe] = useState({ state: "probing", node: nodeUrl });
   const [messages, setMessages] = useState([]);
@@ -312,6 +335,42 @@ export default function Trollbox(properties) {
       cancelled = true;
     };
   }, [chain, nodeUrl]);
+
+  // Keep the selected channel in the URL so back/forward navigation
+  // (and returning to the page) restores it. replaceState avoids
+  // spamming history on every tab switch. CRITICAL: preserve the entry's
+  // existing history.state object — ClientRouter stores {index, ...} there
+  // and ignores popstate events whose state is null, so replaceState(null)
+  // would strand the page content on Back navigation.
+  useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get(TROLLBOX_CHANNEL_PARAM) === activeChannel) {
+        return;
+      }
+      url.searchParams.set(TROLLBOX_CHANNEL_PARAM, activeChannel);
+      window.history.replaceState(
+        { ...(window.history.state ?? {}), trollboxChannel: activeChannel },
+        "",
+        url
+      );
+    } catch {
+      // non-browser or restricted context: channel simply isn't shared
+    }
+  }, [activeChannel]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const v = channelFromUrl();
+      if (activeChannelRef.current !== v) {
+        setMessages([]);
+        setMessagesError(null);
+        setActiveChannel(v);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   // 1. Probe the connected node for the custom_operations plugin.
   useEffect(() => {
@@ -648,8 +707,7 @@ export default function Trollbox(properties) {
     setOfferVerified(null);
     if (
       !openMessage ||
-      !openMessage.attach ||
-      openMessage.attach.t !== "offer" ||
+      attachKind(openMessage.attach) !== "offer" ||
       !openAttachMeta
     ) {
       return undefined;
@@ -960,13 +1018,13 @@ export default function Trollbox(properties) {
                   "Trollbox:attachAttachedTitle",
                   "Attached {{type}}: {{label}}",
                   {
-                    type: pendingAttach.attach.t,
+                    type: attachKind(pendingAttach.attach) ?? "item",
                     label: pendingAttach.label,
                   }
                 )}
               >
                 <AttachTypeIcon
-                  type={pendingAttach.attach.t}
+                  type={attachKind(pendingAttach.attach) ?? "asset"}
                   className="h-4 w-4 shrink-0"
                 />
                 <span className="truncate text-xs">{pendingAttach.label}</span>

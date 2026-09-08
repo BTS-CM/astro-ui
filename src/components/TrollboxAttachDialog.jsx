@@ -57,6 +57,24 @@ function formatDuration(totalSeconds) {
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
 
+function offerAssetSymbol(o, assets) {
+  return (
+    (assets || []).find((a) => a && a.id === o.asset_type)?.symbol ??
+    o.asset_type
+  );
+}
+
+function offerOwner(o) {
+  return o.owner_name ?? o.owner_account;
+}
+
+// Instance number of a "1.space.x" object ID for on-chain storage.
+// Attachments store bare integers; the space prefix is re-attached on read.
+function toInstance(objectId) {
+  const n = parseInt(String(objectId).split(".").pop(), 10);
+  return Number.isInteger(n) && n >= 0 ? n : null;
+}
+
 const POOL_ROW_HEIGHT = 96;
 const POOL_MAX_VISIBLE_ROWS = 3;
 
@@ -153,6 +171,8 @@ export default function TrollboxAttachDialog(properties) {
   const [poolId, setPoolId] = useState(null);
   const [offers, setOffers] = useState(null);
   const [offersLoading, setOffersLoading] = useState(false);
+  const [filterOfferAsset, setFilterOfferAsset] = useState(null);
+  const [filterOfferLender, setFilterOfferLender] = useState(null);
   const [usrBalances, setUsrBalances] = useState();
 
   useEffect(() => {
@@ -162,6 +182,8 @@ export default function TrollboxAttachDialog(properties) {
       setAssetA(null);
       setAssetB(null);
       setPoolId(null);
+      setFilterOfferAsset(null);
+      setFilterOfferLender(null);
     }
   }, [open ]);
 
@@ -334,13 +356,17 @@ export default function TrollboxAttachDialog(properties) {
     if (!found) {
       return;
     }
-    const entry = { symbol, id: found.id };
+    const id = toInstance(found.id);
+    if (id === null) {
+      return;
+    }
+    const entry = { symbol, id };
     if (slot === "B") {
       setAssetB(entry);
     } else if (slot === "A") {
       setAssetA(entry);
     } else {
-      setPicked({ attach: { t: "asset", id: found.id }, label: symbol });
+      setPicked({ attach: { t: 3, id }, label: symbol });
     }
   };
 
@@ -352,9 +378,11 @@ export default function TrollboxAttachDialog(properties) {
       if (view === "pair") {
         const a = assetBySymbol[assetA.symbol];
         const b = assetBySymbol[assetB.symbol];
-        if (a && b) {
+        const aId = a ? toInstance(a.id) : null;
+        const bId = b ? toInstance(b.id) : null;
+        if (aId !== null && bId !== null) {
           setPicked({
-            attach: { t: "pair", a: a.id, b: b.id },
+            attach: { t: 3, a: aId, b: bId },
             label: `${assetA.symbol}/${assetB.symbol}`,
           });
           return;
@@ -366,12 +394,48 @@ export default function TrollboxAttachDialog(properties) {
     }
   }, [view, assetA, assetB, assetBySymbol]);
 
+  const offerAssetOptions = useMemo(() => {
+    const set = new Set();
+    for (const o of offers || []) {
+      if (o) {
+        set.add(offerAssetSymbol(o, assets));
+      }
+    }
+    return [...set].sort();
+  }, [offers, assets]);
+
+  const offerLenderOptions = useMemo(() => {
+    const set = new Set();
+    for (const o of offers || []) {
+      if (o) {
+        set.add(offerOwner(o));
+      }
+    }
+    return [...set].sort();
+  }, [offers]);
+
+  const filteredOffers = useMemo(() => {
+    if (!offers) {
+      return null;
+    }
+    return offers.filter(
+      (o) =>
+        o &&
+        (!filterOfferAsset || offerAssetSymbol(o, assets) === filterOfferAsset) &&
+        (!filterOfferLender || offerOwner(o) === filterOfferLender)
+    );
+  }, [offers, filterOfferAsset, filterOfferLender, assets]);
+
   const confirmDisabled = !picked;
 
   const handlePoolSelect = useCallback((p) => {
+    const id = toInstance(p.id);
+    if (id === null) {
+      return;
+    }
     setPoolId(p.id);
     setPicked({
-      attach: { t: "pool", id: p.id },
+      attach: { t: 19, id },
       label: `${p.asset_a_symbol}/${p.asset_b_symbol}`,
     });
   }, []);
@@ -583,31 +647,97 @@ export default function TrollboxAttachDialog(properties) {
 
         {view === "offer" ? (
           <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1.5 min-w-0">
+                <Label htmlFor="trollbox-offer-asset">
+                  {t("Trollbox:filterBorrowAsset", "Borrowable asset")}
+                </Label>
+                <Select
+                  value={filterOfferAsset ?? "__all"}
+                  onValueChange={(v) =>
+                    setFilterOfferAsset(v === "__all" ? null : v)
+                  }
+                >
+                  <SelectTrigger id="trollbox-offer-asset" className="w-full">
+                    <SelectValue
+                      placeholder={t("Trollbox:filterAllOption", "All")}
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[240px]">
+                    <SelectItem value="__all">
+                      {t("Trollbox:filterAllOption", "All")}
+                    </SelectItem>
+                    {offerAssetOptions.map((symbol) => (
+                      <SelectItem key={symbol} value={symbol}>
+                        {symbol}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5 min-w-0">
+                <Label htmlFor="trollbox-offer-lender">
+                  {t("Trollbox:filterLender", "Lender")}
+                </Label>
+                <Select
+                  value={filterOfferLender ?? "__all"}
+                  onValueChange={(v) =>
+                    setFilterOfferLender(v === "__all" ? null : v)
+                  }
+                >
+                  <SelectTrigger id="trollbox-offer-lender" className="w-full">
+                    <SelectValue
+                      placeholder={t("Trollbox:filterAllOption", "All")}
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[240px]">
+                    <SelectItem value="__all">
+                      {t("Trollbox:filterAllOption", "All")}
+                    </SelectItem>
+                    {offerLenderOptions.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             {offersLoading ? (
               <div className="flex items-center justify-center gap-2 p-6 text-sm text-muted-foreground">
                 <Spinner />
                 {t("Trollbox:attachLoadingOffers", "Loading credit offers…")}
               </div>
-            ) : offers && offers.length > 0 ? (
-              <div className="max-h-[320px] overflow-y-auto space-y-2 pr-1">
-                {offers.map((o) => {
+            ) : filteredOffers && filteredOffers.length > 0 ? (
+              <div>
+                <p className="px-1 pb-1 text-xs text-muted-foreground">
+                  {t("Trollbox:offersResultCount", "{{count}} found", {
+                    count: filteredOffers.length,
+                  })}
+                </p>
+                <div className="max-h-[320px] overflow-y-auto space-y-2 pr-1">
+                  {filteredOffers.map((o) => {
                   const asset = (assets || []).find(
                     (a) => a && a.id === o.asset_type
                   );
                   const symbol = asset ? asset.symbol : o.asset_type;
                   const precision = asset ? asset.precision : 5;
                   const isSelected =
-                    picked && picked.attach.id === o.id;
+                    picked && picked.attach.t === 21 && picked.attach.id === toInstance(o.id);
                   return (
                     <button
                       key={o.id}
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
+                        const id = toInstance(o.id);
+                        if (id === null) {
+                          return;
+                        }
                         setPicked({
-                          attach: { t: "offer", id: o.id },
+                          attach: { t: 21, id },
                           label: `${symbol} ${t("Trollbox:attachOfferLabel", "offer")}`,
-                        })
-                      }
+                        });
+                      }}
                       className={
                         isSelected
                           ? "relative overflow-hidden w-full text-left rounded-xl border border-[hsl(var(--accent-1)/0.6)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.15)] to-[hsl(var(--accent-2)/0.1)] px-4 py-3 transition-all"
@@ -647,6 +777,7 @@ export default function TrollboxAttachDialog(properties) {
                     </button>
                   );
                 })}
+                </div>
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
@@ -669,6 +800,8 @@ export default function TrollboxAttachDialog(properties) {
                 setAssetA(null);
                 setAssetB(null);
                 setPoolId(null);
+                setFilterOfferAsset(null);
+                setFilterOfferLender(null);
               }}
             >
               <ArrowLeft className="mr-1 h-4 w-4" />

@@ -71,5 +71,9 @@
     "poolAssetA": "สินทรัพย์ A",
     "poolAssetB": "สินทรัพย์ B",
     "attachLoadingOffers": "กำลังโหลดข้อเสนอเครดิต…",
-    "attachAttachedTitle": "แนบ {{type}} แล้ว: {{label}}"
+    "attachAttachedTitle": "แนบ {{type}} แล้ว: {{label}}",
+    "filterBorrowAsset": "สินทรัพย์ที่กู้ได้",
+    "filterLender": "ผู้ให้กู้",
+    "filterAllOption": "ทั้งหมด",
+    "offersResultCount": "พบ {{count}}"
 }

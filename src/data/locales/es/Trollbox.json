@@ -71,5 +71,9 @@
     "poolAssetA": "Activo A",
     "poolAssetB": "Activo B",
     "attachLoadingOffers": "Cargando ofertas de crédito…",
-    "attachAttachedTitle": "{{type}} adjunto: {{label}}"
+    "attachAttachedTitle": "{{type}} adjunto: {{label}}",
+    "filterBorrowAsset": "Activo prestable",
+    "filterLender": "Prestamista",
+    "filterAllOption": "Todos",
+    "offersResultCount": "{{count}} encontrados"
 }

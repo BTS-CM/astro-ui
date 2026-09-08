@@ -71,5 +71,9 @@
     "poolAssetA": "에셋 A",
     "poolAssetB": "에셋 B",
     "attachLoadingOffers": "신용 오퍼 불러오는 중…",
-    "attachAttachedTitle": "첨부됨 {{type}}: {{label}}"
+    "attachAttachedTitle": "첨부됨 {{type}}: {{label}}",
+    "filterBorrowAsset": "대출 가능 에셋",
+    "filterLender": "대출자",
+    "filterAllOption": "전체",
+    "offersResultCount": "{{count}}개 찾음"
 }

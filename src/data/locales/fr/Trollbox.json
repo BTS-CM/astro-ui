@@ -71,5 +71,9 @@
     "poolAssetA": "Actif A",
     "poolAssetB": "Actif B",
     "attachLoadingOffers": "Chargement des offres de crédit…",
-    "attachAttachedTitle": "{{type}} joint : {{label}}"
+    "attachAttachedTitle": "{{type}} joint : {{label}}",
+    "filterBorrowAsset": "Actif empruntable",
+    "filterLender": "Prêteur",
+    "filterAllOption": "Tous",
+    "offersResultCount": "{{count}} trouvés"
 }
