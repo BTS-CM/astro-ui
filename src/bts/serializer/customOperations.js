@@ -2,6 +2,7 @@ import { Buffer } from "buffer";
 import ByteBuffer from "./ByteBuffer.js";
 import types from "./types.js";
 import SerializerImpl from "./serializer.js";
+import { validateAttachmentShape } from "../../lib/trollboxAttach.js";
 
 // types.js / ByteBuffer.js use the bare Buffer global, which browsers do
 // not provide. Same per-module polyfill as AirdropCalculate.jsx: install it
@@ -168,23 +169,32 @@ export function buildMessageKey(nowMs = Date.now(), rand = Math.floor(Math.rando
  * Encode a chat message into custom_operation.data hex.
  * The stored value is a JSON string so the plugin parses it into an object.
  * Size is enforced in UTF-8 bytes against the chain transaction budget.
+ * NOTE: no timestamp is stored — client clocks can't be trusted, so ordering
+ * uses the plugin-assigned storage ID ("7.0.x", write order) instead.
  */
-export function buildTrollboxData({ channel, catalog, key, username, text, timestamp, maxBytes = maxMessageBytes() }) {
+export function buildTrollboxData({ channel, catalog, key, username, text, attach = null, maxBytes = maxMessageBytes() }) {
   if (!text || !text.trim()) {
     throw new Error("message text is empty");
   }
-  const bytes = utf8Length(text);
+  let valueObj = {
+    v: 1,
+    ch: channel,
+    u: username,
+    text,
+  };
+  if (attach !== null && attach !== undefined) {
+    const valid = validateAttachmentShape(attach);
+    if (!valid) {
+      throw new Error("invalid attachment");
+    }
+    valueObj = { ...valueObj, v: 2, attach: valid };
+  }
+  const value = JSON.stringify(valueObj);
+  const bytes = utf8Length(value);
   if (bytes > maxBytes) {
     throw new Error(`message is ${bytes - maxBytes} bytes over the size limit (${maxBytes} bytes)`);
   }
   assertKey(key);
-  const value = JSON.stringify({
-    v: 1,
-    ch: channel,
-    u: username,
-    t: timestamp,
-    text,
-  });
   return packAccountStorageMap({ remove: false, catalog, entries: [[key, value]] });
 }
 
@@ -209,7 +219,10 @@ export function decodeTrollboxValue(storageObject) {
   if (!raw || typeof raw !== "object" || typeof raw.text !== "string") {
     return null;
   }
-  const timestamp = Number(raw.t);
+  const attach =
+    raw.attach === undefined || raw.attach === null
+      ? null
+      : validateAttachmentShape(raw.attach);
   return {
     id: storageObject.id,
     account: storageObject.account,
@@ -217,7 +230,7 @@ export function decodeTrollboxValue(storageObject) {
     key: storageObject.key,
     author: typeof raw.u === "string" ? raw.u : null,
     channel: typeof raw.ch === "string" ? raw.ch : null,
-    timestamp: Number.isFinite(timestamp) ? timestamp : 0,
     text: raw.text,
+    attach,
   };
 }

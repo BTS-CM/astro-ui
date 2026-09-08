@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react";
+import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { List } from "react-window";
@@ -19,7 +20,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
   ItemMedia,
@@ -32,7 +32,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -41,8 +51,13 @@ import {
 } from "@/components/ui/tooltip";
 
 import {
+  ArrowLeftRight,
   Ban,
+  Coins,
+  Droplets,
+  HandCoins,
   MessageSquare,
+  Paperclip,
   Radio,
   Send,
   Server,
@@ -50,11 +65,19 @@ import {
   RefreshCw,
   TriangleAlert,
   CircleCheck,
+  X,
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode, setCurrentNode } from "@/stores/node.ts";
 import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
+import { $favouriteUsers } from "@/stores/favourites.ts";
+import {
+  $customTheme,
+  getThemeForPage,
+  resolveSectionAccent,
+} from "@/stores/customTheme.ts";
+import { sectionAccentStyles } from "@/lib/accentStyles.js";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import {
   TROLLBOX_CHANNELS,
@@ -63,7 +86,12 @@ import {
   findSupportingNode,
   isPluginMissingError,
   probeTrollboxSupport,
+  verifyAttachmentOnChain,
 } from "@/nanoeffects/Trollbox.ts";
+import {
+  resolveAttachmentMeta,
+  validateAttachmentShape,
+} from "@/lib/trollboxAttach.js";
 import {
   TROLLBOX_OP_ID,
   buildMessageKey,
@@ -71,7 +99,14 @@ import {
   maxMessageBytes,
   utf8Length,
 } from "@/bts/serializer/customOperations.js";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
 import { Avatar } from "@/components/Avatar.tsx";
 
 const POLL_MS = 15000;
@@ -81,22 +116,23 @@ const TROLLBOX_MIN_ROWS = 7;
 const TROLLBOX_MAX_ROWS = 9;
 const TROLLBOX_PREVIEW_CHARS = 140;
 
-function formatTime(ts) {
-  if (!ts) {
-    return "";
-  }
-  try {
-    return new Date(ts).toLocaleString();
-  } catch {
-    return "";
-  }
-}
-
 function truncatePreview(text, max = TROLLBOX_PREVIEW_CHARS) {
   if (!text) {
     return "";
   }
   return text.length > max ? `${text.slice(0, max)}…` : text;
+}
+
+function AttachTypeIcon({ type, className }) {
+  const Icon =
+    type === "pair"
+      ? ArrowLeftRight
+      : type === "pool"
+        ? Droplets
+        : type === "offer"
+          ? HandCoins
+          : Coins;
+  return <Icon className={className ?? "h-3 w-3"} />;
 }
 
 const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
@@ -106,6 +142,9 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   canBlock,
   currentUserId,
   blockLabel,
+  blockSelfLabel,
+  ltmLabel,
+  attachMetas,
   onBlockUser,
   onOpenMessage,
 }) {
@@ -113,71 +152,123 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   if (!m) {
     return null;
   }
+  const isOwn = m.account === currentUserId;
+  const attachMeta = attachMetas[m.id] || null;
   return (
-    <div style={{ ...style, padding: "0 2px 8px" }}>
-      <Item
-        variant="outline"
-        size="sm"
-        className="h-full cursor-pointer overflow-hidden hover:bg-accent/50"
-        onClick={() => onOpenMessage(m)}
-      >
-        <ItemMedia>
-          <Avatar
-            size={36}
-            name={m.displayAuthor}
-            extra="trollbox"
-            expression={{ eye: "normal", mouth: "open" }}
-          />
-        </ItemMedia>
-        <ItemContent className="min-w-0">
-          <ItemTitle className="min-w-0">
-            <span className="truncate">{m.displayAuthor}</span>
-            <span className="text-xs font-normal text-muted-foreground shrink-0">
-              {formatTime(m.timestamp)}
-            </span>
-          </ItemTitle>
-          <ItemDescription className="line-clamp-none truncate">
-            {truncatePreview(m.text)}
-          </ItemDescription>
-        </ItemContent>
-        {canBlock && m.account !== currentUserId ? (
-          <ItemActions>
+    <div style={{ ...style, paddingBottom: "8px" }}>
+      <div className="grid grid-cols-12 gap-2">
+        <div className="col-span-11 min-w-0">
+          <Item
+            variant="outline"
+            size="sm"
+            className="h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]"
+            onClick={() => onOpenMessage(m)}
+          >
+            <ItemMedia>
+              <Avatar
+                size={36}
+                name={m.displayAuthor}
+                extra="trollbox"
+                expression={{ eye: "normal", mouth: "open" }}
+              />
+            </ItemMedia>
+            <ItemContent className="min-w-0">
+            <ItemTitle className="min-w-0 w-full">
+              {m.isLtm ? (
+                <span
+                  role="img"
+                  aria-label={ltmLabel}
+                  title={ltmLabel}
+                  className="shrink-0 text-xs leading-none"
+                >
+                  💎
+                </span>
+              ) : null}
+              <span className="truncate">{m.displayAuthor}</span>
+              <span className="text-xs font-normal text-muted-foreground shrink-0">
+                {m.id}
+              </span>
+              {attachMeta ? (
+                <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
+                  <AttachTypeIcon type={attachMeta.type} />
+                  <span className="max-w-[140px] truncate">{attachMeta.label}</span>
+                </span>
+              ) : null}
+            </ItemTitle>
+              <ItemDescription className="line-clamp-none truncate">
+                {truncatePreview(m.text)}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </div>
+        <div className="col-span-1 flex items-center justify-center">
+          {canBlock ? (
             <TooltipProvider delayDuration={300}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="outline"
                     size="icon"
-                    aria-label={blockLabel}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onBlockUser(m);
-                    }}
-                    className="h-6 w-6 shrink-0 rounded-full text-muted-foreground/60 hover:text-destructive"
+                    aria-label={isOwn ? blockSelfLabel : blockLabel}
+                    disabled={isOwn}
+                    onClick={() => onBlockUser(m)}
+                    className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:text-destructive disabled:opacity-40"
                   >
-                    <Ban className="h-3.5 w-3.5" />
+                    <Ban className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top">
-                  <p>{blockLabel}</p>
+                  <p>{isOwn ? blockSelfLabel : blockLabel}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </ItemActions>
-        ) : null}
-      </Item>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 });
 
-export default function Trollbox() {
+export default function Trollbox(properties) {
+  const {
+    _assetsBTS = [],
+    _assetsTEST = [],
+    _marketSearchBTS = [],
+    _marketSearchTEST = [],
+    _poolsBTS = [],
+    _poolsTEST = [],
+  } = properties || {};
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
+  useStore($customTheme);
   const currentUser = useStore($currentUser);
   const currentNode = useStore($currentNode);
 
+  const { resolvedTheme } = useTheme();
+  const [domIsDark, setDomIsDark] = useState(
+    () =>
+      typeof document !== "undefined" &&
+      document.documentElement.classList.contains("dark")
+  );
+  useEffect(() => {
+    const el = document.documentElement;
+    const check = () => setDomIsDark(el.classList.contains("dark"));
+    check();
+    const obs = new MutationObserver(check);
+    obs.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+  const isDark = resolvedTheme ? resolvedTheme === "dark" : domIsDark;
+  const pair = resolveSectionAccent(getThemeForPage("trollbox"), "blockchain");
+  const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
+
   const chain = (currentUser && currentUser.chain) || "bitshares";
   const nodeUrl = (currentNode && currentNode.url) || "";
+
+  const chainAssets = chain === "bitshares" ? _assetsBTS : _assetsTEST;
+  const chainMarketSearch =
+    chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+  const chainPools = chain === "bitshares" ? _poolsBTS : _poolsTEST;
 
   useInitCache(chain, []);
 
@@ -194,6 +285,11 @@ export default function Trollbox() {
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [openMessage, setOpenMessage] = useState(null);
+  const [blockTarget, setBlockTarget] = useState(null);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
+  const [verifyingAttach, setVerifyingAttach] = useState(false);
+  const [showFriends, setShowFriends] = useState(false);
   const [maxBytes, setMaxBytes] = useState(() => maxMessageBytes());
 
   const channelInfo = useMemo(
@@ -302,7 +398,7 @@ export default function Trollbox() {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     setComposeError(null);
     const text = draft.trim();
     if (!currentUser || !currentUser.id) {
@@ -327,6 +423,36 @@ export default function Trollbox() {
     if (!channelInfo) {
       return;
     }
+    let attach = null;
+    if (pendingAttach) {
+      const shape = validateAttachmentShape(pendingAttach.attach);
+      if (!shape) {
+        setComposeError(
+          t("Trollbox:attachInvalid", "Attachment is invalid — pick again.")
+        );
+        return;
+      }
+      setVerifyingAttach(true);
+      try {
+        const ok = await verifyAttachmentOnChain(
+          chain,
+          probe.state === "live" ? probe.node : nodeUrl,
+          shape
+        );
+        if (!ok) {
+          setComposeError(
+            t(
+              "Trollbox:attachGone",
+              "Attachment no longer exists on-chain — pick again."
+            )
+          );
+          return;
+        }
+      } finally {
+        setVerifyingAttach(false);
+      }
+      attach = shape;
+    }
     try {
       const data = buildTrollboxData({
         channel: activeChannel,
@@ -334,7 +460,7 @@ export default function Trollbox() {
         key: buildMessageKey(),
         username: currentUser.username,
         text,
-        timestamp: Date.now(),
+        attach,
         maxBytes,
       });
       setPendingOp([
@@ -404,31 +530,93 @@ export default function Trollbox() {
       ),
     [messages, blockedIds, blockedNames]
   );
+  const favouriteUsers = useStore($favouriteUsers);
+  const favouriteIds = useMemo(
+    () =>
+      new Set(
+        ((favouriteUsers && favouriteUsers[chain]) || []).map((u) => u.id)
+      ),
+    [favouriteUsers, chain]
+  );
+  const favouriteNames = useMemo(
+    () =>
+      new Set(
+        ((favouriteUsers && favouriteUsers[chain]) || []).map((u) =>
+          (u.name || "").toLowerCase()
+        )
+      ),
+    [favouriteUsers, chain]
+  );
+  // Friends view narrows the (already block-filtered) list to favourited
+  // accounts; blocked users stay hidden in both modes.
+  const friendMessages = useMemo(
+    () =>
+      showFriends
+        ? filteredMessages.filter(
+            (m) =>
+              favouriteIds.has(m.account) ||
+              favouriteNames.has((m.displayAuthor || "").toLowerCase())
+          )
+        : filteredMessages,
+    [filteredMessages, showFriends, favouriteIds, favouriteNames]
+  );
+  // Newest first (fetch returns storage-ID-descending); keep the head.
   const visibleMessages = useMemo(
-    () => filteredMessages.slice(-TROLLBOX_MAX_MESSAGES),
-    [filteredMessages]
+    () => friendMessages.slice(0, TROLLBOX_MAX_MESSAGES),
+    [friendMessages]
   );
   const hiddenBlockedCount = messages.length - filteredMessages.length;
 
+  // Resolve attachments to display metadata using trusted lists only.
+  // Unresolvable attachments yield no badge (never render raw payload).
+  const attachMetas = useMemo(() => {
+    const map = {};
+    for (const m of visibleMessages) {
+      if (m.attach) {
+        const meta = resolveAttachmentMeta(m.attach, {
+          assets: chainAssets,
+          pools: chainPools,
+        });
+        if (meta) {
+          map[m.id] = meta;
+        }
+      }
+    }
+    return map;
+  }, [visibleMessages, chainAssets, chainPools]);
+
   const blockLabel = t("Trollbox:blockUser", "Block user");
+  const blockSelfLabel = t("Trollbox:blockSelf", "You can't block yourself");
+  const ltmLabel = t("Trollbox:ltmMember", "Lifetime member");
   const handleOpenMessage = useCallback((m) => {
     setOpenMessage(m);
   }, []);
-  const handleBlockUser = useCallback(
-    (m) => {
-      if (!m || !m.account) {
-        return;
+  const handleBlockUser = useCallback((m) => {
+    if (!m || !m.account) {
+      return;
+    }
+    setBlockTarget(m);
+  }, []);
+  const handleConfirmBlock = useCallback(() => {
+    setBlockTarget((target) => {
+      if (target && target.account) {
+        addBlockedUser(chain, {
+          name: target.displayAuthor,
+          id: target.account,
+        });
       }
-      addBlockedUser(chain, { name: m.displayAuthor, id: m.account });
-    },
-    [chain]
-  );
+      return null;
+    });
+  }, [chain]);
   const messageRowProps = useMemo(
     () => ({
       visibleMessages,
       canBlock: loggedIn,
       currentUserId,
       blockLabel,
+      blockSelfLabel,
+      ltmLabel,
+      attachMetas,
       onBlockUser: handleBlockUser,
       onOpenMessage: handleOpenMessage,
     }),
@@ -437,14 +625,61 @@ export default function Trollbox() {
       loggedIn,
       currentUserId,
       blockLabel,
+      blockSelfLabel,
+      ltmLabel,
+      attachMetas,
       handleBlockUser,
       handleOpenMessage,
     ]
   );
 
+  const openAttachMeta = useMemo(() => {
+    if (!openMessage || !openMessage.attach) {
+      return null;
+    }
+    return resolveAttachmentMeta(openMessage.attach, {
+      assets: chainAssets,
+      pools: chainPools,
+    });
+  }, [openMessage, chainAssets, chainPools]);
+
+  const [offerVerified, setOfferVerified] = useState(null);
+  useEffect(() => {
+    setOfferVerified(null);
+    if (
+      !openMessage ||
+      !openMessage.attach ||
+      openMessage.attach.t !== "offer" ||
+      !openAttachMeta
+    ) {
+      return undefined;
+    }
+    let cancelled = false;
+    const offerId = openMessage.attach.id;
+    verifyAttachmentOnChain(
+      chain,
+      probe.state === "live" ? probe.node : nodeUrl,
+      openMessage.attach
+    ).then((ok) => {
+      if (!cancelled) {
+        setOfferVerified(ok ? offerId : false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [openMessage, openAttachMeta, chain, probe.state, probe.node, nodeUrl]);
+
+  const openAttachActions =
+    !openAttachMeta ||
+    (openAttachMeta.type === "offer" &&
+      offerVerified !== (openMessage && openMessage.attach.id))
+      ? []
+      : openAttachMeta.actions;
+
   return (
     <div className="container mx-auto mt-3 mb-5 px-3 sm:px-4 max-w-5xl">
-      <Card className="mb-4 relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-xl shadow-black/30">
+      <Card className="mb-4 relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
@@ -555,10 +790,22 @@ export default function Trollbox() {
           setMessagesError(null);
         }}
       >
-      <Card className="mb-4">
-        <CardHeader className="pb-2">
+      <Card className="mb-4 relative overflow-hidden">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+        />
+        <CardHeader className="pb-2 relative">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Radio className="h-4 w-4" />
+            <span
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border"
+              style={{ ...accent.iconBg, ...accent.iconBorder }}
+            >
+              <Radio
+                className="h-3.5 w-3.5"
+                style={isDark ? undefined : accent.iconText}
+              />
+            </span>
             {t("Trollbox:channelsTitle", "Channels")}
           </CardTitle>
           <CardDescription>
@@ -579,13 +826,50 @@ export default function Trollbox() {
         </CardContent>
       </Card>
 
-      <Card className="mb-4">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">
-            {t("Trollbox:viewingTitle", "Viewing the {{tag}} trollbox", {
-              tag: `#${activeChannel}`,
-            })}
-          </CardTitle>
+      <Card className="mb-4 relative overflow-hidden">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+        />
+        <CardHeader className="pb-3 relative">
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border"
+              style={{ ...accent.iconBg, ...accent.iconBorder }}
+            >
+              <MessageSquare
+                className="h-3.5 w-3.5"
+                style={isDark ? undefined : accent.iconText}
+              />
+            </span>
+            <CardTitle className="text-base truncate flex-1 min-w-0">
+              {t("Trollbox:viewingTitle", "Viewing the {{tag}} trollbox", {
+                tag: `#${activeChannel}`,
+              })}
+            </CardTitle>
+            <div
+              className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-border p-0.5"
+              role="tablist"
+              aria-label={t("Trollbox:filterLabel", "Message filter")}
+            >
+              <Button
+                variant={!showFriends ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 px-2.5 text-xs"
+                onClick={() => setShowFriends(false)}
+              >
+                {t("Trollbox:filterAll", "All")}
+              </Button>
+              <Button
+                variant={showFriends ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 px-2.5 text-xs"
+                onClick={() => setShowFriends(true)}
+              >
+                {t("Trollbox:filterFriends", "Friends")}
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
                 {probe.state === "live" ? (
@@ -668,6 +952,46 @@ export default function Trollbox() {
                   </div>
                 )}
           <div className="mt-3 flex gap-2">
+            {pendingAttach ? (
+              <Badge
+                variant="secondary"
+                className="shrink-0 max-w-[220px] h-10 gap-1.5 px-2.5"
+                title={t(
+                  "Trollbox:attachAttachedTitle",
+                  "Attached {{type}}: {{label}}",
+                  {
+                    type: pendingAttach.attach.t,
+                    label: pendingAttach.label,
+                  }
+                )}
+              >
+                <AttachTypeIcon
+                  type={pendingAttach.attach.t}
+                  className="h-4 w-4 shrink-0"
+                />
+                <span className="truncate text-xs">{pendingAttach.label}</span>
+                <button
+                  type="button"
+                  aria-label={t("Trollbox:attachRemove", "Remove attachment")}
+                  onClick={() => setPendingAttach(null)}
+                  className="shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </Badge>
+            ) : (
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0"
+                disabled={!loggedIn}
+                onClick={() => setAttachOpen(true)}
+                title={t("Trollbox:attachButton", "Attach asset, pair, pool or offer")}
+                aria-label={t("Trollbox:attachButton", "Attach asset, pair, pool or offer")}
+              >
+                <Paperclip className="h-4 w-4" />
+              </Button>
+            )}
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -688,11 +1012,15 @@ export default function Trollbox() {
               }}
             />
             <Button
-              disabled={!loggedIn || !draft.trim()}
+              disabled={!loggedIn || !draft.trim() || verifyingAttach}
               onClick={handleSend}
               title={t("Trollbox:sendTitle", "Prepare a custom operation for signing in Beet")}
             >
-              <Send className="mr-1 h-4 w-4" />
+              {verifyingAttach ? (
+                <Spinner className="mr-1 h-4 w-4" />
+              ) : (
+                <Send className="mr-1 h-4 w-4" />
+              )}
               {t("Trollbox:send", "Send")}
             </Button>
             <Button
@@ -733,6 +1061,7 @@ export default function Trollbox() {
               dismissCallback={() => {
                 setShowDialog(false);
                 setDraft("");
+                setPendingAttach(null);
                 setRefreshNonce((n) => n + 1);
               }}
               key={`trollbox-${activeChannel}-${pendingOp[0].data.slice(0, 32)}`}
@@ -743,6 +1072,17 @@ export default function Trollbox() {
               trxJSON={pendingOp}
             />
           ) : null}
+          <TrollboxAttachDialog
+            open={attachOpen}
+            onOpenChange={setAttachOpen}
+            chain={chain}
+            nodeUrl={probe.state === "live" ? probe.node : nodeUrl}
+            usr={currentUser}
+            assets={chainAssets}
+            marketSearch={chainMarketSearch}
+            pools={chainPools}
+            onAttach={(picked) => setPendingAttach(picked)}
+          />
         </CardContent>
       </Card>
       </Tabs>
@@ -755,7 +1095,7 @@ export default function Trollbox() {
           }
         }}
       >
-        <DialogContent className="sm:max-w-[480px]">
+        <DialogContent className="sm:max-w-[50%]">
           {openMessage ? (
             <>
               <DialogHeader>
@@ -770,8 +1110,8 @@ export default function Trollbox() {
                     <DialogTitle className="truncate">
                       {openMessage.displayAuthor}
                     </DialogTitle>
-                    <DialogDescription>
-                      {formatTime(openMessage.timestamp)}
+                    <DialogDescription className="font-mono">
+                      {openMessage.id}
                     </DialogDescription>
                   </div>
                   <Badge variant="secondary" className="ml-auto shrink-0">
@@ -779,11 +1119,45 @@ export default function Trollbox() {
                   </Badge>
                 </div>
               </DialogHeader>
-              <ScrollArea className="max-h-[50vh] rounded-md border border-border p-3">
-                <p className="whitespace-pre-wrap break-words text-sm text-foreground">
-                  {openMessage.text}
-                </p>
-              </ScrollArea>
+              <Textarea
+                disabled
+                readOnly
+                value={openMessage.text}
+                className="min-h-[120px]"
+              />
+              {openAttachMeta ? (
+                <div className="rounded-md border border-border p-3">
+                  <div className="flex items-center gap-2">
+                    <AttachTypeIcon
+                      type={openAttachMeta.type}
+                      className="h-4 w-4 shrink-0"
+                    />
+                    <span className="text-sm font-semibold truncate">
+                      {openAttachMeta.label}
+                    </span>
+                    {openAttachActions.length > 0 ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="ml-auto h-7 shrink-0"
+                          >
+                            {t("Trollbox:attachActions", "Actions")}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {openAttachActions.map((a) => (
+                            <DropdownMenuItem key={a.key} asChild>
+                              <a href={a.href}>{a.label}</a>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : null}
+                  </div>
+                </div>
+              ) : null}
               <p className="text-xs text-muted-foreground">
                 {openMessage.account}
               </p>
@@ -791,6 +1165,67 @@ export default function Trollbox() {
           ) : null}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog
+        open={!!blockTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setBlockTarget(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          {blockTarget ? (
+            <>
+              <AlertDialogHeader>
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    size={44}
+                    name={blockTarget.displayAuthor}
+                    extra="trollbox-block"
+                    expression={{ eye: "normal", mouth: "open" }}
+                  />
+                  <div className="min-w-0">
+                    <AlertDialogTitle>
+                      {t("Trollbox:blockConfirmTitle", "Block this account?")}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t(
+                        "Trollbox:blockConfirmDesc",
+                        "Are you sure you want to block this account? You won't see their messages anymore."
+                      )}
+                    </AlertDialogDescription>
+                  </div>
+                </div>
+              </AlertDialogHeader>
+              <div className="rounded-md border border-border p-3 text-sm space-y-1">
+                <p className="text-foreground">
+                  <span className="text-muted-foreground">
+                    {t("Trollbox:blockAccountLabel", "Account")}:{" "}
+                  </span>
+                  <span className="font-semibold">
+                    {blockTarget.displayAuthor}
+                  </span>
+                </p>
+                <p className="text-foreground font-mono text-xs">
+                  <span className="text-muted-foreground font-sans text-sm">
+                    {t("Trollbox:blockIdLabel", "Account ID")}:{" "}
+                  </span>
+                  {blockTarget.account}
+                </p>
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  {t("Trollbox:blockCancel", "Cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmBlock}>
+                  {t("Trollbox:blockConfirm", "Block")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          ) : null}
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

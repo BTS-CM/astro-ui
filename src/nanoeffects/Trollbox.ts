@@ -7,13 +7,19 @@ import {
   decodeTrollboxValue,
   maxMessageBytes,
 } from "@/bts/serializer/customOperations";
+import { attachmentObjectIds } from "@/lib/trollboxAttach.js";
 
 export const TROLLBOX_CHANNELS = [
   { id: "general", catalog: "trollbox-general" },
+  { id: "announcements", catalog: "trollbox-announcements" },
   { id: "trading", catalog: "trollbox-trading" },
   { id: "pools", catalog: "trollbox-pools" },
   { id: "smartcoins", catalog: "trollbox-smartcoins" },
-  { id: "lend", catalog: "trollbox-lend" },
+  { id: "credit", catalog: "trollbox-credit" },
+  { id: "assets", catalog: "trollbox-assets" },
+  { id: "governance", catalog: "trollbox-governance" },
+  { id: "proposals", catalog: "trollbox-proposals" },
+  { id: "dev", catalog: "trollbox-dev" },
 ];
 
 export const TROLLBOX_META_CATALOG = "trollbox-meta";
@@ -35,9 +41,55 @@ export type TrollboxMessage = {
   catalog: string;
   key: string;
   channel: string | null;
-  timestamp: number;
   text: string;
+  isLtm: boolean;
+  attach: { t: string; [k: string]: string } | null;
 };
+
+/**
+ * Live existence proof for an attachment's referenced object(s).
+ * Used at send time so dead picks (deleted pool, expired offer) block
+ * the broadcast instead of posting a dead badge.
+ */
+export async function verifyAttachmentOnChain(
+  chain: string,
+  node: string,
+  attach: unknown
+): Promise<boolean> {
+  const ids = attachmentObjectIds(attach as any);
+  if (ids.length === 0) {
+    return false;
+  }
+  try {
+    const res = await withApi(node, async (api) =>
+      api.db_api().exec("get_objects", [ids])
+    );
+    return (
+      Array.isArray(res) &&
+      res.length === ids.length &&
+      res.every((o) => !!o)
+    );
+  } catch (error) {
+    console.warn(`Trollbox: attachment verification failed:`, error);
+    return false;
+  }
+}
+
+/** Numeric suffix of a "7.0.x" storage ID. Unparseable IDs sort last. */
+export function storageIdNum(id: string): number {
+  const tail = (id ?? "").split(".").pop() ?? "";
+  if (tail === "") {
+    return -1;
+  }
+  const n = Number(tail);
+  return Number.isFinite(n) ? n : -1;
+}
+
+/** Lifetime members have a future membership_expiration_date. */
+function isLifetimeMember(account: any): boolean {
+  const expiry = account?.membership_expiration_date;
+  return !!expiry && new Date(`${expiry}Z`).getTime() > Date.now();
+}
 
 /**
  * True when an RPC failure means "this node does not run the
@@ -233,6 +285,7 @@ export async function fetchChannelMessages(
             author,
             text: cleanMessageText(decoded.text),
             displayAuthor: author || decoded.account,
+            isLtm: false,
           });
         }
       }
@@ -252,15 +305,20 @@ export async function fetchChannelMessages(
       try {
         const accounts = await api.db_api().exec("get_accounts", [ids]);
         const names: Record<string, string> = {};
+        const ltm: Record<string, boolean> = {};
         for (const a of accounts ?? []) {
-          if (a?.id && a?.name) {
-            names[a.id] = a.name;
+          if (a?.id) {
+            if (a?.name) {
+              names[a.id] = a.name;
+            }
+            ltm[a.id] = isLifetimeMember(a);
           }
         }
         for (const m of out) {
           m.displayAuthor = cleanMessageText(
             names[m.account] ?? m.author ?? m.account
           );
+          m.isLtm = ltm[m.account] ?? false;
         }
       } catch {
         // keep embedded/ raw ids
@@ -268,7 +326,10 @@ export async function fetchChannelMessages(
     }
   });
 
-  out.sort((a, b) => a.timestamp - b.timestamp);
+  // Newest first by plugin-assigned storage ID (chain write order).
+  // Deliberately NOT by any client-stamped time: that field is
+  // user-controlled and trivially spoofed, so it is not stored at all.
+  out.sort((a, b) => storageIdNum(b.id) - storageIdNum(a.id));
   return out;
 }
 
