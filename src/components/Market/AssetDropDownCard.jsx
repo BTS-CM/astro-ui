@@ -256,6 +256,7 @@ export default function AssetDropDown(properties) {
     storeCallback,
     otherAsset,
     otherAssets, // Array of other chosen assets to exclude
+    allowedIds, // Optional array of asset IDs to restrict selection to (e.g. owned balances). Unset = all.
     marketSearch,
     type,
     size,
@@ -264,6 +265,8 @@ export default function AssetDropDown(properties) {
     triggerLabel, // optional custom trigger label
     triggerVariant, // optional custom trigger variant
     triggerClassName, // optional custom trigger class
+    autoWidth, // optional: use w-auto instead of w-full for compact header buttons
+    initialMode, // optional mode to open on ("search"|"balances"|"featured"|"favourites"|"recent"); unset = mode chooser
     accentColor: propsAccentColor,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -291,6 +294,12 @@ export default function AssetDropDown(properties) {
         );
       }
 
+      if (allowedIds && Array.isArray(allowedIds)) {
+        currentContents = currentContents.filter((asset) =>
+          allowedIds.includes(asset.id)
+        );
+      }
+
       if (chain === "bitshares" && blocklist && blocklist.users) {
         currentContents = currentContents.filter(
           (asset) =>
@@ -308,7 +317,7 @@ export default function AssetDropDown(properties) {
 
       return currentContents;
     }
-  }, [marketSearch, blocklist, chain, assetSymbol, otherAsset, otherAssets]);
+  }, [marketSearch, blocklist, chain, assetSymbol, otherAsset, otherAssets, allowedIds]);
 
   // Balances must be pre-filtered to avoid phantom rows: any balance whose asset is blocked
   // or excluded (via marketSearchContents filtering) would otherwise resolve to null in AssetRow
@@ -348,7 +357,7 @@ export default function AssetDropDown(properties) {
     }
   }, [thisInput, fuse]);
 
-  const [mode, setMode] = useState(null);
+  const [mode, setMode] = useState(initialMode ?? null);
   const [featuredCategory, setFeaturedCategory] = useState(null);
 
   // Per-page list filters — same pattern as global search but local to each pseudo-page
@@ -699,7 +708,7 @@ export default function AssetDropDown(properties) {
             variant={triggerVariant ? triggerVariant : "ghost"}
             className={`${
               size && size === "small" ? "h-7 text-xs px-2 " : "h-9 px-3 "
-            } w-full justify-between font-semibold ${
+            } ${autoWidth ? "w-auto" : "w-full"} justify-between font-semibold ${
               type === "quote"
                 ? "bg-accent/50 hover:bg-white/[0.1] text-foreground border border-border"
                 : "bg-accent/40 hover:bg-accent/60 text-foreground/85 border border-border"

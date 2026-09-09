@@ -69,6 +69,7 @@ import {
   Coins,
   Droplets,
   HandCoins,
+  Handshake,
   MessageSquare,
   Paperclip,
   Radio,
@@ -104,12 +105,14 @@ import {
   TROLLBOX_CHANNELS,
   TROLLBOX_LANGS,
   NATIVE_LANG_NAMES,
+  CHANNEL_ATTACH_TYPES,
   $trollboxLang,
   fetchChannelMessages,
   fetchMaxMessageBytes,
   findSupportingNode,
   isPluginMissingError,
   isSupportedTrollboxLang,
+  channelAllowsAttach,
   probeTrollboxSupport,
   resolveContentLang,
   trollboxCatalog,
@@ -136,6 +139,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
+import TrollboxRisks from "@/components/TrollboxRisks.jsx";
 import { Avatar } from "@/components/Avatar.tsx";
 
 const POLL_MS = 15000;
@@ -184,8 +188,32 @@ function AttachTypeIcon({ type, className }) {
         ? Droplets
         : type === "offer"
           ? HandCoins
-          : Coins;
+          : type === "barter"
+            ? Handshake
+            : Coins;
   return <Icon className={className ?? "h-3 w-3"} />;
+}
+
+const ATTACH_ACTION_LABELS = {
+  trade: "attachActionTrade",
+  borrow: "attachActionBorrow",
+  lend: "attachActionLend",
+  asset: "attachActionAssetPage",
+  limit: "attachActionLimit",
+  instant: "attachActionInstant",
+  swap: "attachActionSwap",
+  stake: "attachActionStake",
+  view: "attachActionView",
+  proceed: "attachActionProceed",
+  favourite: null, // labeled inline (toggle state)
+};
+
+function attachActionLabel(t, action) {
+  if (action.key === "favourite") {
+    return action.label;
+  }
+  const key = ATTACH_ACTION_LABELS[action.key];
+  return key ? t(`Trollbox:${key}`, action.key) : action.key;
 }
 
 const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
@@ -198,6 +226,7 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   blockSelfLabel,
   ltmLabel,
   attachMetas,
+  attachBadgeLabel,
   onBlockUser,
   onOpenMessage,
 }) {
@@ -244,7 +273,7 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
               {attachMeta ? (
                 <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
                   <AttachTypeIcon type={attachMeta.type} />
-                  <span className="max-w-[140px] truncate">{attachMeta.label}</span>
+                  <span className="max-w-[140px] truncate">{attachBadgeLabel(attachMeta)}</span>
                 </span>
               ) : null}
             </ItemTitle>
@@ -350,6 +379,7 @@ export default function Trollbox(properties) {
     () => trollboxCatalog(activeChannel, activeLang),
     [activeChannel, activeLang]
   );
+  const allowedAttachTypes = CHANNEL_ATTACH_TYPES[activeChannel] ?? [];
   const [draft, setDraft] = useState("");
   const [probe, setProbe] = useState({ state: "probing", node: nodeUrl });
   const [messages, setMessages] = useState([]);
@@ -374,6 +404,16 @@ export default function Trollbox(properties) {
     [activeChannel]
   );
 
+  // Drop a staged attachment its channel no longer allows (e.g.
+  // leaving #barter) so it can never be posted elsewhere.
+  useEffect(() => {
+    if (!pendingAttach) {
+      return;
+    }
+    if (!channelAllowsAttach(activeChannel, attachKind(pendingAttach.attach))) {
+      setPendingAttach(null);
+    }
+  }, [activeChannel, pendingAttach]);
   // 1b. Live message budget from the chain's maximum transaction size.
   useEffect(() => {
     let cancelled = false;
@@ -557,6 +597,15 @@ export default function Trollbox(properties) {
         );
         return;
       }
+      if (!channelAllowsAttach(activeChannel, attachKind(shape))) {
+        setComposeError(
+          t(
+            "Trollbox:attachNotAllowedChannel",
+            "This attachment can't be posted in this channel."
+          )
+        );
+        return;
+      }
       setVerifyingAttach(true);
       try {
         const ok = await verifyAttachmentOnChain(
@@ -695,14 +744,20 @@ export default function Trollbox(properties) {
 
   // Resolve attachments to display metadata using trusted lists only.
   // Unresolvable attachments yield no badge (never render raw payload).
+  // Counterparty (message author) is passed so barter actions can link
+  // to a prefilled trade with them.
   const attachMetas = useMemo(() => {
     const map = {};
     for (const m of visibleMessages) {
       if (m.attach) {
-        const meta = resolveAttachmentMeta(m.attach, {
-          assets: chainAssets,
-          pools: chainPools,
-        });
+        const meta = resolveAttachmentMeta(
+          m.attach,
+          {
+            assets: chainAssets,
+            pools: chainPools,
+          },
+          { counterparty: m.account }
+        );
         if (meta) {
           map[m.id] = meta;
         }
@@ -710,6 +765,14 @@ export default function Trollbox(properties) {
     }
     return map;
   }, [visibleMessages, chainAssets, chainPools]);
+
+  const attachBadgeLabel = useCallback(
+    (meta) =>
+      meta.type === "barter"
+        ? t("Trollbox:attachTypeBarter", "Barter")
+        : meta.label,
+    [t]
+  );
 
   const blockLabel = t("Trollbox:blockUser", "Block user");
   const blockSelfLabel = t("Trollbox:blockSelf", "You can't block yourself");
@@ -743,6 +806,7 @@ export default function Trollbox(properties) {
       blockSelfLabel,
       ltmLabel,
       attachMetas,
+      attachBadgeLabel,
       onBlockUser: handleBlockUser,
       onOpenMessage: handleOpenMessage,
     }),
@@ -754,6 +818,7 @@ export default function Trollbox(properties) {
       blockSelfLabel,
       ltmLabel,
       attachMetas,
+      attachBadgeLabel,
       handleBlockUser,
       handleOpenMessage,
     ]
@@ -763,10 +828,14 @@ export default function Trollbox(properties) {
     if (!openMessage || !openMessage.attach) {
       return null;
     }
-    return resolveAttachmentMeta(openMessage.attach, {
-      assets: chainAssets,
-      pools: chainPools,
-    });
+    return resolveAttachmentMeta(
+      openMessage.attach,
+      {
+        assets: chainAssets,
+        pools: chainPools,
+      },
+      { counterparty: openMessage.account }
+    );
   }, [openMessage, chainAssets, chainPools]);
 
   const [offerVerified, setOfferVerified] = useState(null);
@@ -1177,7 +1246,9 @@ export default function Trollbox(properties) {
             {pendingAttach ? (
               <Badge
                 variant="secondary"
-                className="shrink-0 max-w-[220px] h-10 gap-1.5 px-2.5"
+                className="shrink-0 max-w-[320px] h-10 gap-1.5 px-2.5 cursor-pointer hover:bg-accent/60"
+                role="button"
+                tabIndex={0}
                 title={t(
                   "Trollbox:attachAttachedTitle",
                   "Attached {{type}}: {{label}}",
@@ -1186,22 +1257,60 @@ export default function Trollbox(properties) {
                     label: pendingAttach.label,
                   }
                 )}
+                onClick={() => {
+                  if (
+                    attachKind(pendingAttach.attach) === "barter" &&
+                    activeChannel === "barter"
+                  ) {
+                    setAttachOpen(true);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (
+                    (e.key === "Enter" || e.key === " ") &&
+                    attachKind(pendingAttach.attach) === "barter" &&
+                    activeChannel === "barter"
+                  ) {
+                    e.preventDefault();
+                    setAttachOpen(true);
+                  }
+                }}
               >
-                <AttachTypeIcon
-                  type={attachKind(pendingAttach.attach) ?? "asset"}
-                  className="h-4 w-4 shrink-0"
-                />
-                <span className="truncate text-xs">{pendingAttach.label}</span>
+                {attachKind(pendingAttach.attach) === "barter" ? (
+                  <>
+                    <Handshake className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="truncate text-xs font-semibold">
+                      {t("Trollbox:attachChipOffer", "Have")}:{" "}
+                      {(pendingAttach.attach.offer || []).length}
+                    </span>
+                    <ArrowLeftRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="truncate text-xs font-semibold">
+                      {t("Trollbox:attachChipWant", "Want")}:{" "}
+                      {(pendingAttach.attach.want || []).length}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <AttachTypeIcon
+                      type={attachKind(pendingAttach.attach) ?? "asset"}
+                      className="h-4 w-4 shrink-0"
+                    />
+                    <span className="truncate text-xs">{pendingAttach.label}</span>
+                  </>
+                )}
                 <button
                   type="button"
                   aria-label={t("Trollbox:attachRemove", "Remove attachment")}
-                  onClick={() => setPendingAttach(null)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPendingAttach(null);
+                  }}
                   className="shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
               </Badge>
-            ) : (
+            ) : allowedAttachTypes.length > 0 ? (
               <Button
                 variant="outline"
                 size="icon"
@@ -1213,7 +1322,7 @@ export default function Trollbox(properties) {
               >
                 <Paperclip className="h-4 w-4" />
               </Button>
-            )}
+            ) : null}
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -1303,11 +1412,15 @@ export default function Trollbox(properties) {
             assets={chainAssets}
             marketSearch={chainMarketSearch}
             pools={chainPools}
+            allowedTypes={allowedAttachTypes}
+            initialValue={pendingAttach}
             onAttach={(picked) => setPendingAttach(picked)}
           />
         </CardContent>
       </Card>
       </Tabs>
+
+      <TrollboxRisks />
 
       <Dialog
         open={!!openMessage}
@@ -1348,14 +1461,14 @@ export default function Trollbox(properties) {
                 className="min-h-[120px]"
               />
               {openAttachMeta ? (
-                <div className="rounded-md border border-border p-3">
+                <div className="rounded-md border border-border p-3 space-y-2">
                   <div className="flex items-center gap-2">
                     <AttachTypeIcon
                       type={openAttachMeta.type}
                       className="h-4 w-4 shrink-0"
                     />
                     <span className="text-sm font-semibold truncate">
-                      {openAttachMeta.label}
+                      {attachBadgeLabel(openAttachMeta)}
                     </span>
                     {openAttachActions.length > 0 ? (
                       <DropdownMenu>
@@ -1372,14 +1485,16 @@ export default function Trollbox(properties) {
                           {openAttachActions.map((a) =>
                             a.href ? (
                               <DropdownMenuItem key={a.key} asChild>
-                                <a href={a.href}>{a.label}</a>
+                                <a href={a.href}>
+                                  {attachActionLabel(t, a)}
+                                </a>
                               </DropdownMenuItem>
                             ) : (
                               <DropdownMenuItem
                                 key={a.key}
                                 onSelect={() => a.onSelect && a.onSelect()}
                               >
-                                {a.label}
+                                {attachActionLabel(t, a)}
                               </DropdownMenuItem>
                             )
                           )}
@@ -1387,6 +1502,43 @@ export default function Trollbox(properties) {
                       </DropdownMenu>
                     ) : null}
                   </div>
+                  {openAttachMeta.type === "barter" &&
+                  openAttachMeta.details ? (
+                    <div className="text-xs space-y-1.5">
+                      <div>
+                        <p className="font-semibold text-foreground/80">
+                          {t("Trollbox:barterTheirOffer", "They offer")}
+                        </p>
+                        {openAttachMeta.details.offer.map((l, i) => (
+                          <p key={i} className="font-mono text-muted-foreground">
+                            {l.amount} {l.symbol}
+                          </p>
+                        ))}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground/80">
+                          {t("Trollbox:barterTheirWant", "They want")}
+                        </p>
+                        {openAttachMeta.details.want.map((l, i) => (
+                          <p key={i} className="font-mono text-muted-foreground">
+                            {l.amount} {l.symbol}
+                          </p>
+                        ))}
+                      </div>
+                      {openAttachMeta.details.escrow ? (
+                        <p className="text-muted-foreground">
+                          {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
+                            account: openAttachMeta.details.escrow.account,
+                            fee: openAttachMeta.details.escrow.fee,
+                            first:
+                              openAttachMeta.details.escrow.first === "me"
+                                ? t("Trollbox:barterCreatorFirst", "Poster")
+                                : t("Trollbox:barterCounterpartyFirst", "Counterparty"),
+                          })}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
               <p className="text-xs text-muted-foreground">

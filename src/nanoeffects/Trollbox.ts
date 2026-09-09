@@ -15,7 +15,7 @@ export const TROLLBOX_CHANNELS = [
   { id: "announcements" },
   { id: "trading" },
   { id: "pools" },
-  { id: "smartcoins" },
+  { id: "barter" },
   { id: "credit" },
   { id: "assets" },
   { id: "governance" },
@@ -66,6 +66,32 @@ export function trollboxCatalog(channelId: string, lang: string): string {
   return normalized === "en"
     ? `trollbox-${channelId}`
     : `trollbox-${channelId}-${normalized}`;
+}
+
+/**
+ * Which attachment kinds each channel accepts (attachment `kind` names:
+ * "asset" | "pair" | "pool" | "offer" | "barter"). Channels absent here
+ * accept nothing. History still renders attachments posted anywhere —
+ * this only gates composing new ones.
+ */
+export const CHANNEL_ATTACH_TYPES: Record<string, string[]> = {
+  general: [],
+  announcements: ["asset", "pool", "offer"],
+  trading: ["pair", "asset"],
+  pools: ["pool", "asset"],
+  barter: ["barter"],
+  credit: ["offer"],
+  assets: ["pair", "asset", "offer", "pool"],
+  governance: [],
+  proposals: [],
+  dev: [],
+};
+
+export function channelAllowsAttach(channelId: string, kind: string | null): boolean {
+  if (!kind) {
+    return false;
+  }
+  return (CHANNEL_ATTACH_TYPES[channelId] ?? []).includes(kind);
 }
 
 export const TROLLBOX_META_CATALOG = "trollbox-meta";

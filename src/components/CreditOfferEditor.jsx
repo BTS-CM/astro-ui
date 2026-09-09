@@ -80,7 +80,7 @@ const CreditOfferEditorCollateralRow = memo(function CreditOfferEditorCollateral
     Number.isFinite(_priceNum) && Number.isInteger(_targetAsset.precision)
       ? _priceNum.toFixed(_targetAsset.precision)
       : res.price;
-  return (<div style={{ ...style, paddingLeft: "8px", paddingRight: "8px", paddingBottom: "8px", paddingTop: "4px" }} key={`acard-${res.id}`}><Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60"><div className="p-3 flex items-center gap-3"><span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)]"> <Coins className="h-3.5 w-3.5" strokeWidth={2.25} /></span><div className="flex-1 min-w-0"><div className="text-sm font-semibold truncate">#{index + 1}: {_targetAsset.symbol}</div><div className="text-xs text-muted-foreground">{t("CreditOfferEditor:price")} <span className="font-mono">{_displayPrice}</span> {_targetAsset.symbol} / {selectedAsset ?? ""}</div></div></div></Card></div>);
+  return (<div style={{ ...style, paddingLeft: "8px", paddingRight: "8px", paddingBottom: "8px", paddingTop: "4px" }} key={`acard-${res.id}`}><Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60"><div className="p-3 flex items-center gap-3"><span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)]"> <Coins className="h-3.5 w-3.5" strokeWidth={2.25} /></span><div className="flex-1 min-w-0"><div className="text-sm font-semibold truncate">#{index + 1}: {_targetAsset.symbol}</div><div className="text-xs text-muted-foreground">{t("CreditOfferEditor:price")} <span className="font-mono">{_displayPrice}</span> {_targetAsset.symbol} / {selectedAsset ?? ""}</div></div><Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-muted-foreground hover:text-[hsl(var(--accent-danger-fg))] hover:bg-[hsl(var(--accent-danger)/0.1)]" onClick={(event) => { event.preventDefault(); setAcceptableCollateral(acceptableCollateral.filter((_, i) => i !== index)); }}><Trash2 className="h-4 w-4" /></Button></div></Card></div>);
 });
 const CreditOfferEditorApprovedRow = memo(function CreditOfferEditorApprovedRow({ index, style, allowedAccounts, t, foundAsset, setAllowedAccounts }) {
   let res = allowedAccounts[index];
@@ -89,7 +89,6 @@ const CreditOfferEditorApprovedRow = memo(function CreditOfferEditorApprovedRow(
 });
 
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
-import CollateralDropDownCard from "./Market/CollateralDropDownCard.jsx";
 import AccountSearch from "./AccountSearch.jsx";
 
 import {
@@ -160,6 +159,11 @@ export default function CreditOfferEditor(properties) {
   const [acceptableCollateral, setAcceptableCollateral] = useState([]);
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
+
+  const [pendingCollateral, setPendingCollateral] = useState(null);
+  const [collateralPrice, setCollateralPrice] = useState("");
+  const [collateralPriceDialogOpen, setCollateralPriceDialogOpen] =
+    useState(false);
 
   const debouncedSetRate = useCallback(
     debounce((input, mcr) => {
@@ -282,6 +286,81 @@ export default function CreditOfferEditor(properties) {
       setFoundAssetBalance(0);
     }
   }, [foundAsset]);
+
+  const handleCollateralAssetSelect = useCallback(
+    (symbol) => {
+      if (!symbol) {
+        return;
+      }
+      if (
+        acceptableCollateral.some((x) => x.symbol === symbol) ||
+        (foundAsset && symbol === foundAsset.symbol)
+      ) {
+        return;
+      }
+      const marketEntry = (marketSearch || []).find((a) => a.s === symbol);
+      const assetEntry = (assets || []).find((a) => a.symbol === symbol);
+      setPendingCollateral({
+        symbol,
+        id: marketEntry ? marketEntry.id : assetEntry ? assetEntry.id : null,
+        precision:
+          marketEntry && Number.isInteger(marketEntry.p)
+            ? marketEntry.p
+            : assetEntry && Number.isInteger(assetEntry.precision)
+              ? assetEntry.precision
+              : null,
+      });
+      setCollateralPrice("");
+      setCollateralPriceDialogOpen(true);
+    },
+    [acceptableCollateral, foundAsset, marketSearch, assets],
+  );
+
+  const isCollateralPriceValid = useMemo(() => {
+    if (!pendingCollateral || !collateralPrice) {
+      return false;
+    }
+    const precisionArg =
+      pendingCollateral && Number.isInteger(pendingCollateral.precision)
+        ? { precision: pendingCollateral.precision }
+        : null;
+    if (!assetAmountRegex(precisionArg).test(collateralPrice)) {
+      return false;
+    }
+    const parsed = parseFloat(collateralPrice);
+    return Number.isFinite(parsed) && parsed > 0;
+  }, [pendingCollateral, collateralPrice]);
+
+  const confirmPendingCollateral = useCallback(() => {
+    if (!pendingCollateral || !pendingCollateral.symbol || !isCollateralPriceValid) {
+      return;
+    }
+    if (
+      acceptableCollateral.some((x) => x.symbol === pendingCollateral.symbol)
+    ) {
+      setCollateralPriceDialogOpen(false);
+      setPendingCollateral(null);
+      setCollateralPrice("");
+      return;
+    }
+    setAcceptableCollateral([
+      ...acceptableCollateral,
+      {
+        symbol: pendingCollateral.symbol,
+        price: collateralPrice,
+        precision: pendingCollateral.precision,
+        id: pendingCollateral.id,
+      },
+    ]);
+    setCollateralPriceDialogOpen(false);
+    setPendingCollateral(null);
+    setCollateralPrice("");
+  }, [
+    pendingCollateral,
+    collateralPrice,
+    isCollateralPriceValid,
+    acceptableCollateral,
+  ]);
 
   const [offerID, setOfferID] = useState();
   useEffect(() => {
@@ -1094,17 +1173,134 @@ export default function CreditOfferEditor(properties) {
                       {t("CreditOfferEditor:acceptedCollateral")}
                     </span>
                   </div>
-                  <CollateralDropDownCard
-                    chosenAssets={acceptableCollateral}
-                    lendingAsset={
-                      foundAsset && foundAsset.symbol
-                        ? foundAsset.symbol
-                        : ""
+                  <AssetDropDown
+                    assetSymbol=""
+                    storeCallback={handleCollateralAssetSelect}
+                    otherAsset={
+                      foundAsset && foundAsset.symbol ? foundAsset.symbol : ""
                     }
+                    otherAssets={acceptableCollateral.map((x) => x.symbol)}
                     marketSearch={marketSearch}
-                    storeCallback={setAcceptableCollateral}
                     chain={usr && usr.chain ? usr.chain : "bitshares"}
+                    balances={balances}
+                    triggerLabel={`+ ${t("AssetDropDownCard:addCollateral").replace(/^➕\s*/, "")}`}
+                    triggerVariant="outline"
+                    triggerClassName="w-auto border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.5)]"
+                    autoWidth
                   />
+                  <Dialog
+                    open={collateralPriceDialogOpen}
+                    onOpenChange={(open) => {
+                      setCollateralPriceDialogOpen(open);
+                      if (!open) {
+                        setPendingCollateral(null);
+                        setCollateralPrice("");
+                      }
+                    }}
+                  >
+                    <DialogContent className="sm:max-w-[425px] !bg-card border border-border">
+                      <DialogHeader>
+                        <DialogTitle>
+                          {t("CreditOfferEditor:collateralPriceTitle", {
+                            defaultValue: "Set collateral price",
+                          })}
+                        </DialogTitle>
+                        <DialogDescription className="text-muted-foreground">
+                          {pendingCollateral && pendingCollateral.symbol
+                            ? t("CreditOfferEditor:collateralPriceDescription", {
+                                symbol: pendingCollateral.symbol,
+                                lendingAsset:
+                                  foundAsset && foundAsset.symbol
+                                    ? foundAsset.symbol
+                                    : "",
+                                defaultValue: `Provide the price for ${pendingCollateral.symbol}${foundAsset && foundAsset.symbol ? ` in ${foundAsset.symbol}` : ""}`,
+                              })
+                            : t("CreditOfferEditor:collateralPriceDescriptionFallback", {
+                                defaultValue:
+                                  "Provide the price for the selected collateral asset",
+                              })}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-2">
+                        <div className="grid gap-2">
+                          <Label htmlFor="collateralPrice">
+                            {pendingCollateral && pendingCollateral.symbol
+                              ? t("CreditOfferEditor:collateralPriceLabel", {
+                                  symbol: pendingCollateral.symbol,
+                                  lendingAsset:
+                                    foundAsset && foundAsset.symbol
+                                      ? foundAsset.symbol
+                                      : "",
+                                  defaultValue: `Price (${pendingCollateral.symbol}${foundAsset && foundAsset.symbol ? ` / ${foundAsset.symbol}` : ""})`,
+                                })
+                              : t("CreditOfferEditor:collateralPriceLabelFallback", {
+                                  defaultValue: "Price",
+                                })}
+                          </Label>
+                          <Input
+                            id="collateralPrice"
+                            value={collateralPrice}
+                            placeholder={t(
+                              "CreditOfferEditor:collateralPricePlaceholder",
+                              { defaultValue: "0.0" },
+                            )}
+                            onKeyPress={(event) => {
+                              if (
+                                event.key === "." &&
+                                event.target.value.includes(".")
+                              ) {
+                                event.preventDefault();
+                              }
+                              const precisionArg =
+                                pendingCollateral &&
+                                Number.isInteger(pendingCollateral.precision)
+                                  ? { precision: pendingCollateral.precision }
+                                  : null;
+                              const regex = assetAmountRegex(precisionArg);
+                              if (!regex.test(event.key)) {
+                                event.preventDefault();
+                              }
+                            }}
+                            onChange={(event) => {
+                              const input = event.target.value;
+                              const precisionArg =
+                                pendingCollateral &&
+                                Number.isInteger(pendingCollateral.precision)
+                                  ? { precision: pendingCollateral.precision }
+                                  : null;
+                              const regex = assetAmountRegex(precisionArg);
+                              if (!regex.test(input)) {
+                                return;
+                              }
+                              setCollateralPrice(input);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setCollateralPriceDialogOpen(false);
+                            setPendingCollateral(null);
+                            setCollateralPrice("");
+                          }}
+                        >
+                          {t("CreditOfferEditor:cancel", { defaultValue: "Cancel" })}
+                        </Button>
+                        <Button
+                          type="button"
+                          disabled={!isCollateralPriceValid}
+                          onClick={confirmPendingCollateral}
+                        >
+                          {t("AssetDropDownCard:addAsset", {
+                            defaultValue: "Add asset",
+                          })}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <div className="rounded-lg border border-border/60 bg-card/40">
                   <div className="w-full overflow-hidden">

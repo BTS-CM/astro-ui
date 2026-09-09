@@ -39,6 +39,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { getObjects } from "@/nanoeffects/src/common";
 import {
   blockchainFloat,
   humanReadableFloat,
@@ -209,6 +210,7 @@ export default function Barter(properties) {
 
   const [proposalFee, setProposalFee] = useState(0);
   const [transferFee, setTransferFee] = useState(0);
+  const [urlPrefilled, setUrlPrefilled] = useState(false);
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
       return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
@@ -228,6 +230,136 @@ export default function Barter(properties) {
       );
     }
   }, [globalParams]);
+
+  // URL prefill (?from= ?to= ?counterparty= ?escrow= ?escrowFee= ?first=),
+  // e.g. from a trollbox barter attachment's "proceed" link. Applies once,
+  // only to empty fields, so manual input is never clobbered. Asset legs
+  // are "1.3.x:humanAmount" pairs; escrow fee is a BTS human amount.
+  useEffect(() => {
+    if (urlPrefilled || !assets || !assets.length) {
+      return undefined;
+    }
+    let params;
+    try {
+      params = new URLSearchParams(window.location.search);
+    } catch {
+      setUrlPrefilled(true);
+      return undefined;
+    }
+    const fromParam = params.get("from");
+    const toParam = params.get("to");
+    const counterpartyParam = params.get("counterparty");
+    const escrowParam = params.get("escrow");
+    if (!fromParam && !toParam && !counterpartyParam && !escrowParam) {
+      setUrlPrefilled(true);
+      return undefined;
+    }
+
+    const parseLeg = (param) => {
+      const out = {};
+      if (!param) {
+        return out;
+      }
+      for (const part of param.split(",")) {
+        const sep = part.lastIndexOf(":");
+        if (sep === -1) {
+          continue;
+        }
+        const id = part.slice(0, sep);
+        const amount = part.slice(sep + 1);
+        if (!/^1\.3\.\d+$/.test(id)) {
+          continue;
+        }
+        const asset = assets.find((a) => a && a.id === id);
+        if (!asset) {
+          continue;
+        }
+        if (
+          typeof amount !== "string" ||
+          !assetAmountRegex({ precision: asset.precision }).test(amount) ||
+          !(parseFloat(amount) > 0)
+        ) {
+          continue;
+        }
+        out[id] = { amount, asset };
+      }
+      return out;
+    };
+
+    const fromLeg = parseLeg(fromParam);
+    const toLeg = parseLeg(toParam);
+    if (Object.keys(fromLeg).length) {
+      setFromAssets((prev) =>
+        Object.keys(prev || {}).length ? prev : fromLeg
+      );
+    }
+    if (Object.keys(toLeg).length) {
+      setToAssets((prev) =>
+        Object.keys(prev || {}).length ? prev : toLeg
+      );
+    }
+
+    const escrowValid = /^1\.2\.\d+$/.test(escrowParam || "");
+    if (escrowValid) {
+      setShowEscrow(true);
+      const fee = params.get("escrowFee");
+      if (
+        typeof fee === "string" &&
+        assetAmountRegex({ precision: 5 }).test(fee) &&
+        parseFloat(fee) > 0
+      ) {
+        setEscrowPayment((prev) =>
+          prev && parseFloat(prev) > 0 ? prev : fee
+        );
+      }
+      const first = params.get("first");
+      if (first === "self" || first === "counterparty") {
+        setSendToEscrowFirst(first === "self");
+      }
+    }
+
+    const needIds = [];
+    if (/^1\.2\.\d+$/.test(counterpartyParam || "")) {
+      needIds.push(counterpartyParam);
+    }
+    if (escrowValid) {
+      needIds.push(escrowParam);
+    }
+    let cancelled = false;
+    if (needIds.length) {
+      getObjects(_chain, [...new Set(needIds)], currentNode?.url || null)
+        .then((accounts) => {
+          if (cancelled) {
+            return;
+          }
+          const byId = {};
+          for (const a of accounts || []) {
+            if (a && a.id) {
+              byId[a.id] = a.name ?? a.id;
+            }
+          }
+          if (counterpartyParam && byId[counterpartyParam]) {
+            setToAccount((prev) =>
+              prev
+                ? prev
+                : { id: counterpartyParam, name: byId[counterpartyParam] }
+            );
+          }
+          if (escrowValid && byId[escrowParam]) {
+            setEscrowAccount((prev) =>
+              prev ? prev : { id: escrowParam, name: byId[escrowParam] }
+            );
+          }
+        })
+        .catch(() => {
+          // names stay unresolved; user can pick accounts manually
+        });
+    }
+    setUrlPrefilled(true);
+    return () => {
+      cancelled = true;
+    };
+  }, [assets, _chain, currentNode, urlPrefilled]);
 
   useEffect(() => {
     async function fetchFromBalances() {

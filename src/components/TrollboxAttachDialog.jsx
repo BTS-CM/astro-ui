@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { List } from "react-window";
@@ -9,9 +9,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,6 +23,11 @@ import {
   Coins,
   Droplets,
   HandCoins,
+  Handshake,
+  Inbox,
+  Send,
+  Shield,
+  X,
 } from "lucide-react";
 
 import {
@@ -31,16 +38,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
+import AccountSearch from "@/components/AccountSearch.jsx";
+import { Checkbox } from "@/components/ui/checkbox";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createCreditOfferStore } from "@/nanoeffects/CreditOffers.ts";
 import { getObjects } from "@/nanoeffects/src/common";
-import { humanReadableFloat } from "@/lib/common.js";
+import { humanReadableFloat, assetAmountRegex } from "@/lib/common.js";
+import { attachKind, fullObjectId } from "@/lib/trollboxAttach.js";
 
 const ATTACH_TYPES = [
   { id: "asset", icon: Coins },
   { id: "pair", icon: ArrowLeftRight },
   { id: "pool", icon: Droplets },
   { id: "offer", icon: HandCoins },
+  { id: "barter", icon: Handshake },
 ];
 
 function formatDuration(totalSeconds) {
@@ -77,7 +88,6 @@ function toInstance(objectId) {
 
 const POOL_ROW_HEIGHT = 96;
 const POOL_MAX_VISIBLE_ROWS = 3;
-
 const TrollboxPoolRow = React.memo(function TrollboxPoolRow({
   index,
   style,
@@ -150,6 +160,245 @@ const TrollboxPoolRow = React.memo(function TrollboxPoolRow({
   );
 });
 
+const BARTER_LEG_LIMIT = 5;
+const BARTER_LEG_ROW_HEIGHT = 52;
+const BARTER_LEG_MAX_ROWS = 3;
+
+const BarterLegRow = React.memo(function BarterLegRow({
+  index,
+  style,
+  entries,
+  onRemove,
+  removeLabel,
+}) {
+  const e = entries[index];
+  if (!e) {
+    return null;
+  }
+  return (
+    <div style={{ ...style, paddingBottom: "6px", paddingRight: "2px" }}>
+      <div className="flex h-full items-center gap-2 rounded-lg border border-border bg-accent/20 px-2.5 text-sm overflow-hidden">
+        <span className="font-mono truncate">{e.amount}</span>
+        <span className="font-semibold truncate">{e.symbol}</span>
+        <button
+          type="button"
+          aria-label={removeLabel}
+          onClick={() => onRemove(e.id)}
+          className="ml-auto shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-destructive"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+});
+
+function BarterLegEditor(properties) {
+  const {
+    title,
+    tone,
+    entries,
+    marketSearch,
+    chain,
+    balances,
+    assets,
+    excludeIds,
+    capToBalance,
+    showBalance,
+    balanceLabel,
+    addAssetLabel,
+    maxAssetsLabel,
+    amountPlaceholder,
+    addLabel,
+    cancelLabel,
+    emptyLabel,
+    removeLabel,
+    onAdd,
+    onRemove,
+  } = properties;
+  const [staged, setStaged] = useState(null); // {symbol, id} picked, awaiting amount
+  const [amount, setAmount] = useState("");
+
+  const stagedAsset = (assets || []).find(
+    (a) => a && staged && a.id === staged.id
+  );
+  // Offer side: only assets actually held (balance > 0) are pickable, so
+  // an offered asset can never exceed an empty balance. While balances
+  // are still loading the restriction stays off (no false-empty picker).
+  const ownedIds = useMemo(() => {
+    if (!capToBalance || balances === undefined) {
+      return null;
+    }
+    return new Set(
+      (balances || [])
+        .filter((b) => b && Number(b.amount) > 0)
+        .map((b) => b.asset_id)
+    );
+  }, [capToBalance, balances]);
+  // Gate keystrokes by the asset's precision (mirrors the barter page's
+  // escrow fee field): invalid intermediate input never enters state, so
+  // downstream validation and display always see well-formed amounts.
+  const handleAmountChange = useCallback(
+    (value) => {
+      if (
+        !stagedAsset ||
+        assetAmountRegex({ precision: stagedAsset.precision }).test(value)
+      ) {
+        setAmount(value);
+      }
+    },
+    [stagedAsset]
+  );
+  const handleStoreStaged = useCallback(
+    (s) => {
+      const found = (marketSearch || []).find((m) => m && m.s === s);
+      if (!found) {
+        return;
+      }
+      setStaged((prev) =>
+        prev && prev.symbol === s ? prev : { symbol: s, id: found.id }
+      );
+    },
+    [marketSearch]
+  );
+  const stagedBalanceEntry =
+    showBalance && stagedAsset
+      ? (balances || []).find((b) => b.asset_id === stagedAsset.id)
+      : null;
+  const stagedBalanceHuman =
+    stagedBalanceEntry && stagedAsset
+      ? humanReadableFloat(stagedBalanceEntry.amount, stagedAsset.precision)
+      : 0;
+  const amountValid =
+    stagedAsset &&
+    typeof amount === "string" &&
+    assetAmountRegex({ precision: stagedAsset.precision }).test(amount) &&
+    parseFloat(amount) > 0 &&
+    (!capToBalance || parseFloat(amount) <= stagedBalanceHuman);
+
+  const isOffer = tone === "offer";
+  const TitleIcon = isOffer ? Send : Inbox;
+  const atMax = entries.length >= BARTER_LEG_LIMIT;
+
+  return (
+    <div
+      className={
+        isOffer
+          ? "space-y-2 rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4"
+          : "space-y-2 rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-2)/0.06)] to-transparent p-4"
+      }
+    >
+      <div className="flex items-center gap-2">
+        <span
+          className={
+            isOffer
+              ? "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]"
+              : "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[hsl(var(--accent-2)/0.15)] border border-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))]"
+          }
+        >
+          <TitleIcon className="h-3 w-3" strokeWidth={2.5} />
+        </span>
+        <p className="text-sm font-semibold text-foreground">{title}</p>
+        <div className="ml-auto shrink-0">
+          {atMax ? (
+            <Button size="sm" disabled>
+              {maxAssetsLabel}
+            </Button>
+          ) : (
+            <AssetDropDown
+              assetSymbol=""
+              assetData={null}
+              storeCallback={handleStoreStaged}
+              otherAssets={excludeIds}
+              allowedIds={ownedIds ? [...ownedIds] : undefined}
+              initialMode={capToBalance ? "balances" : undefined}
+              marketSearch={marketSearch}
+              chain={chain}
+              balances={balances}
+              triggerLabel={addAssetLabel}
+              triggerVariant="outline"
+            />
+          )}
+        </div>
+      </div>
+      {staged ? (
+        <div className="rounded-lg border border-border bg-accent/20 p-2.5 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold truncate">
+              {staged.symbol}
+            </span>
+            <button
+              type="button"
+              aria-label={cancelLabel}
+              onClick={() => {
+                setStaged(null);
+                setAmount("");
+              }}
+              className="ml-auto shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-destructive"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <div className="flex gap-2 items-start">
+            <div className="min-w-0 flex-1">
+              <Input
+                type="text"
+                inputMode="decimal"
+                value={amount}
+                onChange={(e) => handleAmountChange(e.target.value)}
+                placeholder={amountPlaceholder}
+                className="font-mono"
+                autoFocus
+              />
+              {showBalance && stagedAsset ? (
+                <p className="mt-1 truncate text-xs text-muted-foreground">
+                  {balanceLabel}:{" "}
+                  {stagedBalanceEntry
+                    ? humanReadableFloat(
+                        stagedBalanceEntry.amount,
+                        stagedAsset.precision
+                      )
+                    : 0}{" "}
+                  {stagedAsset.symbol}
+                </p>
+              ) : null}
+            </div>
+            <Button
+              size="sm"
+              className="mt-0.5 shrink-0"
+              disabled={!amountValid}
+              onClick={() => {
+                onAdd(staged.id, staged.symbol, amount);
+                setStaged(null);
+                setAmount("");
+              }}
+            >
+              {addLabel}
+            </Button>
+          </div>
+        </div>
+      ) : null}
+      {entries.length > 0 ? (
+        <List
+          rowComponent={BarterLegRow}
+          rowCount={entries.length}
+          rowHeight={BARTER_LEG_ROW_HEIGHT}
+          height={
+            Math.min(entries.length, BARTER_LEG_MAX_ROWS) *
+            BARTER_LEG_ROW_HEIGHT
+          }
+          width="100%"
+          rowProps={{ entries, onRemove, removeLabel }}
+        />
+      ) : (
+        <div className="rounded-lg border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+          {emptyLabel}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function TrollboxAttachDialog(properties) {
   const {
     open,
@@ -160,6 +409,7 @@ export default function TrollboxAttachDialog(properties) {
     assets,
     marketSearch,
     pools,
+    allowedTypes,
     onAttach,
   } = properties;
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -173,9 +423,79 @@ export default function TrollboxAttachDialog(properties) {
   const [offersLoading, setOffersLoading] = useState(false);
   const [filterOfferAsset, setFilterOfferAsset] = useState(null);
   const [filterOfferLender, setFilterOfferLender] = useState(null);
+  const [barterOffer, setBarterOffer] = useState([]);
+  const [barterWant, setBarterWant] = useState([]);
+  const [barterEscrow, setBarterEscrow] = useState(false);
+  const [barterAgent, setBarterAgent] = useState(null);
+  const [agentDialogOpen, setAgentDialogOpen] = useState(false);
+  const [barterFee, setBarterFee] = useState("");
+  const [barterFirst, setBarterFirst] = useState("me");
   const [usrBalances, setUsrBalances] = useState();
 
+  const prevOpenRef = useRef(false);
   useEffect(() => {
+    if (open && !prevOpenRef.current) {
+      // Freshly opened: restore a pending barter attachment for editing,
+      // otherwise start clean. Symbols + agent name are re-resolved from
+      // the stored ids (labels are never trusted for identity).
+      const initAttach = initialValue && initialValue.attach;
+      if (initAttach && attachKind(initAttach) === "barter") {
+        const toEntry = (e) => {
+          const fullId = fullObjectId(3, e.a);
+          const asset = (assets || []).find((a) => a && a.id === fullId);
+          return {
+            id: fullId,
+            symbol: asset ? asset.symbol : `#${e.a}`,
+            amount: e.n,
+          };
+        };
+        setView("barter");
+        setBarterOffer((initAttach.offer || []).map(toEntry));
+        setBarterWant((initAttach.want || []).map(toEntry));
+        if (initAttach.escrow) {
+          const agentInst = initAttach.escrow.a;
+          const agentId =
+            Number.isInteger(agentInst) && agentInst >= 0
+              ? `1.2.${agentInst}`
+              : null;
+          if (agentId) {
+            setBarterEscrow(true);
+            setBarterAgent({
+              id: agentId,
+              name: initialValue.agentName || agentId,
+            });
+            setBarterFee(initAttach.escrow.f);
+            setBarterFirst(
+              initAttach.escrow.first === "them" ? "them" : "me"
+            );
+          } else {
+            setBarterEscrow(false);
+            setBarterAgent(null);
+            setBarterFee("");
+            setBarterFirst("me");
+          }
+        } else {
+          setBarterEscrow(false);
+          setBarterAgent(null);
+          setBarterFee("");
+          setBarterFirst("me");
+        }
+      } else {
+        setView("types");
+        setPicked(null);
+        setAssetA(null);
+        setAssetB(null);
+        setPoolId(null);
+        setFilterOfferAsset(null);
+        setFilterOfferLender(null);
+        setBarterOffer([]);
+        setBarterWant([]);
+        setBarterEscrow(false);
+        setBarterAgent(null);
+        setBarterFee("");
+        setBarterFirst("me");
+      }
+    }
     if (!open) {
       setView("types");
       setPicked(null);
@@ -184,8 +504,15 @@ export default function TrollboxAttachDialog(properties) {
       setPoolId(null);
       setFilterOfferAsset(null);
       setFilterOfferLender(null);
+      setBarterOffer([]);
+      setBarterWant([]);
+      setBarterEscrow(false);
+      setBarterAgent(null);
+      setBarterFee("");
+      setBarterFirst("me");
     }
-  }, [open ]);
+    prevOpenRef.current = open;
+  }, [open, initialValue, assets]);
 
   useEffect(() => {
     if (!open || !usr || !usr.id) {
@@ -287,7 +614,19 @@ export default function TrollboxAttachDialog(properties) {
     );
   }, [pools, assetA, assetB]);
 
-  // Share-asset issuer names for the displayed pools (the creator is
+  // Barter attachments are exclusive to channels that allow them.
+  // Defaults to everything except barter (safe: barter is opt-in per
+  // channel, and the composer never opens the dialog where disallowed).
+  const allowed = allowedTypes ?? ["asset", "pair", "pool", "offer"];
+  const visibleTypes = ATTACH_TYPES.filter((t) => allowed.includes(t.id));
+
+  // Bounce out of a disallowed view if the channel changed underneath.
+  useEffect(() => {
+    if (!allowed.includes(view) && view !== "types") {
+      setView("types");
+      setPicked(null);
+    }
+  }, [allowed, view]);
   // likely the one sharing, so readers see who stands behind a pool).
   const [issuerNames, setIssuerNames] = useState({});
   useEffect(() => {
@@ -426,7 +765,110 @@ export default function TrollboxAttachDialog(properties) {
     );
   }, [offers, filterOfferAsset, filterOfferLender, assets]);
 
+  // Stable identities for the leg editors: fresh arrays/callbacks every
+  // render would bust AssetDropDown's memos (full-market Fuse rebuilds)
+  // and freeze typing anywhere in this dialog.
+  const barterExcludeIds = useMemo(
+    () => [
+      ...barterOffer.map((e) => e.symbol),
+      ...barterWant.map((e) => e.symbol),
+    ],
+    [barterOffer, barterWant]
+  );
+  const handleBarterOfferAdd = useCallback((id, symbol, amount) => {
+    setBarterOffer((prev) => {
+      if (prev.some((e) => e.id === id) || prev.length >= BARTER_LEG_LIMIT) {
+        return prev;
+      }
+      return [...prev, { id, symbol, amount }];
+    });
+  }, []);
+  const handleBarterOfferRemove = useCallback((id) => {
+    setBarterOffer((prev) => prev.filter((e) => e.id !== id));
+  }, []);
+  const handleBarterWantAdd = useCallback((id, symbol, amount) => {
+    setBarterWant((prev) => {
+      if (prev.some((e) => e.id === id) || prev.length >= BARTER_LEG_LIMIT) {
+        return prev;
+      }
+      return [...prev, { id, symbol, amount }];
+    });
+  }, []);
+  const handleBarterWantRemove = useCallback((id) => {
+    setBarterWant((prev) => prev.filter((e) => e.id !== id));
+  }, []);
+
   const confirmDisabled = !picked;
+
+  // Keep the footer Attach button in sync with the barter form. Pure
+  // derivation (no setState-in-effect): the footer confirms explicitly.
+  const toInstance = (id) => {
+    const n = parseInt(String(id).split(".").pop(), 10);
+    return Number.isInteger(n) && n >= 0 ? n : null;
+  };
+  const validBarterLeg = (leg) => {
+    if (!Array.isArray(leg) || leg.length === 0 || leg.length > 5) {
+      return null;
+    }
+    const out = [];
+    const seen = new Set();
+    for (const e of leg) {
+      const inst = toInstance(e && e.id);
+      const asset = (assets || []).find((a) => a && a.id === e?.id);
+      if (
+        inst === null ||
+        seen.has(inst) ||
+        !asset ||
+        typeof e.amount !== "string" ||
+        !assetAmountRegex({ precision: asset.precision }).test(e.amount) ||
+        !(parseFloat(e.amount) > 0)
+      ) {
+        return null;
+      }
+      seen.add(inst);
+      out.push({ a: inst, n: e.amount });
+    }
+    return out;
+  };
+  const barterStaged = useMemo(() => {
+    if (view !== "barter") {
+      return null;
+    }
+    const offer = validBarterLeg(barterOffer);
+    const want = validBarterLeg(barterWant);
+    if (!offer || !want) {
+      return null;
+    }
+    const attach = { t: 99, offer, want };
+    if (barterEscrow) {
+      const agentId = barterAgent ? toInstance(barterAgent.id) : null;
+      const feeOk =
+        typeof barterFee === "string" &&
+        assetAmountRegex({ precision: 5 }).test(barterFee) &&
+        parseFloat(barterFee) > 0;
+      if (
+        agentId === null ||
+        !feeOk ||
+        (barterFirst !== "me" && barterFirst !== "them")
+      ) {
+        return null;
+      }
+      attach.escrow = { a: agentId, f: barterFee, first: barterFirst };
+    }
+    const oSyms = barterOffer.map((e) => e.symbol).join("+");
+    const wSyms = barterWant.map((e) => e.symbol).join("+");
+    return { attach, label: `${oSyms} ⇄ ${wSyms}` };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    view,
+    barterOffer,
+    barterWant,
+    barterEscrow,
+    barterAgent,
+    barterFee,
+    barterFirst,
+    assets,
+  ]);
 
   const handlePoolSelect = useCallback((p) => {
     const id = toInstance(p.id);
@@ -461,9 +903,28 @@ export default function TrollboxAttachDialog(properties) {
     onOpenChange(false);
   };
 
+  // Barter bypasses `picked` (staged derivation above feeds the footer
+  // directly, so no setState-in-effect loop is possible). Agent display
+  // name rides along (display-only; identity is always the stored id).
+  const handleFooterConfirm = () => {
+    if (view === "barter") {
+      if (!barterStaged) {
+        return;
+      }
+      onAttach({
+        ...barterStaged,
+        agentName: barterAgent && barterEscrow ? barterAgent.name : null,
+      });
+      onOpenChange(false);
+      return;
+    }
+    handleConfirm();
+  };
+  const footerDisabled = view === "barter" ? !barterStaged : confirmDisabled;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[560px]">
+      <DialogContent className="sm:max-w-[720px]">
         <DialogHeader>
           <DialogTitle>
             {t("Trollbox:attachTitle", "Attach to message")}
@@ -480,7 +941,7 @@ export default function TrollboxAttachDialog(properties) {
 
         {view === "types" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {ATTACH_TYPES.map(({ id, icon: Icon }) => (
+            {visibleTypes.map(({ id, icon: Icon }) => (
               <Button
                 key={id}
                 variant="outline"
@@ -790,6 +1251,172 @@ export default function TrollboxAttachDialog(properties) {
           </div>
         ) : null}
 
+        {view === "barter" ? (
+          <div className="space-y-3">
+            <BarterLegEditor
+              title={t("Trollbox:barterOfferTitle", "Your offer")}
+              tone="offer"
+              entries={barterOffer}
+              marketSearch={marketSearch}
+              chain={chain}
+              balances={usrBalances}
+              assets={assets}
+              excludeIds={barterExcludeIds}
+              capToBalance
+              showBalance
+              balanceLabel={t("Trollbox:barterBalance", "Balance")}
+              addAssetLabel={t("Trollbox:barterAddAsset", "Add asset")}
+              maxAssetsLabel={t("Trollbox:barterMaxAssets", "Max assets")}
+              cancelLabel={t("Trollbox:barterCancel", "Cancel")}
+              emptyLabel={t("Trollbox:barterEmptyLeg", "No assets added yet.")}
+              amountPlaceholder={t("Trollbox:barterAmount", "Amount")}
+              addLabel={t("Trollbox:barterAdd", "Add")}
+              removeLabel={t("Trollbox:barterRemoveAsset", "Remove asset")}
+              onAdd={handleBarterOfferAdd}
+              onRemove={handleBarterOfferRemove}
+            />
+            <BarterLegEditor
+              title={t("Trollbox:barterWantTitle", "Your want")}
+              tone="want"
+              entries={barterWant}
+              marketSearch={marketSearch}
+              chain={chain}
+              balances={usrBalances}
+              assets={assets}
+              excludeIds={barterExcludeIds}
+              addAssetLabel={t("Trollbox:barterAddAsset", "Add asset")}
+              maxAssetsLabel={t("Trollbox:barterMaxAssets", "Max assets")}
+              cancelLabel={t("Trollbox:barterCancel", "Cancel")}
+              emptyLabel={t("Trollbox:barterEmptyLeg", "No assets added yet.")}
+              amountPlaceholder={t("Trollbox:barterAmount", "Amount")}
+              addLabel={t("Trollbox:barterAdd", "Add")}
+              removeLabel={t("Trollbox:barterRemoveAsset", "Remove asset")}
+              onAdd={handleBarterWantAdd}
+              onRemove={handleBarterWantRemove}
+            />
+            <div className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-transparent p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="barter-use-escrow"
+                  checked={barterEscrow}
+                  onCheckedChange={(v) => setBarterEscrow(!!v)}
+                />
+                <Label
+                  htmlFor="barter-use-escrow"
+                  className="text-sm font-semibold text-foreground inline-flex items-center gap-2"
+                >
+                  <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                    <Shield className="h-3 w-3" strokeWidth={2.5} />
+                  </span>
+                  {t("Trollbox:barterEscrow", "Use escrow agent")}
+                </Label>
+              </div>
+              {barterEscrow ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      disabled
+                      readOnly
+                      value={
+                        barterAgent
+                          ? `${barterAgent.name} (${barterAgent.id})`
+                          : ""
+                      }
+                      placeholder={t(
+                        "Trollbox:barterSelectAgent",
+                        "Select escrow agent…"
+                      )}
+                      className="flex-1"
+                    />
+                    <Dialog
+                      open={agentDialogOpen}
+                      onOpenChange={setAgentDialogOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          {t("Trollbox:barterSelectAgent", "Select escrow agent…")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[375px]">
+                        <DialogHeader>
+                          <DialogTitle>
+                            {t(
+                              "Trollbox:barterSelectAgentTitle",
+                              "Choose escrow agent"
+                            )}
+                          </DialogTitle>
+                        </DialogHeader>
+                        <AccountSearch
+                          chain={chain}
+                          excludedUsers={usr ? [usr] : []}
+                          setChosenAccount={(acc) => {
+                            setBarterAgent({ id: acc.id, name: acc.name });
+                            setAgentDialogOpen(false);
+                          }}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1.5 min-w-0">
+                      <Label htmlFor="barter-escrow-fee">
+                        {t("Trollbox:barterEscrowFee", "Escrow fee (BTS)")}
+                      </Label>
+                      <Input
+                        id="barter-escrow-fee"
+                        type="text"
+                        inputMode="decimal"
+                        value={barterFee}
+                        onChange={(e) => {
+                          // BTS precision is 5: reject keystrokes beyond it
+                          // (same gate as the barter page) so the field can
+                          // never hold an unserializable value.
+                          const v = e.target.value;
+                          if (
+                            assetAmountRegex({ precision: 5 }).test(v)
+                          ) {
+                            setBarterFee(v);
+                          }
+                        }}
+                        placeholder="0.0"
+                        className="font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1.5 min-w-0">
+                      <Label htmlFor="barter-first">
+                        {t("Trollbox:barterFirst", "Who sends first")}
+                      </Label>
+                      <Select
+                        value={barterFirst}
+                        onValueChange={(v) => {
+                          if (v === "me" || v === "them") {
+                            setBarterFirst(v);
+                          }
+                        }}
+                      >
+                        <SelectTrigger id="barter-first" className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="me">
+                            {t("Trollbox:barterFirstMe", "I send first")}
+                          </SelectItem>
+                          <SelectItem value="them">
+                            {t(
+                              "Trollbox:barterFirstThem",
+                              "Counterparty sends first"
+                            )}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+
         {view !== "types" ? (
           <div className="flex items-center justify-between gap-2 pt-1">
             <Button
@@ -802,14 +1429,20 @@ export default function TrollboxAttachDialog(properties) {
                 setPoolId(null);
                 setFilterOfferAsset(null);
                 setFilterOfferLender(null);
+                setBarterOffer([]);
+                setBarterWant([]);
+                setBarterEscrow(false);
+                setBarterAgent(null);
+                setBarterFee("");
+                setBarterFirst("me");
               }}
             >
               <ArrowLeft className="mr-1 h-4 w-4" />
               {t("Trollbox:attachBack", "Back")}
             </Button>
             <Button
-              disabled={confirmDisabled}
-              onClick={handleConfirm}
+              disabled={footerDisabled}
+              onClick={handleFooterConfirm}
             >
               <Check className="mr-1 h-4 w-4" />
               {t("Trollbox:attachConfirm", "Attach")}
