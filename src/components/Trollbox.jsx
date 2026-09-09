@@ -1839,21 +1839,38 @@ export default function Trollbox(properties) {
                   {openMessage.id}
                 </p>
                 {loggedIn && openMessage.account !== currentUserId ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="ml-auto shrink-0 text-muted-foreground hover:text-destructive"
-                    onClick={() => {
-                      setBlockTarget({
-                        account: openMessage.account,
-                        displayAuthor: openMessage.displayAuthor,
-                      });
-                      setOpenMessage(null);
-                    }}
-                  >
-                    <Ban className="mr-1 h-3.5 w-3.5" />
-                    {t("Trollbox:blockUser", "Block user")}
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="ml-auto shrink-0"
+                    >
+                      <a
+                        href={`/transfer.html?to=${encodeURIComponent(
+                          openMessage.displayAuthor
+                        )}`}
+                      >
+                        <HandCoins className="mr-1 h-3.5 w-3.5" />
+                        {t("Trollbox:tipUser", "Tip user")}
+                      </a>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                      onClick={() => {
+                        setBlockTarget({
+                          account: openMessage.account,
+                          displayAuthor: openMessage.displayAuthor,
+                        });
+                        setOpenMessage(null);
+                      }}
+                    >
+                      <Ban className="mr-1 h-3.5 w-3.5" />
+                      {t("Trollbox:blockUser", "Block user")}
+                    </Button>
+                  </>
                 ) : null}
               </div>
             </>

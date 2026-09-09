@@ -19,6 +19,7 @@
     "messagesError": "Kunne ikke indlæse beskeder.",
     "hiddenBlocked": "{{count}} skjult fra blokerede brugere.",
     "blockUser": "Bloker bruger",
+    "tipUser": "Tip bruger",
     "waitingForNode": "Meddelelseshistorikken vises, når en understøttet node er valgt.",
     "channelsTitle": "Kanaler",
     "channelsSubtitle": "Vælg en kanal nedenfor. Hver kanal er sin egen samtale.",

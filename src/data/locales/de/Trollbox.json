@@ -19,6 +19,7 @@
     "messagesError": "Nachrichten konnten nicht geladen werden.",
     "hiddenBlocked": "{{count}} von blockierten Benutzern ausgeblendet.",
     "blockUser": "Benutzer blockieren",
+    "tipUser": "Benutzer Trinkgeld geben",
     "waitingForNode": "Der Nachrichtenverlauf erscheint, sobald ein unterstützter Node ausgewählt ist.",
     "channelsTitle": "Kanäle",
     "channelsSubtitle": "Wähle unten einen Kanal. Jeder Kanal ist eine eigene Unterhaltung.",

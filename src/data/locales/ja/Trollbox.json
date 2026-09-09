@@ -19,6 +19,7 @@
     "messagesError": "メッセージを読み込めませんでした。",
     "hiddenBlocked": "ブロックしたユーザーから{{count}}件を非表示。",
     "blockUser": "ユーザーをブロック",
+    "tipUser": "チップを送る",
     "waitingForNode": "対応ノードが選択されるとメッセージ履歴が表示されます。",
     "channelsTitle": "チャンネル",
     "channelsSubtitle": "下からチャンネルを選んでください。各チャンネルは個別の会話です。",

@@ -19,6 +19,7 @@
     "messagesError": "메시지를 불러오지 못했습니다.",
     "hiddenBlocked": "차단된 사용자의 {{count}}개 숨김.",
     "blockUser": "사용자 차단",
+    "tipUser": "팁 보내기",
     "waitingForNode": "지원 노드를 선택하면 메시지 기록이 표시됩니다.",
     "channelsTitle": "채널",
     "channelsSubtitle": "아래에서 채널을 선택하세요. 각 채널은 별도의 대화입니다.",

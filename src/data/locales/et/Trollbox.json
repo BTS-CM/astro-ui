@@ -19,6 +19,7 @@
     "messagesError": "Sõnumeid ei saanud laadida.",
     "hiddenBlocked": "{{count}} peidetud blokeeritud kasutajatelt.",
     "blockUser": "Blokeeri kasutaja",
+    "tipUser": "Anna tippi",
     "waitingForNode": "Sõnumite ajalugu ilmub, kui toetatud sõlm on valitud.",
     "channelsTitle": "Kanalid",
     "channelsSubtitle": "Vali allpool kanal. Iga kanal on omaette vestlus.",

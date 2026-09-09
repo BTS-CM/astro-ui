@@ -19,6 +19,7 @@
     "messagesError": "No se pudieron cargar los mensajes.",
     "hiddenBlocked": "{{count}} ocultos de usuarios bloqueados.",
     "blockUser": "Bloquear usuario",
+    "tipUser": "Dar propina",
     "waitingForNode": "El historial de mensajes aparece cuando se selecciona un nodo compatible.",
     "channelsTitle": "Canales",
     "channelsSubtitle": "Elige un canal a continuación. Cada canal es una conversación propia.",

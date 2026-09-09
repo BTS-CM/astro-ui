@@ -19,6 +19,7 @@
     "messagesError": "Couldn't load messages.",
     "hiddenBlocked": "{{count}} hidden from blocked users.",
     "blockUser": "Block user",
+    "tipUser": "Tip user",
     "waitingForNode": "Message history appears once a supported node is selected.",
     "channelsTitle": "Channels",
     "channelsSubtitle": "Pick a channel below. Each channel is its own conversation.",

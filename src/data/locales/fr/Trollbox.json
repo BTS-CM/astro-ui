@@ -19,6 +19,7 @@
     "messagesError": "Impossible de charger les messages.",
     "hiddenBlocked": "{{count}} masqués (utilisateurs bloqués).",
     "blockUser": "Bloquer l'utilisateur",
+    "tipUser": "Donner un pourboire",
     "waitingForNode": "L'historique des messages apparaît une fois qu'un nœud pris en charge est sélectionné.",
     "channelsTitle": "Canaux",
     "channelsSubtitle": "Choisissez un canal ci-dessous. Chaque canal est une conversation distincte.",

@@ -19,6 +19,7 @@
     "messagesError": "Impossibile caricare i messaggi.",
     "hiddenBlocked": "{{count}} nascosti da utenti bloccati.",
     "blockUser": "Blocca utente",
+    "tipUser": "Invia mancia",
     "waitingForNode": "La cronologia dei messaggi appare quando viene selezionato un nodo supportato.",
     "channelsTitle": "Canali",
     "channelsSubtitle": "Scegli un canale qui sotto. Ogni canale è una conversazione a sé.",
