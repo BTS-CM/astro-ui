@@ -44,7 +44,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createCreditOfferStore } from "@/nanoeffects/CreditOffers.ts";
 import { getObjects } from "@/nanoeffects/src/common";
 import { humanReadableFloat, assetAmountRegex } from "@/lib/common.js";
-import { attachKind, fullObjectId } from "@/lib/trollboxAttach.js";
+import { attachKind, fullObjectId, isAmountWithinAsset } from "@/lib/trollboxAttach.js";
 
 const ATTACH_TYPES = [
   { id: "asset", icon: Coins },
@@ -822,7 +822,9 @@ export default function TrollboxAttachDialog(properties) {
         !asset ||
         typeof e.amount !== "string" ||
         !assetAmountRegex({ precision: asset.precision }).test(e.amount) ||
-        !(parseFloat(e.amount) > 0)
+        !(parseFloat(e.amount) > 0) ||
+        // Cached-data cap: amount must fit precision and max_supply.
+        !isAmountWithinAsset(e.amount, asset)
       ) {
         return null;
       }
@@ -928,7 +930,12 @@ export default function TrollboxAttachDialog(properties) {
       <DialogContent className="sm:max-w-[720px]">
         <DialogHeader>
           <DialogTitle>
-            {t("Trollbox:attachTitle", "Attach to message")}
+            {view === "types"
+              ? t("Trollbox:attachTitle", "Attach to message")
+              : `${t("Trollbox:attachTitle", "Attach to message")} - ${t(
+                  `Trollbox:attachType${view[0].toUpperCase()}${view.slice(1)}`,
+                  view
+                )}`}
           </DialogTitle>
           {view === "types" ? (
             <DialogDescription>

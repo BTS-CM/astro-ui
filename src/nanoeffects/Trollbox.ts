@@ -127,6 +127,9 @@ export function resolveContentLang(
 }
 export const TROLLBOX_STORAGE_PAGE_LIMIT = 100;
 const TROLLBOX_MAX_PAGES = 10;
+// Display cap for inbound message text (writes are budgeted to ~2KB;
+// reads tolerate more but never render unbounded plugin data).
+const TROLLBOX_TEXT_CAP = 4096;
 
 export type TrollboxProbe = {
   supported: boolean;
@@ -450,10 +453,19 @@ export async function fetchChannelMessages(
         const decoded = decodeTrollboxValue(o);
         if (decoded) {
           const author = cleanMessageText(decoded.author);
+          // Offline hardening: channel must be a known id (else a hostile
+          // payload could spoof tags like "#announcements"), and text is
+          // display-capped.
+          const channel =
+            typeof decoded.channel === "string" &&
+            TROLLBOX_CHANNELS.some((c) => c.id === decoded.channel)
+              ? decoded.channel
+              : null;
           out.push({
             ...decoded,
             author,
-            text: cleanMessageText(decoded.text),
+            channel,
+            text: cleanMessageText(decoded.text).slice(0, TROLLBOX_TEXT_CAP),
             displayAuthor: author || decoded.account,
             isLtm: false,
           });

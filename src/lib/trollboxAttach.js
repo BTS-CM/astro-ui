@@ -283,6 +283,121 @@ function findAsset(assets, id) {
   return (assets || []).find((a) => a && a.id === id) || null;
 }
 
+// ---- Cached-data layer: id index + amount caps (no network) ----
+
+// Id sets + highest known instance per object space, memoized per list
+// reference (WeakMap: build-time snapshots are stable, so this builds once).
+// Lets resolution reject absurd instances BEFORE scanning, and resolve in
+// O(1). Anything unknown stays hidden — same outcome as a list miss, so a
+// stale snapshot can only hide (never invent) attachments.
+const idIndexCache = new WeakMap();
+function idIndexFor(list, space) {
+  const key = Array.isArray(list) ? list : null;
+  if (key) {
+    const cached = idIndexCache.get(key);
+    if (cached) {
+      return cached;
+    }
+  }
+  const re = new RegExp(`^${space.split(".").join("\\.")}(\\d+)$`);
+  const set = new Set();
+  let max = -1;
+  for (const item of list || []) {
+    const id = item && item.id;
+    if (typeof id !== "string") {
+      continue;
+    }
+    const m = re.exec(id);
+    if (!m) {
+      continue;
+    }
+    const n = Number(m[1]);
+    if (!Number.isSafeInteger(n) || n < 0) {
+      continue;
+    }
+    set.add(n);
+    if (n > max) {
+      max = n;
+    }
+  }
+  const entry = { set, max };
+  if (key) {
+    try {
+      idIndexCache.set(key, entry);
+    } catch {
+      // non-extensible key: skip caching, entry is still correct
+    }
+  }
+  return entry;
+}
+function assetIdIndex(assets) {
+  return idIndexFor(assets, "1.3.");
+}
+function poolIdIndex(pools) {
+  return idIndexFor(pools, "1.19.");
+}
+
+/**
+ * Amount validity against an asset's on-chain limits (cached data, exact
+ * integer math — no float rounding): fraction digits must fit the asset
+ * precision and the value must not exceed max_supply. Breach → false and
+ * callers must reject the asset's presence entirely (hide, don't clamp).
+ */
+export function isAmountWithinAsset(amountStr, asset) {
+  if (typeof amountStr !== "string" || !asset) {
+    return false;
+  }
+  const precision = asset.precision;
+  if (!Number.isInteger(precision) || precision < 0 || precision > 12) {
+    return false;
+  }
+  const dot = amountStr.indexOf(".");
+  const intPart = dot === -1 ? amountStr : amountStr.slice(0, dot);
+  const fracPart = dot === -1 ? "" : amountStr.slice(dot + 1);
+  if (!/^\d+$/.test(intPart)) {
+    return false;
+  }
+  if (fracPart !== "" && !/^\d+$/.test(fracPart)) {
+    return false;
+  }
+  if (fracPart.length > precision) {
+    return false;
+  }
+  if (!(parseFloat(amountStr) > 0)) {
+    return false;
+  }
+  // Cached snapshots are flat ({max_supply} top-level); live chain
+  // objects nest it under options. Accept both — missing entirely means
+  // malformed data and must reject (hide, never clamp).
+  const opts = asset.options || {};
+  const rawMax =
+    asset.max_supply !== undefined && asset.max_supply !== null
+      ? asset.max_supply
+      : opts.max_supply;
+  let maxInt;
+  if (typeof rawMax === "string" && /^\d+$/.test(rawMax)) {
+    maxInt = BigInt(rawMax);
+  } else if (
+    typeof rawMax === "number" &&
+    Number.isInteger(rawMax) &&
+    rawMax >= 0
+  ) {
+    maxInt = BigInt(rawMax);
+  } else {
+    return false;
+  }
+  const scale = 10n ** BigInt(precision);
+  let amountInt;
+  try {
+    amountInt =
+      BigInt(intPart) * scale +
+      BigInt((fracPart + "0".repeat(precision)).slice(0, precision) || "0");
+  } catch {
+    return false;
+  }
+  return amountInt <= maxInt;
+}
+
 function findPool(pools, id) {
   return (pools || []).find((p) => p && p.id === id) || null;
 }
@@ -303,7 +418,11 @@ function marketOf(a, b) {
 /**
  * Resolve a validated attachment into a display label + navigation actions,
  * using ONLY trusted lists. Returns null when anything fails to resolve —
- * callers must not render in that case.
+ * callers must not render in that case. Layered, cheapest first, no network:
+ * offline shape (validateAttachmentShape, before this) → cached id bounds
+ * + membership (instances past the highest known id short-circuit) →
+ * cached amount caps (precision + max_supply per asset). Live existence is
+ * proven separately at send time (verifyAttachmentOnChain).
  *
  * @arg {object} attach - output of validateAttachmentShape
  * @arg {object} lists - {assets, pools} build-time lists
@@ -319,6 +438,10 @@ export function resolveAttachmentMeta(
   if (!kind) {
     return null;
   }
+  // Cached id bounds (no network): highest known instances for this
+  // snapshot. Anything past them short-circuits to hidden below.
+  const assetIdx = assetIdIndex(assets);
+  const poolIdx = poolIdIndex(pools);
   if (kind === "barter") {
     const resolveLeg = (leg) => {
       if (!Array.isArray(leg)) {
@@ -333,8 +456,18 @@ export function resolveAttachmentMeta(
         ) {
           return null;
         }
+        // Layer 2a: instance past the highest cached id (or absent from
+        // the set) rejects the asset's presence before any scan.
+        if (e.a > assetIdx.max || !assetIdx.set.has(e.a)) {
+          return null;
+        }
         const asset = findAsset(assets, `1.3.${e.a}`);
         if (!asset || typeof asset.symbol !== "string") {
+          return null;
+        }
+        // Layer 2b: amount must fit precision and max_supply — breach
+        // rejects the asset's presence entirely (hide, never clamp).
+        if (!isAmountWithinAsset(e.n, asset)) {
           return null;
         }
         out.push({
@@ -359,6 +492,16 @@ export function resolveAttachmentMeta(
         typeof e.f !== "string" ||
         (e.first !== "me" && e.first !== "them")
       ) {
+        return null;
+      }
+      // Fee is paid in the core asset: enforce its precision and max
+      // supply when 1.3.0 is in the cached list, else a precision-only
+      // gate (5 = BTS/TEST precision). Breach hides the attachment.
+      const coreAsset = findAsset(assets, "1.3.0");
+      const feeOk = coreAsset
+        ? isAmountWithinAsset(e.f, coreAsset)
+        : /^\d+(\.\d{1,5})?$/.test(e.f) && parseFloat(e.f) > 0;
+      if (!feeOk) {
         return null;
       }
       escrow = { account: `1.2.${e.a}`, fee: e.f, first: e.first };
@@ -389,6 +532,7 @@ export function resolveAttachmentMeta(
   }
   switch (kind) {
     case "asset": {
+      if (attach.id > assetIdx.max || !assetIdx.set.has(attach.id)) return null;
       const asset = findAsset(assets, fullObjectId(3, attach.id));
       if (!asset || typeof asset.symbol !== "string") return null;
       const sym = asset.symbol;
@@ -404,6 +548,13 @@ export function resolveAttachmentMeta(
       return { type: "asset", label: sym, actions };
     }
     case "pair": {
+      if (
+        attach.a > assetIdx.max ||
+        attach.b > assetIdx.max ||
+        !assetIdx.set.has(attach.a) ||
+        !assetIdx.set.has(attach.b)
+      )
+        return null;
       const a = findAsset(assets, fullObjectId(3, attach.a));
       const b = findAsset(assets, fullObjectId(3, attach.b));
       if (!a || !b || typeof a.symbol !== "string" || typeof b.symbol !== "string") {
@@ -420,6 +571,7 @@ export function resolveAttachmentMeta(
       };
     }
     case "pool": {
+      if (attach.id > poolIdx.max || !poolIdx.set.has(attach.id)) return null;
       const pool = findPool(pools, fullObjectId(19, attach.id));
       if (
         !pool ||

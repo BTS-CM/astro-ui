@@ -19,6 +19,7 @@ import {
   UserPlus,
   Pencil,
   ArrowLeftRight,
+  ArrowRight,
   AlertTriangle,
   PackageOpen,
   Zap,
@@ -530,6 +531,7 @@ export default function Barter(properties) {
 
   const yourShortfalls = useMemo(() => {
     if (!fromAssets || !fromCount) return [];
+    if (!fromBalances) return [];
     return Object.values(fromAssets)
       .map((item) => {
         const assetData = item && item.asset;
@@ -546,6 +548,7 @@ export default function Barter(properties) {
 
   const theirShortfalls = useMemo(() => {
     if (!toAssets || !toCount) return [];
+    if (!toBalances) return [];
     return Object.values(toAssets)
       .map((item) => {
         const assetData = item && item.asset;
@@ -570,6 +573,11 @@ export default function Barter(properties) {
     return escrowAccount.id === toAccount.id;
   }, [showEscrow, escrowAccount, toAccount]);
 
+  const escrowIsSelf = useMemo(() => {
+    if (!showEscrow || !escrowAccount || !usr) return false;
+    return escrowAccount.id === usr.id;
+  }, [showEscrow, escrowAccount, usr]);
+
   const canSubmit = useMemo(
     () =>
       usr &&
@@ -579,7 +587,10 @@ export default function Barter(properties) {
       toAssets &&
       Object.keys(toAssets).length &&
       isEscrowValid &&
-      !escrowConflictsCounterparty,
+      !escrowConflictsCounterparty &&
+      !escrowIsSelf &&
+      !yourShortfalls.length &&
+      !theirShortfalls.length,
     [
       usr,
       toAccount,
@@ -587,6 +598,9 @@ export default function Barter(properties) {
       toAssets,
       isEscrowValid,
       escrowConflictsCounterparty,
+      escrowIsSelf,
+      yourShortfalls,
+      theirShortfalls,
     ]
   );
 
@@ -602,6 +616,9 @@ export default function Barter(properties) {
     if (escrowConflictsCounterparty) {
       reasons.push(t("Barter:errorEscrowIsCounterparty"));
     }
+    if (escrowIsSelf) {
+      reasons.push(t("Barter:errorEscrowIsYou"));
+    }
     if (yourShortfalls.length || theirShortfalls.length) {
       reasons.push(t("Barter:errorInsufficientBalance"));
     }
@@ -614,6 +631,7 @@ export default function Barter(properties) {
     showEscrow,
     escrowAccount,
     escrowConflictsCounterparty,
+    escrowIsSelf,
     yourShortfalls,
     theirShortfalls,
     t,
@@ -1021,6 +1039,17 @@ export default function Barter(properties) {
           {t("Barter:noBalancesHint")}
         </p>
       ) : null}
+      {escrowIsSelf ? (
+        <div className="mt-3 rounded-lg border border-[hsl(var(--accent-danger)/0.3)] bg-[hsl(var(--accent-danger)/0.07)] p-3">
+          <p className="flex items-center gap-1.5 text-xs font-semibold text-[hsl(var(--accent-danger-fg))]">
+            <AlertTriangle className="h-3.5 w-3.5" />
+            {t("Barter:useEscrow")}
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {t("Barter:errorEscrowIsYou")}
+          </p>
+        </div>
+      ) : null}
       {yourShortfalls.length > 0 ? (
         <div className="mt-3 rounded-lg border border-[hsl(var(--accent-danger)/0.3)] bg-[hsl(var(--accent-danger)/0.07)] p-3">
           <p className="flex items-center gap-1.5 text-xs font-semibold text-[hsl(var(--accent-danger-fg))]">
@@ -1289,6 +1318,12 @@ export default function Barter(properties) {
                   {t("Barter:errorEscrowIsCounterparty")}
                 </p>
               ) : null}
+              {escrowIsSelf ? (
+                <p className="flex items-center gap-1.5 text-xs font-medium text-[hsl(var(--accent-danger-fg))]">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  {t("Barter:errorEscrowIsYou")}
+                </p>
+              ) : null}
             </div>
 
             <div className="space-y-2 min-w-0">
@@ -1319,21 +1354,103 @@ export default function Barter(properties) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.04)] p-3">
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground">
+          <div
+            className={`rounded-xl border p-3 transition-colors ${
+              sendToEscrowFirst
+                ? "border-[hsl(var(--accent-1)/0.45)] bg-[hsl(var(--accent-1)/0.08)] ring-1 ring-[hsl(var(--accent-1)/0.3)]"
+                : "border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.04)]"
+            }`}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="flex items-center gap-2 text-sm font-medium text-foreground">
                 {t("Barter:sendToEscrowFirst")}
+                {sendToEscrowFirst ? (
+                  <Badge className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))] border-[hsl(var(--accent-1)/0.35)] hover:bg-[hsl(var(--accent-1)/0.2)]">
+                    {t("Barter:on")}
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-muted-foreground">
+                    {t("Barter:off")}
+                  </Badge>
+                )}
               </p>
-              <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
-                {t("Barter:sendToEscrowFirstInfo")}
-              </p>
+              <Switch
+                checked={sendToEscrowFirst}
+                onCheckedChange={setSendToEscrowFirst}
+                aria-label={t("Barter:sendToEscrowFirst")}
+                className="shrink-0 data-[state=checked]:bg-[hsl(var(--accent-1))] data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-white/[0.12] [&>span]:bg-white"
+              />
             </div>
-            <Switch
-              checked={sendToEscrowFirst}
-              onCheckedChange={setSendToEscrowFirst}
-              aria-label={t("Barter:sendToEscrowFirst")}
-              className="shrink-0 data-[state=checked]:bg-[hsl(var(--accent-1))] data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-white/[0.12] [&>span]:bg-white"
-            />
+            <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+              {t("Barter:sendToEscrowFirstInfo")}
+            </p>
+            <div aria-live="polite" className="mt-2.5 space-y-1.5">
+              <p
+                className={`text-xs font-medium leading-relaxed ${
+                  sendToEscrowFirst
+                    ? "text-[hsl(var(--accent-1-fg))]"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {sendToEscrowFirst
+                  ? t("Barter:escrowFlowYouFirst", {
+                      name: toAccount?.name || "…",
+                    })
+                  : t("Barter:escrowFlowCounterpartyFirst", {
+                      name: toAccount?.name || "…",
+                    })}
+              </p>
+              <div className="flex flex-col gap-1.5 text-[11px]">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--accent-1)/0.2)] text-[10px] font-bold text-[hsl(var(--accent-1-fg))]">
+                    1
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-md border px-2 py-0.5 font-semibold ${
+                      sendToEscrowFirst
+                        ? "border-[hsl(var(--accent-1)/0.5)] bg-[hsl(var(--accent-1)/0.15)] text-foreground"
+                        : "border-border bg-card/50 text-muted-foreground"
+                    }`}
+                  >
+                    {sendToEscrowFirst
+                      ? usr?.username || "…"
+                      : toAccount?.name || "…"}
+                  </span>
+                  <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground" />
+                  <span
+                    className={`inline-flex items-center rounded-md border px-2 py-0.5 font-semibold ${
+                      sendToEscrowFirst
+                        ? "border-[hsl(var(--accent-1)/0.5)] bg-[hsl(var(--accent-1)/0.15)] text-foreground"
+                        : "border-border bg-card/50 text-muted-foreground"
+                    }`}
+                  >
+                    {escrowAccount?.name || t("Barter:escrowAgent")}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
+                    {t("Barter:escrowFlowFirst")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-card/60 border border-border text-[10px] font-bold text-muted-foreground">
+                    2
+                  </span>
+                  <span className="inline-flex items-center rounded-md border border-border bg-card/50 px-2 py-0.5 text-muted-foreground">
+                    {sendToEscrowFirst
+                      ? toAccount?.name || "…"
+                      : usr?.username || "…"}
+                  </span>
+                  <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground" />
+                  <span className="inline-flex items-center rounded-md border border-border bg-card/50 px-2 py-0.5 text-muted-foreground">
+                    {sendToEscrowFirst
+                      ? usr?.username || "…"
+                      : toAccount?.name || "…"}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
+                    {t("Barter:escrowFlowThen")}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       ) : (

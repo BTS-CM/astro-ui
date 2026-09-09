@@ -72,5 +72,9 @@
   "noEscrow": "No escrow — direct trade",
   "feeSummary": "Network fees (proposal / transfer)",
   "whatIsMissing": "What to complete",
-  "disabledHint": "Complete the steps above to propose."
+  "disabledHint": "Complete the steps above to propose.",
+  "escrowFlowYouFirst": "You send first — escrow holds your assets until {{name}} delivers.",
+  "escrowFlowCounterpartyFirst": "{{name}} sends first — escrow holds their assets until you deliver.",
+  "escrowFlowFirst": "held by escrow",
+  "escrowFlowThen": "direct"
 }
