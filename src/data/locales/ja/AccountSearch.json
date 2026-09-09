@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "ブロックチェーンアカウント名を入力してください",
-    "placeholder": "アカウント名またはID",
-    "continue": "続く",
-    "error": "アカウントが見つかりませんでした。",
-    "selfError": "このアカウントに資産を移すことはできません。"
-  },
-  "searchResponse": {
-    "promptBTS": "次の Bitshares アカウントを続行しますか?",
-    "promptTEST": "次の Bitshares テストネット (TEST) アカウントを続行しますか?",
-    "back": "戻る",
-    "proceed": "進む"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "最近の検索",
-    "recentSubtitle": "{{count}} 件の最近の検索",
-    "recentSubtitle_plural": "{{count}} 件の最近の検索",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "最近検索したユーザーを選択してください",
-    "none": "最近の検索が見つかりません",
-    "noneHint": "検索履歴はここに表示されます",
-    "eraseHistory": "履歴を削除"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "ブロックチェーンアカウント名を入力してください",
+        "placeholder": "アカウント名またはID",
+        "continue": "続く",
+        "error": "アカウントが見つかりませんでした。",
+        "selfError": "このアカウントに資産を移すことはできません。"
+    },
+    "searchResponse": {
+        "promptBTS": "次の Bitshares アカウントを続行しますか?",
+        "promptTEST": "次の Bitshares テストネット (TEST) アカウントを続行しますか?",
+        "back": "戻る",
+        "proceed": "進む"
+    },
+    "mode": {
+        "titleBTS": "Bitsharesでアカウントをどのように探しますか？",
+        "titleTEST": "Bitsharesテストネットでアカウントをどのように探しますか？",
+        "search": "アカウントを検索",
+        "searchSubtitle": "アカウント名またはIDを入力",
+        "favourites": "お気に入りユーザー",
+        "favouritesSubtitle": "保存済みお気に入り{{count}}件",
+        "favouritesSubtitle_plural": "保存済みお気に入り{{count}}件",
+        "recent": "最近の検索",
+        "recentSubtitle": "{{count}} 件の最近の検索",
+        "recentSubtitle_plural": "{{count}} 件の最近の検索",
+        "back": "戻る"
+    },
+    "search": {
+        "initDesc": "アカウント名またはIDを入力",
+        "description": "このアカウントで正しいですか？",
+        "back": "戻る",
+        "continue": "続ける"
+    },
+    "favourites": {
+        "description": "お気に入りユーザーから1人選択",
+        "none": "お気に入りユーザーが見つかりません",
+        "noneHint": "お気に入りページから追加できます"
+    },
+    "recent": {
+        "description": "最近検索したユーザーを選択してください",
+        "none": "最近の検索が見つかりません",
+        "noneHint": "検索履歴はここに表示されます",
+        "eraseHistory": "履歴を削除"
+    },
+    "step1": "方法",
+    "step2": "選択",
+    "noAccount": "アカウントが見つかりませんでした。"
 }

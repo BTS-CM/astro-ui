@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "Sisestage plokiahela konto nimi",
-    "placeholder": "Konto nimi või ID",
-    "continue": "Jätka",
-    "error": "Kontot ei leitud.",
-    "selfError": "Sellele kontole ei saa varasid üle kanda."
-  },
-  "searchResponse": {
-    "promptBTS": "Kas jätkata järgmise Bitsharesi kontoga?",
-    "promptTEST": "Kas jätkata järgmise Bitsharesi testneti (TEST) kontoga?",
-    "back": "Mine tagasi",
-    "proceed": "Jätkake"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "Hiljutised otsingud",
-    "recentSubtitle": "{{count}} hiljutine otsing",
-    "recentSubtitle_plural": "{{count}} hiljutist otsingut",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "Valige üks oma hiljutistest otsitud kasutajatest",
-    "none": "Hiljutisi otsinguid ei leitud",
-    "noneHint": "Teie otsinguajalugu kuvatakse siin",
-    "eraseHistory": "Kustuta ajalugu"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "Sisestage plokiahela konto nimi",
+        "placeholder": "Konto nimi või ID",
+        "continue": "Jätka",
+        "error": "Kontot ei leitud.",
+        "selfError": "Sellele kontole ei saa varasid üle kanda."
+    },
+    "searchResponse": {
+        "promptBTS": "Kas jätkata järgmise Bitsharesi kontoga?",
+        "promptTEST": "Kas jätkata järgmise Bitsharesi testneti (TEST) kontoga?",
+        "back": "Mine tagasi",
+        "proceed": "Jätkake"
+    },
+    "mode": {
+        "titleBTS": "Kuidas soovid Bitsharesis kontot leida?",
+        "titleTEST": "Kuidas soovid Bitsharesi testnetis kontot leida?",
+        "search": "Otsi kontot",
+        "searchSubtitle": "Sisesta konto nimi või ID",
+        "favourites": "Lemmikkasutajad",
+        "favouritesSubtitle": "{{count}} lemmik salvestatud",
+        "favouritesSubtitle_plural": "{{count}} lemmikut salvestatud",
+        "recent": "Hiljutised otsingud",
+        "recentSubtitle": "{{count}} hiljutine otsing",
+        "recentSubtitle_plural": "{{count}} hiljutist otsingut",
+        "back": "Tagasi"
+    },
+    "search": {
+        "initDesc": "Sisesta konto nimi või ID",
+        "description": "Kas see on õige konto?",
+        "back": "Mine tagasi",
+        "continue": "Jätka"
+    },
+    "favourites": {
+        "description": "Vali üks oma lemmikkasutajatest",
+        "none": "Lemmikkasutajaid ei leitud",
+        "noneHint": "Lemmikuid saad lisada lehelt Lemmikud"
+    },
+    "recent": {
+        "description": "Valige üks oma hiljutistest otsitud kasutajatest",
+        "none": "Hiljutisi otsinguid ei leitud",
+        "noneHint": "Teie otsinguajalugu kuvatakse siin",
+        "eraseHistory": "Kustuta ajalugu"
+    },
+    "step1": "Meetod",
+    "step2": "Vali",
+    "noAccount": "Kontot ei leitud."
 }

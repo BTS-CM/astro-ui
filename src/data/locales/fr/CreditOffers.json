@@ -4,6 +4,7 @@
     "description": "De là, vous pouvez surveiller vos offres de crédit actives et gérer leurs paramètres.",
     "noResults": "Aucune offre de crédit active trouvée.",
     "noResultsDesc": "Vous n'avez actuellement aucune offre de crédit active. ",
-    "create": "Créer une offre de crédit"
+    "create": "Créer une offre de crédit",
+    "acceptedCollateral": "Collatéral accepté"
   }
 }

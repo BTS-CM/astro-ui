@@ -34,6 +34,7 @@ import {
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { chains } from "@/config/chains";
 
 import { useRecentBlocksLive } from "@/hooks/useRecentBlocksLive";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
@@ -213,17 +214,48 @@ export default function LiveBlocks(properties) {
   const [viewJSON, setViewJSON] = useState(false);
   const [json, setJSON] = useState();
 
-  // Live subscription: ~30 block lookback on mount + push feed per applied block.
-  // Replaces the old window.electron.requestBlocks/onBlockResponse/stopBlocks IPC.
-  // The hook owns buffering/dedup/capping - consume its data directly so the
-  // page body always updates in lockstep with the footer subscription status.
-  const liveBlocks = useRecentBlocksLive({
+  const isTestnet = chains[usr && usr.chain ? usr.chain : "bitshares"]?.testnet;
+
+  // Mainnet: renderer-side subscription via set_block_applied_callback
+  // (BlocksLive.ts). Testnet: background.js polling via window.electron
+  // (REFERENCE_CODE path, re-introduced for testnet only).
+  const liveBlocksMainnet = useRecentBlocksLive({
     chain: usr && usr.chain ? usr.chain : "bitshares",
-    enabled: Boolean(currentNode && currentNode.url),
+    enabled: !isTestnet && Boolean(currentNode && currentNode.url),
     specificNode: currentNode ? currentNode.url : null,
     lookback: 30,
   });
-  const recentBlocks = liveBlocks.recentBlocks ?? [];
+
+  // Testnet poll blocks via Electron background (REFERENCE_CODE/src/background.js)
+  const [pollBlocks, setPollBlocks] = useState([]);
+  useEffect(() => {
+    if (!isTestnet || !currentNode || !currentNode.url) return;
+    if (!window.electron || !window.electron.requestBlocks) return;
+
+    window.electron.requestBlocks({
+      url: currentNode.url,
+      chain: usr && usr.chain ? usr.chain : "bitshares",
+    });
+
+    const handleBlockResponse = (data) => {
+      setPollBlocks((prev) => {
+        if (prev.find((x) => x.block === data.block)) return prev;
+        return [...prev, data];
+      });
+    };
+
+    window.electron.onBlockResponse(handleBlockResponse);
+
+    return () => {
+      try { window.electron.stopBlocks(); } catch {}
+    };
+  }, [currentNode, isTestnet, usr && usr.chain]);
+
+  const recentBlocks = isTestnet ? pollBlocks : (liveBlocksMainnet.recentBlocks ?? []);
+  // Keep hook-compatible shape for footer (footer hidden on testnet anyway)
+  const liveBlocks = isTestnet
+    ? { recentBlocks: pollBlocks, lastFetchAt: null, isSubscribed: false, blockNumber: null, loading: false, error: null }
+    : liveBlocksMainnet;
 
   const activities = useMemo(() => {
     if (!recentBlocks || !recentBlocks.length) return [];
@@ -676,7 +708,8 @@ export default function LiveBlocks(properties) {
           blockNumber={liveBlocks.blockNumber}
           nodeUrl={currentNode ? currentNode.url : null}
           warningThresholdSec={10}
-        />
+        
+        chain={usr?.chain}/>
       </div>
     </>
   );

@@ -20,7 +20,7 @@
     "preimageLabel": "프리 이미지 (비밀)",
     "preimageDesc": "비밀 텍스트를 입력하십시오. ",
     "preimagePlaceholder": "여기에 비밀 문구 나 데이터를 입력하십시오",
-    "preimageHashLabel": "Preimage Hash (SHA256)",
+    "preimageHashLabel": "프리이미지 해시 (SHA256)",
     "preimageSizeLabel": "프리 이미지 크기",
     "claimPeriodLabel": "클레임 기간 (초)",
     "claimPeriodDesc": "수령인이 창조 후 자금을 청구 해야하는 기간 (최소 60 초).",
@@ -30,4 +30,4 @@
     "deeplinkHeader": "HTLC 생성 : {{amount}} {{symbol}} 에게 {{recipient}}",
     "algorithm": "해싱 알고리즘",
     "algorithmDesc": "프리 이미지를 해시하는 데 사용되는 알고리즘. "
-  }
+}

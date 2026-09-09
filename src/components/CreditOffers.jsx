@@ -7,7 +7,20 @@ import React, {
 } from "react";
 import { List } from "react-window";
 
-const CreditOffersCommonRow = memo(function CreditOffersCommonRow({ style, res, foundAsset, assets, t, usr }) {
+const CreditOffersCommonRow = memo(function CreditOffersCommonRow({ style, res, foundAsset, assets, t, usr, onDeleteRequest }) {
+  const collateralSymbols =
+    res.acceptable_collateral && res.acceptable_collateral.length
+      ? res.acceptable_collateral
+          .map((asset) => asset[0])
+          .map((x) => assets.find((y) => y.id === x)?.symbol ?? x)
+      : [];
+  const visibleCollateral = collateralSymbols.slice(0, 5);
+  const hiddenCollateralCount = collateralSymbols.length - visibleCollateral.length;
+  const isExpired = new Date(res.auto_disable_time) < new Date();
+  const hasOngoingDeals = res.current_balance !== res.total_balance;
+  const canDelete =
+    usr && usr.id === res.owner_account && (isExpired || !hasOngoingDeals);
+  const validityHours = hoursTillExpiration(res.auto_disable_time);
   return (
     <div style={{ ...style }} key={`acard-${res.id}`}>
       <div className="ml-2 mr-2 relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-md shadow-[color:hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[color:hsl(var(--accent-1)/0.15)] transition-all duration-300">
@@ -20,54 +33,58 @@ const CreditOffersCommonRow = memo(function CreditOffersCommonRow({ style, res, 
               {t("CreditBorrow:common.offer")}
               {" #"}
               {res.id.replace("1.21.", "")}
-              {" "}
-              {t("CreditBorrow:common.by")}{" "}
-              {res.owner_name}
-              {" "}
-              (
-              {res.owner_account}
-              )
+              {" - "}
+              {t("CreditOffers:card.lending")}
+              <b>
+                {` ${humanReadableFloat(
+                  res.current_balance,
+                  foundAsset.precision
+                )} ${foundAsset.symbol} (${res.asset_type})`}
+              </b>
+              {" - "}
+              {t("CreditOffers:card.charging")}{" "}
+              <b>{`${res.fee_rate / 10000}%`}</b>{" "}
+              {t("CreditOffers:card.feeWord")}
             </h3>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            {t("CreditBorrow:common.offering")}
-            <b>
-              {` ${humanReadableFloat(
-                res.current_balance,
-                foundAsset.precision
-              )} ${foundAsset.symbol} (${res.asset_type})`}
-            </b>
-            <br />
-            {t("CreditBorrow:common.accepting")}
-            <b>
-              {assets && assets.length
-                ? ` ${res.acceptable_collateral
-                    .map((asset) => asset[0])
-                    .map((x) => {
-                      return assets.find((y) => y.id === x)?.symbol;
-                    })
-                    .map((x) => x)
-                    .join(", ")}`
-                : t("CreditBorrow:common.loading")}
-            </b>
+            {t("CreditOffers:card.acceptedCollateral")}
           </p>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {assets && assets.length ? (
+              <>
+                {visibleCollateral.map((symbol) => (
+                  <span
+                    key={`${res.id}-${symbol}`}
+                    className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[11px] font-medium text-foreground/80"
+                  >
+                    {symbol}
+                  </span>
+                ))}
+                {hiddenCollateralCount > 0 ? (
+                  <span
+                    title={collateralSymbols.join(", ")}
+                    className="inline-flex cursor-default items-center rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground"
+                  >
+                    {t("CreditOffers:card.more", {
+                      count: hiddenCollateralCount,
+                    })}
+                  </span>
+                ) : null}
+              </>
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                {t("CreditBorrow:common.loading")}
+              </span>
+            )}
+          </div>
         </div>
-        <div className="text-sm px-3 pb-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="px-3 pb-3">
+          <p className="text-sm text-muted-foreground mt-1">
+            {t("CreditOffers:card.details")}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm mt-1">
             <div className="col-span-1">
-              {t("CreditBorrow:common.fee", { fee: res.fee_rate / 10000 })}
-              <br />
-              {t("CreditBorrow:common.repayPeriod", {
-                repayPeriod: (res.max_duration_seconds / 60 / 60).toFixed(
-                  res.max_duration_seconds / 60 / 60 < 1 ? 2 : 0
-                ),
-              })}
-            </div>
-            <div className="col-span-1">
-              {t("CreditBorrow:common.validity", {
-                validity: hoursTillExpiration(res.auto_disable_time),
-              })}
-              <br />
               {t("CreditBorrow:common.min", {
                 amount: humanReadableFloat(
                   res.min_deal_amount,
@@ -76,9 +93,23 @@ const CreditOffersCommonRow = memo(function CreditOffersCommonRow({ style, res, 
                 asset: foundAsset.symbol,
               })}
             </div>
+            <div className="col-span-1">
+              {t("CreditBorrow:common.repayPeriod", {
+                repayPeriod: (res.max_duration_seconds / 60 / 60).toFixed(
+                  res.max_duration_seconds / 60 / 60 < 1 ? 2 : 0
+                ),
+              })}
+            </div>
+            <div className="col-span-1">
+              {validityHours < 0
+                ? t("CreditOffers:card.expired")
+                : t("CreditBorrow:common.validity", {
+                    validity: validityHours,
+                  })}
+            </div>
           </div>
         </div>
-        <div className="px-3 pb-5">
+        <div className="px-3 pb-5 flex gap-2">
           <a href={`/lend.html?id=${res.id}`}>
             <Button className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-md shadow-[color:hsl(var(--accent-1)/0.2)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] hover:shadow-[color:hsl(var(--accent-1)/0.4)] active:scale-95 transition-all duration-200 cursor-pointer">
               {t(
@@ -91,18 +122,30 @@ const CreditOffersCommonRow = memo(function CreditOffersCommonRow({ style, res, 
               )}
             </Button>
           </a>
+          {canDelete ? (
+            <Button
+              variant="outline"
+              className="border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] hover:bg-[hsl(var(--accent-1)/0.1)]"
+              onClick={(event) => {
+                event.preventDefault();
+                onDeleteRequest(res.id);
+              }}
+            >
+              {t("CreditOffers:card.delete")}
+            </Button>
+          ) : null}
         </div>
       </div>
     </div>
   );
 });
 
-const CreditOffersRow = memo(function CreditOffersRow({ index, style, offers, assets, t, usr }) {
+const CreditOffersRow = memo(function CreditOffersRow({ index, style, offers, assets, t, usr, onDeleteRequest }) {
   const res = offers[index];
   if (!res) return null;
   const foundAsset = assets.find((x) => x.id === res.asset_type);
   if (!foundAsset) return null;
-  return <CreditOffersCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} t={t} usr={usr} />;
+  return <CreditOffersCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} t={t} usr={usr} onDeleteRequest={onDeleteRequest} />;
 });
 import { useTranslation } from "react-i18next";
 import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
@@ -126,6 +169,8 @@ import {
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createCreditOfferByOwnerStore } from "@/nanoeffects/CreditOffersByOwner.ts";
+
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -170,6 +215,7 @@ export default function CreditOffers(properties) {
 
   const [allOffers, setAllOffers] = useState([]);
   const [showExpired, setShowExpired] = useState(false);
+  const [deleteOfferId, setDeleteOfferId] = useState(null);
 
   useEffect(() => {
     async function fetchUserOffers() {
@@ -206,7 +252,7 @@ export default function CreditOffers(properties) {
     return [];
   }, [allOffers, _chain, showExpired]);
 
-  const creditOffersRowProps = useMemo(() => ({ offers, assets, t, usr }), [offers, assets, t, usr]);
+  const creditOffersRowProps = useMemo(() => ({ offers, assets, t, usr, onDeleteRequest: setDeleteOfferId }), [offers, assets, t, usr]);
 
   return (
     <>
@@ -228,19 +274,32 @@ export default function CreditOffers(properties) {
                   {t("CreditOffers:card.description")}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] hover:bg-[hsl(var(--accent-1)/0.1)]"
-                onClick={() => setShowExpired(!showExpired)}
-                title={
-                  showExpired
-                    ? t("CreditBorrow:card.hideExpired")
-                    : t("CreditBorrow:card.showExpired")
-                }
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
+              <div className="flex items-center gap-2">
+                {offers && offers.length ? (
+                  <a href="/lend.html">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] hover:bg-[hsl(var(--accent-1)/0.1)]"
+                    >
+                      + {t("CreditOffers:card.create")}
+                    </Button>
+                  </a>
+                ) : null}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] hover:bg-[hsl(var(--accent-1)/0.1)]"
+                  onClick={() => setShowExpired(!showExpired)}
+                  title={
+                    showExpired
+                      ? t("CreditBorrow:card.hideExpired")
+                      : t("CreditBorrow:card.showExpired")
+                  }
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             <div className="p-4 pt-2">
               <>
@@ -281,6 +340,26 @@ export default function CreditOffers(properties) {
           </div>
         </div>
       </div>
+
+      {deleteOfferId && usr && usr.id ? (
+        <DeepLinkDialog
+          trxJSON={[
+            {
+              owner_account: usr.id,
+              offer_id: deleteOfferId,
+              extensions: [],
+            },
+          ]}
+          operationNames={["credit_offer_delete"]}
+          username={usr.username}
+          usrChain={_chain}
+          userID={usr.id}
+          dismissCallback={() => setDeleteOfferId(null)}
+          headerText={t("CreditOffers:card.deleteHeader", {
+            offerID: deleteOfferId.replace("1.21.", ""),
+          })}
+        />
+      ) : null}
     </>
   );
 }

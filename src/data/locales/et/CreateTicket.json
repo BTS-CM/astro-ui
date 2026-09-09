@@ -22,6 +22,24 @@
     "description": "Hiljuti toodud piletite eelvaade.",
     "note": "Konteksti andmiseks hankige väike näidis hiljutistest piletitest."
   },
+  "requestCard": {
+    "title": "Taotle THUMBSUP.1",
+    "description": "Piletid nõuavad samaväärset THUMBSUP.1 saldot.",
+    "btsBalance": "Teie BTS",
+    "thumbsupBalance": "Teie THUMBSUP.1",
+    "deficit": "Kokku vajalik {{need}} THUMBSUP.1 ({{locked}} juba lukustatud + {{new}} uus); teie puudujääk on {{deficit}}.",
+    "useDeficit": "Kasuta puudujääki",
+    "amountHeader": "Taotletav summa",
+    "amountDescription": "Ei tohi ületada teie BTS saldot. 'abit' saadab teile selle koguse THUMBSUP.1, kui ta ettepaneku heaks kiidab.",
+    "max": "Maks",
+    "maxHint": "Maksimaalselt taotletav: {{max}} THUMBSUP.1 (teie BTS saldo).",
+    "exceedsBalance": "Taotletud summa ei tohi ületada teie BTS saldot.",
+    "loginRequired": "THUMBSUP.1 taotlemiseks logige sisse.",
+    "resolvingAbit": "'abit' konto lahendamine…",
+    "proposalNote": "See loob ettepaneku (7 päeva kehtivus, 1h läbivaatamine), kus 'abit' maksab tasu. Ta peab selle heaks kiitma, enne kui te tokeneid saate.",
+    "submit": "Taotle THUMBSUP.1",
+    "dialogHeader": "Taotle THUMBSUP.1 kontolt abit"
+  },
   "myTickets": {
     "title": "Minu piletid",
     "description": "Teie praegused piletid, kogusummad ja tegelik hääleõigus.",
@@ -54,6 +72,10 @@
     "newType": "Uus tüüp",
     "amountNewTarget": "Täiendav summa (valikuline)",
     "cancel": "Tühista",
-    "continue": "Jätka"
+    "continue": "Jätka",
+    "lockedAmount": "Lukustatud summa",
+    "votingPower": "Praegune hääleõigus",
+    "frozenWarning": "See pilet on igaveseks lukustatud ning seda ei saa ahelas uuendada ega välja võtta.",
+    "sameTargetHint": "Uus tüüp ühtib pileti praeguse sihtmärgiga — jätkamiseks valige mõni muu tüüp."
   }
 }

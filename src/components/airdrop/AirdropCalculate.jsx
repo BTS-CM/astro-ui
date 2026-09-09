@@ -2212,6 +2212,7 @@ export default function AirdropCalculate(props) {
               })}
               disableQR={trxSize >= 2000 || estBytes > chainParams.maxBytes * 0.95}
               disableDeeplink={trxSize >= 2000 || estBytes > chainParams.maxBytes * 0.95}
+              disableTotp={trxSize >= 2000 || estBytes > chainParams.maxBytes * 0.95}
             />
           );
         })()}

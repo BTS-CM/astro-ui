@@ -1,10 +1,10 @@
 {
-  "lastUpdate": "Última actualización",
-  "secondsAgo": "{{count}}s ago",
-  "staleWarning": "Obsoleto: sin actualización durante un rato",
-  "title": "Suscripción en vivo",
-  "subscribed": "Suscrito",
-  "disconnected": "Desconectado",
-  "block": "Bloque",
-  "node": "Nodo"
+    "lastUpdate": "Última actualización",
+    "secondsAgo": "hace {{count}}s",
+    "staleWarning": "Obsoleto: sin actualización durante un rato",
+    "title": "Suscripción en vivo",
+    "subscribed": "Suscrito",
+    "disconnected": "Desconectado",
+    "block": "Bloque",
+    "node": "Nodo"
 }

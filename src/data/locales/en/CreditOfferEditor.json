@@ -60,5 +60,12 @@
   "risksPoint5": "The expiration of a credit deal can exceed the credit offer expiration date, you shouldn't assume you'll have your lent assets back until the expiration + last repayment period has passed.",
   "risksPoint6": "Be aware of counterparty risks if using exchange backed assets (EBA) for collateral or lending purposes as their value could fluctuate based on their third party risks.",
   "noCollateral": "No collateral added yet",
-  "noPreApprovedBorrowers": "No pre-approved borrowers"
+  "noPreApprovedBorrowers": "No pre-approved borrowers",
+  "cancel": "Cancel",
+  "collateralPriceTitle": "Set collateral price",
+  "collateralPriceDescription": "Provide the price for {{symbol}} in {{lendingAsset}}",
+  "collateralPriceDescriptionFallback": "Provide the price for the selected collateral asset",
+  "collateralPriceLabel": "Price ({{symbol}} / {{lendingAsset}})",
+  "collateralPriceLabelFallback": "Price",
+  "collateralPricePlaceholder": "0.0"
 }

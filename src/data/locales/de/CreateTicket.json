@@ -22,6 +22,24 @@
     "description": "Vorschau der kürzlich abgerufenen Tickets.",
     "note": "Rufen Sie eine kleine Auswahl aktueller Tickets ab, um den Kontext zu verdeutlichen."
   },
+  "requestCard": {
+    "title": "THUMBSUP.1 anfordern",
+    "description": "Tickets erfordern einen entsprechenden THUMBSUP.1-Bestand.",
+    "btsBalance": "Ihre BTS",
+    "thumbsupBalance": "Ihre THUMBSUP.1",
+    "deficit": "Insgesamt {{need}} THUMBSUP.1 erforderlich ({{locked}} bereits gesperrt + {{new}} neu); Ihr Fehlbetrag beträgt {{deficit}}.",
+    "useDeficit": "Fehlbetrag übernehmen",
+    "amountHeader": "Anzufordernder Betrag",
+    "amountDescription": "Darf Ihren BTS-Bestand nicht übersteigen. 'abit' sendet Ihnen diese Menge THUMBSUP.1, wenn der Vorschlag angenommen wird.",
+    "max": "Max",
+    "maxHint": "Maximal anforderbar: {{max}} THUMBSUP.1 (Ihr BTS-Bestand).",
+    "exceedsBalance": "Der angeforderte Betrag darf Ihren BTS-Bestand nicht übersteigen.",
+    "loginRequired": "Melden Sie sich an, um THUMBSUP.1 anzufordern.",
+    "resolvingAbit": "'abit'-Konto wird aufgelöst…",
+    "proposalNote": "Dies erstellt einen Vorschlag (7 Tage Laufzeit, 1h Prüfung), bei dem 'abit' die Gebühr zahlt. Er muss genehmigt werden, bevor Sie die Token erhalten.",
+    "submit": "THUMBSUP.1 anfordern",
+    "dialogHeader": "THUMBSUP.1 von abit anfordern"
+  },
   "myTickets": {
     "title": "Meine Tickets",
     "description": "Ihre aktuellen Tickets, Gesamtzahlen und effektives Stimmrecht.",
@@ -54,6 +72,10 @@
     "newType": "Neuer Typ",
     "amountNewTarget": "Zusätzlicher Betrag (optional)",
     "cancel": "Stornieren",
-    "continue": "Weitermachen"
+    "continue": "Weitermachen",
+    "lockedAmount": "Gesperrter Betrag",
+    "votingPower": "Aktuelles Stimmrecht",
+    "frozenWarning": "Dieses Ticket ist für immer gesperrt und kann on-chain weder aktualisiert noch abgehoben werden.",
+    "sameTargetHint": "Neuer Typ entspricht dem aktuellen Ziel des Tickets — wählen Sie einen anderen Typ, um fortzufahren."
   }
 }

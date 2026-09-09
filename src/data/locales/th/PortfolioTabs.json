@@ -24,6 +24,7 @@
   "blockNumber": "หมายเลขบล็อก",
   "timeSinceBroadcast": "เวลานับตั้งแต่ออกอากาศ",
   "viewOperationButton": "ดูการดำเนินการ",
+  "aboutButton": "เกี่ยวกับ",
   "operationJsonTitle": "การดำเนินการ JSON",
   "operationJsonDescription": "ตรวจสอบเนื้อหาของการดำเนินการนี้",
   "viewAllButton": "ดูทั้งหมด",

@@ -4,6 +4,7 @@ import { Activity, Clock, Box, Server } from "lucide-react";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { cn } from "@/lib/utils";
 import { filterNodeDomain } from "@/lib/dexHash";
+import { chains } from "@/config/chains";
 
 export default function DexLiveFooterCard({
   lastFetchAt,
@@ -11,7 +12,11 @@ export default function DexLiveFooterCard({
   blockNumber,
   nodeUrl,
   warningThresholdSec = 10,
+  chain,
 }) {
+  // Mainnet-only: never render on testnet (ChainStore set_subscribe_callback
+  // is rejected there; data comes from nanoeffects polling instead).
+  if (chain && chains[chain]?.testnet) return null;
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   // Always show after first block/fetch - indicate Subscribed vs Disconnected;

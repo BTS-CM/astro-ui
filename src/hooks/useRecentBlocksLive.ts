@@ -3,6 +3,8 @@ import {
   subscribeRecentBlocks,
   type RecentBlocksSubscription,
 } from "@/nanoeffects/BlocksLive";
+import { getObjects } from "@/nanoeffects/src/common";
+import { chains } from "@/config/chains";
 import { useSubscriptionGuard } from "@/hooks/useSubscriptionGuard";
 
 /**
@@ -100,6 +102,23 @@ export function useRecentBlocksLive(options: {
       if (sub) {
         try { sub.unsubscribe(); } catch {}
       }
+      return;
+    }
+
+    if ((chains as any)[chain]?.testnet) {
+      // Testnet: do not use ChainStore subscription (BlocksLive uses
+      // set_block_applied_callback which is rejected). LiveBlocks on
+      // testnet uses background.js polling via window.electron.requestBlocks
+      // (REFERENCE_CODE path, re-introduced for testnet only). This hook
+      // therefore does not poll on testnet — LiveBlocks.jsx branches to the
+      // Electron IPC path instead. Return empty so no footer is shown.
+      setRecentBlocks([]);
+      setLoading(false);
+      setError(null);
+      setIsSubscribed(false);
+      setLastFetchAt(null);
+      setBlockNumber(null);
+      lastSeenBlockRef.current = null;
       return;
     }
 

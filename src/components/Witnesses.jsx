@@ -625,7 +625,8 @@ export default function Witnesses(properties) {
         blockNumber={liveWitnessData.blockNumber}
         nodeUrl={currentNode ? currentNode.url : null}
         warningThresholdSec={10}
-      />
+      
+        chain={_chain}/>
     </div>
   );
 }

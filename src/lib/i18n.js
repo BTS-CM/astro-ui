@@ -10,12 +10,14 @@ const pages = [
   "AccountSearch",
   "AccountSelect",
   "AssetDropDownCard",
+  "Beautification",
   "Blocklist",
   "CreatePool",
   "CreditOfferEditor",
   "CreditBorrow",
   "CreditOffers",
   "CreditDeals",
+  "CreditDealUpdate",
   "CreditOffer",
   "CurrentUser",
   "DeepLinkDialog",
@@ -41,6 +43,7 @@ const pages = [
   "PoolForm",
   "PoolStake",
   "PortfolioTabs",
+  "PublishFeed",
   "Settlement",
   "Smartcoin",
   "Smartcoins",
@@ -79,6 +82,7 @@ const pages = [
   "GovernanceActions",
   "WorkerCreate",
   "CommitteeMembers",
+  "CommitteeParams",
   "Witnesses",
   "Voting",
   "CreateTicket",
@@ -98,6 +102,7 @@ const pages = [
   "Explorer",
   "Common",
   "Charts",
+  "Trollbox",
   "PageTitles"
 ];
 

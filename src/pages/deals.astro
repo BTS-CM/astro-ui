@@ -12,10 +12,15 @@ const testAllAssets = await getCollection('testAllAssets');
 const btsFeeSchedule = await getCollection('btsFeeSchedule');
 const testFeeSchedule = await getCollection('testFeeSchedule');
 
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
 const btsAssets = btsAllAssets.map(collection => collection.data);
 const testAssets = testAllAssets.map(collection => collection.data);
 const feeScheduleBTS = btsFeeSchedule.map(collection => collection.data);
 const feeScheduleTEST = testFeeSchedule.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
 ---
 <Layout title="Bitshares credit deal listings">
 	<main>
@@ -26,6 +31,8 @@ const feeScheduleTEST = testFeeSchedule.map(collection => collection.data);
 			_assetsTEST={testAssets}
 			_globalParamsBTS={feeScheduleBTS}
 			_globalParamsTEST={feeScheduleTEST}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/deals.astro" />
 	</main>

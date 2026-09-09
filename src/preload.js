@@ -23,6 +23,13 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("blindAccountFromWif", args),
   blindEncrypt: async (args) => ipcRenderer.invoke("blindEncrypt", args),
   blindDecrypt: async (args) => ipcRenderer.invoke("blindDecrypt", args),
+  // Block polling for LiveBlocks (testnet-only via background.js fetchBlocks loop;
+  // mainnet uses renderer subscription, but bridge is re-exposed for testnet)
+  requestBlocks: async (args) => ipcRenderer.send("requestBlocks", args),
+  onBlockResponse: (func) => {
+    ipcRenderer.on("blockResponse", (event, data) => func(data));
+  },
+  stopBlocks: async () => ipcRenderer.send("stopBlocks"),
   // REST queries
   fetchTopMarkets: async (args) => ipcRenderer.invoke("fetchTopMarkets", args),
   fetchAccountHistory: async (args) =>

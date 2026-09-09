@@ -1,201 +1,201 @@
 {
-  "page": {
-    "title": "Calculadora de airdrop",
-    "description": "Crea un grupo de destinatarios, ejecuta algoritmos de selección y difunde un airdrop de cualquier activo."
-  },
-  "pool": {
-    "title": "Pool de candidatos",
-    "description": "Elige de dónde provienen los candidatos al airdrop y luego cárgalos. Los algoritmos se ejecutan contra este pool.",
-    "source": "Fuente del pool",
-    "source.manual": "Lista manual (subir / pegar)",
-    "source.allaccounts": "Todas las cuentas (1.2.1 hasta la más reciente)",
-    "source.tickets": "Titulares de tickets (bloqueos)",
-    "source.callorders": "Titulares de órdenes de margen (garantía de deuda)",
-    "source.assetholders": "Principales titulares del activo (saldo)",
-    "source.creators": "Principales creadores de órdenes límite",
-    "source.fillers": "Principales ejecutores de órdenes límite",
-    "source.creatorspair": "Principales creadores de órdenes límite (par específico)",
-    "source.fillerspair": "Principales ejecutores de órdenes límite (par específico)",
-    "source.ltm": "Cuentas mejoradas a miembro vitalicio",
-    "qtyLimit": "Límite de cantidad",
-    "qtyLimitHint": "Número máximo de cuentas a obtener del explorador de la cadena / Elasticsearch.",
-    "pairAsset": "Activo del par",
-    "pairAssetHint": "El activo del otro lado del par de trading (lo que se recibe al vender o se compra al completar).",
-    "needAsset": "Selecciona primero el activo del airdrop.",
-    "needAssetHint": "Estas fuentes de pool se limitan al activo de airdrop que selecciones arriba.",
-    "airdropAssetHint": "El activo que se distribuirá en el airdrop. Elígelo aquí para delimitar el pool y verificar tu saldo.",
-    "needSmartcoin": "Selecciona primero un smartcoin válido (activo vinculado al mercado).",
-    "asset": "Activo",
-    "assetHint": "El activo a partir del cual se construye este pool (tenedores, o el lado de venta/pago de las órdenes límite).",
-    "needPair": "Selecciona tanto el activo del airdrop como el activo del par.",
-    "needPairHint": "Las fuentes de par requieren dos activos para definir el par de trading.",
-    "callOrderAsset": "Smartcoin",
-    "callOrderAssetHint": "Elige un único activo vinculado al mercado (smartcoin). Solo se cargan sus prestatarios (tenedores de call order); el activo debe ser un smartcoin o el pool no se puede construir.",
-    "notSmartcoin": "Este activo no es un smartcoin (no tiene datos de bitasset), por lo que los tenedores de call order no se pueden cargar. Elige un activo vinculado al mercado.",
-    "timeframe": "Periodo de tiempo",
-    "timeframe.1d": "Último 1 día",
-    "timeframe.7d": "Últimos 7 días",
-    "timeframe.30d": "Últimos 30 días",
-    "timeframe.365d": "Últimos 365 días",
-    "timeframe.specific": "Fecha específica (desde entonces hasta ahora)",
-    "timeframe.pickDate": "Elija una fecha de inicio",
-    "weightAsset": "Activo de peso (lotaría)",
-    "weightAssetHint": "Opcional. Cuando se define, los algoritmos aleatorios (de firma) ponderan cada cuenta por su saldo de este activo. Déjalo vacío para una lotería equitativa (sin ponderar).",
-    "allAccountsHint": "Cada cuenta de la cadena se convierte en una entrada de la lotería (ponderada equitativamente). Solo los algoritmos de firma (lotería) pueden ejecutarse contra todo el espacio de cuentas.",
-    "ticketsHint": "Carga todos los tickets de Bitshares (1.18.x) y pondera cada cuenta por su monto bloqueado efectivo. Los bloqueos más largos cuentan más.",
-    "callOrdersHint": "Carga los tenedores de call order (prestatarios) del smartcoin seleccionado (1.8.x) y pondera cada cuenta por su garantía.",
-    "assetHoldersHint": "Carga los principales tenedores del activo de airdrop (por saldo on-chain) desde el índice del explorador objects-balance. Cada cuenta se pondera por su saldo.",
-    "creatorsHint": "Carga las cuentas que crearon más órdenes límite vendiendo el activo de airdrop en el periodo seleccionado. Cada cuenta se pondera por su número de órdenes.",
-    "fillersHint": "Carga las cuentas que completaron más órdenes límite pagando con el activo de airdrop en el periodo seleccionado. Cada cuenta se pondera por su número de fills.",
-    "creatorsPairHint": "Carga las cuentas que crearon más órdenes límite vendiendo el activo de airdrop por el activo del par en el periodo seleccionado. Cada cuenta se pondera por su número de órdenes.",
-    "fillersPairHint": "Carga las cuentas que completaron más órdenes límite pagando con el activo de airdrop y recibiendo el activo del par en el periodo seleccionado. Cada cuenta se pondera por su número de fills.",
-    "ltmHint": "Carga las cuentas que se actualizaron a miembro de por vida en el periodo seleccionado desde las operaciones account_upgrade. Cada cuenta se pondera equitativamente.",
-    "load": "Cargar pool",
-    "loading": "Cargando…",
-    "loaded": "{{count}} cuentas cargadas",
-    "accountsLoaded": "{{count}} cuentas en el rango",
-    "weightBy": "Ponderar por",
-    "weightByCollateral": "Garantía",
-    "weightByDebt": "Deuda"
-  },
-  "preview": {
-    "title": "Vista previa del pool",
-    "count": "{{count}} entradas",
-    "weight": "Peso",
-    "locked": "Peso bloqueado",
-    "collateral": "Garantía",
-    "balance": "Saldo",
-    "orders": "Órdenes",
-    "fills": "Fills",
-    "upgrades": "Actualizaciones"
-  },
-  "algos": {
-    "title": "Algoritmos",
-    "description": "Selecciona uno o más algoritmos. Cada algoritmo elegido añade sus cuentas ganadoras a la lista final de destinatarios.",
-    "freebie": {
-      "name": "Gratis (todos)",
-      "desc": "Cada cuenta de la pool recibe el airdrop."
+    "page": {
+        "title": "Calculadora de airdrop",
+        "description": "Crea un grupo de destinatarios, ejecuta algoritmos de selección y difunde un airdrop de cualquier activo."
     },
-    "forward": {
-      "name": "Hacia adelante",
-      "desc": "Selección aleatoria determinista sembrada a partir de la firma de testigo de un bloque (fragmentos en orden)."
+    "pool": {
+        "title": "Pool de candidatos",
+        "description": "Elige de dónde provienen los candidatos al airdrop y luego cárgalos. Los algoritmos se ejecutan contra este pool.",
+        "source": "Fuente del pool",
+        "source.manual": "Lista manual (subir / pegar)",
+        "source.allaccounts": "Todas las cuentas (1.2.1 hasta la más reciente)",
+        "source.tickets": "Titulares de tickets (bloqueos)",
+        "source.callorders": "Titulares de órdenes de margen (garantía de deuda)",
+        "source.assetholders": "Principales titulares del activo (saldo)",
+        "source.creators": "Principales creadores de órdenes límite",
+        "source.fillers": "Principales ejecutores de órdenes límite",
+        "source.creatorspair": "Principales creadores de órdenes límite (par específico)",
+        "source.fillerspair": "Principales ejecutores de órdenes límite (par específico)",
+        "source.ltm": "Cuentas mejoradas a miembro vitalicio",
+        "qtyLimit": "Límite de cantidad",
+        "qtyLimitHint": "Número máximo de cuentas a obtener del explorador de la cadena / Elasticsearch.",
+        "pairAsset": "Activo del par",
+        "pairAssetHint": "El activo del otro lado del par de trading (lo que se recibe al vender o se compra al completar).",
+        "needAsset": "Selecciona primero el activo del airdrop.",
+        "needAssetHint": "Estas fuentes de pool se limitan al activo de airdrop que selecciones arriba.",
+        "airdropAssetHint": "El activo que se distribuirá en el airdrop. Elígelo aquí para delimitar el pool y verificar tu saldo.",
+        "needSmartcoin": "Selecciona primero un smartcoin válido (activo vinculado al mercado).",
+        "asset": "Activo",
+        "assetHint": "El activo a partir del cual se construye este pool (tenedores, o el lado de venta/pago de las órdenes límite).",
+        "needPair": "Selecciona tanto el activo del airdrop como el activo del par.",
+        "needPairHint": "Las fuentes de par requieren dos activos para definir el par de trading.",
+        "callOrderAsset": "Smartcoin",
+        "callOrderAssetHint": "Elige un único activo vinculado al mercado (smartcoin). Solo se cargan sus prestatarios (tenedores de call order); el activo debe ser un smartcoin o el pool no se puede construir.",
+        "notSmartcoin": "Este activo no es un smartcoin (no tiene datos de bitasset), por lo que los tenedores de call order no se pueden cargar. Elige un activo vinculado al mercado.",
+        "timeframe": "Periodo de tiempo",
+        "timeframe.1d": "Último 1 día",
+        "timeframe.7d": "Últimos 7 días",
+        "timeframe.30d": "Últimos 30 días",
+        "timeframe.365d": "Últimos 365 días",
+        "timeframe.specific": "Fecha específica (desde entonces hasta ahora)",
+        "timeframe.pickDate": "Elija una fecha de inicio",
+        "weightAsset": "Activo de peso (lotaría)",
+        "weightAssetHint": "Opcional. Cuando se define, los algoritmos aleatorios (de firma) ponderan cada cuenta por su saldo de este activo. Déjalo vacío para una lotería equitativa (sin ponderar).",
+        "allAccountsHint": "Cada cuenta de la cadena se convierte en una entrada de la lotería (ponderada equitativamente). Solo los algoritmos de firma (lotería) pueden ejecutarse contra todo el espacio de cuentas.",
+        "ticketsHint": "Carga todos los tickets de Bitshares (1.18.x) y pondera cada cuenta por su monto bloqueado efectivo. Los bloqueos más largos cuentan más.",
+        "callOrdersHint": "Carga los tenedores de call order (prestatarios) del smartcoin seleccionado (1.8.x) y pondera cada cuenta por su garantía.",
+        "assetHoldersHint": "Carga los principales tenedores del activo de airdrop (por saldo on-chain) desde el índice del explorador objects-balance. Cada cuenta se pondera por su saldo.",
+        "creatorsHint": "Carga las cuentas que crearon más órdenes límite vendiendo el activo de airdrop en el periodo seleccionado. Cada cuenta se pondera por su número de órdenes.",
+        "fillersHint": "Carga las cuentas que completaron más órdenes límite pagando con el activo de airdrop en el periodo seleccionado. Cada cuenta se pondera por su número de fills.",
+        "creatorsPairHint": "Carga las cuentas que crearon más órdenes límite vendiendo el activo de airdrop por el activo del par en el periodo seleccionado. Cada cuenta se pondera por su número de órdenes.",
+        "fillersPairHint": "Carga las cuentas que completaron más órdenes límite pagando con el activo de airdrop y recibiendo el activo del par en el periodo seleccionado. Cada cuenta se pondera por su número de fills.",
+        "ltmHint": "Carga las cuentas que se actualizaron a miembro de por vida en el periodo seleccionado desde las operaciones account_upgrade. Cada cuenta se pondera equitativamente.",
+        "load": "Cargar pool",
+        "loading": "Cargando…",
+        "loaded": "{{count}} cuentas cargadas",
+        "accountsLoaded": "{{count}} cuentas en el rango",
+        "weightBy": "Ponderar por",
+        "weightByCollateral": "Garantía",
+        "weightByDebt": "Deuda"
     },
-    "reverse": {
-      "name": "Inverso",
-      "desc": "Selección aleatoria determinista sembrada a partir de la firma de testigo de un bloque (fragmentos invertidos)."
+    "preview": {
+        "title": "Vista previa del pool",
+        "count": "{{count}} entradas",
+        "weight": "Peso",
+        "locked": "Peso bloqueado",
+        "collateral": "Garantía",
+        "balance": "Saldo",
+        "orders": "Órdenes",
+        "fills": "Completados",
+        "upgrades": "Actualizaciones"
     },
-    "pi": {
-      "name": "Pi",
-      "desc": "Selección aleatoria determinista usando un cálculo tipo PI sobre los fragmentos de la firma."
+    "algos": {
+        "title": "Algoritmos",
+        "description": "Selecciona uno o más algoritmos. Cada algoritmo elegido añade sus cuentas ganadoras a la lista final de destinatarios.",
+        "freebie": {
+            "name": "Gratis (todos)",
+            "desc": "Cada cuenta de la pool recibe el airdrop."
+        },
+        "forward": {
+            "name": "Hacia adelante",
+            "desc": "Selección aleatoria determinista sembrada a partir de la firma de testigo de un bloque (fragmentos en orden)."
+        },
+        "reverse": {
+            "name": "Inverso",
+            "desc": "Selección aleatoria determinista sembrada a partir de la firma de testigo de un bloque (fragmentos invertidos)."
+        },
+        "pi": {
+            "name": "Pi",
+            "desc": "Selección aleatoria determinista usando un cálculo tipo PI sobre los fragmentos de la firma."
+        },
+        "reverse_pi": {
+            "name": "Pi inverso",
+            "desc": "Selección aleatoria determinista usando un cálculo tipo PI sobre los fragmentos de la firma invertidos."
+        },
+        "cubed": {
+            "name": "Cúbico",
+            "desc": "Selección aleatoria determinista que eleva al cubo los fragmentos de 3 dígitos de la firma."
+        },
+        "avg_point_lines": {
+            "name": "Líneas de punto promedio",
+            "desc": "Selección geométrica: traza líneas hacia el vector promedio derivado de la firma."
+        },
+        "alien_blood": {
+            "name": "Sangre alienígena",
+            "desc": "Selección geométrica: puntos salpicados derivados de la firma."
+        },
+        "bouncing_ball": {
+            "name": "Pelota rebotando",
+            "desc": "Selección geométrica: traza una trayectoria entre los vectores de la firma."
+        },
+        "barrel_of_fish": {
+            "name": "Barril de peces",
+            "desc": "Selección geométrica: fragmentos vuelan desde un punto de impacto a través de los vectores de la firma.",
+            "projectile": "Profundidad del proyectil",
+            "beam": "Haz",
+            "slow": "Lento",
+            "splinter": "Astilla",
+            "yes": "Sí",
+            "no": "No"
+        },
+        "golden": {
+            "name": "Retícula dorada",
+            "desc": "Selección geométrica: una retícula de Fibonacci (proporción áurea) de baja discrepancia llena el cubo uniformemente para una cobertura casi uniforme."
+        },
+        "hash": {
+            "name": "Hash",
+            "desc": "Selección numérica: un PRNG FNV-1a + xorshift32 sembrado por la firma reparte los tickets uniformemente en todo el rango."
+        },
+        "walk": {
+            "name": "Caminata",
+            "desc": "Selección geométrica: una ruta serpenteante avanza por el cubo y muestrea tickets a lo largo de cada segmento."
+        },
+        "helix": {
+            "name": "Helix",
+            "desc": "Selección geométrica: tickets muestreados a lo largo de una espiral 3D que asciende por el cubo."
+        },
+        "configuration": "configuración"
     },
-    "reverse_pi": {
-      "name": "Pi inverso",
-      "desc": "Selección aleatoria determinista usando un cálculo tipo PI sobre los fragmentos de la firma invertidos."
+    "block": {
+        "title": "Número de bloque",
+        "description": "La firma del testigo de este bloque inicia los algoritmos aleatorios (de firma). Usa cualquier bloque histórico.",
+        "useLatest": "Usar el último bloque",
+        "random": "Bloque aleatorio",
+        "current": "Último bloque conocido: {{num}}",
+        "currentUnknown": "El último bloque aún no se ha obtenido."
     },
-    "cubed": {
-      "name": "Cúbico",
-      "desc": "Selección aleatoria determinista que eleva al cubo los fragmentos de 3 dígitos de la firma."
+    "options": {
+        "deduplicate": "Eliminar duplicados de ganadores",
+        "yes": "Sí",
+        "no": "No"
     },
-    "avg_point_lines": {
-      "name": "Líneas de punto promedio",
-      "desc": "Selección geométrica: traza líneas hacia el vector promedio derivado de la firma."
+    "run": {
+        "run": "Ejecutar cálculo",
+        "running": "Calculando…"
     },
-    "alien_blood": {
-      "name": "Sangre alienígena",
-      "desc": "Selección geométrica: puntos salpicados derivados de la firma."
+    "result": {
+        "title": "Resultado",
+        "description": "Define el activo del airdrop y luego ejecuta los algoritmos seleccionados. Previsualiza y guarda la lista de ganadores.",
+        "asset": "Activo del airdrop",
+        "winners": "{{count}} cuentas ganadoras",
+        "quantityHeading": "Cantidad de ganadores",
+        "quantityHint": "La cantidad de cuentas seleccionadas como ganadoras por los algoritmos elegidos.",
+        "account": "Cuenta",
+        "qty": "Aciertos",
+        "amount": "Monto",
+        "weight": "Peso",
+        "basis": "Base del reparto",
+        "basisHint": "Cómo se divide el total: por aciertos (cada acierto = 1 parte), por el peso en tenencia, o por igual.",
+        "basisHits": "Aciertos",
+        "basisWeight": "Peso",
+        "basisEqual": "Igual",
+        "prev": "Anterior",
+        "next": "Siguiente",
+        "goTo": "Ir a la página",
+        "pageOf": "Página {{page}} de {{total}}",
+        "pageRange": "{{from}}–{{to}}",
+        "save": "Generar detalles de la transacción de airdrop",
+        "none": "Los algoritmos seleccionados no produjeron ganadores.",
+        "yourHit": "Tu(s) ticket(s) ganador(es)",
+        "detailSubtitle": "Toca un algoritmo abajo para ver cómo se sorteó esta cuenta.",
+        "noTicketDetail": "No hay detalle por ticket disponible para esta cuenta en este modo.",
+        "filterLabel": "Mostrar",
+        "filterAll": "Todos",
+        "filterNone": "Ningún candidato coincide con este filtro."
     },
-    "bouncing_ball": {
-      "name": "Pelota rebotando",
-      "desc": "Selección geométrica: traza una trayectoria entre los vectores de la firma."
+    "amount": {
+        "title": "Monto a repartir",
+        "hint": "La cantidad total del activo seleccionado para repartir entre las cuentas ganadoras.",
+        "placeholder": "0,0",
+        "max": "Máx",
+        "balance": "Tu saldo: {{amount}} {{symbol}}",
+        "invalid": "Introduce un monto mayor que cero y no superior a tu saldo."
     },
-    "barrel_of_fish": {
-      "name": "Barril de peces",
-      "desc": "Selección geométrica: fragmentos vuelan desde un punto de impacto a través de los vectores de la firma.",
-      "projectile": "Profundidad del proyectil",
-      "beam": "Haz",
-      "slow": "Lento",
-      "splinter": "Astilla",
-      "yes": "Sí",
-      "no": "No"
-    },
-    "golden": {
-      "name": "Retícula dorada",
-      "desc": "Selección geométrica: una retícula de Fibonacci (proporción áurea) de baja discrepancia llena el cubo uniformemente para una cobertura casi uniforme."
-    },
-    "hash": {
-      "name": "Hash",
-      "desc": "Selección numérica: un PRNG FNV-1a + xorshift32 sembrado por la firma reparte los tickets uniformemente en todo el rango."
-    },
-    "walk": {
-      "name": "Caminata",
-      "desc": "Selección geométrica: una ruta serpenteante avanza por el cubo y muestrea tickets a lo largo de cada segmento."
-    },
-    "helix": {
-      "name": "Helix",
-      "desc": "Selección geométrica: tickets muestreados a lo largo de una espiral 3D que asciende por el cubo."
-    },
-    "configuration": "configuración"
-  },
-  "block": {
-    "title": "Número de bloque",
-    "description": "La firma del testigo de este bloque inicia los algoritmos aleatorios (de firma). Usa cualquier bloque histórico.",
-    "useLatest": "Usar el último bloque",
-    "random": "Bloque aleatorio",
-    "current": "Último bloque conocido: {{num}}",
-    "currentUnknown": "El último bloque aún no se ha obtenido."
-  },
-  "options": {
-    "deduplicate": "Eliminar duplicados de ganadores",
-    "yes": "Sí",
-    "no": "No"
-  },
-  "run": {
-    "run": "Ejecutar cálculo",
-    "running": "Calculando…"
-  },
-  "result": {
-    "title": "Resultado",
-    "description": "Define el activo del airdrop y luego ejecuta los algoritmos seleccionados. Previsualiza y guarda la lista de ganadores.",
-    "asset": "Activo del airdrop",
-    "winners": "{{count}} cuentas ganadoras",
-    "quantityHeading": "Cantidad de ganadores",
-    "quantityHint": "La cantidad de cuentas seleccionadas como ganadoras por los algoritmos elegidos.",
-    "account": "Cuenta",
-    "qty": "Aciertos",
-    "amount": "Monto",
-    "weight": "Peso",
-    "basis": "Base del reparto",
-    "basisHint": "Cómo se divide el total: por aciertos (cada acierto = 1 parte), por el peso en tenencia, o por igual.",
-    "basisHits": "Aciertos",
-    "basisWeight": "Peso",
-    "basisEqual": "Igual",
-    "prev": "Anterior",
-    "next": "Siguiente",
-    "goTo": "Ir a la página",
-    "pageOf": "Página {{page}} de {{total}}",
-    "pageRange": "{{from}}–{{to}}",
-    "save": "Generar detalles de la transacción de airdrop",
-    "none": "Los algoritmos seleccionados no produjeron ganadores.",
-    "yourHit": "Tu(s) ticket(s) ganador(es)",
-    "detailSubtitle": "Toca un algoritmo abajo para ver cómo se sorteó esta cuenta.",
-    "noTicketDetail": "No hay detalle por ticket disponible para esta cuenta en este modo.",
-    "filterLabel": "Mostrar",
-    "filterAll": "Todos",
-    "filterNone": "Ningún candidato coincide con este filtro."
-  },
-  "amount": {
-    "title": "Monto a repartir",
-    "hint": "La cantidad total del activo seleccionado para repartir entre las cuentas ganadoras.",
-    "placeholder": "0,0",
-    "max": "Máx",
-    "balance": "Tu saldo: {{amount}} {{symbol}}",
-    "invalid": "Introduce un monto mayor que cero y no superior a tu saldo."
-  },
-  "errors": {
-    "noPool": "Carga primero el pool.",
-    "noAlgo": "Selecciona al menos un algoritmo.",
-    "noBlock": "Introduce un número de bloque válido para los algoritmos de firma.",
-    "lotteryOnly": "Todo el espacio de cuentas solo admite los algoritmos de firma (lotería).",
-    "needEnrich": "Este pool es demasiado grande para enriquecer, por lo que los algoritmos de filtro (LTM / activo / votante) no pueden ejecutarse. Usa un pool más pequeño o solo algoritmos de lotería."
-  }
+    "errors": {
+        "noPool": "Carga primero el pool.",
+        "noAlgo": "Selecciona al menos un algoritmo.",
+        "noBlock": "Introduce un número de bloque válido para los algoritmos de firma.",
+        "lotteryOnly": "Todo el espacio de cuentas solo admite los algoritmos de firma (lotería).",
+        "needEnrich": "Este pool es demasiado grande para enriquecer, por lo que los algoritmos de filtro (LTM / activo / votante) no pueden ejecutarse. Usa un pool más pequeño o solo algoritmos de lotería."
+    }
 }

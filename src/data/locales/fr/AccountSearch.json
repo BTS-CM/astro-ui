@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "Veuillez saisir un nom de compte blockchain",
-    "placeholder": "Nom ou identifiant du compte",
-    "continue": "Continuer",
-    "error": "Impossible de trouver le compte.",
-    "selfError": "Impossible de transférer des actifs vers ce compte."
-  },
-  "searchResponse": {
-    "promptBTS": "Continuer avec le compte Bitshares suivant ?",
-    "promptTEST": "Procéder au compte Bitshares testnet (TEST) suivant ?",
-    "back": "Retourner",
-    "proceed": "Procéder"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "Recherches récentes",
-    "recentSubtitle": "{{count}} recherche récente",
-    "recentSubtitle_plural": "{{count}} recherches récentes",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "Sélectionnez l'un de vos utilisateurs récemment recherchés",
-    "none": "Aucune recherche récente trouvée",
-    "noneHint": "Votre historique de recherche apparaîtra ici",
-    "eraseHistory": "Effacer l'historique"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "Veuillez saisir un nom de compte blockchain",
+        "placeholder": "Nom ou identifiant du compte",
+        "continue": "Continuer",
+        "error": "Impossible de trouver le compte.",
+        "selfError": "Impossible de transférer des actifs vers ce compte."
+    },
+    "searchResponse": {
+        "promptBTS": "Continuer avec le compte Bitshares suivant ?",
+        "promptTEST": "Procéder au compte Bitshares testnet (TEST) suivant ?",
+        "back": "Retourner",
+        "proceed": "Procéder"
+    },
+    "mode": {
+        "titleBTS": "Comment voulez-vous trouver le compte sur Bitshares ?",
+        "titleTEST": "Comment voulez-vous trouver le compte sur le testnet Bitshares ?",
+        "search": "Rechercher un compte",
+        "searchSubtitle": "Saisissez un nom ou un ID de compte",
+        "favourites": "Utilisateurs favoris",
+        "favouritesSubtitle": "{{count}} favori enregistré",
+        "favouritesSubtitle_plural": "{{count}} favoris enregistrés",
+        "recent": "Recherches récentes",
+        "recentSubtitle": "{{count}} recherche récente",
+        "recentSubtitle_plural": "{{count}} recherches récentes",
+        "back": "Retour"
+    },
+    "search": {
+        "initDesc": "Saisissez le nom ou l'ID du compte",
+        "description": "Est-ce le bon compte ?",
+        "back": "Retour",
+        "continue": "Continuer"
+    },
+    "favourites": {
+        "description": "Sélectionnez l'un de vos utilisateurs favoris",
+        "none": "Aucun utilisateur favori trouvé",
+        "noneHint": "Vous pouvez ajouter des favoris depuis la page Favoris"
+    },
+    "recent": {
+        "description": "Sélectionnez l'un de vos utilisateurs récemment recherchés",
+        "none": "Aucune recherche récente trouvée",
+        "noneHint": "Votre historique de recherche apparaîtra ici",
+        "eraseHistory": "Effacer l'historique"
+    },
+    "step1": "Méthode",
+    "step2": "Sélectionner",
+    "noAccount": "Compte introuvable."
 }

@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+import CommitteeParams from '../components/CommitteeParams.jsx';
+
+const page = "committee";
+---
+
+<Layout title="Bitshares Global Blockchain Parameters">
+    <main>
+        <PageHeader page={page} client:only="react" backURL="" />
+        <CommitteeParams client:only="react" />
+         <PageFooter sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/committee_parameters.astro" client:only="react" />
+    </main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: hsl(var(--foreground));
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

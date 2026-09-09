@@ -134,6 +134,12 @@ const newApis = (
     _hist: null as any,
     _crypt: null as any,
     _orders: null as any,
+    // Best-effort handle for the optional `custom_operations` plugin API
+    // (trollbox storage). Null when the node does not offer it — never
+    // rejects the shared init promise.
+    _custom_ops: null as any,
+    _custom_ops_available: false as boolean,
+    _custom_ops_init: null as Promise<any> | null,
     closeCb: closeCb,
     refs: 0,
     destroyed: false,
@@ -145,6 +151,35 @@ const newApis = (
     enableCrypto: !!o.enableCrypto,
     enableOrders: !!o.enableOrders,
   });
+
+  // Best-effort handshake for the optional `custom_operations` plugin API
+  // (trollbox storage reads). Resolves in all cases: on success
+  // `state._custom_ops` holds the API and `_custom_ops_available` is true;
+  // on nodes without the plugin both stay falsy and callers get a clear
+  // "not available on this node" error from custom_operations_api().
+  const initCustomOps = () => {
+    state._custom_ops = null;
+    state._custom_ops_available = false;
+    if (!state.ws_rpc || state.destroyed) {
+      state._custom_ops_init = Promise.resolve(false);
+      return state._custom_ops_init;
+    }
+    const api = new GrapheneApi(state.ws_rpc, "custom_operations");
+    state._custom_ops_init = api
+      .init()
+      .then(() => {
+        if (!state.ws_rpc || state.destroyed) return false;
+        state._custom_ops = api;
+        state._custom_ops_available = true;
+        return true;
+      })
+      .catch(() => {
+        state._custom_ops = null;
+        state._custom_ops_available = false;
+        return false;
+      });
+    return state._custom_ops_init;
+  };
 
   const doConnect = (
     connectUrl: string,
@@ -246,6 +281,7 @@ const newApis = (
             state._hist.init();
             if (opts.enableOrders) state._orders.init();
             if (opts.enableCrypto) state._crypt.init();
+            initCustomOps();
           });
         };
         state.ws_rpc.on_close = () => {
@@ -263,6 +299,10 @@ const newApis = (
 
         if (opts.enableOrders) initPromises.push(state._orders.init());
         if (opts.enableCrypto) initPromises.push(state._crypt.init());
+        // Best-effort: most public nodes do not run the custom_operations
+        // plugin. A rejection here must never break the shared connection,
+        // so this promise is kept separate from initPromises.
+        initCustomOps();
         return Promise.all(initPromises);
       })
       .catch((err: any) => {
@@ -295,6 +335,9 @@ const newApis = (
     state._hist = null;
     state._crypt = null;
     state._orders = null;
+    state._custom_ops = null;
+    state._custom_ops_available = false;
+    state._custom_ops_init = null;
     state.refs = 0;
     state._idleTimer = null;
   };
@@ -377,6 +420,29 @@ const newApis = (
     history_api: () => lazyApi("_hist"),
     crypto_api: () => lazyApi("_crypt"),
     orders_api: () => lazyApi("_orders"),
+    // Optional trollbox storage API. Like lazyApi, this waits for the
+    // shared init_promise FIRST — otherwise exec() could run before the
+    // login roundtrip has even created the best-effort handshake promise,
+    // falsely reporting "not available on this node" on every fresh
+    // connection. Genuine init failures propagate as connection errors.
+    custom_operations_api: () => ({
+      exec: (method: any, args: any[]) =>
+        (state.init_promise || Promise.resolve())
+          .then(() => state._custom_ops_init || Promise.resolve(false))
+          .then(() => {
+            if (!state._custom_ops) {
+              throw new Error(
+                `custom_operations API not available on this node (${state.url})`
+              );
+            }
+            return state._custom_ops.exec(method, args);
+          }),
+      // Resolves true when the connected node runs the plugin.
+      isAvailable: () =>
+        (state.init_promise || Promise.resolve())
+          .then(() => state._custom_ops_init || Promise.resolve(false))
+          .then(() => state._custom_ops_available),
+    }),
     setRpcConnectionStatusCallback: (callback: any) => (state.statusCb = callback),
     get chain_id() {
       return state.chain_id;

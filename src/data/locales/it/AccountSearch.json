@@ -1,48 +1,48 @@
 {
-  "noSearch": {
-    "prompt": "Inserisci il nome di un account blockchain",
-    "placeholder": "Nome o ID dell'account",
-    "continue": "Continua",
-    "error": "Impossibile trovare l'account.",
-    "selfError": "Impossibile trasferire risorse a questo account."
-  },
-  "searchResponse": {
-    "promptBTS": "Procedere con il seguente account Bitshares?",
-    "promptTEST": "Procedere con il seguente account Bitshares testnet (TEST)?",
-    "back": "Torna indietro",
-    "proceed": "Procedere"
-  },
-  "mode": {
-    "titleBTS": "How would you like to find the account on Bitshares?",
-    "titleTEST": "How would you like to find the account on Bitshares testnet?",
-    "search": "Search for account",
-    "searchSubtitle": "Enter an account name or ID",
-    "favourites": "Favourite Users",
-    "favouritesSubtitle": "{{count}} favourite saved",
-    "favouritesSubtitle_plural": "{{count}} favourites saved",
-    "recent": "Ricerche recenti",
-    "recentSubtitle": "{{count}} ricerca recente",
-    "recentSubtitle_plural": "{{count}} ricerche recenti",
-    "back": "Back"
-  },
-  "search": {
-    "initDesc": "Enter the account name or ID",
-    "description": "Is this the correct account?",
-    "back": "Go back",
-    "continue": "Continue"
-  },
-  "favourites": {
-    "description": "Select one of your favourite users",
-    "none": "No favourite users found",
-    "noneHint": "You can add favourites from the Favourites page"
-  },
-  "recent": {
-    "description": "Seleziona uno degli utenti cercati di recente",
-    "none": "Nessuna ricerca recente trovata",
-    "noneHint": "La cronologia delle ricerche verrà visualizzata qui",
-    "eraseHistory": "Cancella cronologia"
-  },
-  "step1": "Method",
-  "step2": "Select",
-  "noAccount": "Couldn't find account."
+    "noSearch": {
+        "prompt": "Inserisci il nome di un account blockchain",
+        "placeholder": "Nome o ID dell'account",
+        "continue": "Continua",
+        "error": "Impossibile trovare l'account.",
+        "selfError": "Impossibile trasferire risorse a questo account."
+    },
+    "searchResponse": {
+        "promptBTS": "Procedere con il seguente account Bitshares?",
+        "promptTEST": "Procedere con il seguente account Bitshares testnet (TEST)?",
+        "back": "Torna indietro",
+        "proceed": "Procedere"
+    },
+    "mode": {
+        "titleBTS": "Come vuoi trovare l'account su Bitshares?",
+        "titleTEST": "Come vuoi trovare l'account sulla testnet di Bitshares?",
+        "search": "Cerca account",
+        "searchSubtitle": "Inserisci un nome o ID account",
+        "favourites": "Utenti preferiti",
+        "favouritesSubtitle": "{{count}} preferito salvato",
+        "favouritesSubtitle_plural": "{{count}} preferiti salvati",
+        "recent": "Ricerche recenti",
+        "recentSubtitle": "{{count}} ricerca recente",
+        "recentSubtitle_plural": "{{count}} ricerche recenti",
+        "back": "Indietro"
+    },
+    "search": {
+        "initDesc": "Inserisci il nome o l'ID dell'account",
+        "description": "È questo l'account corretto?",
+        "back": "Indietro",
+        "continue": "Continua"
+    },
+    "favourites": {
+        "description": "Seleziona uno dei tuoi utenti preferiti",
+        "none": "Nessun utente preferito trovato",
+        "noneHint": "Puoi aggiungere preferiti dalla pagina Preferiti"
+    },
+    "recent": {
+        "description": "Seleziona uno degli utenti cercati di recente",
+        "none": "Nessuna ricerca recente trovata",
+        "noneHint": "La cronologia delle ricerche verrà visualizzata qui",
+        "eraseHistory": "Cancella cronologia"
+    },
+    "step1": "Metodo",
+    "step2": "Seleziona",
+    "noAccount": "Account non trovato."
 }

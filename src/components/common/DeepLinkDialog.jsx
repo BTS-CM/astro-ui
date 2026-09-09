@@ -51,6 +51,21 @@ import { Avatar } from "../Avatar.tsx";
 import AccountSearch from "../AccountSearch.jsx";
 import { QRCode } from "react-qrcode-logo";
 
+const REVIEW_PERIOD_LABELS = {
+  60000: "60s",
+  300000: "300s",
+  600000: "600s",
+  900000: "900s",
+  1200000: "1200s",
+  604800: "1w",
+  1209600: "2w",
+  2419200: "4w",
+};
+
+const REVIEW_PERIOD_OPTIONS = [
+  60000, 300000, 600000, 900000, 1200000, 604800, 1209600, 2419200,
+];
+
 const operationNumbers = {
   transfer: 0,
   limit_order_create: 1,
@@ -153,6 +168,19 @@ export default function DeepLinkDialog(properties) {
     disableQR = false,
     // When true, hides the deeplink tab (useful when the deeplink URL exceeds the webview's character limit)
     disableDeeplink = false,
+    // When true, hides the TOTP tab (encrypted deeplink alternative, also
+    // unsuitable for very large transactions)
+    disableTotp = false,
+    // When true, only the transaction object view and proposal tabs are shown,
+    // forcing the operation through a committee proposal (required for
+    // operations like committee_member_update_global_parameters).
+    forcePropose = false,
+    // Initial review period (in seconds) preselected in the proposal tab.
+    // Defaults to 60000 to preserve existing behaviour.
+    initialReviewPeriodSeconds = null,
+    // Hide review period options below this value (in seconds). Useful when
+    // the chain requires a minimum review period, e.g. committee proposals.
+    minReviewPeriodSeconds = null,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore(
@@ -163,7 +191,9 @@ export default function DeepLinkDialog(properties) {
 
   const currentNode = useStore($currentNode);
 
-  const [activeTab, setActiveTab] = useState("object");
+  const [activeTab, setActiveTab] = useState(
+    forcePropose ? "propose" : "object"
+  );
   const [deeplink, setDeeplink] = useState();
   useEffect(() => {
     async function fetchDeeplink() {
@@ -231,7 +261,19 @@ export default function DeepLinkDialog(properties) {
     }
   }, [expiryType, date]);
 
-  const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(60000);
+  const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(() => {
+    // Clamp the initial value to a selectable option: a raw chain value
+    // (e.g. review period 0) may match no item, which renders a blank field.
+    const min = Number(minReviewPeriodSeconds);
+    const floor = Number.isFinite(min) ? min : -Infinity;
+    const init = Number(initialReviewPeriodSeconds ?? 60000);
+    const candidate = REVIEW_PERIOD_OPTIONS.find(
+      (o) => o >= Math.max(Number.isFinite(init) ? init : 60000, floor)
+    );
+    return String(
+      candidate ?? REVIEW_PERIOD_OPTIONS[REVIEW_PERIOD_OPTIONS.length - 1]
+    );
+  });
 
   const [deeplinkJSON, setDeeplinkJSON] = useState(null);
 
@@ -349,7 +391,7 @@ export default function DeepLinkDialog(properties) {
           fee_paying_account: targetUser.id,
           expiration_time: date,
           proposed_ops: _adjusted_proposed_ops,
-          review_period_seconds: reviewPeriodSeconds,
+          review_period_seconds: Number(reviewPeriodSeconds),
           extensions: {},
         },
       ];
@@ -419,6 +461,7 @@ export default function DeepLinkDialog(properties) {
             <hr className="mt-3" />
             <div className="grid grid-cols-1 gap-3">
               <div className="grid grid-cols-4 gap-2">
+                {!forcePropose ? (
                 <Button
                   className="col-span-1"
                   onClick={() => setActiveTab("object")}
@@ -426,7 +469,8 @@ export default function DeepLinkDialog(properties) {
                 >
                   {t("DeepLinkDialog:tabs.viewTRXObject")}
                 </Button>
-                {!disableDeeplink ? (
+                ) : null}
+                {!disableDeeplink && !forcePropose ? (
                 <Button
                   className="col-span-1"
                   onClick={() => setActiveTab("deeplink")}
@@ -435,6 +479,7 @@ export default function DeepLinkDialog(properties) {
                   {t("DeepLinkDialog:tabs.rawDeeplink")}
                 </Button>
                 ) : null}
+                {!forcePropose ? (
                 <Button
                   className="col-span-1"
                   onClick={() => setActiveTab("localJSON")}
@@ -442,7 +487,8 @@ export default function DeepLinkDialog(properties) {
                 >
                   {t("DeepLinkDialog:tabs.localJSONFile")}
                 </Button>
-                {!disableQR ? (
+                ) : null}
+                {!disableQR && !forcePropose ? (
                 <Button
                   className="col-span-1"
                   onClick={() => setActiveTab("qr")}
@@ -460,6 +506,7 @@ export default function DeepLinkDialog(properties) {
                     {t("DeepLinkDialog:tabs.propose")}
                   </Button>
                 ) : null}
+                {!forcePropose && !disableTotp ? (
                 <Button
                   className="col-span-1"
                   onClick={() => setActiveTab("totp")}
@@ -467,6 +514,7 @@ export default function DeepLinkDialog(properties) {
                 >
                   {t("DeepLinkDialog:tabs.totp")}
                 </Button>
+                ) : null}
               </div>
               {activeTab === "object" ? (
                 <>
@@ -499,7 +547,7 @@ export default function DeepLinkDialog(properties) {
                   </Button>
                 </>
               ) : null}
-              {activeTab === "deeplink" && !disableDeeplink ? (
+              {activeTab === "deeplink" && !disableDeeplink && !forcePropose ? (
                 <>
                   <Label className="text-left text-md font-bold">
                     {t("DeepLinkDialog:tabsContent.usingDeeplink")}
@@ -535,7 +583,7 @@ export default function DeepLinkDialog(properties) {
                   ) : null}
                 </>
               ) : null}
-              {activeTab === "localJSON" ? (
+              {activeTab === "localJSON" && !forcePropose ? (
                 <>
                   <Label className="text-left text-md font-bold">
                     {t("DeepLinkDialog:tabsContent.viaLocalFile")}
@@ -581,7 +629,7 @@ export default function DeepLinkDialog(properties) {
                   ) : null}
                 </>
               ) : null}
-              {activeTab === "qr" && !disableQR ? (
+              {activeTab === "qr" && !disableQR && !forcePropose ? (
                 <>
                   <Label className="text-left text-md font-bold">
                     {t("DeepLinkDialog:tabs.qrCode")}
@@ -910,19 +958,34 @@ export default function DeepLinkDialog(properties) {
                         type="header"
                       />
                       <Select
+                        value={String(reviewPeriodSeconds)}
                         onValueChange={(selectedReviewPeriod) => {
                           setReviewPeriodSeconds(selectedReviewPeriod);
                         }}
                       >
                         <SelectTrigger className="mb-3 mt-1 w-3/4">
-                          <SelectValue placeholder="60s" />
+                          <SelectValue
+                            placeholder={
+                              REVIEW_PERIOD_LABELS[reviewPeriodSeconds] ??
+                              `${reviewPeriodSeconds}s`
+                            }
+                          />
                         </SelectTrigger>
                         <SelectContent className="bg-card">
-                          <SelectItem value={60000}>60s</SelectItem>
-                          <SelectItem value={300000}>300s</SelectItem>
-                          <SelectItem value={600000}>600s</SelectItem>
-                          <SelectItem value={900000}>900s</SelectItem>
-                          <SelectItem value={1200000}>1200s</SelectItem>
+                          {(() => {
+                            const min = Number(minReviewPeriodSeconds);
+                            const visible = Number.isFinite(min)
+                              ? REVIEW_PERIOD_OPTIONS.filter((o) => o >= min)
+                              : REVIEW_PERIOD_OPTIONS;
+                            return (visible.length
+                              ? visible
+                              : REVIEW_PERIOD_OPTIONS
+                            ).map((o) => (
+                              <SelectItem key={o} value={String(o)}>
+                                {REVIEW_PERIOD_LABELS[o] ?? `${o}s`}
+                              </SelectItem>
+                            ));
+                          })()}
                         </SelectContent>
                       </Select>
                     </div>
@@ -952,11 +1015,14 @@ export default function DeepLinkDialog(properties) {
                         dismissCallback={dismissCallback}
                         headerText={headerText}
                         proposal={true}
+                        disableQR={disableQR}
+                        disableDeeplink={disableDeeplink}
+                        disableTotp={disableTotp}
                       />
                     )}
                 </>
               ) : null}
-              {activeTab === "totp" ? (
+              {activeTab === "totp" && !forcePropose && !disableTotp ? (
                 <>
                   <Label className="text-left text-md font-bold">
                     {t("DeepLinkDialog:totp.title")}

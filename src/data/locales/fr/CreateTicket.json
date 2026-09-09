@@ -22,6 +22,24 @@
     "description": "Aperçu des billets récemment récupérés.",
     "note": "Récupération d'un petit échantillon de tickets récents pour donner le contexte."
   },
+  "requestCard": {
+    "title": "Demander des THUMBSUP.1",
+    "description": "Les tickets nécessitent un solde équivalent en THUMBSUP.1.",
+    "btsBalance": "Vos BTS",
+    "thumbsupBalance": "Vos THUMBSUP.1",
+    "deficit": "Total requis : {{need}} THUMBSUP.1 ({{locked}} déjà verrouillés + {{new}} nouveaux) ; votre manque est de {{deficit}}.",
+    "useDeficit": "Utiliser le manque",
+    "amountHeader": "Montant à demander",
+    "amountDescription": "Ne peut pas dépasser votre solde BTS. 'abit' vous enverra ce montant de THUMBSUP.1 s'il approuve la proposition.",
+    "max": "Max",
+    "maxHint": "Maximum demandable : {{max}} THUMBSUP.1 (votre solde BTS).",
+    "exceedsBalance": "Le montant demandé ne peut pas dépasser votre solde BTS.",
+    "loginRequired": "Connectez-vous pour demander des THUMBSUP.1.",
+    "resolvingAbit": "Résolution du compte 'abit'…",
+    "proposalNote": "Cela crée une proposition (expiration 7 jours, révision 1 h) dont 'abit' paie les frais. Il doit l'approuver avant que vous receviez les jetons.",
+    "submit": "Demander des THUMBSUP.1",
+    "dialogHeader": "Demander des THUMBSUP.1 à abit"
+  },
   "myTickets": {
     "title": "Mes billets",
     "description": "Vos tickets actuels, vos totaux et votre pouvoir de vote effectif.",
@@ -54,6 +72,10 @@
     "newType": "Nouveau type",
     "amountNewTarget": "Montant supplémentaire (facultatif)",
     "cancel": "Annuler",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "lockedAmount": "Montant verrouillé",
+    "votingPower": "Pouvoir de vote actuel",
+    "frozenWarning": "Ce ticket est verrouillé pour toujours et ne peut être ni mis à jour ni retiré on-chain.",
+    "sameTargetHint": "Le nouveau type correspond à la cible actuelle du ticket — choisissez un type différent pour continuer."
   }
 }

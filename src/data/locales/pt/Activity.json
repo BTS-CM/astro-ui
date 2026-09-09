@@ -227,7 +227,8 @@
       "narrative": "Narrativa: {{narrative}}",
       "title": "Título: {{title}}",
       "tags": "Tags: {{tags}}",
-      "type": "Tipo: {{type}}"
+      "type": "Tipo: {{type}}",
+      "is_prediction_market": "O mercado de previsão é: {{is_prediction_market}}"
     },
     "tooltip": "Cria um ativo na blockchain Bitshares"
   },
@@ -285,7 +286,8 @@
       "narrative": "Narrativa: {{narrative}}",
       "title": "Título: {{title}}",
       "tags": "Tags: {{tags}}",
-      "type": "Tipo: {{type}}"
+      "type": "Tipo: {{type}}",
+      "is_prediction_market": "O mercado de previsão é: {{is_prediction_market}}"
     },
     "tooltip": "Atualiza as configurações de um ativo"
   },
@@ -528,7 +530,7 @@
       "result": "As seguintes atualizações de permissão de testemunha foram aprovadas:"
     },
     "rows": {
-      "withrdaw_from_account": "Saque da conta: {{withrdaw_from_account}} ({{withrdaw_from_accountOP}})",
+      "withdraw_from_account": "Saque da conta: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "Conta autorizada: {{authorized_account}} ({{authorized_accountOP}})",
       "permission_to_update": "Permissão para atualizar: {{permission_to_update}}",
       "withdrawal_limited": "Limite de retirada: {{withdrawal_limit}}",
@@ -738,7 +740,7 @@
     },
     "rows": {
       "deposit_to_account": "Depósito na conta: {{deposit_to_account}} ({{deposit_to_accountOP}})",
-      "balance_to_claim": "Saldo a reivindicar: {{balance_to_claim}} ({{asset_id}})",
+      "balance_to_claim": "Saldo a reivindicar: {{balance_to_claim}}",
       "balance_owner_key": "Chave do proprietário do saldo: {{balance_owner_key}}",
       "total_claimed": "Total reivindicado: {{total_claimed}} ({{asset_id}})"
     },
@@ -833,7 +835,8 @@
     },
     "rows": {
       "issuer": "Emissor: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "Valor a ser reivindicado: {{amount_to_claim}} ({{asset_id}})"
+      "amount_to_claim": "Valor a ser reivindicado: {{amount_to_claim}} ({{asset_id}})",
+      "extensions": "Extensões: {{extensions}}"
     },
     "tooltip": "Reivindique as taxas de um ativo"
   },
@@ -1238,7 +1241,7 @@
     },
     "tooltip": "Peça emprestado de um fundo SameT."
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "Reembolso do fundo SameT",
     "title": "Solicitação de reembolso de fundos SameT",
     "result": "Resultado de reembolso do fundo SameT",

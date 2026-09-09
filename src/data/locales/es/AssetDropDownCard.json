@@ -19,5 +19,60 @@
   "addAsset": "Agregar activo",
   "featured": "Activos destacados",
   "borrowed": "Tomado prestado",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "mode": {
+    "titleBTS": "¿Cómo quieres encontrar el activo en Bitshares?",
+    "titleTEST": "¿Cómo quieres encontrar el activo en la testnet de Bitshares?",
+    "search": "Buscar activo",
+    "searchSubtitle": "Buscar por símbolo o ID",
+    "balances": "Mis saldos",
+    "balancesSubtitle": "{{count}} saldos",
+    "featured": "Activos destacados",
+    "featuredSubtitle": "{{count}} destacados",
+    "favourites": "Activos favoritos",
+    "favouritesSubtitle": "{{count}} favoritos",
+    "recent": "Activos recientes",
+    "recentSubtitle": "{{count}} recientes",
+    "back": "Atrás"
+  },
+  "searchPage": {
+    "initDesc": "Buscar por símbolo, ID o emisor del activo",
+    "description": "Selecciona un activo para continuar",
+    "placeholder": "p. ej. BTS, USD, 1.3.0",
+    "back": "Volver",
+    "noResults": "No se encontraron activos",
+    "noResultsHint": "Intenta ajustar tu búsqueda"
+  },
+  "favouritesPage": {
+    "description": "Selecciona uno de tus activos favoritos",
+    "none": "No se encontraron activos favoritos",
+    "noneHint": "Puedes añadir favoritos desde la página de Favoritos"
+  },
+  "featuredPage": {
+    "description": "Explora los activos destacados en esta cadena",
+    "none": "No se encontraron activos destacados",
+    "noneHint": "No hay activos seleccionados disponibles",
+    "assets": "activos"
+  },
+  "featuredCategories": {
+    "committee": "Propiedad del comité",
+    "committeeSubtitle": "Emitido por committee-account",
+    "xbtsSubtitle": "Activos XBTS",
+    "btwtySubtitle": "Activos BTWTY",
+    "honestSubtitle": "Activos HONEST",
+    "nfteaSubtitle": "Activos NFTEA"
+  },
+  "balancesPage": {
+    "description": "Selecciona uno de tus activos con saldo",
+    "none": "No se encontraron saldos",
+    "noneHint": "No tienes activos con saldo"
+  },
+  "recent": {
+    "description": "Selecciona uno de tus activos seleccionados recientemente",
+    "none": "No se encontraron activos recientes",
+    "noneHint": "Tus selecciones recientes aparecerán aquí",
+    "eraseHistory": "Borrar historial"
+  },
+  "step1": "Método",
+  "step2": "Seleccionar"
 }

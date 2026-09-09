@@ -55,6 +55,12 @@
         "hover2": "Visualizza i membri del comitato per cui hanno votato.",
         "hover3": "Visualizza i saldi dei token core del comitato."
     },
+    "committee_parameters": {
+        "title": "Parametri globali",
+        "subtitle": "Proponi nuovi parametri globali.",
+        "hover1": "Modifica tempi, limiti e suddivisione commissioni.",
+        "hover2": "Invia modifiche tramite proposta del comitato."
+    },
     "governance": {
         "title": "Registrazione del ruolo",
         "subtitle": "Crea/aggiorna i ruoli di testimoni e del comitato.",
@@ -438,6 +444,11 @@
         "subtitle": "Assegna temi specifici a singole pagine",
         "hover1": "Sovrascrivi il tema attivo per qualsiasi pagina dell'app."
     },
+    "docs": {
+        "title": "Documentazione",
+        "subtitle": "Guide e riferimenti per usare l'app",
+        "hover1": "Sfoglia la documentazione Starlight per configurazione, funzionalità e tutorial."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Distribuisci un asset in massa a molti account in un'unica operazione.",
@@ -522,5 +533,11 @@
         "subtitle": "Cambia la password del tuo cloud wallet.",
         "hover1": "Singolo account_update atomico che sostituisce le chiavi owner, active e memo.",
         "hover2": "Password generata o personalizzata — stessa derivazione della creazione account."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "Chat on-chain sulla blockchain BitShares.",
+        "hover1": "Chatta con altri utenti, memorizzato in modo permanente sulla blockchain.",
+        "hover2": "Il mittente paga una piccola commissione di rete per messaggio."
     }
 }

@@ -34,6 +34,7 @@
   "issuedAssets": "Sus activos emitidos",
   "create_smartcoin": "Crear moneda inteligente",
   "create_uia": "Crear activo emitido por el usuario",
+  "create_pool": "Crear fondo de liquidez",
   "blockExplorer": "Datos de blockchain en vivo",
   "accountLists": "Listas de cuentas",
   "proposals": "Operaciones propuestas",
@@ -120,7 +121,8 @@
     "network_fees": "Consulta todas las tarifas de la red al completo: costes estándar, cargos por KByte y tarifas para miembros vitalicios.",
     "explorer": "Usa esta página para buscar cualquier cuenta, activo, objeto, hash de transacción o número de bloque y ver el JSON con copia y favoritos.",
     "top-operations": "Usa esta página para ver las operaciones de blockchain más ejecutadas en los últimos 30 días, ordenadas por frecuencia.",
-    "change_password": "Use el formulario a continuación para cambiar la contraseña de su billetera en la nube mediante una operación account_update."
+    "change_password": "Use el formulario a continuación para cambiar la contraseña de su billetera en la nube mediante una operación account_update.",
+    "trollbox": "Chatea con la comunidad en canales que viven por completo en la blockchain de BitShares."
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

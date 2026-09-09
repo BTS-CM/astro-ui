@@ -17,6 +17,9 @@ const page = "committee";
 <Layout title="Bitshares Committee Members">
     <main>
         <PageHeader page={page} client:only="react" backURL="" />
+        <div style="max-width: 56rem; margin: 1rem auto 0; padding: 0 1rem;">
+            <a href="/committee_parameters.html" class="committee-params-link">Edit global blockchain parameters →</a>
+        </div>
         <CommitteeMembers
             client:only="react"
             _assetsBTS={btsAssets}
@@ -36,5 +39,12 @@ const page = "committee";
 		font-size: 20px;
 		line-height: 1.6;
 		min-height: 100vh;
+	}
+	.committee-params-link {
+		display: inline-block;
+		font-size: 16px;
+		color: hsl(var(--accent-1-fg));
+		text-decoration: underline;
+		text-underline-offset: 3px;
 	}
 </style>

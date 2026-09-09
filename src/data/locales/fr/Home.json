@@ -55,6 +55,12 @@
         "hover2": "Voir pour qui les membres du comité ont voté pour.",
         "hover3": "Voir les soldes de jeton de base du comité."
     },
+    "committee_parameters": {
+        "title": "Paramètres globaux",
+        "subtitle": "Proposez de nouveaux paramètres globaux.",
+        "hover1": "Modifiez temps, limites et répartition des frais.",
+        "hover2": "Soumettez via une proposition du comité."
+    },
     "governance": {
         "title": "Inscription aux rôles",
         "subtitle": "Créer / mettre à jour les rôles de témoignage et de comité.",
@@ -438,6 +444,11 @@
         "subtitle": "Attribuer des thèmes spécifiques à des pages individuelles",
         "hover1": "Remplacez le thème actif pour n'importe quelle page de l'application."
     },
+    "docs": {
+        "title": "Documentation",
+        "subtitle": "Guides et référence pour utiliser l'application",
+        "hover1": "Parcourez la documentation Starlight pour la configuration, les fonctionnalités et les tutoriels."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Distribuez en masse un actif à de nombreux comptes en une seule fois.",
@@ -494,7 +505,7 @@
         "openDex": "Ouvrir dans un ordre à cours limité DEX",
         "openStake": "Staker des actifs",
         "pool": "Pool",
-        "assets": "Assets",
+        "assets": "Actifs",
         "swaps": "Swaps"
     },
     "top_operations": {
@@ -522,5 +533,11 @@
         "subtitle": "Changez le mot de passe de votre portefeuille cloud.",
         "hover1": "account_update atomique unique remplaçant les clés owner, active et memo.",
         "hover2": "Mot de passe généré ou personnalisé — même dérivation que lors de la création du compte."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "Chat on-chain sur la blockchain BitShares.",
+        "hover1": "Discutez avec d'autres utilisateurs, stocké en permanence sur la blockchain.",
+        "hover2": "L'expéditeur paie des frais de réseau modestes par message."
     }
 }

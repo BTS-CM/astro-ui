@@ -24,6 +24,7 @@
   "blockNumber": "Bloknummer",
   "timeSinceBroadcast": "Tid siden udsendelse",
   "viewOperationButton": "Se Operation",
+  "aboutButton": "Om",
   "operationJsonTitle": "Operations-JSON",
   "operationJsonDescription": "Tjek indholdet af denne operation",
   "viewAllButton": "Se alt",

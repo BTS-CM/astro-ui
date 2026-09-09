@@ -511,6 +511,293 @@ export default function PoolStake(properties) {
   const [withdrawingA, setWithdrawingA] = useState(0);
   const [withdrawingB, setWithdrawingB] = useState(0);
 
+  const [stakeNotice, setStakeNotice] = useState("");
+  const [unstakeNotice, setUnstakeNotice] = useState("");
+
+  // Whether the UI asset A/B selection is swapped vs the pool's canonical
+  // (balance_a/asset_a) orientation. foundPool itself is never swapped, only
+  // the assetA/assetB states are, so resolve sides by canonical symbol.
+  const isStakeSwapped = useMemo(() => {
+    if (!assetA || !foundPool || !foundPool.asset_a_symbol) return false;
+    return assetA.symbol !== foundPool.asset_a_symbol;
+  }, [assetA, foundPool]);
+
+  // Pool balances mapped to the UI asset A/B orientation
+  const poolSides = useMemo(() => {
+    if (!foundPool || !assetA || !assetB) return null;
+    const rawA = isStakeSwapped ? foundPool.balance_b : foundPool.balance_a;
+    const rawB = isStakeSwapped ? foundPool.balance_a : foundPool.balance_b;
+    const precA = isStakeSwapped
+      ? foundPool.asset_b_precision
+      : foundPool.asset_a_precision;
+    const precB = isStakeSwapped
+      ? foundPool.asset_a_precision
+      : foundPool.asset_b_precision;
+    if (rawA == null || rawB == null || precA == null || precB == null) {
+      return null;
+    }
+    return {
+      rawA: Number(rawA),
+      rawB: Number(rawB),
+      precA,
+      precB,
+      humanA: humanReadableFloat(Number(rawA), precA),
+      humanB: humanReadableFloat(Number(rawB), precB),
+    };
+  }, [foundPool, assetA, assetB, isStakeSwapped]);
+
+  const readablePoolA = useMemo(() => {
+    if (!foundPool) return "0";
+    if (!isStakeSwapped && foundPool.readable_balance_a) {
+      return foundPool.readable_balance_a.split(" ")[0];
+    }
+    if (isStakeSwapped && foundPool.readable_balance_b) {
+      return foundPool.readable_balance_b.split(" ")[0];
+    }
+    return poolSides ? String(poolSides.humanA) : "0";
+  }, [foundPool, isStakeSwapped, poolSides]);
+
+  const readablePoolB = useMemo(() => {
+    if (!foundPool) return "0";
+    if (!isStakeSwapped && foundPool.readable_balance_b) {
+      return foundPool.readable_balance_b.split(" ")[0];
+    }
+    if (isStakeSwapped && foundPool.readable_balance_a) {
+      return foundPool.readable_balance_a.split(" ")[0];
+    }
+    return poolSides ? String(poolSides.humanB) : "0";
+  }, [foundPool, isStakeSwapped, poolSides]);
+
+  const getUserHumanBalance = useCallback(
+    (asset) => {
+      if (!asset || !asset.id || !usrBalances) return 0;
+      const found = usrBalances.find((x) => x.asset_id === asset.id);
+      if (!found) return 0;
+      return humanReadableFloat(Number(found.amount), asset.precision);
+    },
+    [usrBalances],
+  );
+
+  const userBalanceA = useMemo(
+    () => getUserHumanBalance(assetA),
+    [getUserHumanBalance, assetA],
+  );
+  const userBalanceB = useMemo(
+    () => getUserHumanBalance(assetB),
+    [getUserHumanBalance, assetB],
+  );
+  const userShareBalance = useMemo(() => {
+    if (!foundPool) return 0;
+    const shareId = foundPool.share_asset || foundPool.share_asset_id;
+    const sharePrec = foundPool.share_asset_details
+      ? foundPool.share_asset_details.precision
+      : null;
+    if (!shareId || sharePrec == null || !usrBalances) return 0;
+    const found = usrBalances.find((x) => x.asset_id === shareId);
+    if (!found) return 0;
+    return humanReadableFloat(Number(found.amount), sharePrec);
+  }, [foundPool, usrBalances]);
+
+  const floorToPrecision = useCallback((value, precision) => {
+    if (!isFinite(value) || value <= 0) return 0;
+    const factor = 10 ** precision;
+    return Math.floor(value * factor + 1e-9) / factor;
+  }, []);
+
+  const calcShareReceive = useCallback(
+    (aHum, bHum) => {
+      if (!poolSides || !foundPoolDetails || !foundPool) return 0;
+      const supply = humanReadableFloat(
+        foundPoolDetails.current_supply,
+        foundPool.share_asset_details.precision,
+      );
+      if (!poolSides.humanA || !poolSides.humanB || !supply) return 0;
+      const shareA = (aHum / poolSides.humanA) * supply;
+      const shareB = (bHum / poolSides.humanB) * supply;
+      const share = Math.min(shareA, shareB);
+      if (!isFinite(share) || share <= 0) return 0;
+      return parseFloat(
+        share.toFixed(foundPool.share_asset_details.precision),
+      );
+    },
+    [poolSides, foundPoolDetails, foundPool],
+  );
+
+  const calcWithdrawPair = useCallback(
+    (shareHum) => {
+      if (!poolSides || !foundPoolDetails || !foundPool) return { a: 0, b: 0 };
+      const supply = humanReadableFloat(
+        foundPoolDetails.current_supply,
+        foundPool.share_asset_details.precision,
+      );
+      if (!supply || !(shareHum > 0)) return { a: 0, b: 0 };
+      const ratio = shareHum / supply;
+      return {
+        a: parseFloat((poolSides.humanA * ratio).toFixed(poolSides.precA)),
+        b: parseFloat((poolSides.humanB * ratio).toFixed(poolSides.precB)),
+      };
+    },
+    [poolSides, foundPoolDetails, foundPool],
+  );
+
+  // Largest affordable (a,b) pair fitting both balances and the pool ratio.
+  // Priority side is kept at its balance when possible, otherwise falls back
+  // to the other side's constraint.
+  const computeMaxStakePair = useCallback(
+    (priority) => {
+      if (!poolSides || !poolSides.humanA || !poolSides.humanB) {
+        return { a: 0, b: 0, clamped: false };
+      }
+      const ratio = poolSides.humanB / poolSides.humanA; // B per 1 A
+      if (!isFinite(ratio) || ratio <= 0) return { a: 0, b: 0, clamped: false };
+      if (priority === "B") {
+        const bTry = floorToPrecision(userBalanceB, poolSides.precB);
+        const aNeed = floorToPrecision(bTry / ratio, poolSides.precA);
+        if (aNeed <= userBalanceA + 1e-12) {
+          return {
+            a: aNeed,
+            b: floorToPrecision(aNeed * ratio, poolSides.precB),
+            clamped: false,
+          };
+        }
+        const a = floorToPrecision(userBalanceA, poolSides.precA);
+        return {
+          a,
+          b: floorToPrecision(a * ratio, poolSides.precB),
+          clamped: true,
+        };
+      }
+      const aTry = floorToPrecision(userBalanceA, poolSides.precA);
+      const bNeed = floorToPrecision(aTry * ratio, poolSides.precB);
+      if (bNeed <= userBalanceB + 1e-12) {
+        return { a: aTry, b: bNeed, clamped: false };
+      }
+      const b = floorToPrecision(userBalanceB, poolSides.precB);
+      return {
+        a: floorToPrecision(b / ratio, poolSides.precA),
+        b,
+        clamped: true,
+      };
+    },
+    [poolSides, userBalanceA, userBalanceB, floorToPrecision],
+  );
+
+  const applyStakePair = useCallback(
+    (aHum, bHum, notice) => {
+      const a = Number(aHum) || 0;
+      const b = Number(bHum) || 0;
+      setAStake(a);
+      setBStake(b);
+      form.setValue("stakeA", a);
+      form.setValue("stakeB", b);
+      setTotalReceiving(calcShareReceive(a, b));
+      setStakeNotice(notice || "");
+    },
+    [calcShareReceive, form],
+  );
+
+  const handleStakeInput = useCallback(
+    (side, input) => {
+      if (!poolSides) return;
+      const want = parseFloat(input);
+      if (!isFinite(want) || want <= 0) return;
+      const ratio = poolSides.humanB / poolSides.humanA;
+      if (!isFinite(ratio) || ratio <= 0) return;
+      let a;
+      let b;
+      let clamped = false;
+      if (side === "A") {
+        a = floorToPrecision(want, poolSides.precA);
+        b = floorToPrecision(a * ratio, poolSides.precB);
+        if (a > userBalanceA + 1e-12 || b > userBalanceB + 1e-12) {
+          const max = computeMaxStakePair("A");
+          a = max.a;
+          b = max.b;
+          clamped = true;
+        }
+      } else {
+        b = floorToPrecision(want, poolSides.precB);
+        a = floorToPrecision(b / ratio, poolSides.precA);
+        if (a > userBalanceA + 1e-12 || b > userBalanceB + 1e-12) {
+          const max = computeMaxStakePair("B");
+          a = max.a;
+          b = max.b;
+          clamped = true;
+        }
+      }
+      applyStakePair(
+        a,
+        b,
+        clamped ? t("PoolStake:adjustedToMax") : "",
+      );
+    },
+    [
+      poolSides,
+      floorToPrecision,
+      userBalanceA,
+      userBalanceB,
+      computeMaxStakePair,
+      applyStakePair,
+      t,
+    ],
+  );
+
+  const handleStakeMax = useCallback(
+    (priority) => {
+      // A Max click always lands on the max affordable pair by construction,
+      // so clear any stale notice rather than claiming an over-balance.
+      const max = computeMaxStakePair(priority);
+      applyStakePair(max.a, max.b, "");
+    },
+    [computeMaxStakePair, applyStakePair],
+  );
+
+  const applyUnstakeAmount = useCallback(
+    (shareHum, notice) => {
+      const amount = Number(shareHum) || 0;
+      setWithdrawAmount(amount);
+      form.setValue("withdrawalAmount", amount ? String(amount) : "");
+      const pair = calcWithdrawPair(amount);
+      setWithdrawingA(pair.a);
+      setWithdrawingB(pair.b);
+      setUnstakeNotice(notice || "");
+    },
+    [calcWithdrawPair, form],
+  );
+
+  const handleUnstakeInput = useCallback(
+    (input) => {
+      const want = parseFloat(input);
+      if (!isFinite(want) || want <= 0) return;
+      const sharePrec = foundPool?.share_asset_details?.precision ?? 0;
+      const floored = floorToPrecision(want, sharePrec);
+      if (floored > userShareBalance + 1e-12) {
+        applyUnstakeAmount(
+          floorToPrecision(userShareBalance, sharePrec),
+          t("PoolStake:adjustedToMax"),
+        );
+        return;
+      }
+      applyUnstakeAmount(floored, "");
+    },
+    [foundPool, floorToPrecision, userShareBalance, applyUnstakeAmount, t],
+  );
+
+  const handleUnstakeMax = useCallback(() => {
+    const sharePrec = foundPool?.share_asset_details?.precision ?? 0;
+    applyUnstakeAmount(floorToPrecision(userShareBalance, sharePrec), "");
+  }, [foundPool, floorToPrecision, userShareBalance, applyUnstakeAmount]);
+
+  const isStakeOverBalance = useMemo(() => {
+    return (
+      parseFloat(aStake) > userBalanceA + 1e-12 ||
+      parseFloat(bStake) > userBalanceB + 1e-12
+    );
+  }, [aStake, bStake, userBalanceA, userBalanceB]);
+
+  const isUnstakeOverBalance =
+    parseFloat(withdrawAmount) > userShareBalance + 1e-12;
+
   const [showDialog, setShowDialog] = useState(false);
   const [poolKey, setPoolKey] = useState("default_pool_key");
   useEffect(() => {
@@ -519,6 +806,27 @@ export default function PoolStake(properties) {
     }
     setPoolKey(`pool_key${Date.now()}`);
   }, [pool]);
+
+  // Reset stake/unstake inputs when the pool or its assets change, so stale
+  // amounts from a previous pool can't sit over the new balances.
+  // Note: deliberately keyed on ids only — foundPool object identity changes
+  // on every live block update and must not wipe user input.
+  const assetAId = assetA && assetA.id ? assetA.id : "";
+  const assetBId = assetB && assetB.id ? assetB.id : "";
+  useEffect(() => {
+    setAStake(0);
+    setBStake(0);
+    setTotalReceiving(0);
+    setWithdrawAmount(0);
+    setWithdrawingA(0);
+    setWithdrawingB(0);
+    setStakeNotice("");
+    setUnstakeNotice("");
+    form.setValue("stakeA", 0);
+    form.setValue("stakeB", 0);
+    form.setValue("withdrawalAmount", "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool, assetAId, assetBId]);
 
   const poolRow = useCallback(({ index, style }) => {
     const _pool = finalPools[index];
@@ -599,6 +907,14 @@ export default function PoolStake(properties) {
   }, [pool, foundPool, foundPoolDetails, assetA, assetB]);
 
   const [stakeTab, setStakeTab] = useState("stake");
+
+  const isStakeSubmitDisabled =
+    !(parseFloat(aStake) > 0 && parseFloat(bStake) > 0) ||
+    isStakeOverBalance;
+  const isUnstakeSubmitDisabled =
+    !(parseFloat(withdrawAmount) > 0) || isUnstakeOverBalance;
+  const isSubmitDisabled =
+    stakeTab === "stake" ? isStakeSubmitDisabled : isUnstakeSubmitDisabled;
 
   return (
     <>
@@ -979,8 +1295,20 @@ export default function PoolStake(properties) {
                                 </div>
                                 <div className="font-mono text-lg tabular-nums dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
                                   {foundPool && foundPoolDetails
-                                    ? foundPool.readable_balance_a.split(" ")[0]
+                                    ? readablePoolA
                                     : "0"}
+                                </div>
+                                <div className="mt-1 text-[11px] font-mono tabular-nums text-muted-foreground">
+                                  {t("PoolStake:balance", {
+                                    amount: userBalanceA.toLocaleString(
+                                      undefined,
+                                      {
+                                        minimumFractionDigits: assetA.precision,
+                                        maximumFractionDigits: assetA.precision,
+                                      },
+                                    ),
+                                    symbol: assetA.symbol,
+                                  })}
                                 </div>
                               </div>
                             </div>
@@ -995,8 +1323,20 @@ export default function PoolStake(properties) {
                                 </div>
                                 <div className="font-mono text-lg tabular-nums dark:text-[hsl(var(--accent-2-fg)/0.9)] text-[hsl(var(--accent-2-fg))]">
                                   {foundPool && foundPoolDetails
-                                    ? foundPool.readable_balance_b.split(" ")[0]
+                                    ? readablePoolB
                                     : "0"}
+                                </div>
+                                <div className="mt-1 text-[11px] font-mono tabular-nums text-muted-foreground">
+                                  {t("PoolStake:balance", {
+                                    amount: userBalanceB.toLocaleString(
+                                      undefined,
+                                      {
+                                        minimumFractionDigits: assetB.precision,
+                                        maximumFractionDigits: assetB.precision,
+                                      },
+                                    ),
+                                    symbol: assetB.symbol,
+                                  })}
                                 </div>
                               </div>
                             </div>
@@ -1073,13 +1413,28 @@ export default function PoolStake(properties) {
                                         }
                                         className="!bg-card/40 border-border text-foreground placeholder:text-muted-foreground/50"
                                       />
+                                      <div className="mt-1 text-[11px] font-mono tabular-nums text-muted-foreground">
+                                        {t("PoolStake:balance", {
+                                          amount:
+                                            userBalanceA.toLocaleString(
+                                              undefined,
+                                              {
+                                                minimumFractionDigits:
+                                                  assetA.precision,
+                                                maximumFractionDigits:
+                                                  assetA.precision,
+                                              },
+                                            ),
+                                          symbol: assetA.symbol,
+                                        })}
+                                      </div>
                                     </div>
-                                    <div className="col-span-4 ml-3">
+                                    <div className="col-span-4 ml-3 flex flex-wrap items-center gap-2">
                                       <Popover>
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                           <span
-                                            onClick={() => {
-                                              event.preventDefault();
+                                            onClick={(e) => {
+                                              e.preventDefault();
                                             }}
                                             className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors cursor-pointer"
                                           >
@@ -1109,88 +1464,7 @@ export default function PoolStake(properties) {
                                                     regex.test(input)
                                                   ) {
                                                     field.onChange(input);
-                                                    setAStake(input);
-
-                                                    if (
-                                                      foundPool.balance_a &&
-                                                      foundPool.balance_b
-                                                    ) {
-                                                      const _aAmount =
-                                                        parseFloat(input);
-                                                      const _bAmount =
-                                                        parseFloat(
-                                                          (
-                                                            _aAmount *
-                                                            (humanReadableFloat(
-                                                              Number(
-                                                                foundPool.balance_b,
-                                                              ),
-                                                              foundPool.asset_b_precision,
-                                                            ) /
-                                                              humanReadableFloat(
-                                                                Number(
-                                                                  foundPool.balance_a,
-                                                                ),
-                                                                foundPool.asset_a_precision,
-                                                              ))
-                                                          ).toFixed(
-                                                            foundPool.asset_a_precision,
-                                                          ),
-                                                        );
-
-                                                      setBStake(_bAmount);
-                                                      form.setValue(
-                                                        "stakeB",
-                                                        _bAmount,
-                                                      );
-
-                                                      const _supply =
-                                                        humanReadableFloat(
-                                                          foundPoolDetails.current_supply,
-                                                          foundPool
-                                                            .share_asset_details
-                                                            .precision,
-                                                        );
-
-                                                      const balanceA =
-                                                        humanReadableFloat(
-                                                          Number(
-                                                            foundPool.balance_a,
-                                                          ),
-                                                          foundPool.asset_a_precision,
-                                                        );
-
-                                                      const balanceB =
-                                                        humanReadableFloat(
-                                                          Number(
-                                                            foundPool.balance_b,
-                                                          ),
-                                                          foundPool.asset_b_precision,
-                                                        );
-
-                                                      const shareAssetAmountA =
-                                                        (_aAmount / balanceA) *
-                                                        _supply;
-                                                      const shareAssetAmountB =
-                                                        (_bAmount / balanceB) *
-                                                        _supply;
-
-                                                      const shareAssetAmount =
-                                                        Math.min(
-                                                          shareAssetAmountA,
-                                                          shareAssetAmountB,
-                                                        );
-
-                                                      setTotalReceiving(
-                                                        parseFloat(
-                                                          shareAssetAmount.toFixed(
-                                                            foundPool
-                                                              .share_asset_details
-                                                              .precision,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
+                                                    handleStakeInput("A", input);
                                                   }
                                                 }}
                                               />
@@ -1198,6 +1472,16 @@ export default function PoolStake(properties) {
                                           />
                                         </PopoverContent>
                                       </Popover>
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleStakeMax("A");
+                                        }}
+                                        className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors cursor-pointer"
+                                      >
+                                        {t("PoolStake:stakeMax")}
+                                      </button>
                                     </div>
                                   </div>
                                 </FieldContent>
@@ -1226,13 +1510,28 @@ export default function PoolStake(properties) {
                                         }
                                         className="!bg-card/40 border-border text-foreground placeholder:text-muted-foreground/50"
                                       />
+                                      <div className="mt-1 text-[11px] font-mono tabular-nums text-muted-foreground">
+                                        {t("PoolStake:balance", {
+                                          amount:
+                                            userBalanceB.toLocaleString(
+                                              undefined,
+                                              {
+                                                minimumFractionDigits:
+                                                  assetB.precision,
+                                                maximumFractionDigits:
+                                                  assetB.precision,
+                                              },
+                                            ),
+                                          symbol: assetB.symbol,
+                                        })}
+                                      </div>
                                     </div>
-                                    <div className="col-span-4 ml-3">
+                                    <div className="col-span-4 ml-3 flex flex-wrap items-center gap-2">
                                       <Popover>
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                           <span
-                                            onClick={() => {
-                                              event.preventDefault();
+                                            onClick={(e) => {
+                                              e.preventDefault();
                                             }}
                                             className="inline-flex items-center rounded-md border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))] hover:bg-[hsl(var(--accent-2)/0.2)] hover:border-[hsl(var(--accent-2)/0.5)] transition-colors cursor-pointer"
                                           >
@@ -1262,88 +1561,7 @@ export default function PoolStake(properties) {
                                                     regex.test(input)
                                                   ) {
                                                     field.onChange(input);
-                                                    setBStake(input);
-
-                                                    if (
-                                                      foundPool.balance_a &&
-                                                      foundPool.balance_b
-                                                    ) {
-                                                      const _bAmount =
-                                                        parseFloat(input);
-                                                      const _aAmount =
-                                                        parseFloat(
-                                                          (
-                                                            _bAmount *
-                                                            (humanReadableFloat(
-                                                              Number(
-                                                                foundPool.balance_a,
-                                                              ),
-                                                              foundPool.asset_a_precision,
-                                                            ) /
-                                                              humanReadableFloat(
-                                                                Number(
-                                                                  foundPool.balance_b,
-                                                                ),
-                                                                foundPool.asset_b_precision,
-                                                              ))
-                                                          ).toFixed(
-                                                            foundPool.asset_a_precision,
-                                                          ),
-                                                        );
-
-                                                      setAStake(_aAmount);
-                                                      form.setValue(
-                                                        "stakeA",
-                                                        _aAmount,
-                                                      );
-
-                                                      const _supply =
-                                                        humanReadableFloat(
-                                                          foundPoolDetails.current_supply,
-                                                          foundPool
-                                                            .share_asset_details
-                                                            .precision,
-                                                        );
-
-                                                      const balanceA =
-                                                        humanReadableFloat(
-                                                          Number(
-                                                            foundPool.balance_a,
-                                                          ),
-                                                          foundPool.asset_a_precision,
-                                                        );
-
-                                                      const balanceB =
-                                                        humanReadableFloat(
-                                                          Number(
-                                                            foundPool.balance_b,
-                                                          ),
-                                                          foundPool.asset_b_precision,
-                                                        );
-
-                                                      const shareAssetAmountA =
-                                                        (_aAmount / balanceA) *
-                                                        _supply;
-                                                      const shareAssetAmountB =
-                                                        (_bAmount / balanceB) *
-                                                        _supply;
-
-                                                      const shareAssetAmount =
-                                                        Math.min(
-                                                          shareAssetAmountA,
-                                                          shareAssetAmountB,
-                                                        );
-
-                                                      setTotalReceiving(
-                                                        parseFloat(
-                                                          shareAssetAmount.toFixed(
-                                                            foundPool
-                                                              .share_asset_details
-                                                              .precision,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
+                                                    handleStakeInput("B", input);
                                                   }
                                                 }}
                                               />
@@ -1351,10 +1569,34 @@ export default function PoolStake(properties) {
                                           />
                                         </PopoverContent>
                                       </Popover>
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleStakeMax("B");
+                                        }}
+                                        className="inline-flex items-center rounded-md border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))] hover:bg-[hsl(var(--accent-2)/0.2)] hover:border-[hsl(var(--accent-2)/0.5)] transition-colors cursor-pointer"
+                                      >
+                                        {t("PoolStake:stakeMax")}
+                                      </button>
                                     </div>
                                   </div>
                                 </FieldContent>
                               </Field>
+                              {stakeNotice || isStakeOverBalance ? (
+                                <div
+                                  className={`mb-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
+                                    isStakeOverBalance
+                                      ? "border-[hsl(var(--accent-danger)/0.4)] bg-[hsl(var(--accent-danger)/0.1)] text-[hsl(var(--accent-danger-fg))]"
+                                      : "border-[hsl(var(--accent-warning)/0.4)] bg-[hsl(var(--accent-warning)/0.1)] text-[hsl(var(--accent-warning-fg))]"
+                                  }`}
+                                >
+                                  <ExclamationTriangleIcon className="h-3.5 w-3.5 shrink-0" />
+                                  {isStakeOverBalance
+                                    ? t("PoolStake:insufficientBalance")
+                                    : stakeNotice}
+                                </div>
+                              ) : null}
                               <Field className="mb-4">
                                 <FieldLabel className="text-foreground/80">
                                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
@@ -1412,13 +1654,30 @@ export default function PoolStake(properties) {
                                         }
                                         className="!bg-card/40 border-border text-foreground placeholder:text-muted-foreground/50"
                                       />
+                                      <div className="mt-1 text-[11px] font-mono tabular-nums text-muted-foreground">
+                                        {t("PoolStake:balance", {
+                                          amount:
+                                            userShareBalance.toLocaleString(
+                                              undefined,
+                                              {
+                                                minimumFractionDigits:
+                                                  foundPool.share_asset_details
+                                                    .precision,
+                                                maximumFractionDigits:
+                                                  foundPool.share_asset_details
+                                                    .precision,
+                                              },
+                                            ),
+                                          symbol: foundPool.share_asset_symbol,
+                                        })}
+                                      </div>
                                     </div>
-                                    <div className="col-span-4 ml-3">
+                                    <div className="col-span-4 ml-3 flex flex-wrap items-center gap-2">
                                       <Popover>
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                           <span
-                                            onClick={() => {
-                                              event.preventDefault();
+                                            onClick={(e) => {
+                                              e.preventDefault();
                                             }}
                                             className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors cursor-pointer"
                                           >
@@ -1452,68 +1711,8 @@ export default function PoolStake(properties) {
                                                     input.length &&
                                                     regex.test(input)
                                                   ) {
-                                                    const _input = parseFloat(
-                                                      Number(input).toFixed(
-                                                        foundPool
-                                                          .share_asset_details
-                                                          .precision,
-                                                      ),
-                                                    );
-
                                                     field.onChange(input);
-                                                    setWithdrawAmount(_input);
-
-                                                    const _supply =
-                                                      humanReadableFloat(
-                                                        foundPoolDetails.current_supply,
-                                                        foundPool
-                                                          .share_asset_details
-                                                          .precision,
-                                                      );
-
-                                                    const _balanceA =
-                                                      humanReadableFloat(
-                                                        Number(
-                                                          foundPool.balance_a,
-                                                        ),
-                                                        foundPool.asset_a_precision,
-                                                      );
-
-                                                    const _balanceB =
-                                                      humanReadableFloat(
-                                                        Number(
-                                                          foundPool.balance_b,
-                                                        ),
-                                                        foundPool.asset_b_precision,
-                                                      );
-
-                                                    const _withdrawRatio =
-                                                      _input / _supply;
-                                                    const _allocatedA =
-                                                      parseFloat(
-                                                        (
-                                                          _balanceA *
-                                                          _withdrawRatio
-                                                        ).toFixed(
-                                                          foundPool.asset_a_precision,
-                                                        ),
-                                                      );
-                                                    const _allocatedB =
-                                                      parseFloat(
-                                                        (
-                                                          _balanceB *
-                                                          _withdrawRatio
-                                                        ).toFixed(
-                                                          foundPool.asset_b_precision,
-                                                        ),
-                                                      );
-
-                                                    setWithdrawingA(
-                                                      _allocatedA,
-                                                    );
-                                                    setWithdrawingB(
-                                                      _allocatedB,
-                                                    );
+                                                    handleUnstakeInput(input);
                                                   }
                                                 }}
                                               />
@@ -1521,11 +1720,35 @@ export default function PoolStake(properties) {
                                           />
                                         </PopoverContent>
                                       </Popover>
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleUnstakeMax();
+                                        }}
+                                        className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors cursor-pointer"
+                                      >
+                                        {t("PoolStake:unstakeMax")}
+                                      </button>
                                     </div>
                                   </div>
                                 </FieldContent>
                               </Field>
 
+                              {unstakeNotice || isUnstakeOverBalance ? (
+                                <div
+                                  className={`mb-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
+                                    isUnstakeOverBalance
+                                      ? "border-[hsl(var(--accent-danger)/0.4)] bg-[hsl(var(--accent-danger)/0.1)] text-[hsl(var(--accent-danger-fg))]"
+                                      : "border-[hsl(var(--accent-warning)/0.4)] bg-[hsl(var(--accent-warning)/0.1)] text-[hsl(var(--accent-warning-fg))]"
+                                  }`}
+                                >
+                                  <ExclamationTriangleIcon className="h-3.5 w-3.5 shrink-0" />
+                                  {isUnstakeOverBalance
+                                    ? t("PoolStake:insufficientBalance")
+                                    : unstakeNotice}
+                                </div>
+                              ) : null}
                               <Field className="mb-4">
                                 <FieldLabel className="text-foreground/80">
                                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">
@@ -1610,7 +1833,13 @@ export default function PoolStake(properties) {
                       {isFormReady ? (
                         <button
                           type="submit"
-                          className="mt-6 w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)] hover:shadow-[0_12px_40px_-12px_rgba(168,85,247,0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-2))] hover:to-[hsl(var(--accent-3))] transition-all flex items-center justify-center gap-2 text-base group"
+                          disabled={isSubmitDisabled}
+                          title={
+                            isSubmitDisabled
+                              ? t("PoolStake:insufficientBalance")
+                              : undefined
+                          }
+                          className="mt-6 w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)] hover:shadow-[0_12px_40px_-12px_rgba(168,85,247,0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-2))] hover:to-[hsl(var(--accent-3))] transition-all flex items-center justify-center gap-2 text-base group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)]"
                         >
                           <Layers
                             className="h-4 w-4 group-hover:scale-110 transition-transform"
@@ -1845,7 +2074,8 @@ export default function PoolStake(properties) {
           blockNumber={liveStakePool.blockNumber}
           nodeUrl={currentNode ? currentNode.url : null}
           warningThresholdSec={10}
-        />
+        
+        chain={_chain}/>
       </div>
     </>
   );

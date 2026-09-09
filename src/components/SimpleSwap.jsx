@@ -1550,7 +1550,8 @@ export default function SimpleSwap(properties) {
           blockNumber={livePool.blockNumber}
           nodeUrl={currentNode ? currentNode.url : null}
           warningThresholdSec={10}
-        />
+        
+        chain={_chain}/>
       </div>
     </>
   );

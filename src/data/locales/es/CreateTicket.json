@@ -22,6 +22,24 @@
     "description": "Vista previa de entradas obtenidas recientemente.",
     "note": "Obteniendo una pequeña muestra de tickets recientes para dar contexto."
   },
+  "requestCard": {
+    "title": "Solicitar THUMBSUP.1",
+    "description": "Los tickets requieren un saldo equivalente de THUMBSUP.1.",
+    "btsBalance": "Sus BTS",
+    "thumbsupBalance": "Sus THUMBSUP.1",
+    "deficit": "Total requerido: {{need}} THUMBSUP.1 ({{locked}} ya bloqueados + {{new}} nuevos); su déficit es {{deficit}}.",
+    "useDeficit": "Usar déficit",
+    "amountHeader": "Cantidad a solicitar",
+    "amountDescription": "No puede superar su saldo de BTS. 'abit' le enviará esta cantidad de THUMBSUP.1 si aprueba la propuesta.",
+    "max": "Máx",
+    "maxHint": "Máximo solicitable: {{max}} THUMBSUP.1 (su saldo de BTS).",
+    "exceedsBalance": "La cantidad solicitada no puede superar su saldo de BTS.",
+    "loginRequired": "Inicie sesión para solicitar THUMBSUP.1.",
+    "resolvingAbit": "Resolviendo la cuenta 'abit'…",
+    "proposalNote": "Esto crea una propuesta (vencimiento de 7 días, revisión de 1 h) donde 'abit' paga la comisión. Debe aprobarla antes de que reciba los tokens.",
+    "submit": "Solicitar THUMBSUP.1",
+    "dialogHeader": "Solicitar THUMBSUP.1 a abit"
+  },
   "myTickets": {
     "title": "Mis entradas",
     "description": "Sus boletos actuales, totales y poder de voto efectivo.",
@@ -54,6 +72,10 @@
     "newType": "Nuevo tipo",
     "amountNewTarget": "Monto adicional (opcional)",
     "cancel": "Cancelar",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "lockedAmount": "Cantidad bloqueada",
+    "votingPower": "Poder de voto actual",
+    "frozenWarning": "Este ticket está bloqueado para siempre y no se puede actualizar ni retirar on-chain.",
+    "sameTargetHint": "El nuevo tipo coincide con el objetivo actual del ticket; elija un tipo diferente para continuar."
   }
 }

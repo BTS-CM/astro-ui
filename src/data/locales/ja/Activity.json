@@ -227,7 +227,8 @@
       "narrative": "ナラティブ: {{narrative}}",
       "title": "タイトル: {{title}}",
       "tags": "タグ: {{tags}}",
-      "type": "タイプ: {{type}}"
+      "type": "タイプ: {{type}}",
+      "is_prediction_market": "予測市場です: {{is_prediction_market}}"
     },
     "tooltip": "Bitshares ブロックチェーン上に資産を作成します"
   },
@@ -285,7 +286,8 @@
       "narrative": "ナラティブ: {{narrative}}",
       "title": "タイトル: {{title}}",
       "tags": "タグ: {{tags}}",
-      "type": "タイプ: {{type}}"
+      "type": "タイプ: {{type}}",
+      "is_prediction_market": "予測市場です: {{is_prediction_market}}"
     },
     "tooltip": "アセットの設定を更新します"
   },
@@ -528,7 +530,7 @@
       "result": "次の証人権限の更新が承認されました。"
     },
     "rows": {
-      "withrdaw_from_account": "アカウントからの出金: {{withrdaw_from_account}} ({{withrdaw_from_accountOP}})",
+      "withdraw_from_account": "アカウントからの出金: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "承認されたアカウント: {{authorized_account}} ({{authorized_accountOP}})",
       "permission_to_update": "更新権限: {{permission_to_update}}",
       "withdrawal_limited": "出金限度額: {{withdrawal_limit}}",
@@ -738,7 +740,7 @@
     },
     "rows": {
       "deposit_to_account": "アカウントへの入金: {{deposit_to_account}} ({{deposit_to_accountOP}})",
-      "balance_to_claim": "請求残高: {{balance_to_claim}} ({{asset_id}})",
+      "balance_to_claim": "請求残高: {{balance_to_claim}}",
       "balance_owner_key": "残高所有者キー: {{balance_owner_key}}",
       "total_claimed": "請求総額: {{total_claimed}} ({{asset_id}})"
     },
@@ -833,7 +835,8 @@
     },
     "rows": {
       "issuer": "発行者: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "請求額: {{amount_to_claim}} ({{asset_id}})"
+      "amount_to_claim": "請求額: {{amount_to_claim}} ({{asset_id}})",
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "資産から手数料を請求する"
   },
@@ -1238,7 +1241,7 @@
     },
     "tooltip": "SameT ファンドから借ります。"
   },
-  "samt_fund_repay": {
+  "samet_fund_repay": {
     "method": "SameT 基金の返済",
     "title": "SameT 資金の返済リクエスト",
     "result": "SameTファンド返済結果",

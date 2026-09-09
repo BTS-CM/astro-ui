@@ -1,56 +1,56 @@
 {
-  "title": "Blockchain Explorer",
-  "subtitle": "Konten, Assets, Objekte, Transaktionen und Blöcke nachschlagen. Ergebnisse erscheinen in einem Dialog mit kopierbarem JSON.",
-  "search": "Suchen",
-  "copy": "JSON kopieren",
-  "copied": "Kopiert",
-  "favourite": "Favorit",
-  "removeFavourite": "Favorit entfernen",
-  "sampleLabel": "Beispiel:",
-  "jsonPlaceholder": "JSON wird hier angezeigt",
-  "account": {
-    "title": "Konto-Suche",
-    "description": "Suche nach Kontoname oder ID — zeigt vollständiges JSON & Favorit",
-    "placeholder": "z.B. nathan oder 1.2.123",
-    "hint": "ws: get_accounts + get_full_accounts",
-    "errorEmpty": "Kontonamen eingeben",
-    "dialogTitle": "Konto: {{name}} ({{id}})",
-    "dialogSubtitle": "Chain: {{chain}} • Vollständiges Konto-JSON"
-  },
-  "asset": {
-    "title": "Asset-Suche",
-    "description": "Suche nach Symbol oder ID — zeigt Asset-JSON & Favorit",
-    "placeholder": "z.B. BTS oder 1.3.0",
-    "hint": "ws: get_asset_id_from_string + get_objects",
-    "errorEmpty": "Asset-Symbol eingeben",
-    "dialogTitle": "Asset: {{symbol}} ({{id}})",
-    "dialogSubtitle": "Chain: {{chain}} • Asset-JSON"
-  },
-  "object": {
-    "title": "Objekt-ID Suche",
-    "description": "Jedes x.x.x Objekt suchen — zeigt rohes Objekt-JSON",
-    "placeholder": "z.B. 1.2.123 oder 2.1.0",
-    "hint": "ws: get_objects (kein Abo)",
-    "errorInvalid": "Gültige Objekt-ID wie 1.2.123 oder 2.1.0 eingeben",
-    "dialogTitle": "Objekt: {{id}}",
-    "dialogSubtitle": "Chain: {{chain}}"
-  },
-  "tx": {
-    "title": "Transaktions-Hash Suche",
-    "description": "Suche per Hash — aus Elasticsearch",
-    "placeholder": "40 Hex-Zeichen",
-    "errorEmpty": "Transaktions-Hash eingeben",
-    "errorInvalid": "Erwartet 40 oder 64 Hex-Zeichen",
-    "dialogTitle": "Transaktion: {{hash}}",
-    "dialogSubtitle": "Chain: {{chain}}"
-  },
-  "block": {
-    "title": "Blocknummer-Suche",
-    "description": "Suche per Blocknummer — zeigt Block-JSON",
-    "placeholder": "z.B. 19446934",
-    "hint": "ws: get_block + get_block_header",
-    "errorInvalid": "Gültige Blocknummer eingeben",
-    "dialogTitle": "Block #{{num}}",
-    "dialogSubtitle": "Chain: {{chain}}"
-  }
+    "title": "Blockchain-Explorer",
+    "subtitle": "Konten, Assets, Objekte, Transaktionen und Blöcke nachschlagen. Ergebnisse erscheinen in einem Dialog mit kopierbarem JSON.",
+    "search": "Suchen",
+    "copy": "JSON kopieren",
+    "copied": "Kopiert",
+    "favourite": "Favorit",
+    "removeFavourite": "Favorit entfernen",
+    "sampleLabel": "Beispiel:",
+    "jsonPlaceholder": "JSON wird hier angezeigt",
+    "account": {
+        "title": "Konto-Suche",
+        "description": "Suche nach Kontoname oder ID — zeigt vollständiges JSON & Favorit",
+        "placeholder": "z.B. nathan oder 1.2.123",
+        "hint": "ws: get_accounts + get_full_accounts",
+        "errorEmpty": "Kontonamen eingeben",
+        "dialogTitle": "Konto: {{name}} ({{id}})",
+        "dialogSubtitle": "Chain: {{chain}} • Vollständiges Konto-JSON"
+    },
+    "asset": {
+        "title": "Asset-Suche",
+        "description": "Suche nach Symbol oder ID — zeigt Asset-JSON & Favorit",
+        "placeholder": "z.B. BTS oder 1.3.0",
+        "hint": "ws: get_asset_id_from_string + get_objects",
+        "errorEmpty": "Asset-Symbol eingeben",
+        "dialogTitle": "Asset: {{symbol}} ({{id}})",
+        "dialogSubtitle": "Chain: {{chain}} • Asset-JSON"
+    },
+    "object": {
+        "title": "Objekt-ID Suche",
+        "description": "Jedes x.x.x Objekt suchen — zeigt rohes Objekt-JSON",
+        "placeholder": "z.B. 1.2.123 oder 2.1.0",
+        "hint": "ws: get_objects (kein Abo)",
+        "errorInvalid": "Gültige Objekt-ID wie 1.2.123 oder 2.1.0 eingeben",
+        "dialogTitle": "Objekt: {{id}}",
+        "dialogSubtitle": "Chain: {{chain}}"
+    },
+    "tx": {
+        "title": "Transaktions-Hash Suche",
+        "description": "Suche per Hash — aus Elasticsearch",
+        "placeholder": "40 Hex-Zeichen",
+        "errorEmpty": "Transaktions-Hash eingeben",
+        "errorInvalid": "Erwartet 40 oder 64 Hex-Zeichen",
+        "dialogTitle": "Transaktion: {{hash}}",
+        "dialogSubtitle": "Chain: {{chain}}"
+    },
+    "block": {
+        "title": "Blocknummer-Suche",
+        "description": "Suche per Blocknummer — zeigt Block-JSON",
+        "placeholder": "z.B. 19446934",
+        "hint": "ws: get_block + get_block_header",
+        "errorInvalid": "Gültige Blocknummer eingeben",
+        "dialogTitle": "Block #{{num}}",
+        "dialogSubtitle": "Chain: {{chain}}"
+    }
 }

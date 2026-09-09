@@ -34,6 +34,7 @@
   "issuedAssets": "발행된 자산",
   "create_smartcoin": "스마트코인 생성",
   "create_uia": "사용자 발행 자산 생성",
+  "create_pool": "유동성 풀 생성",
   "blockExplorer": "라이브 블록체인 데이터",
   "accountLists": "계정 목록",
   "proposals": "제안된 운영",
@@ -120,7 +121,8 @@
     "network_fees": "모든 네트워크 수수료를 확인하세요 — 표준 비용, KByte당 요금 및 평생 회원 요율.",
     "explorer": "이 페이지에서 계정, 자산, 객체, 트랜잭션 해시 또는 블록 번호를 조회하고 복사 및 즐겨찾기와 함께 원시 JSON을 봅니다.",
     "top-operations": "이 페이지를 사용하여 지난 30일 동안 가장 자주 실행된 블록체인 작업을 발생 횟수 순으로 확인하세요.",
-    "change_password": "아래 양식을 사용하여 account_update 작업을 통해 클라우드 지갑 비밀번호를 변경하세요."
+    "change_password": "아래 양식을 사용하여 account_update 작업을 통해 클라우드 지갑 비밀번호를 변경하세요.",
+    "trollbox": "BitShares 블록체인에 존재하는 채널에서 커뮤니티와 채팅하세요."
   },
   "back": "돌아가기",
   "usage": "다음과 함께 사용하도록 설계됨 ",

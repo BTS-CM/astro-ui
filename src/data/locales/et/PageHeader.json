@@ -34,6 +34,7 @@
   "issuedAssets": "Teie väljastatud varad",
   "create_smartcoin": "Loo smartcoin",
   "create_uia": "Loo kasutaja väljastatud vara",
+  "create_pool": "Loo likviidsusbassein",
   "blockExplorer": "Reaalajas plokiahela andmed",
   "accountLists": "Kontode loendid",
   "proposals": "Kavandatavad toimingud",
@@ -120,7 +121,8 @@
     "network_fees": "Sirvi kõiki võrgutasusid üksikasjalikult — standardkulud, tasud KByte'i kohta ja eluaegse liikme hinnad.",
     "explorer": "Kasuta lehte iga konto, vara, objekti, tehingu räsi või ploki numbri otsimiseks ja vaata toor JSON-i kopeerimise ja lemmikutega.",
     "top-operations": "Kasuta seda lehte, et vaadata viimase 30 päeva jooksul enim teostatud plokiahela toiminguid, järjestatuna esinemissageduse järgi.",
-    "change_password": "Kasuta allolevat vormi oma pilverahakoti parooli muutmiseks account_update operatsiooni kaudu."
+    "change_password": "Kasuta allolevat vormi oma pilverahakoti parooli muutmiseks account_update operatsiooni kaudu.",
+    "trollbox": "Vestle kogukonnaga kanalites, mis elavad täielikult BitSharesi plokiahelas."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

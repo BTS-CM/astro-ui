@@ -44,6 +44,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -65,7 +66,108 @@ import {
 } from "@/nanoeffects/Objects.ts";
 import DOMPurify from "dompurify";
 
-const RecentActivityRow = memo(function RecentActivityRow({ index, style, activity, opRowsById, buildingOps, t, usr }) {
+/**
+ * Fetch account names for ids missing from the map with a single batched
+ * get_objects call (beetvault-style), merging results into the map.
+ */
+async function fetchMissingAccountNames(
+  missingIds,
+  chain,
+  nodeUrl,
+  accountNameById
+) {
+  if (!missingIds.length) return;
+  try {
+    const store = createObjectStore([
+      chain || "bitshares",
+      JSON.stringify(missingIds),
+      nodeUrl || null,
+    ]);
+    const fetched = await new Promise((resolve) => {
+      let done = false;
+      const finish = (val) => {
+        if (!done) {
+          done = true;
+          resolve(val);
+        }
+      };
+      try {
+        const unsub = store.subscribe((s) => {
+          if (s && !s.loading && s.data) {
+            finish(s.data);
+            if (typeof unsub === "function") unsub();
+          } else if (s && !s.loading && s.error) {
+            finish(null);
+            if (typeof unsub === "function") unsub();
+          }
+        });
+      } catch (e) {
+        finish(null);
+      }
+      setTimeout(() => finish(null), 10000);
+    });
+    if (Array.isArray(fetched)) {
+      for (const a of fetched) {
+        if (a && a.id && a.name && !accountNameById.has(a.id)) {
+          accountNameById.set(a.id, a.name);
+        }
+      }
+    }
+  } catch (e) {
+    // Leave unresolved; callers fall back gracefully.
+  }
+}
+
+/**
+ * Beetvault-style beautification: extract the referenced account/asset ids,
+ * resolve them against the provided lookup maps, then run beautify().
+ * Returns [] when a referenced account is unresolved (beautify would throw
+ * reading `.accountName` of undefined) or when beautify produces no rows.
+ */
+async function beautifyOperation(
+  opObject,
+  opType,
+  accountNameById,
+  assetById
+) {
+  const { accountsToFetch, assetsToFetch } = await extractObjects(opObject);
+  const unresolvedAccounts = (accountsToFetch || []).filter(
+    (id) => !accountNameById.has(id)
+  );
+  if (unresolvedAccounts.length) return [];
+  const accountResults = (accountsToFetch || []).map((id) => {
+    const name = accountNameById.get(id);
+    return { id, name, accountName: name };
+  });
+  const assetResultsForOp = (assetsToFetch || [])
+    .map((id) => assetById.get(id))
+    .filter(Boolean);
+  const relevantOperationType = (operationTypes || []).find(
+    (o) => o.id === opType
+  );
+  const opKeyFallback = Object.entries(ChainTypes.operations).find(
+    ([, v]) => v === opType
+  )?.[0];
+  try {
+    const beautified =
+      (await beautify(
+        accountResults,
+        assetResultsForOp,
+        opObject,
+        [opType, opObject],
+        opType,
+        relevantOperationType || {
+          method: opKeyFallback || `operation_${opType}`,
+        }
+      )) || {};
+    return Array.isArray(beautified) ? beautified : beautified.rows || [];
+  } catch (e) {
+    console.debug("beautify failed for op type", opType, e);
+    return [];
+  }
+}
+
+const RecentActivityRow = memo(function RecentActivityRow({ index, style, activity, opRowsById, buildingOps, t, usr, currentNodeUrl }) {
   const activityItem = activity[index];
   const expirationDate = new Date(activityItem.block_data.block_time);
   const now = new Date();
@@ -106,6 +208,117 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
     const value = humanReadableFloat(fee.amount, precision);
     return `${value} ${symbol}`;
   }, [activityItem, usr]);
+
+  const beautificationMethod = opMethod || opKey;
+
+  const opId = activityItem.account_history.operation_id;
+  const bulkRows = opRowsById[opId] || [];
+
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [aboutRows, setAboutRows] = useState(null);
+  const [aboutLoading, setAboutLoading] = useState(false);
+
+  // react-window recycles row components for different items while scrolling,
+  // so reset the per-item About state whenever this row shows another operation.
+  useEffect(() => {
+    setAboutOpen(false);
+    setAboutRows(null);
+    setAboutLoading(false);
+  }, [opId]);
+
+  // Build the beautified rows on demand when the About dialog is opened,
+  // so it works even if the bulk prebuild hasn't resolved this operation.
+  // Mirrors the beetvault flow: extract ids, look up details, then beautify.
+  useEffect(() => {
+    if (!aboutOpen || aboutRows !== null || aboutLoading) return;
+    if (bulkRows.length || buildingOps) return;
+    let cancelled = false;
+    (async () => {
+      setAboutLoading(true);
+      try {
+        const opObject = activityItem.operation_history.op_object;
+        const opType = activityItem.operation_type;
+        const { accountsToFetch } = await extractObjects(opObject);
+        const accountNameById = new Map();
+        await fetchMissingAccountNames(
+          accountsToFetch || [],
+          usr?.chain,
+          currentNodeUrl,
+          accountNameById
+        );
+        const catalog =
+          usr?.chain === "bitshares" ? btsAllAssets : testAllAssets;
+        const assetById = new Map(
+          (catalog || []).map((a) => [
+            a.id,
+            { id: a.id, symbol: a.symbol, precision: a.precision },
+          ])
+        );
+        const rows = await beautifyOperation(
+          opObject,
+          opType,
+          accountNameById,
+          assetById
+        );
+        if (!cancelled) setAboutRows(rows);
+      } catch (e) {
+        if (!cancelled) setAboutRows([]);
+      } finally {
+        if (!cancelled) setAboutLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    aboutOpen,
+    aboutRows,
+    aboutLoading,
+    bulkRows,
+    buildingOps,
+    activityItem,
+    usr,
+    currentNodeUrl,
+  ]);
+
+  const aboutText = useMemo(() => {
+    const effectiveRows =
+      aboutRows && aboutRows.length ? aboutRows : bulkRows;
+    if (aboutLoading || (buildingOps && !effectiveRows.length)) {
+      return t("Market:loading");
+    }
+    if (!effectiveRows.length) {
+      // Always show the operation itself, even if beautification
+      // produced no rows for this operation type. The dialog title
+      // already names the operation type, so no title prefix here.
+      return JSON.stringify(
+        activityItem.operation_history.op_object,
+        null,
+        2
+      );
+    }
+    const lines = effectiveRows.map((row) => {
+      const template = t(
+        `Beautification:${beautificationMethod}.rows.${row.key}`,
+        { defaultValue: row.key }
+      );
+      // Beautification.json uses single-brace {param} placeholders,
+      // so interpolate the beautified params manually.
+      return String(template).replace(/\{(\w+)\}/g, (match, key) => {
+        const value = row.params ? row.params[key] : undefined;
+        return value !== undefined && value !== null ? String(value) : match;
+      });
+    });
+    return lines.join("\n");
+  }, [
+    aboutRows,
+    bulkRows,
+    aboutLoading,
+    buildingOps,
+    t,
+    activityItem,
+    beautificationMethod,
+  ]);
 
   const sanitizeAndDecode = (input) => {
     if (input === null || input === undefined) return "";
@@ -177,7 +390,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                             <div key={i} className="text-sm">
                               {sanitizeAndDecode(
                                 t(
-                                  `Activity:${opKey}.rows.${row.key}`,
+                                  `Activity:${beautificationMethod}.rows.${row.key}`,
                                   row.params || {}
                                 )
                               )}
@@ -251,7 +464,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                             <div key={i} className="text-sm">
                               {sanitizeAndDecode(
                                 t(
-                                  `Activity:${opKey}.rows.${row.key}`,
+                                  `Activity:${beautificationMethod}.rows.${row.key}`,
                                   row.params || {}
                                 )
                               )}
@@ -340,7 +553,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                             <div key={i} className="text-sm">
                               {sanitizeAndDecode(
                                 t(
-                                  `Activity:${opKey}.rows.${row.key}`,
+                                  `Activity:${beautificationMethod}.rows.${row.key}`,
                                   row.params || {}
                                 )
                               )}
@@ -376,6 +589,34 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
           <div className="text-sm mt-2">{feeDisplay}</div>
 
           <div className="flex items-center gap-2 justify-end">
+            <Dialog open={aboutOpen} onOpenChange={setAboutOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="outline">
+                  {t("PortfolioTabs:aboutButton")}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[560px] bg-card">
+                <DialogHeader>
+                  <DialogTitle>
+                    {t(`Beautification:${beautificationMethod}.title`, {
+                      defaultValue: t("PortfolioTabs:aboutButton"),
+                    })}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {t("Operations:" + opKey)}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid grid-cols-1">
+                  <div className="col-span-1">
+                    <Textarea
+                      readOnly
+                      className="h-72"
+                      value={aboutText}
+                    />
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
             <Dialog>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline">
@@ -603,6 +844,28 @@ export default function PortfolioRecentActivity() {
             ])
         );
 
+        // Beetvault-style: resolve every referenced account before
+        // beautifying, in a single batched get_objects call.
+        const wantedAccountIds = new Set();
+        for (const item of activity) {
+          try {
+            const { accountsToFetch } = await extractObjects(
+              item.operation_history.op_object
+            );
+            (accountsToFetch || []).forEach((id) => {
+              if (!accountNameById.has(id)) wantedAccountIds.add(id);
+            });
+          } catch (e) {
+            // Ignore; per-item beautification falls back gracefully below.
+          }
+        }
+        await fetchMissingAccountNames(
+          [...wantedAccountIds],
+          usr?.chain,
+          currentNode ? currentNode.url : null,
+          accountNameById
+        );
+
         const entries = await Promise.all(
           activity.map(async (item) => {
             const operationObject = item.operation_history.op_object;
@@ -610,33 +873,15 @@ export default function PortfolioRecentActivity() {
             const opId = item.account_history.operation_id;
 
             try {
-              // Select only the relevant accounts/assets for this operation from pre-fetched data
-              const { accountsToFetch, assetsToFetch } = await extractObjects(
-                operationObject
+              const rows = await beautifyOperation(
+                operationObject,
+                operationType,
+                accountNameById,
+                assetById
               );
-
-              const accountResults = (accountsToFetch || [])
-                .map((id) => {
-                  const name = accountNameById.get(id);
-                  return name ? { id, name } : null;
-                })
-                .filter(Boolean);
-
-              const assetResultsForOp = (assetsToFetch || [])
-                .map((id) => assetById.get(id))
-                .filter(Boolean);
-
-              const rows =
-                (await beautify(
-                  accountResults,
-                  assetResultsForOp,
-                  operationObject,
-                  operationType
-                )) || [];
-
               return [opId, rows];
             } catch (e) {
-              console.log(e);
+              console.debug("beautify failed for op", opId, e);
               return [opId, []];
             }
           })
@@ -653,9 +898,9 @@ export default function PortfolioRecentActivity() {
     }
 
     buildAllOperations();
-  }, [activity, usr, allAccounts, assetResults]);
+  }, [activity, usr, allAccounts, assetResults, currentNode]);
 
-  const recentActivityRowProps = useMemo(() => ({ activity, opRowsById, buildingOps, t, usr }), [activity, opRowsById, buildingOps, t, usr]);
+  const recentActivityRowProps = useMemo(() => ({ activity, opRowsById, buildingOps, t, usr, currentNodeUrl: currentNode ? currentNode.url : null }), [activity, opRowsById, buildingOps, t, usr, currentNode]);
 
   if (isTestnet) {
     return (

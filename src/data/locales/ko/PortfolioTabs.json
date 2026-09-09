@@ -24,6 +24,7 @@
   "blockNumber": "블록 번호",
   "timeSinceBroadcast": "방송 이후 시간",
   "viewOperationButton": "작업 보기",
+  "aboutButton": "정보",
   "operationJsonTitle": "JSON 작업",
   "operationJsonDescription": "이 작업의 내용을 확인하세요.",
   "viewAllButton": "모두보기",

@@ -176,6 +176,7 @@ export const PAGE_ACCENTS: Record<string, AccentTriple> = {
   pools: { primary: "#a855f7", secondary: "#6366f1", tertiary: "#d946ef" },
   configure_visuals: { primary: "#8b5cf6", secondary: "#6366f1", tertiary: "#d946ef" },
   airdrop_calculate: { primary: "#8b5cf6", secondary: "#d946ef", tertiary: "#6366f1" },
+  "top-operations": { primary: "#10b981", secondary: "#0ea5e9", tertiary: "#8b5cf6" },
 };
 
 // Fallback triple derived from the brand pair for pages not yet catalogued.
@@ -227,6 +228,7 @@ export const DEFAULT_ITEM_ACCENTS: Record<string, AccentPair> = {
   vote: { primary: "#6366f1", secondary: "#8b5cf6" },
   witnesses: { primary: "#f59e0b", secondary: "#f97316" },
   committee: { primary: "#10b981", secondary: "#14b8a6" },
+  committee_parameters: { primary: "#8b5cf6", secondary: "#a855f7" },
   governance: { primary: "#8b5cf6", secondary: "#a855f7" },
   create_worker: { primary: "#0ea5e9", secondary: "#3b82f6" },
   create_ticket: { primary: "#d946ef", secondary: "#ec4899" },

@@ -22,6 +22,24 @@
     "description": "最近取得したチケットをプレビューします。",
     "note": "コンテキストを提供するために、最近のチケットの小さなサンプルを取得します。"
   },
+  "requestCard": {
+    "title": "THUMBSUP.1をリクエスト",
+    "description": "チケットには同等のTHUMBSUP.1残高が必要です。",
+    "btsBalance": "あなたのBTS",
+    "thumbsupBalance": "あなたのTHUMBSUP.1",
+    "deficit": "必要な合計：{{need}} THUMBSUP.1（ロック済み{{locked}}＋新規{{new}}）。不足分は{{deficit}}です。",
+    "useDeficit": "不足分を使用",
+    "amountHeader": "リクエスト金額",
+    "amountDescription": "BTS残高を超えることはできません。提案が承認されると、「abit」がこの量のTHUMBSUP.1を送信します。",
+    "max": "最大",
+    "maxHint": "リクエスト可能な最大値：{{max}} THUMBSUP.1（あなたのBTS残高）。",
+    "exceedsBalance": "リクエスト金額はBTS残高を超えることはできません。",
+    "loginRequired": "THUMBSUP.1をリクエストするにはログインしてください。",
+    "resolvingAbit": "「abit」アカウントを解決中…",
+    "proposalNote": "これにより、「abit」が手数料を支払う提案（有効期限7日、レビュー1時間）が作成されます。トークンを受け取る前に承認が必要です。",
+    "submit": "THUMBSUP.1をリクエスト",
+    "dialogHeader": "abitからTHUMBSUP.1をリクエスト"
+  },
   "myTickets": {
     "title": "私のチケット",
     "description": "現在のチケット、合計、有効投票力。",
@@ -54,6 +72,10 @@
     "newType": "新しいタイプ",
     "amountNewTarget": "追加金額（任意）",
     "cancel": "キャンセル",
-    "continue": "続く"
+    "continue": "続く",
+    "lockedAmount": "ロック金額",
+    "votingPower": "現在の投票力",
+    "frozenWarning": "このチケットは永久ロックされており、オンチェーンで更新も引き出しもできません。",
+    "sameTargetHint": "新しいタイプがチケットの現在のターゲットと同じです。続行するには別のタイプを選択してください。"
   }
 }

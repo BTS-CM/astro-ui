@@ -6,6 +6,13 @@
         "hover2": "Nutzt die Fill-or-Kill-Auftragstechnologie, um entweder die gewünschten Preise zu erhalten oder die Bestellung zu stornieren.",
         "hover3": "Sehen Sie, mit wem Sie am DEX handeln und ob diese On-Fill-Bedingungen für ihre Aufträge aktiviert haben."
     },
+    "call_orders": {
+        "title": "Call-Orders",
+        "subtitle": "Deine Margin-Positionen über alle Smartcoins ansehen",
+        "hover1": "Sicherheiten und Schulden pro Smartcoin ansehen.",
+        "hover2": "DEX oder Instant Trade für das Paar öffnen.",
+        "hover3": "Position von der Smartcoin-Seite verwalten."
+    },
     "vote": {
         "title": "Abstimmung",
         "subtitle": "Stimmen Sie für Zeugen, Ausschussmitglieder und Arbeitnehmervorschläge",
@@ -28,7 +35,7 @@
         "hover3": "Gewähren Sie bereichsbezogene Berechtigungen an Konten oder Schlüssel."
     },
     "blind_transfers": {
-        "title": "Blind Transfers",
+        "title": "Blinde Transfers",
         "subtitle": "Erstellen Sie vertrauliche Blind-Transfer-Vorgänge",
         "hover1": "Verschieben Sie Guthaben in oder aus Blind-Commitments.",
         "hover2": "Übertragen Sie Wert zwischen Blind-Commitments.",
@@ -47,6 +54,12 @@
         "hover1": "Zeigen Sie, wer die meisten Stimmen erhalten hat.",
         "hover2": "Stellen Sie sich an, für wen die Mitglieder des Ausschusses gestimmt haben.",
         "hover3": "View Committee Core Token Balances."
+    },
+    "committee_parameters": {
+        "title": "Globale Parameter",
+        "subtitle": "Neue globale Blockchain-Parameter vorschlagen.",
+        "hover1": "Timing, Limits und Gebührenaufteilung bearbeiten.",
+        "hover2": "Änderungen per Komitee-Vorschlag einreichen."
     },
     "governance": {
         "title": "Rollenregistrierung",
@@ -427,6 +440,11 @@
         "subtitle": "Bestimmte Themes für individuelle Seiten zuweisen",
         "hover1": "Überschreiben Sie das aktive Theme für jede Seite in der App."
     },
+    "docs": {
+        "title": "Dokumentation",
+        "subtitle": "Anleitungen und Referenz zur Nutzung der App",
+        "hover1": "Durchsuche die Starlight-Docs für Einrichtung, Funktionen und Tutorials."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Verteilen Sie einen Asset massenhaft an viele Konten auf einmal.",
@@ -500,7 +518,7 @@
         "other": "Sonstige"
     },
     "explorer": {
-        "title": "Blockchain Explorer",
+        "title": "Blockchain-Explorer",
         "subtitle": "Konten, Assets, Objekte, Transaktionen und Blöcke nachschlagen",
         "hover1": "Suche Konten/Assets per Name/ID und favorisiere sie.",
         "hover2": "Rohdaten x.x.x Objekte und Blöcke via WS prüfen.",
@@ -511,5 +529,11 @@
         "subtitle": "Ändern Sie Ihr Cloud-Wallet-Passwort.",
         "hover1": "Einzelner atomarer account_update ersetzt Owner-, Active- und Memo-Schlüssel.",
         "hover2": "Generiertes oder eigenes Passwort — gleiche Ableitung wie bei der Kontoerstellung."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-Chain-Chat auf der BitShares-Blockchain.",
+        "hover1": "Chatte mit anderen Nutzern, dauerhaft auf der Blockchain gespeichert.",
+        "hover2": "Der Absender zahlt eine kleine Netzwerkgebühr pro Nachricht."
     }
 }

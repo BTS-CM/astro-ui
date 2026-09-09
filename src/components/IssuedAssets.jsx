@@ -70,6 +70,9 @@ import AssetIssuerActions from "./AssetIssuerActions.jsx";
 
 
 function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain, currentUser, currentNode }) {
+    const [viewJSON, setViewJSON] = useState(false);
+    const [json, setJSON] = useState();
+
     const issuedAsset = relevantAssets[index];
     if (!issuedAsset) {
       return null;
@@ -96,9 +99,6 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
         parsedDescription = _desc;
       }
     }
-
-    const [viewJSON, setViewJSON] = useState(false);
-    const [json, setJSON] = useState();
 
     const smartcoinCheck =
       activeTab === "smartcoins" &&
@@ -226,6 +226,14 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
                 <DropdownMenuItem>
                   <ArrowRight className="h-3.5 w-3.5 mr-2" />
                   {t("IssuedAssets:collateralBid")}
+                </DropdownMenuItem>
+              </a>
+            ) : null}
+            {activeTab === "smartcoins" ? (
+              <a href={`/publish_feed.html?id=${issuedAsset.id}`}>
+                <DropdownMenuItem>
+                  <ArrowRight className="h-3.5 w-3.5 mr-2" />
+                  {t("IssuedAssets:publishFeed")}
                 </DropdownMenuItem>
               </a>
             ) : null}
@@ -371,6 +379,9 @@ export default function IssuedAssets(properties) {
   const [issuedAssets, setIssuedAssets] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    let cancelled = false;
+    let unsubscribe;
+
     async function fetching() {
       const requiredStore = createIssuedAssetsStore([
         usr.chain,
@@ -378,7 +389,10 @@ export default function IssuedAssets(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      requiredStore.subscribe(({ data, error, loading }) => {
+      unsubscribe = requiredStore.subscribe(({ data, error, loading }) => {
+        if (cancelled) {
+          return;
+        }
         if (data && !error && !loading) {
           setLoading(false);
           setIssuedAssets(data);
@@ -388,8 +402,24 @@ export default function IssuedAssets(properties) {
 
     if (usr && usr.id && currentNode && currentNode.url) {
       setLoading(true);
+      // Clear the previous account's data immediately so rows never render
+      // stale assets under the new account while the fetch is in flight.
+      setIssuedAssets([]);
+      setDynamicData([]);
+      setBitassetData([]);
+      setPriceFeederAccounts([]);
       fetching();
+    } else {
+      setIssuedAssets([]);
+      setLoading(false);
     }
+
+    return () => {
+      cancelled = true;
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
   }, [usr, currentNode]);
 
   const [activeTab, setActiveTab] = useState("uia");
@@ -440,6 +470,9 @@ export default function IssuedAssets(properties) {
 
   const [dynamicData, setDynamicData] = useState([]);
   useEffect(() => {
+    let cancelled = false;
+    let unsubscribe;
+
     async function fetching() {
       const requiredStore = createObjectStore([
         usr.chain,
@@ -447,7 +480,10 @@ export default function IssuedAssets(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      requiredStore.subscribe(({ data, error, loading }) => {
+      unsubscribe = requiredStore.subscribe(({ data, error, loading }) => {
+        if (cancelled) {
+          return;
+        }
         if (data && !error && !loading) {
           setDynamicData(data);
         }
@@ -456,7 +492,16 @@ export default function IssuedAssets(properties) {
 
     if (dynamicDataIDs && dynamicDataIDs.length) {
       fetching();
+    } else {
+      setDynamicData([]);
     }
+
+    return () => {
+      cancelled = true;
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
   }, [dynamicDataIDs]);
 
   const bitassetDataIDs = useMemo(() => {
@@ -473,6 +518,9 @@ export default function IssuedAssets(properties) {
 
   const [bitassetData, setBitassetData] = useState([]);
   useEffect(() => {
+    let cancelled = false;
+    let unsubscribe;
+
     async function fetching() {
       const requiredStore = createObjectStore([
         usr.chain,
@@ -480,7 +528,10 @@ export default function IssuedAssets(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      requiredStore.subscribe(({ data, error, loading }) => {
+      unsubscribe = requiredStore.subscribe(({ data, error, loading }) => {
+        if (cancelled) {
+          return;
+        }
         if (data && !error && !loading) {
           setBitassetData(data);
         }
@@ -489,7 +540,16 @@ export default function IssuedAssets(properties) {
 
     if (bitassetDataIDs && bitassetDataIDs.length) {
       fetching();
+    } else {
+      setBitassetData([]);
     }
+
+    return () => {
+      cancelled = true;
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
   }, [bitassetDataIDs]);
 
   const priceFeederAccountIDs = useMemo(() => {
@@ -506,6 +566,9 @@ export default function IssuedAssets(properties) {
 
   const [priceFeederAccounts, setPriceFeederAccounts] = useState([]);
   useEffect(() => {
+    let cancelled = false;
+    let unsubscribe;
+
     async function fetching() {
       const requiredStore = createObjectStore([
         usr.chain,
@@ -513,7 +576,10 @@ export default function IssuedAssets(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      requiredStore.subscribe(({ data, error, loading }) => {
+      unsubscribe = requiredStore.subscribe(({ data, error, loading }) => {
+        if (cancelled) {
+          return;
+        }
         if (data && !error && !loading) {
           setPriceFeederAccounts(data);
         }
@@ -522,10 +588,25 @@ export default function IssuedAssets(properties) {
 
     if (priceFeederAccountIDs && priceFeederAccountIDs.length) {
       fetching();
+    } else {
+      setPriceFeederAccounts([]);
     }
+
+    return () => {
+      cancelled = true;
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
   }, [priceFeederAccountIDs]);
 
   const assetRowProps = useMemo(() => ({ relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain: _chain, currentUser: usr, currentNode }), [relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, _chain, usr, currentNode]);
+
+  // Force react-window rows to remount on account/chain switch so reused row
+  // instances never carry the previous account's state or asset shape.
+  const listKey = useMemo(() => {
+    return `issued-${_chain}-${usr && usr.id ? usr.id : "nouser"}`;
+  }, [_chain, usr]);
 
   const tabs = [
     { id: "uia", label: t("IssuedAssets:uiaButton"), icon: Coins },
@@ -632,6 +713,7 @@ export default function IssuedAssets(properties) {
                         <>
                           <div className="w-full h-[500px] block md:hidden">
                             <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -642,6 +724,7 @@ export default function IssuedAssets(properties) {
                           </div>
                           <div className="w-full h-[500px] hidden md:block">
                             <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -696,6 +779,7 @@ export default function IssuedAssets(properties) {
                         <>
                           <div className="w-full h-[500px] block md:hidden">
                             <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -706,6 +790,7 @@ export default function IssuedAssets(properties) {
                           </div>
                           <div className="w-full h-[500px] hidden md:block">
                             <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -760,6 +845,7 @@ export default function IssuedAssets(properties) {
                     <>
                       <div className="w-full h-[500px] block md:hidden">
                         <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -770,6 +856,7 @@ export default function IssuedAssets(properties) {
                       </div>
                       <div className="w-full h-[500px] hidden md:block">
                         <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -806,6 +893,7 @@ export default function IssuedAssets(properties) {
                     <>
                       <div className="w-full h-[500px] block md:hidden">
                         <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}
@@ -816,6 +904,7 @@ export default function IssuedAssets(properties) {
                       </div>
                       <div className="w-full h-[500px] hidden md:block">
                         <List
+                              key={listKey}
                               height={500}
                               width="100%"
                               rowComponent={MemoIssuedAssetRow}

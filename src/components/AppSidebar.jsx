@@ -80,6 +80,7 @@ import {
   Activity,
   TrendingUp,
   ReceiptText,
+  MessageSquare,
 } from "lucide-react";
 import { useStore } from "@nanostores/react";
 import { useTheme } from "next-themes";
@@ -142,6 +143,7 @@ const ITEM_ICONS = {
   vote: Vote,
   witnesses: Eye,
   committee: Users,
+  committee_parameters: SlidersHorizontal,
   governance: Vote,
   create_worker: Pickaxe,
   create_ticket: Ticket,
@@ -169,6 +171,7 @@ const ITEM_ICONS = {
   recent_activity: Activity,
   top_markets: TrendingUp,
   top_pools: Droplets,
+  trollbox: MessageSquare,
   custom_authorities: KeyRound,
   blind_transfers: EyeOff,
 };
@@ -257,12 +260,14 @@ export default function AppSidebar() {
     { slug: "top_markets", title: "Home:top_markets.title", href: "/top-markets.html" },
     { slug: "top_pools", title: "Home:top_pools.title", href: "/top-pools.html" },
     { slug: "top_operations", title: "Home:top_operations.title", href: "/top-operations.html" },
+    { slug: "trollbox", title: "Home:trollbox.title", href: "/trollbox.html" },
   ];
 
   const governanceHeading = [
     { slug: "vote", title: "Home:vote.title", href: "/vote.html" },
     { slug: "witnesses", title: "Home:witnesses.title", href: "/witnesses.html" },
     { slug: "committee", title: "Home:committee.title", href: "/committee.html" },
+    { slug: "committee_parameters", title: "Home:committee_parameters.title", href: "/committee_parameters.html" },
     { slug: "governance", title: "Home:governance.title", href: "/governance.html" },
     { slug: "create_worker", title: "Home:create_worker.title", href: "/create_worker.html" },
     { slug: "create_ticket", title: "Home:create_ticket.title", href: "/create_ticket.html" },

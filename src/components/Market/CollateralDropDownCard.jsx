@@ -183,14 +183,17 @@ export default function CollateralDropDownCard(properties) {
     >
       {lendingAsset && marketSearch ? (
         <DialogTrigger asChild>
-          <span
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
             onClick={() => {
-              event.preventDefault();
+              setDialogOpen(true);
             }}
-            className="inline-block border border-border rounded pl-4 pb-1 pr-4 text-lg"
+            className="border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)]"
           >
-            <Label>{t("AssetDropDownCard:addCollateral")}</Label>
-          </span>
+            + {t("AssetDropDownCard:addCollateral").replace(/^➕\s*/, "")}
+          </Button>
         </DialogTrigger>
       ) : (
         <Label>{t("AssetDropDownCard:missingLendingAsset")}</Label>
@@ -213,8 +216,7 @@ export default function CollateralDropDownCard(properties) {
           {thisResult && thisResult.length ? (
             <div className="w-full h-[300px]">
               <List
-                height={300}
-                width="100%"
+                style={{ height: 300, width: "100%" }}
                 rowComponent={CollateralRow}
                 rowCount={thisResult.length}
                 rowHeight={70}

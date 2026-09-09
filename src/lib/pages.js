@@ -19,6 +19,7 @@ export const THEMABLE_PAGES = [
   { slug: "tfunds", label: "TradeFunds" },
   { slug: "tfund_user", label: "TradeFund (user)" },
   { slug: "settlement", label: "Settlement" },
+  { slug: "publish_feed", label: "Publish Feed" },
   { slug: "uia", label: "Create UIA" },
   { slug: "create_smartcoin", label: "Create Smartcoin" },
   { slug: "create_pool", label: "Create Pool" },
@@ -43,6 +44,7 @@ export const THEMABLE_PAGES = [
   { slug: "vote", label: "Vote" },
   { slug: "witnesses", label: "Witnesses" },
   { slug: "committee", label: "Committee" },
+  { slug: "committee_parameters", label: "Committee Parameters" },
   { slug: "governance", label: "Governance" },
   { slug: "create_worker", label: "Create Worker" },
   { slug: "ticket_leaderboard", label: "Ticket Leaderboard" },
@@ -59,4 +61,6 @@ export const THEMABLE_PAGES = [
   { slug: "configure_visuals", label: "Configure Visuals" },
   { slug: "theme_customizer", label: "Theme Customization" },
   { slug: "airdrop_calculate", label: "Airdrop" },
+  { slug: "top-operations", label: "Top Operations" },
+  { slug: "trollbox", label: "Trollbox" },
 ];

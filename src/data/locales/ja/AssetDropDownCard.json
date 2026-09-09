@@ -19,5 +19,60 @@
   "addAsset": "資産を追加します",
   "featured": "注目の資産",
   "borrowed": "借りた",
-  "balance": "残高"
+  "balance": "残高",
+  "mode": {
+    "titleBTS": "Bitsharesでアセットをどのように探しますか？",
+    "titleTEST": "Bitsharesテストネットでアセットをどのように探しますか？",
+    "search": "アセットを検索",
+    "searchSubtitle": "シンボルまたはIDで検索",
+    "balances": "残高一覧",
+    "balancesSubtitle": "{{count}} 件の残高",
+    "featured": "注目のアセット",
+    "featuredSubtitle": "{{count}} 件の注目",
+    "favourites": "お気に入りアセット",
+    "favouritesSubtitle": "{{count}} 件のお気に入り",
+    "recent": "最近のアセット",
+    "recentSubtitle": "{{count}} 件の最近",
+    "back": "戻る"
+  },
+  "searchPage": {
+    "initDesc": "シンボル・ID・発行者で検索",
+    "description": "続行するアセットを選択",
+    "placeholder": "例 BTS、USD、1.3.0",
+    "back": "戻る",
+    "noResults": "アセットが見つかりません",
+    "noResultsHint": "検索条件を変更してみてください"
+  },
+  "favouritesPage": {
+    "description": "お気に入りアセットから選択",
+    "none": "お気に入りアセットが見つかりません",
+    "noneHint": "お気に入りページから追加できます"
+  },
+  "featuredPage": {
+    "description": "このチェーンの注目アセットを閲覧",
+    "none": "注目のアセットが見つかりません",
+    "noneHint": "利用可能なアセットがありません",
+    "assets": "アセット"
+  },
+  "featuredCategories": {
+    "committee": "委員会所有",
+    "committeeSubtitle": "committee-account発行",
+    "xbtsSubtitle": "XBTSアセット",
+    "btwtySubtitle": "BTWTYアセット",
+    "honestSubtitle": "HONESTアセット",
+    "nfteaSubtitle": "NFTEAアセット"
+  },
+  "balancesPage": {
+    "description": "残高のあるアセットから選択",
+    "none": "残高が見つかりません",
+    "noneHint": "残高のあるアセットがありません"
+  },
+  "recent": {
+    "description": "最近選択したアセットから選択",
+    "none": "最近のアセットが見つかりません",
+    "noneHint": "最近の選択がここに表示されます",
+    "eraseHistory": "履歴を削除"
+  },
+  "step1": "方法",
+  "step2": "選択"
 }

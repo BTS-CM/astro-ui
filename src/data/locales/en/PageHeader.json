@@ -34,6 +34,7 @@
   "issuedAssets": "Your issued assets",
   "create_smartcoin": "Create smartcoin",
   "create_uia": "Create user issued asset",
+  "create_pool": "Create liquidity pool",
   "blockExplorer": "Live blockchain data",
   "accountLists": "Account Lists",
   "proposals": "Proposed Operations",
@@ -120,7 +121,8 @@
     "configure_visuals": "Customize the app's visuals — waves, colour palettes, aurora, blur and particle effects.",
     "network_fees": "Browse every network fee in full — standard costs, per-KByte charges and lifetime member rates.",
     "explorer": "Use this page to lookup any account, asset, object, transaction hash or block number and view the raw JSON with copy and favourites.",
-    "change_password": "Use the form below to change your cloud wallet password via an account_update operation."
+    "change_password": "Use the form below to change your cloud wallet password via an account_update operation.",
+    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

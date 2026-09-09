@@ -243,6 +243,137 @@ export default function IssuedAssets(properties) {
   const [assetB, setAssetB] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
 
+  // Edit mode: ?pool=1.19.x switches the page to edit the pool's fees
+  // via liquidity_pool_update (only taker/withdrawal fees are mutable on chain).
+  const [editPoolId, setEditPoolId] = useState(null);
+  const [editPool, setEditPool] = useState(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState(null);
+  const isEditMode = useMemo(() => !!editPoolId, [editPoolId]);
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const poolParam = (params.get("pool") || "").trim();
+      if (/^1\.19\.\d+$/.test(poolParam)) {
+        setEditPoolId(poolParam);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!editPoolId) {
+      return;
+    }
+    if (!currentNode || !currentNode.url) {
+      return;
+    }
+    let cancelled = false;
+    async function fetching() {
+      setEditLoading(true);
+      setEditError(null);
+      try {
+        const store = createObjectStore([
+          _chain ?? "bitshares",
+          JSON.stringify([editPoolId]),
+          currentNode.url,
+        ]);
+        store.subscribe(({ data, error, loading }) => {
+          if (cancelled || loading) {
+            return;
+          }
+          setEditLoading(false);
+          if (error || !data || !data[0] || data[0].id !== editPoolId) {
+            setEditError("not_found");
+            return;
+          }
+          const pool = data[0];
+          setEditPool(pool);
+          setTakerFeePercent((pool.taker_fee_percent ?? 0) / 100);
+          setWithdrawalFeePercent((pool.withdrawal_fee_percent ?? 0) / 100);
+        });
+      } catch (e) {
+        console.log(e);
+        if (!cancelled) {
+          setEditLoading(false);
+          setEditError("not_found");
+        }
+      }
+    }
+    fetching();
+    return () => {
+      cancelled = true;
+    };
+  }, [editPoolId, _chain, currentNode]);
+
+  const editPoolAssets = useMemo(() => {
+    if (!editPool || !assets || !assets.length) {
+      return null;
+    }
+    const findSymbol = (id) =>
+      assets.find((a) => a.id === id)?.symbol ?? id;
+    return {
+      assetA: findSymbol(editPool.asset_a),
+      assetB: findSymbol(editPool.asset_b),
+      shareAsset: findSymbol(editPool.share_asset),
+      shareAssetId: editPool.share_asset,
+    };
+  }, [editPool, assets]);
+
+  const editPoolShareIssuer = useMemo(() => {
+    if (!editPool || !assets || !assets.length) {
+      return null;
+    }
+    return assets.find((a) => a.id === editPool.share_asset)?.issuer ?? null;
+  }, [editPool, assets]);
+
+  const originalTakerUnits = useMemo(
+    () => (editPool ? editPool.taker_fee_percent ?? 0 : 0),
+    [editPool]
+  );
+  const originalWithdrawalUnits = useMemo(
+    () => (editPool ? editPool.withdrawal_fee_percent ?? 0 : 0),
+    [editPool]
+  );
+  const newTakerUnits = useMemo(
+    () => Math.round(Number(takerFeePercent || 0) * 100),
+    [takerFeePercent]
+  );
+  const newWithdrawalUnits = useMemo(
+    () => Math.round(Number(withdrawalFeePercent || 0) * 100),
+    [withdrawalFeePercent]
+  );
+  const takerChanged = newTakerUnits !== originalTakerUnits;
+  const withdrawalChanged = newWithdrawalUnits !== originalWithdrawalUnits;
+  // Chain rules: withdrawal fee can only be updated to zero;
+  // taker fee can only change once the on-chain withdrawal fee is zero.
+  const takerLocked = originalWithdrawalUnits !== 0;
+  const withdrawalValid = !withdrawalChanged || newWithdrawalUnits === 0;
+  const takerValid = !takerChanged || !takerLocked;
+  const hasPoolChanges = takerChanged || withdrawalChanged;
+  const editFormValid =
+    !!editPool && hasPoolChanges && withdrawalValid && takerValid;
+
+  const updateTrxJSON = useMemo(() => {
+    if (!editPool || !usr || !usr.id) {
+      return [];
+    }
+    const op = {
+      account: usr.id,
+      pool: editPool.id,
+      extensions: {},
+    };
+    if (takerChanged) {
+      op.taker_fee_percent = newTakerUnits;
+    }
+    if (withdrawalChanged) {
+      op.withdrawal_fee_percent = newWithdrawalUnits;
+    }
+    return [op];
+  }, [editPool, usr, takerChanged, withdrawalChanged, newTakerUnits, newWithdrawalUnits]);
+
   const swapAssets = () => {
     const temp = assetA;
     setAssetA(assetB);
@@ -364,16 +495,111 @@ export default function IssuedAssets(properties) {
             </span>
             <div className="flex-1 min-w-0">
               <h1 className="text-xl font-bold tracking-tight text-foreground">
-                {t("CreatePool:title")}
+                {isEditMode
+                  ? t("CreatePool:edit_title", {
+                      defaultValue: "Edit liquidity pool",
+                    })
+                  : t("CreatePool:title")}
               </h1>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                {t("CreatePool:description")}
+                {isEditMode
+                  ? t("CreatePool:edit_description", {
+                      defaultValue:
+                        "Update the fee configuration of your existing liquidity pool. The trading assets and share asset cannot be changed.",
+                    })
+                  : t("CreatePool:description")}
               </p>
             </div>
             </div>
           </div>
 
           <div className="mt-6 flex flex-col gap-6">
+            {isEditMode ? (
+              <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">
+                    {t("CreatePool:edit_pool_id", {
+                      defaultValue: "Liquidity pool",
+                    })}
+                    : {editPoolId}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-5 sm:p-6 pt-0">
+                  {editLoading ? (
+                    <div className="text-center mt-2">
+                      {t("CreatePool:loading_pool", {
+                        defaultValue: "Loading liquidity pool...",
+                      })}
+                    </div>
+                  ) : editError || !editPool ? (
+                    <p className="text-sm text-muted-foreground">
+                      {t("CreatePool:pool_not_found", {
+                        defaultValue:
+                          "Liquidity pool not found. Check the pool ID in the URL.",
+                      })}
+                    </p>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                            {t("CreatePool:summary_pair")}
+                          </div>
+                          <div className="font-mono text-sm tabular-nums text-foreground/85 truncate">
+                            {editPoolAssets
+                              ? `${editPoolAssets.assetA} / ${editPoolAssets.assetB}`
+                              : `${editPool.asset_a} / ${editPool.asset_b}`}
+                          </div>
+                        </div>
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                            {t("CreatePool:summary_share_asset")}
+                          </div>
+                          <div className="font-mono text-sm tabular-nums text-foreground/85 truncate">
+                            {editPoolAssets
+                              ? `${editPoolAssets.shareAsset} (${editPoolAssets.shareAssetId})`
+                              : editPool.share_asset}
+                          </div>
+                        </div>
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                            {t("CreatePool:current_taker_fee", {
+                              defaultValue: "Current taker fee",
+                            })}
+                          </div>
+                          <div className="font-mono text-sm tabular-nums text-foreground/85">
+                            {`${originalTakerUnits / 100}%`}
+                          </div>
+                        </div>
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                            {t("CreatePool:current_withdrawal_fee", {
+                              defaultValue: "Current withdrawal fee",
+                            })}
+                          </div>
+                          <div className="font-mono text-sm tabular-nums text-foreground/85">
+                            {`${originalWithdrawalUnits / 100}%`}
+                          </div>
+                        </div>
+                      </div>
+                      {editPoolShareIssuer &&
+                      usr &&
+                      usr.id &&
+                      editPoolShareIssuer !== usr.id ? (
+                        <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                          {t("CreatePool:must_be_issuer", {
+                            defaultValue: `Only the share asset issuer (${editPoolShareIssuer}) can update this pool's fees.`,
+                            issuer: editPoolShareIssuer,
+                          })}
+                        </p>
+                      ) : null}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            ) : null}
+            {!isEditMode ? (
+            <>
             <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
               <StepHeader
                 icon={Coins}
@@ -515,6 +741,8 @@ export default function IssuedAssets(properties) {
                 ) : null}
               </CardContent>
             </Card>
+            </>
+            ) : null}
 
             <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
               <StepHeader
@@ -522,7 +750,7 @@ export default function IssuedAssets(properties) {
                 step={3}
                 title={t("CreatePool:step3_title")}
                 description={t("CreatePool:step3_description")}
-                done={!!(selectedAsset && assetA && assetB)}
+                done={isEditMode ? hasPoolChanges : !!(selectedAsset && assetA && assetB)}
               />
               <CardContent className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4">
@@ -538,6 +766,7 @@ export default function IssuedAssets(properties) {
                     max="100"
                     step="0.01"
                     pattern="^\d*(\.\d{0,2})?$"
+                    disabled={isEditMode && (takerLocked || !editPool)}
                     onInput={(e) => {
                       setTakerFeePercent(e.currentTarget.value);
                       debouncedPercent(
@@ -547,6 +776,14 @@ export default function IssuedAssets(properties) {
                     }}
                     className="mt-1 !bg-card/40 border-border focus-visible:!ring-[hsl(var(--accent-1)/0.4)] focus-visible:border-[hsl(var(--accent-1)/0.5)]"
                   />
+                  {isEditMode && takerLocked && editPool ? (
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      {t("CreatePool:taker_locked", {
+                        defaultValue:
+                          "Taker fee can only be changed once the withdrawal fee is zero. Set the withdrawal fee to zero first.",
+                      })}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4">
                   <HoverInfo
@@ -561,6 +798,7 @@ export default function IssuedAssets(properties) {
                     max="100"
                     step="0.01"
                     pattern="^\d*(\.\d{0,2})?$"
+                    disabled={isEditMode && !editPool}
                     onInput={(e) => {
                       setWithdrawalFeePercent(e.currentTarget.value);
                       debouncedPercent(
@@ -570,11 +808,19 @@ export default function IssuedAssets(properties) {
                     }}
                     className="mt-1 !bg-card/40 border-border focus-visible:!ring-[hsl(var(--accent-1)/0.4)] focus-visible:border-[hsl(var(--accent-1)/0.5)]"
                   />
+                  {isEditMode && editPool ? (
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      {t("CreatePool:withdrawal_zero_only", {
+                        defaultValue:
+                          "Withdrawal fee can only be reduced to zero — it cannot be raised or set to another value.",
+                      })}
+                    </p>
+                  ) : null}
                 </div>
               </CardContent>
             </Card>
 
-            {selectedAsset && assetA && assetB && assetA !== assetB ? (
+            {!isEditMode && selectedAsset && assetA && assetB && assetA !== assetB ? (
               <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-[hsl(var(--accent-1)/0.04)] p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.15)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
@@ -630,16 +876,72 @@ export default function IssuedAssets(properties) {
               </div>
             ) : null}
 
+            {isEditMode && editPool && !editLoading && !editError ? (
+              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-[hsl(var(--accent-1)/0.04)] p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.15)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                    <Layers className="h-3.5 w-3.5" strokeWidth={2.25} />
+                  </span>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {t("CreatePool:summary_title")}
+                  </h3>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">
+                  {t("CreatePool:summary_ready_update", {
+                    defaultValue:
+                      "Review the new fee configuration below before submitting.",
+                  })}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                    <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                      {t("CreatePool:summary_taker_fee")}
+                    </div>
+                    <div className="font-mono text-sm tabular-nums text-foreground/85">
+                      {`${originalTakerUnits / 100}% → ${takerFeePercent}%`}
+                    </div>
+                  </div>
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                    <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                      {t("CreatePool:summary_withdrawal_fee")}
+                    </div>
+                    <div className="font-mono text-sm tabular-nums text-foreground/85">
+                      {`${originalWithdrawalUnits / 100}% → ${withdrawalFeePercent}%`}
+                    </div>
+                  </div>
+                </div>
+                {!withdrawalValid ? (
+                  <p className="mt-3 text-xs font-medium text-[hsl(var(--accent-danger-fg))] dark:text-[hsl(var(--accent-danger-fg))]">
+                    {t("CreatePool:withdrawal_invalid", {
+                      defaultValue:
+                        "Invalid withdrawal fee: it can only be set to 0%.",
+                    })}
+                  </p>
+                ) : null}
+                {!hasPoolChanges ? (
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    {t("CreatePool:no_changes", {
+                      defaultValue: "No changes to submit yet.",
+                    })}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
             <div>
               <button
                 type="button"
-                disabled={!(assetA && assetB && selectedAsset && assetA !== assetB)}
+                disabled={
+                  isEditMode
+                    ? !editFormValid
+                    : !(assetA && assetB && selectedAsset && assetA !== assetB)
+                }
                 onClick={() => {
                   setShowDialog(true);
                 }}
                 className={cn(
                   "w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] flex items-center justify-center gap-2 text-base transition-all group",
-                  assetA && assetB && selectedAsset
+                  (isEditMode ? editFormValid : assetA && assetB && selectedAsset)
                     ? "bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] shadow-[0_8px_32px_-12px_rgba(6,182,212,0.7)] hover:shadow-[0_12px_40px_-12px_rgba(20,184,166,0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))]"
                     : "bg-card/60 border border-border/40 dark:border-white/5 text-muted-foreground cursor-not-allowed"
                 )}
@@ -655,24 +957,40 @@ export default function IssuedAssets(properties) {
       </div>
       {showDialog ? (
         <DeepLinkDialog
-          operationNames={["liquidity_pool_create"]}
+          operationNames={
+            isEditMode ? ["liquidity_pool_update"] : ["liquidity_pool_create"]
+          }
           username={usr && usr.username ? usr.username : ""}
           usrChain={usr && usr.chain ? usr.chain : "bitshares"}
           userID={usr.id}
           dismissCallback={setShowDialog}
-          key={`CreatingPool`}
-          headerText={t("CreatePool:deeplinkDialogTitle")}
-          trxJSON={[
-            {
-              account: usr.id,
-              asset_a: assetAData.id,
-              asset_b: assetBData.id,
-              share_asset: selectedAsset,
-              taker_fee_percent: takerFeePercent,
-              withdrawal_fee_percent: withdrawalFeePercent,
-              extensions: {},
-            },
-          ]}
+          key={isEditMode ? `UpdatingPool-${editPoolId}` : `CreatingPool`}
+          headerText={
+            isEditMode
+              ? `${t("CreatePool:deeplinkDialogTitleUpdate", {
+                  defaultValue: "Updating Liquidity Pool",
+                })}: ${editPoolId}`
+              : t("CreatePool:deeplinkDialogTitle")
+          }
+          trxJSON={
+            isEditMode
+              ? updateTrxJSON
+              : [
+                  {
+                    account: usr.id,
+                    asset_a: assetAData.id,
+                    asset_b: assetBData.id,
+                    share_asset: selectedAsset,
+                    taker_fee_percent: Math.round(
+                      Number(takerFeePercent || 0) * 100
+                    ),
+                    withdrawal_fee_percent: Math.round(
+                      Number(withdrawalFeePercent || 0) * 100
+                    ),
+                    extensions: {},
+                  },
+                ]
+          }
         />
       ) : null}
     </>

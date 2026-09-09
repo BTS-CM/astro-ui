@@ -19,5 +19,60 @@
   "addAsset": "Add asset",
   "featured": "Featured assets",
   "borrowed": "Borrowed",
-  "balance": "Balance"
+  "balance": "Balance",
+  "mode": {
+    "titleBTS": "How would you like to find the asset on Bitshares?",
+    "titleTEST": "How would you like to find the asset on Bitshares testnet?",
+    "search": "Search for asset",
+    "searchSubtitle": "Search by symbol or ID",
+    "balances": "My balances",
+    "balancesSubtitle": "{{count}} balances",
+    "featured": "Featured assets",
+    "featuredSubtitle": "{{count}} featured",
+    "favourites": "Favourite assets",
+    "favouritesSubtitle": "{{count}} favourites",
+    "recent": "Recent assets",
+    "recentSubtitle": "{{count}} recent",
+    "back": "Back"
+  },
+  "searchPage": {
+    "initDesc": "Search by asset symbol, ID or issuer",
+    "description": "Select an asset to continue",
+    "placeholder": "e.g. BTS, USD, 1.3.0",
+    "back": "Go back",
+    "noResults": "No assets found",
+    "noResultsHint": "Try adjusting your search query"
+  },
+  "favouritesPage": {
+    "description": "Select one of your favourite assets",
+    "none": "No favourite assets found",
+    "noneHint": "You can add favourites from the Favourites page"
+  },
+  "featuredPage": {
+    "description": "Browse featured assets on this chain",
+    "none": "No featured assets found",
+    "noneHint": "No curated assets available",
+    "assets": "assets"
+  },
+  "featuredCategories": {
+    "committee": "Committee owned",
+    "committeeSubtitle": "Issued by committee-account",
+    "xbtsSubtitle": "XBTS assets",
+    "btwtySubtitle": "BTWTY assets",
+    "honestSubtitle": "HONEST assets",
+    "nfteaSubtitle": "NFTEA assets"
+  },
+  "balancesPage": {
+    "description": "Select one of your balance assets",
+    "none": "No balances found",
+    "noneHint": "You have no assets with a balance"
+  },
+  "recent": {
+    "description": "Select one of your recently selected assets",
+    "none": "No recent assets found",
+    "noneHint": "Your recent asset selections will appear here",
+    "eraseHistory": "Clear history"
+  },
+  "step1": "Method",
+  "step2": "Select"
 }

@@ -1,6 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { useSyncExternalStore } from "react";
+import { DragDropProvider } from "@dnd-kit/react";
+import { isSortable, useSortable } from "@dnd-kit/react/sortable";
+import {
+  PointerActivationConstraints,
+  PointerSensor,
+} from "@dnd-kit/dom";
 
 
 import { useTranslation } from "react-i18next";
@@ -75,8 +81,11 @@ import {
   Package,
   CreditCard,
   Database,
+  MessageSquare,
   ListOrdered,
   Clock,
+  SlidersHorizontal,
+  GripVertical,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -87,6 +96,12 @@ import {
   resolveItemAccent,
   resolveSectionAccent,
 } from "@/stores/customTheme.ts";
+import {
+  $homeSectionOrder,
+  moveSectionOrder,
+  sanitizeSectionOrder,
+  setSectionOrder,
+} from "@/stores/homeSectionOrder.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
@@ -128,6 +143,7 @@ const ITEM_ICONS = {
   vote: Vote,
   witnesses: Eye,
   committee: Users,
+  committee_parameters: SlidersHorizontal,
   governance: Vote,
   create_worker: Pickaxe,
   create_ticket: Ticket,
@@ -155,6 +171,7 @@ const ITEM_ICONS = {
   recent_activity: Activity,
   top_markets: TrendingUp,
   top_pools: Droplets,
+  trollbox: MessageSquare,
   docs: BookOpen,
 };
 
@@ -171,6 +188,71 @@ const SECTION_META = {
   invoicing: { icon: Receipt, titleKey: "PageHeader:invoicingHeading", subtitleKey: "Home:sections.invoicingSubtitle" },
   settings: { icon: Wrench, titleKey: "PageHeader:settingsHeading", subtitleKey: "Home:sections.settingsSubtitle" },
 };
+
+// Group/type identifiers isolate homepage sections from any other
+// DragDropProvider on the page. All 9 sections share one group so they
+// sort vertically within a single list.
+const HOME_SECTION_GROUP = "home-sections";
+const HOME_SECTION_TYPE = "home-section";
+
+const homeSensors = (defaults) => [
+  ...defaults.filter((sensor) => sensor !== PointerSensor),
+  PointerSensor.configure({
+    activationConstraints(event) {
+      // Touch needs a press-and-hold so vertical page scroll still works;
+      // mouse/pen only needs a small movement threshold so header text
+      // isn't accidentally selected when starting a drag.
+      if (event.pointerType === "touch") {
+        return [
+          new PointerActivationConstraints.Delay({
+            value: 250,
+            tolerance: { x: 8, y: 8 },
+          }),
+        ];
+      }
+      return [new PointerActivationConstraints.Distance({ value: 6 })];
+    },
+  }),
+];
+
+function SortableHomeSection({ id, index, title, header, children }) {
+  const { ref, handleRef, isDragging, isDropTarget } = useSortable({
+    id,
+    index,
+    group: HOME_SECTION_GROUP,
+    type: HOME_SECTION_TYPE,
+    accept: HOME_SECTION_TYPE,
+  });
+
+  // The whole header is the drag handle: attach the sortable handle ref to
+  // the pre-rendered header element. The card grid below moves along as
+  // part of the same sortable <section>.
+  const headerWithHandle = React.isValidElement(header)
+    ? React.cloneElement(header, {
+        ref: handleRef,
+        tabIndex: 0,
+        role: "button",
+        "aria-roledescription": "Draggable section",
+        "aria-label": `${title}: drag to reorder`,
+        title: "Drag to reorder",
+        className: `${header.props.className ?? ""} cursor-grab active:cursor-grabbing select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+          isDragging ? "opacity-90 shadow-xl" : "hover:shadow-md"
+        }`,
+      })
+    : header;
+
+  return (
+    <section
+      ref={ref}
+      className={`mt-10 sm:mt-14 transition-opacity ${
+        isDragging ? "relative z-10 opacity-70" : ""
+      } ${isDropTarget ? "rounded-2xl ring-2 ring-ring/50" : ""}`}
+    >
+      {headerWithHandle}
+      <div className="mt-3 sm:mt-4">{children}</div>
+    </section>
+  );
+}
 
 export default function Home(properties) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -287,12 +369,14 @@ export default function Home(properties) {
     { key: "top_markets", href: "/top-markets.html", titleKey: "Home:top_markets.title", subtitleKey: "Home:top_markets.subtitle", hoverKeys: ["Home:top_markets.hover1", "Home:top_markets.hover2"] },
     { key: "top_pools", href: "/top-pools.html", titleKey: "Home:top_pools.title", subtitleKey: "Home:top_pools.subtitle", hoverKeys: ["Home:top_pools.hover1", "Home:top_pools.hover2"] },
     { key: "top_operations", href: "/top-operations.html", titleKey: "Home:top_operations.title", subtitleKey: "Home:top_operations.subtitle", hoverKeys: ["Home:top_operations.hover1", "Home:top_operations.hover2"] },
+    { key: "trollbox", href: "/trollbox.html", titleKey: "Home:trollbox.title", subtitleKey: "Home:trollbox.subtitle", hoverKeys: ["Home:trollbox.hover1", "Home:trollbox.hover2"] },
   ];
 
   const governance = [
     { key: "vote", href: "/vote.html", titleKey: "Home:vote.title", subtitleKey: "Home:vote.subtitle", hoverKeys: ["Home:vote.hover1", "Home:vote.hover2", "Home:vote.hover3"] },
     { key: "witnesses", href: "/witnesses.html", titleKey: "Home:witnesses.title", subtitleKey: "Home:witnesses.subtitle", hoverKeys: ["Home:witnesses.hover1", "Home:witnesses.hover2", "Home:witnesses.hover3"] },
     { key: "committee", href: "/committee.html", titleKey: "Home:committee.title", subtitleKey: "Home:committee.subtitle", hoverKeys: ["Home:committee.hover1", "Home:committee.hover2", "Home:committee.hover3"] },
+    { key: "committee_parameters", href: "/committee_parameters.html", titleKey: "Home:committee_parameters.title", subtitleKey: "Home:committee_parameters.subtitle", hoverKeys: ["Home:committee_parameters.hover1", "Home:committee_parameters.hover2"] },
     { key: "governance", href: "/governance.html", titleKey: "Home:governance.title", subtitleKey: "Home:governance.subtitle", hoverKeys: ["Home:governance.hover1", "Home:governance.hover2"] },
     { key: "create_worker", href: "/create_worker.html", titleKey: "Home:create_worker.title", subtitleKey: "Home:create_worker.subtitle", hoverKeys: ["Home:create_worker.hover1", "Home:create_worker.hover2", "Home:create_worker.hover3"] },
     { key: "create_ticket", href: "/create_ticket.html", titleKey: "Home:create_ticket.title", subtitleKey: "Home:create_ticket.subtitle", hoverKeys: ["Home:create_ticket.hover1", "Home:create_ticket.hover2", "Home:create_ticket.hover3"] },
@@ -321,7 +405,7 @@ export default function Home(properties) {
     { key: "docs", href: "docs/docs-index.html", titleKey: "Home:docs.title", subtitleKey: "Home:docs.subtitle", hoverKeys: ["Home:docs.hover1"] },
   ];
 
-  const renderHoverCard = (card, sectionKey) => {
+const renderHoverCard = (card, sectionKey) => {
     const Icon = ITEM_ICONS[card.key] || Sparkles;
     const pair = resolveItemAccent(theme, card.key, sectionKey);
     const accent = itemAccentStyles(pair.primary, pair.secondary, isDark);
@@ -394,75 +478,123 @@ export default function Home(properties) {
     </div>
   );
 
-  const renderSection = (cards, sectionKey) => {
+  const renderSection = (cards, sectionKey, index) => {
     const meta = SECTION_META[sectionKey] || SECTION_META.settings;
     const pair = resolveSectionAccent(theme, sectionKey);
     const style = sectionAccentStyles(pair.primary, pair.secondary, isDark);
     const SectionIcon = meta.icon;
+    const sectionTitle = t(meta.titleKey);
     return (
-      <section className="mt-10 sm:mt-14">
-        <div
-          className="relative overflow-hidden rounded-2xl border p-4 sm:p-5 bg-gradient-to-br"
-          style={{ ...style.border, ...style.bg }}
-        >
+      <SortableHomeSection
+        key={sectionKey}
+        id={sectionKey}
+        index={index}
+        title={sectionTitle}
+        header={
           <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -left-12 -top-12 h-40 w-40 rounded-full blur-3xl"
-            style={style.blobA}
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-12 -bottom-12 h-40 w-40 rounded-full blur-3xl"
-            style={style.blobB}
-          />
-          <div className="relative flex items-center gap-3 sm:gap-4">
-            <span
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border"
-              style={{ ...style.iconBg, ...style.iconBorder }}
-            >
-              <SectionIcon className={cn("h-5 w-5", isDark && "text-white")} style={isDark ? undefined : style.iconText} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <h2 className="text-base sm:text-lg font-semibold text-foreground tracking-tight leading-tight">
-                {t(meta.titleKey)}
-              </h2>
-              <p className="mt-1 text-[13px] sm:text-sm text-muted-foreground leading-snug">
-                {t(meta.subtitleKey)}
-              </p>
+            className="relative overflow-hidden rounded-2xl border p-4 sm:p-5 bg-gradient-to-br"
+            style={{ ...style.border, ...style.bg }}
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-12 -top-12 h-40 w-40 rounded-full blur-3xl"
+              style={style.blobA}
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-12 -bottom-12 h-40 w-40 rounded-full blur-3xl"
+              style={style.blobB}
+            />
+            <div className="relative flex items-center gap-3 sm:gap-4">
+              <span
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border"
+                style={{ ...style.iconBg, ...style.iconBorder }}
+              >
+                <SectionIcon className={cn("h-5 w-5", isDark && "text-white")} style={isDark ? undefined : style.iconText} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-base sm:text-lg font-semibold text-foreground tracking-tight leading-tight">
+                  {sectionTitle}
+                </h2>
+                <p className="mt-1 text-[13px] sm:text-sm text-muted-foreground leading-snug">
+                  {t(meta.subtitleKey)}
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2 pr-1">
+                <GripVertical
+                  className="h-5 w-5 text-muted-foreground/50"
+                  aria-hidden="true"
+                />
+                <div
+                  aria-hidden="true"
+                  className="hidden md:flex items-center gap-1"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full" style={style.dot} />
+                  <span className="h-1.5 w-1.5 rounded-full opacity-60" style={style.dot} />
+                  <span className="h-1.5 w-1.5 rounded-full opacity-30" style={style.dot} />
+                </div>
+              </div>
             </div>
             <div
               aria-hidden="true"
-              className="hidden md:flex items-center gap-1 pr-1"
-            >
-              <span className="h-1.5 w-1.5 rounded-full" style={style.dot} />
-              <span className="h-1.5 w-1.5 rounded-full opacity-60" style={style.dot} />
-              <span className="h-1.5 w-1.5 rounded-full opacity-30" style={style.dot} />
-            </div>
+              className="pointer-events-none absolute inset-x-6 bottom-0 h-px"
+              style={style.underline}
+            />
           </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-6 bottom-0 h-px"
-            style={style.underline}
-          />
-        </div>
-        <div className="mt-3 sm:mt-4">
-          {renderCardGrid(cards, sectionKey, "lg:grid-cols-3")}
-        </div>
-      </section>
+        }
+      >
+        {renderCardGrid(cards, sectionKey, "lg:grid-cols-3")}
+      </SortableHomeSection>
     );
+  };
+
+  const storedOrder = useStore($homeSectionOrder);
+  const orderedKeys = useMemo(
+    () => sanitizeSectionOrder(storedOrder),
+    [storedOrder]
+  );
+  const [announcement, setAnnouncement] = useState("");
+
+  const sectionContent = {
+    exchanging: exchangingFunds,
+    transfer: transferFunds,
+    debt: formsOfDebt,
+    assetCreation,
+    account: accountOverviews,
+    invoicing,
+    governance,
+    blockchain: blockchainOverviews,
+    settings,
+  };
+
+  const handleDragEnd = (event) => {
+    if (event.canceled) return;
+    const { source } = event.operation;
+    if (!isSortable(source)) return;
+    const { initialIndex, index } = source;
+    if (initialIndex === index) return;
+    setSectionOrder(moveSectionOrder(orderedKeys, initialIndex, index));
+    const movedKey = orderedKeys[initialIndex];
+    const movedMeta = SECTION_META[movedKey];
+    if (movedMeta) {
+      setAnnouncement(
+        `${t(movedMeta.titleKey)} moved to position ${index + 1} of ${orderedKeys.length}`
+      );
+    }
   };
 
   return (
     <div className="container mx-auto mt-3 mb-5 px-3 sm:px-4">
-      {renderSection(exchangingFunds, "exchanging")}
-      {renderSection(transferFunds, "transfer")}
-      {renderSection(formsOfDebt, "debt")}
-      {renderSection(assetCreation, "assetCreation")}
-      {renderSection(accountOverviews, "account")}
-      {renderSection(invoicing, "invoicing")}
-      {renderSection(governance, "governance")}
-      {renderSection(blockchainOverviews, "blockchain")}
-      {renderSection(settings, "settings")}
+      <div aria-live="polite" role="status" className="sr-only">
+        {announcement}
+      </div>
+      <DragDropProvider sensors={homeSensors} onDragEnd={handleDragEnd}>
+        {orderedKeys.map((sectionKey, index) =>
+          sectionContent[sectionKey]
+            ? renderSection(sectionContent[sectionKey], sectionKey, index)
+            : null
+        )}
+      </DragDropProvider>
     </div>
   );
 }

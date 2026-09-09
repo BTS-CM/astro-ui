@@ -55,6 +55,12 @@
         "hover2": "View who committee members have voted for.",
         "hover3": "View committee core token balances."
     },
+    "committee_parameters": {
+        "title": "Global Parameters",
+        "subtitle": "Propose new global blockchain parameters.",
+        "hover1": "Edit timing, limits and fee splits.",
+        "hover2": "Submit changes via committee proposal."
+    },
     "governance": {
         "title": "Role Registration",
         "subtitle": "Create/Update both witness and committee roles.",
@@ -523,5 +529,11 @@
         "hover1": "Search any account or asset by name or ID and favourite them.",
         "hover2": "Inspect raw x.x.x objects and blocks via one-shot WS calls.",
         "hover3": "Fetch transactions by hash from Elasticsearch."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat on the BitShares blockchain.",
+        "hover1": "Chat with other users, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per message."
     }
 }

@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import Apis from "@/bts/ws/ApiInstances";
 import chain_store from "@/bts/chain/ChainStore";
+import { getAccountBalances } from "@/nanoeffects/UserBalances";
+import { getObjects } from "@/nanoeffects/src/common";
+import { chains } from "@/config/chains";
 import {
   acquireChainStore,
   nodeUrlFor,
@@ -90,6 +93,8 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
   const isSubscribedRef = useRef(false);
   const blockNumberRef = useRef<number | null>(null);
 
+  const isTestnet = (chains as any)[chain]?.testnet;
+
   useEffect(() => {
     lastFetchAtRef.current = lastFetchAt;
   }, [lastFetchAt]);
@@ -141,6 +146,65 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
         unsubRef.current = null;
       }
       return;
+    }
+
+    if (isTestnet) {
+      // Testnet: never use ChainStore subscriptions (node rejects
+      // set_subscribe_callback with enable_subscribe_to_all). Use
+      // pre-subscription nanoeffects polling (REFERENCE_CODE pattern:
+      // getObjects in chunks, no ChainStore subscribe, no 2.1.0 heartbeat).
+      // Footer is mainnet-only, so no blockNumber staleness here.
+      let cancelledPoll = false;
+      let pollId: any = null;
+      setLoading(true);
+      setError(null);
+      failureCountRef.current = 0;
+      blockNumberRef.current = null;
+
+      const fetchTestnet = async () => {
+        if (cancelledPoll) return;
+        try {
+          const objs = await getObjects(chain, parsedIds, specificNode);
+          if (cancelledPoll) return;
+          const objectsMap: Record<string, any> = {};
+          if (Array.isArray(objs)) {
+            for (const o of objs) {
+              if (o && o.id) {
+                try {
+                  // Keep cache in sync for consumers that read ChainStore directly,
+                  // but don't subscribe.
+                  chain_store._updateObject(o);
+                } catch {}
+                objectsMap[o.id] = o;
+              }
+            }
+          }
+          // Ensure every requested id has an entry (null if missing)
+          for (const id of parsedIds) {
+            if (!(id in objectsMap)) {
+              const found = (objs as any[]).find((x) => x && x.id === id);
+              if (found) objectsMap[id] = found;
+            }
+          }
+          setObjects(objectsMap);
+          setError(null);
+          setLoading(false);
+        } catch (e) {
+          console.log("useChainObjectsLive testnet fallback error", e);
+          if (!cancelledPoll) {
+            setError(e);
+            setLoading(false);
+          }
+        }
+      };
+
+      fetchTestnet();
+      pollId = setInterval(fetchTestnet, 3500);
+
+      return () => {
+        cancelledPoll = true;
+        if (pollId) clearInterval(pollId);
+      };
     }
 
     let cancelled = false;
@@ -308,12 +372,7 @@ export function useAccountBalancesLive(options: {
   const isSubscribedRef = useRef(false);
   const blockNumberRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    lastFetchAtRef.current = lastFetchAt;
-  }, [lastFetchAt]);
-  useEffect(() => {
-    isSubscribedRef.current = isSubscribed;
-  }, [isSubscribed]);
+  const isTestnet = (chains as any)[chain]?.testnet;
 
   useSubscriptionGuard({
     lastFetchAtRef,
@@ -325,6 +384,66 @@ export function useAccountBalancesLive(options: {
   });
 
   useEffect(() => {
+    // Testnet: never use ChainStore (REFERENCE_CODE getAccountBalances polling,
+    // no ChainStore subscribe, no footer heartbeat).
+    if (isTestnet) {
+      if (!enabled || !chain || !accountId) {
+        setBalances(null);
+        setLoading(false);
+        setError(null);
+        setIsSubscribed(false);
+        setLastFetchAt(null);
+        setBlockNumber(null);
+        blockNumberRef.current = null;
+        if (unsubRef.current) {
+          try {
+            unsubRef.current();
+          } catch {}
+          unsubRef.current = null;
+        }
+        return;
+      }
+
+      let cancelledPoll = false;
+      let pollId: any = null;
+      setLoading(true);
+      setError(null);
+      blockNumberRef.current = null;
+
+      const fetchTestnet = async () => {
+        if (cancelledPoll) return;
+        try {
+          const response = await getAccountBalances(chain, accountId, specificNode);
+          if (cancelledPoll) return;
+          if (response) {
+            setBalances(response as any[]);
+            setError(null);
+            setLoading(false);
+          }
+        } catch (e) {
+          console.log("useAccountBalancesLive testnet error", e);
+          if (!cancelledPoll) {
+            setError(e);
+            setLoading(false);
+          }
+        }
+      };
+
+      fetchTestnet();
+      pollId = setInterval(fetchTestnet, 3500);
+
+      return () => {
+        cancelledPoll = true;
+        if (pollId) clearInterval(pollId);
+        if (unsubRef.current) {
+          try {
+            unsubRef.current();
+          } catch {}
+          unsubRef.current = null;
+        }
+      };
+    }
+
     if (!enabled || !chain || !accountId) {
       setBalances(null);
       setLoading(false);

@@ -19,5 +19,60 @@
   "addAsset": "Asset hinzufügen",
   "featured": "Ausgewählte Assets",
   "borrowed": "Ausgeliehen",
-  "balance": "Guthaben"
+  "balance": "Guthaben",
+  "mode": {
+    "titleBTS": "Wie möchten Sie das Asset auf Bitshares finden?",
+    "titleTEST": "Wie möchten Sie das Asset auf Bitshares Testnet finden?",
+    "search": "Nach Asset suchen",
+    "searchSubtitle": "Nach Symbol oder ID suchen",
+    "balances": "Meine Guthaben",
+    "balancesSubtitle": "{{count}} Guthaben",
+    "featured": "Ausgewählte Assets",
+    "featuredSubtitle": "{{count}} ausgewählte",
+    "favourites": "Favoriten-Assets",
+    "favouritesSubtitle": "{{count}} Favoriten",
+    "recent": "Zuletzt verwendete Assets",
+    "recentSubtitle": "{{count}} zuletzt verwendete",
+    "back": "Zurück"
+  },
+  "searchPage": {
+    "initDesc": "Nach Asset-Symbol, ID oder Emittent suchen",
+    "description": "Wählen Sie ein Asset, um fortzufahren",
+    "placeholder": "z. B. BTS, USD, 1.3.0",
+    "back": "Zurückgehen",
+    "noResults": "Keine Assets gefunden",
+    "noResultsHint": "Versuchen Sie, Ihre Suche anzupassen"
+  },
+  "favouritesPage": {
+    "description": "Wählen Sie eines Ihrer Favoriten-Assets",
+    "none": "Keine Favoriten-Assets gefunden",
+    "noneHint": "Sie können Favoriten auf der Favoriten-Seite hinzufügen"
+  },
+  "featuredPage": {
+    "description": "Ausgewählte Assets auf dieser Chain durchsuchen",
+    "none": "Keine ausgewählten Assets gefunden",
+    "noneHint": "Keine kuratierten Assets verfügbar",
+    "assets": "Assets"
+  },
+  "featuredCategories": {
+    "committee": "Im Besitz des Komitees",
+    "committeeSubtitle": "Ausgestellt von committee-account",
+    "xbtsSubtitle": "XBTS-Assets",
+    "btwtySubtitle": "BTWTY-Assets",
+    "honestSubtitle": "HONEST-Assets",
+    "nfteaSubtitle": "NFTEA-Assets"
+  },
+  "balancesPage": {
+    "description": "Wählen Sie eines Ihrer Guthaben-Assets",
+    "none": "Keine Guthaben gefunden",
+    "noneHint": "Sie haben keine Assets mit Guthaben"
+  },
+  "recent": {
+    "description": "Wählen Sie eines Ihrer zuletzt ausgewählten Assets",
+    "none": "Keine zuletzt verwendeten Assets gefunden",
+    "noneHint": "Ihre zuletzt ausgewählten Assets erscheinen hier",
+    "eraseHistory": "Verlauf löschen"
+  },
+  "step1": "Methode",
+  "step2": "Auswählen"
 }

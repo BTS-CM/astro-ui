@@ -21,7 +21,7 @@
         "hover3": "Tildel omfangede rettigheder til konti eller nøgler."
     },
     "blind_transfers": {
-        "title": "Blind Transfers",
+        "title": "Blinde overførsler",
         "subtitle": "Opbyg fortrolige blind transfer-operationer",
         "hover1": "Flyt midler til eller fra blind commitments.",
         "hover2": "Overfør værdi mellem blind commitments.",
@@ -54,6 +54,12 @@
         "hover1": "Se hvem der har modtaget flest stemmer.",
         "hover2": "Se, hvem udvalgsmedlemmer har stemt for.",
         "hover3": "Se udvalgs kernetokenbalancer."
+    },
+    "committee_parameters": {
+        "title": "Globale parametre",
+        "subtitle": "Foreslå nye globale blockchain-parametre.",
+        "hover1": "Rediger tidsindstillinger, grænser og gebyrfordeling.",
+        "hover2": "Indsend ændringer via komitéforslag."
     },
     "governance": {
         "title": "Rolleregistrering",
@@ -438,6 +444,11 @@
         "subtitle": "Tildel specifikke temaer til individuelle sider",
         "hover1": "Tilsidesæt det aktuelle tema for enhver side i appen."
     },
+    "docs": {
+        "title": "Dokumentation",
+        "subtitle": "Vejledninger og reference til brug af appen",
+        "hover1": "Gennemse Starlight-dokumentationen for opsætning, funktioner og vejledninger."
+    },
     "airdrop": {
         "title": "Airdrop",
         "subtitle": "Fordel et aktiv massevis til mange konti på én gang.",
@@ -511,7 +522,7 @@
         "other": "Øvrige"
     },
     "explorer": {
-        "title": "Blockchain Explorer",
+        "title": "Blockchainudforsker",
         "subtitle": "Slå konti, aktiver, objekter, transaktioner og blokke op",
         "hover1": "Søg enhver konto eller aktiv via navn/ID og favoritér.",
         "hover2": "Inspicér rå x.x.x objekter og blokke via WS.",
@@ -522,5 +533,11 @@
         "subtitle": "Skift adgangskoden til din cloud-tegnebog.",
         "hover1": "Enkelt atomisk account_update, der erstatter owner-, active- og memo-nøgler.",
         "hover2": "Genereret eller egen adgangskode — samme afledning som ved oprettelse af konto."
+    },
+    "trollbox": {
+        "title": "Trollbox",
+        "subtitle": "On-chain chat på BitShares-blockchainen.",
+        "hover1": "Chat med andre brugere, gemt permanent på blockchainen.",
+        "hover2": "Afsenderen betaler et lille netværksgebyr pr. besked."
     }
 }

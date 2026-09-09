@@ -235,7 +235,7 @@ export default function InstantTrade(properties) {
   );
 
   const defaultCoreSymbol = _chain === "bitshares" ? "BTS" : "TEST";
-  const defaultQuoteSymbol = _chain === "bitshares" ? "HONEST.USD" : "TESTPMA";
+  const defaultQuoteSymbol = _chain === "bitshares" ? "HONEST.USD" : "NFTEA.TESTNET";
 
   const [assetA, setAssetA] = useState(!window.location.search ? defaultQuoteSymbol : null);
   const [assetB, setAssetB] = useState(!window.location.search ? defaultCoreSymbol : null);
@@ -1562,7 +1562,8 @@ export default function InstantTrade(properties) {
               : null
           }
           warningThresholdSec={10}
-        />
+        
+        chain={usr?.chain}/>
       </div>
     </div>
   );

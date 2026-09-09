@@ -71,6 +71,7 @@ import {
   Database,
   ListOrdered,
   Clock,
+  MessageSquare,
   Home,
   Layers,
   Menu,
@@ -128,6 +129,7 @@ const ICONS = {
   vote: Vote,
   witnesses: Eye,
   committee: Users,
+  committee_parameters: SlidersHorizontal,
   governance: Vote,
   create_worker: Pickaxe,
   create_ticket: Ticket,
@@ -153,6 +155,7 @@ const ICONS = {
   create_liquidity_pool: Droplets,
   airdrop_calculate: Calculator,
   blocked_users: UserX,
+  trollbox: MessageSquare,
 };
 
 // Matches a nav item href against the current path. The root ("/") must match
@@ -365,6 +368,7 @@ export default function PageHeader(properties) {
         { slug: "custom_pool_tracker", title: "Home:custom_pool_tracker.title", description: "Home:custom_pool_tracker.subtitle", href: "/custom_pool_overview.html" },
         { slug: "pools", title: "Home:pools.title", description: "Home:pools.subtitle", href: "/pools.html" },
         { slug: "top_operations", title: "Home:top_operations.title", description: "Home:top_operations.subtitle", href: "/top-operations.html" },
+        { slug: "trollbox", title: "Home:trollbox.title", description: "Home:trollbox.subtitle", href: "/trollbox.html" },
       ],
     },
     {
@@ -375,6 +379,7 @@ export default function PageHeader(properties) {
         { slug: "vote", title: "Home:vote.title", description: "Home:vote.subtitle", href: "/vote.html" },
         { slug: "witnesses", title: "Home:witnesses.title", description: "Home:witnesses.subtitle", href: "/witnesses.html" },
         { slug: "committee", title: "Home:committee.title", description: "Home:committee.subtitle", href: "/committee.html" },
+        { slug: "committee_parameters", title: "Home:committee_parameters.title", description: "Home:committee_parameters.subtitle", href: "/committee_parameters.html" },
         { slug: "governance", title: "Home:governance.title", description: "Home:governance.subtitle", href: "/governance.html" },
         { slug: "create_worker", title: "Home:create_worker.title", description: "Home:create_worker.subtitle", href: "/create_worker.html" },
         { slug: "create_ticket", title: "Home:create_ticket.title", description: "Home:create_ticket.subtitle", href: "/create_ticket.html" },

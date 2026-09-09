@@ -770,7 +770,8 @@ export default function CustomPoolOverview(properties) {
         blockNumber={livePools.blockNumber}
         nodeUrl={currentNode ? currentNode.url : null}
         warningThresholdSec={10}
-      />
+      
+        chain={_chain}/>
     </div>
   );
 }

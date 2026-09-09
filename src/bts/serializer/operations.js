@@ -80,7 +80,8 @@ export const call_order_update_operation_fee_parameters = new Serializer(
 );
 
 export const fill_order_operation_fee_parameters = new Serializer(
-  "fill_order_operation_fee_parameters"
+  "fill_order_operation_fee_parameters",
+  {}
 );
 
 export const account_create_operation_fee_parameters = new Serializer(
@@ -273,7 +274,8 @@ export const assert_operation_fee_parameters = new Serializer("assert_operation_
 });
 
 export const balance_claim_operation_fee_parameters = new Serializer(
-  "balance_claim_operation_fee_parameters"
+  "balance_claim_operation_fee_parameters",
+  {}
 );
 
 export const override_transfer_operation_fee_parameters = new Serializer(
@@ -306,7 +308,8 @@ export const transfer_from_blind_operation_fee_parameters = new Serializer(
 );
 
 export const asset_settle_cancel_operation_fee_parameters = new Serializer(
-  "asset_settle_cancel_operation_fee_parameters"
+  "asset_settle_cancel_operation_fee_parameters",
+  {}
 );
 
 export const asset_claim_fees_operation_fee_parameters = new Serializer(
@@ -315,7 +318,8 @@ export const asset_claim_fees_operation_fee_parameters = new Serializer(
 );
 
 export const fba_distribute_operation_fee_parameters = new Serializer(
-  "fba_distribute_operation_fee_parameters"
+  "fba_distribute_operation_fee_parameters",
+  {}
 );
 
 export const bid_collateral_operation_fee_parameters = new Serializer(
@@ -326,7 +330,8 @@ export const bid_collateral_operation_fee_parameters = new Serializer(
 );
 
 export const execute_bid_operation_fee_parameters = new Serializer(
-  "execute_bid_operation_fee_parameters"
+  "execute_bid_operation_fee_parameters",
+  {}
 );
 
 export const asset_claim_pool_operation_fee_parameters = new Serializer(
@@ -1061,6 +1066,21 @@ export const committee_member_update = new Serializer("committee_member_update",
   new_url: optional(string),
 });
 
+export const htlc_options = new Serializer("htlc_options", {
+  max_timeout_secs: uint32,
+  max_preimage_size: uint32,
+});
+
+export const custom_authority_options_type = new Serializer(
+  "custom_authority_options_type",
+  {
+    max_custom_authority_lifetime_seconds: uint32,
+    max_custom_authorities_per_account: uint32,
+    max_custom_authorities_per_account_op: uint32,
+    max_custom_authority_restrictions: uint32,
+  }
+);
+
 export const chain_parameters = new Serializer("chain_parameters", {
   current_fees: fee_schedule,
   block_interval: uint8,
@@ -1084,13 +1104,34 @@ export const chain_parameters = new Serializer("chain_parameters", {
   count_non_member_votes: bool,
   allow_non_member_whitelists: bool,
   witness_pay_per_block: int64,
+  witness_pay_vesting_seconds: uint32,
   worker_budget_per_day: int64,
   max_predicate_opcode: uint16,
   fee_liquidation_threshold: int64,
   accounts_per_fee_scale: uint16,
   account_fee_scale_bitshifts: uint8,
   max_authority_depth: uint8,
-  extensions: set(future_extensions),
+  // NOTE: core declares this as extension<ext> (named optional fields), not
+  // a set of future_extensions. A set() here cannot pack named content and
+  // breaks finalize() on any chain carrying extension values.
+  extensions: extension([
+    {
+      name: "updatable_htlc_options",
+      type: htlc_options,
+    },
+    {
+      name: "custom_authority_options",
+      type: custom_authority_options_type,
+    },
+    {
+      name: "market_fee_network_percent",
+      type: uint16,
+    },
+    {
+      name: "maker_fee_discount_percent",
+      type: uint16,
+    },
+  ]),
 });
 
 export const committee_member_update_global_parameters = new Serializer(

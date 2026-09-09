@@ -21,5 +21,60 @@
   "ยืม": "ยืม",
   "สมดุล": "สมดุล",
   "borrowed": "ยืมแล้ว",
-  "balance": "ยอดคงเหลือ"
+  "balance": "ยอดคงเหลือ",
+  "mode": {
+    "titleBTS": "คุณต้องการค้นหาสินทรัพย์บน Bitshares อย่างไร?",
+    "titleTEST": "คุณต้องการค้นหาสินทรัพย์บน Bitshares testnet อย่างไร?",
+    "search": "ค้นหาสินทรัพย์",
+    "searchSubtitle": "ค้นหาด้วยสัญลักษณ์หรือ ID",
+    "balances": "ยอดคงเหลือของฉัน",
+    "balancesSubtitle": "{{count}} ยอดคงเหลือ",
+    "featured": "สินทรัพย์เด่น",
+    "featuredSubtitle": "{{count}} รายการเด่น",
+    "favourites": "สินทรัพย์โปรด",
+    "favouritesSubtitle": "{{count}} รายการโปรด",
+    "recent": "สินทรัพย์ล่าสุด",
+    "recentSubtitle": "{{count}} รายการล่าสุด",
+    "back": "ย้อนกลับ"
+  },
+  "searchPage": {
+    "initDesc": "ค้นหาด้วยสัญลักษณ์ ID หรือผู้ออก",
+    "description": "เลือกสินทรัพย์เพื่อดำเนินการต่อ",
+    "placeholder": "เช่น BTS, USD, 1.3.0",
+    "back": "กลับไป",
+    "noResults": "ไม่พบสินทรัพย์",
+    "noResultsHint": "ลองปรับคำค้นหาของคุณ"
+  },
+  "favouritesPage": {
+    "description": "เลือกหนึ่งในสินทรัพย์โปรดของคุณ",
+    "none": "ไม่พบสินทรัพย์โปรด",
+    "noneHint": "คุณสามารถเพิ่มรายการโปรดจากหน้าโปรด"
+  },
+  "featuredPage": {
+    "description": "เรียกดูสินทรัพย์เด่นบนเชนนี้",
+    "none": "ไม่พบสินทรัพย์เด่น",
+    "noneHint": "ไม่มีสินทรัพย์ที่คัดสรรไว้",
+    "assets": "สินทรัพย์"
+  },
+  "featuredCategories": {
+    "committee": "คณะกรรมการเป็นเจ้าของ",
+    "committeeSubtitle": "ออกโดย committee-account",
+    "xbtsSubtitle": "สินทรัพย์ XBTS",
+    "btwtySubtitle": "สินทรัพย์ BTWTY",
+    "honestSubtitle": "สินทรัพย์ HONEST",
+    "nfteaSubtitle": "สินทรัพย์ NFTEA"
+  },
+  "balancesPage": {
+    "description": "เลือกหนึ่งในสินทรัพย์ที่มีคงเหลือของคุณ",
+    "none": "ไม่พบยอดคงเหลือ",
+    "noneHint": "คุณไม่มีสินทรัพย์ที่มียอดคงเหลือ"
+  },
+  "recent": {
+    "description": "เลือกหนึ่งในสินทรัพย์ที่เลือกล่าสุดของคุณ",
+    "none": "ไม่พบสินทรัพย์ล่าสุด",
+    "noneHint": "การเลือกสินทรัพย์ล่าสุดของคุณจะปรากฏที่นี่",
+    "eraseHistory": "ลบประวัติ"
+  },
+  "step1": "วิธีการ",
+  "step2": "เลือก"
 }
