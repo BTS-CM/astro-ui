@@ -318,48 +318,93 @@ export default function Barter(properties) {
       }
     }
 
-    const needIds = [];
-    if (/^1\.2\.\d+$/.test(counterpartyParam || "")) {
-      needIds.push(counterpartyParam);
+    const counterpartyValid = /^1\.2\.\d+$/.test(counterpartyParam || "");
+    if (counterpartyValid) {
+      // Fill the counterparty account immediately with the id as a name
+      // fallback; the resolver effect below upgrades it to the live name
+      // once the user's chain + node are known (they rehydrate after
+      // first render on fresh page loads).
+      setToAccount((prev) =>
+        prev ? prev : { id: counterpartyParam, name: counterpartyParam }
+      );
     }
     if (escrowValid) {
-      needIds.push(escrowParam);
-    }
-    let cancelled = false;
-    if (needIds.length) {
-      getObjects(_chain, [...new Set(needIds)], currentNode?.url || null)
-        .then((accounts) => {
-          if (cancelled) {
-            return;
-          }
-          const byId = {};
-          for (const a of accounts || []) {
-            if (a && a.id) {
-              byId[a.id] = a.name ?? a.id;
-            }
-          }
-          if (counterpartyParam && byId[counterpartyParam]) {
-            setToAccount((prev) =>
-              prev
-                ? prev
-                : { id: counterpartyParam, name: byId[counterpartyParam] }
-            );
-          }
-          if (escrowValid && byId[escrowParam]) {
-            setEscrowAccount((prev) =>
-              prev ? prev : { id: escrowParam, name: byId[escrowParam] }
-            );
-          }
-        })
-        .catch(() => {
-          // names stay unresolved; user can pick accounts manually
-        });
+      setEscrowAccount((prev) =>
+        prev ? prev : { id: escrowParam, name: escrowParam }
+      );
     }
     setUrlPrefilled(true);
+    return undefined;
+  }, [assets, urlPrefilled]);
+
+  // Node URL matching the active chain. $currentNode rehydrates after first
+  // render (and may belong to the other chain), so a mismatched URL must
+  // never be used for lookups — null falls back to this chain's default.
+  const accountNodeUrl =
+    currentNode && currentNode.chain === _chain && currentNode.url
+      ? currentNode.url
+      : null;
+
+  // Resolve display names for prefilled counterparty/escrow accounts.
+  // Separate from the one-shot prefill above so it retries as the chain
+  // and node become known. Only upgrades id-as-name placeholders, so
+  // manually picked accounts are never clobbered.
+  const toAccountId = toAccount && toAccount.id;
+  const toAccountName = toAccount && toAccount.name;
+  const escrowAccountId = escrowAccount && escrowAccount.id;
+  const escrowAccountName = escrowAccount && escrowAccount.name;
+  useEffect(() => {
+    const targets = [];
+    if (toAccountId && toAccountName === toAccountId) {
+      targets.push({ id: toAccountId, set: setToAccount });
+    }
+    if (
+      showEscrow &&
+      escrowAccountId &&
+      escrowAccountName === escrowAccountId
+    ) {
+      targets.push({ id: escrowAccountId, set: setEscrowAccount });
+    }
+    if (!targets.length) {
+      return undefined;
+    }
+    let cancelled = false;
+    getObjects(_chain, [...new Set(targets.map((t) => t.id))], accountNodeUrl)
+      .then((accounts) => {
+        if (cancelled) {
+          return;
+        }
+        const byId = {};
+        for (const a of accounts || []) {
+          if (a && a.id && typeof a.name === "string" && a.name) {
+            byId[a.id] = a.name;
+          }
+        }
+        for (const t of targets) {
+          if (byId[t.id]) {
+            t.set((prev) =>
+              prev && prev.id === t.id && prev.name !== byId[t.id]
+                ? { id: t.id, name: byId[t.id] }
+                : prev
+            );
+          }
+        }
+      })
+      .catch(() => {
+        // id fallbacks stay; user can still pick accounts manually
+      });
     return () => {
       cancelled = true;
     };
-  }, [assets, _chain, currentNode, urlPrefilled]);
+  }, [
+    toAccountId,
+    toAccountName,
+    escrowAccountId,
+    escrowAccountName,
+    showEscrow,
+    _chain,
+    accountNodeUrl,
+  ]);
 
   useEffect(() => {
     async function fetchFromBalances() {

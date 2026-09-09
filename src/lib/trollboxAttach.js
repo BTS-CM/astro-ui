@@ -337,7 +337,12 @@ export function resolveAttachmentMeta(
         if (!asset || typeof asset.symbol !== "string") {
           return null;
         }
-        out.push({ instance: e.a, symbol: asset.symbol, amount: e.n });
+        out.push({
+          instance: e.a,
+          id: `1.3.${e.a}`,
+          symbol: asset.symbol,
+          amount: e.n,
+        });
       }
       return out;
     };

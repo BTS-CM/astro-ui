@@ -109,6 +109,7 @@ import {
   $trollboxLang,
   fetchChannelMessages,
   fetchMaxMessageBytes,
+  fetchRoleAccountIds,
   findSupportingNode,
   isPluginMissingError,
   isSupportedTrollboxLang,
@@ -124,6 +125,13 @@ import {
   resolveAttachmentMeta,
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
+import { getTopDonators } from "@/nanoeffects/TopDonators.ts";
+import {
+  DONATIONS_ASSET_ID,
+  DONATIONS_LIMIT,
+  DONATIONS_LOOKBACK_DAYS,
+  DONATIONS_TARGET_ID,
+} from "@/config/donations.ts";
 import {
   TROLLBOX_OP_ID,
   buildMessageKey,
@@ -141,6 +149,7 @@ import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
 import TrollboxRisks from "@/components/TrollboxRisks.jsx";
 import { Avatar } from "@/components/Avatar.tsx";
+import { getObjects } from "@/nanoeffects/src/common";
 
 const POLL_MS = 15000;
 const TROLLBOX_ROW_HEIGHT = 96;
@@ -216,6 +225,71 @@ function attachActionLabel(t, action) {
   return key ? t(`Trollbox:${key}`, action.key) : action.key;
 }
 
+function buildDonorRankMap(donors) {
+  const rank = {};
+  if (!Array.isArray(donors)) {
+    return rank;
+  }
+  donors.forEach((d, index) => {
+    if (d && typeof d.id === "string" && !(d.id in rank)) {
+      rank[d.id] = index + 1;
+    }
+  });
+  return rank;
+}
+
+function getDonorBadgeInfo(accountId, donorRank) {
+  const rank = donorRank ? donorRank[accountId] : undefined;
+  if (!rank) {
+    return null;
+  }
+  if (rank >= 1 && rank <= 3) {
+    return { kind: "top", rank };
+  }
+  return { kind: "donor", rank };
+}
+
+function donorMedal(rank) {
+  if (rank === 1) {
+    return "🥇";
+  }
+  if (rank === 2) {
+    return "🥈";
+  }
+  if (rank === 3) {
+    return "🥉";
+  }
+  return "";
+}
+
+function donorBadgeClassName(rank) {
+  const base =
+    "inline-flex shrink-0 items-center rounded border px-1.5 py-px text-[10px] font-medium";
+  if (rank === 1) {
+    return `${base} border-yellow-500/60 bg-yellow-500/15 text-yellow-700 dark:text-yellow-300`;
+  }
+  if (rank === 2) {
+    return `${base} border-slate-400/60 bg-slate-400/15 text-slate-600 dark:text-slate-300`;
+  }
+  if (rank === 3) {
+    return `${base} border-amber-700/60 bg-amber-700/15 text-amber-700 dark:text-amber-400`;
+  }
+  return `${base} border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400`;
+}
+
+function donorBadgeDialogClassName(rank) {
+  if (rank === 1) {
+    return "shrink-0 border-yellow-500/60 bg-yellow-500/15 text-[11px] text-yellow-700 dark:text-yellow-300";
+  }
+  if (rank === 2) {
+    return "shrink-0 border-slate-400/60 bg-slate-400/15 text-[11px] text-slate-600 dark:text-slate-300";
+  }
+  if (rank === 3) {
+    return "shrink-0 border-amber-700/60 bg-amber-700/15 text-[11px] text-amber-700 dark:text-amber-400";
+  }
+  return "shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[11px] text-emerald-700 dark:text-emerald-400";
+}
+
 const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   index,
   style,
@@ -225,6 +299,15 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   blockLabel,
   blockSelfLabel,
   ltmLabel,
+  roleWitnessIds,
+  roleCommitteeIds,
+  roleWitnessLabel,
+  roleCommitteeLabel,
+  donorRank,
+  donorLabel,
+  topDonorLabel,
+  donorTitle,
+  topDonorTitle,
   attachMetas,
   attachBadgeLabel,
   onBlockUser,
@@ -236,6 +319,29 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
   }
   const isOwn = m.account === currentUserId;
   const attachMeta = attachMetas[m.id] || null;
+  const roleLabel = [
+    roleWitnessIds.includes(m.account) ? roleWitnessLabel : null,
+    roleCommitteeIds.includes(m.account) ? roleCommitteeLabel : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const donorBadge = getDonorBadgeInfo(m.account, donorRank);
+  const donorBadgeLabel = donorBadge
+    ? donorBadge.kind === "top"
+      ? `${donorMedal(donorBadge.rank)} ${
+          topDonorTitle
+            ? topDonorTitle.replace("{{rank}}", String(donorBadge.rank))
+            : `${topDonorLabel} #${donorBadge.rank}`
+        }`
+      : donorLabel
+    : null;
+  const donorBadgeTitle = donorBadge
+    ? donorBadge.kind === "top"
+      ? topDonorTitle
+        ? topDonorTitle.replace("{{rank}}", String(donorBadge.rank))
+        : `${topDonorLabel} #${donorBadge.rank}`
+      : donorTitle || donorLabel
+    : null;
   return (
     <div style={{ ...style, paddingBottom: "8px" }}>
       <div className="grid grid-cols-12 gap-2">
@@ -268,14 +374,29 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
               ) : null}
               <span className="truncate">{m.displayAuthor}</span>
               <span className="text-xs font-normal text-muted-foreground shrink-0">
-                {m.id}
+                {m.account}
               </span>
-              {attachMeta ? (
-                <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
-                  <AttachTypeIcon type={attachMeta.type} />
-                  <span className="max-w-[140px] truncate">{attachBadgeLabel(attachMeta)}</span>
-                </span>
-              ) : null}
+              <span className="ml-auto inline-flex shrink-0 items-center gap-1">
+                {roleLabel ? (
+                  <span className="inline-flex shrink-0 items-center rounded border border-border bg-accent/30 px-1.5 py-px text-[10px] font-medium text-muted-foreground">
+                    {roleLabel}
+                  </span>
+                ) : null}
+                {donorBadge ? (
+                  <span
+                    title={donorBadgeTitle}
+                    className={donorBadgeClassName(donorBadge.rank)}
+                  >
+                    {donorBadgeLabel}
+                  </span>
+                ) : null}
+                {attachMeta ? (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
+                    <AttachTypeIcon type={attachMeta.type} />
+                    <span className="max-w-[140px] truncate">{attachBadgeLabel(attachMeta)}</span>
+                  </span>
+                ) : null}
+              </span>
             </ItemTitle>
           <p className="w-full pr-2 text-sm font-normal leading-normal text-muted-foreground line-clamp-2">
             {truncatePreview(m.text)}
@@ -398,6 +519,54 @@ export default function Trollbox(properties) {
   const [verifyingAttach, setVerifyingAttach] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
   const [maxBytes, setMaxBytes] = useState(() => maxMessageBytes());
+  const [roleIds, setRoleIds] = useState({ witnesses: [], committee: [] });
+  const [donorRank, setDonorRank] = useState({});
+
+  // Active witness / committee account IDs (decorative only; failures
+  // silently yield no badges).
+  useEffect(() => {
+    if (!nodeUrl) {
+      return undefined;
+    }
+    let cancelled = false;
+    fetchRoleAccountIds(chain, nodeUrl).then((roles) => {
+      if (!cancelled) {
+        setRoleIds(roles);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [chain, nodeUrl]);
+
+  // Monthly Referrer donor ranks (decorative only; mainnet only; failures
+  // silently yield no badges). Same source as /monthly_referrer.html.
+  useEffect(() => {
+    if (chain !== "bitshares") {
+      setDonorRank({});
+      return undefined;
+    }
+    let cancelled = false;
+    getTopDonators(
+      DONATIONS_TARGET_ID,
+      DONATIONS_ASSET_ID,
+      DONATIONS_LIMIT,
+      DONATIONS_LOOKBACK_DAYS
+    )
+      .then((donors) => {
+        if (!cancelled) {
+          setDonorRank(buildDonorRankMap(donors));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDonorRank({});
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [chain]);
 
   const channelInfo = useMemo(
     () => TROLLBOX_CHANNELS.find((c) => c.id === activeChannel),
@@ -777,6 +946,12 @@ export default function Trollbox(properties) {
   const blockLabel = t("Trollbox:blockUser", "Block user");
   const blockSelfLabel = t("Trollbox:blockSelf", "You can't block yourself");
   const ltmLabel = t("Trollbox:ltmMember", "Lifetime member");
+  const roleWitnessLabel = t("Trollbox:roleWitnessBadge", "witness");
+  const roleCommitteeLabel = t("Trollbox:roleCommitteeBadge", "committee member");
+  const donorLabel = t("Trollbox:donorBadge", "donor");
+  const topDonorLabel = t("Trollbox:topDonorBadge", "top donor");
+  const donorTitle = t("Trollbox:donorBadgeTitle", "Monthly donor");
+  const topDonorTitle = t("Trollbox:topDonorBadgeTitle", "Top donor #{{rank}}");
   const handleOpenMessage = useCallback((m) => {
     setOpenMessage(m);
   }, []);
@@ -805,6 +980,15 @@ export default function Trollbox(properties) {
       blockLabel,
       blockSelfLabel,
       ltmLabel,
+      roleWitnessIds: roleIds.witnesses,
+      roleCommitteeIds: roleIds.committee,
+      roleWitnessLabel,
+      roleCommitteeLabel,
+      donorRank,
+      donorLabel,
+      topDonorLabel,
+      donorTitle,
+      topDonorTitle,
       attachMetas,
       attachBadgeLabel,
       onBlockUser: handleBlockUser,
@@ -817,12 +1001,64 @@ export default function Trollbox(properties) {
       blockLabel,
       blockSelfLabel,
       ltmLabel,
+      roleIds,
+      roleWitnessLabel,
+      roleCommitteeLabel,
+      donorRank,
+      donorLabel,
+      topDonorLabel,
+      donorTitle,
+      topDonorTitle,
       attachMetas,
       attachBadgeLabel,
       handleBlockUser,
       handleOpenMessage,
     ]
   );
+
+  const openRoleLabel = useMemo(() => {
+    if (!openMessage) {
+      return null;
+    }
+    return [
+      roleIds.witnesses.includes(openMessage.account) ? roleWitnessLabel : null,
+      roleIds.committee.includes(openMessage.account)
+        ? roleCommitteeLabel
+        : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+  }, [openMessage, roleIds, roleWitnessLabel, roleCommitteeLabel]);
+
+  const openDonorBadge = useMemo(() => {
+    if (!openMessage) {
+      return null;
+    }
+    return getDonorBadgeInfo(openMessage.account, donorRank);
+  }, [openMessage, donorRank]);
+
+  const openDonorLabel = useMemo(() => {
+    if (!openDonorBadge) {
+      return null;
+    }
+    if (openDonorBadge.kind === "top") {
+      return `${donorMedal(openDonorBadge.rank)} ${topDonorTitle.replace(
+        "{{rank}}",
+        String(openDonorBadge.rank)
+      )}`;
+    }
+    return donorLabel;
+  }, [openDonorBadge, donorLabel, topDonorTitle]);
+
+  const openDonorTitle = useMemo(() => {
+    if (!openDonorBadge) {
+      return null;
+    }
+    if (openDonorBadge.kind === "top") {
+      return topDonorTitle.replace("{{rank}}", String(openDonorBadge.rank));
+    }
+    return donorTitle;
+  }, [openDonorBadge, donorTitle, topDonorTitle]);
 
   const openAttachMeta = useMemo(() => {
     if (!openMessage || !openMessage.attach) {
@@ -863,6 +1099,42 @@ export default function Trollbox(properties) {
       cancelled = true;
     };
   }, [openMessage, openAttachMeta, chain, probe.state, probe.node, nodeUrl]);
+
+  // Escrow agent display name for an opened barter attachment (display
+  // only; identity is always the stored 1.2.x id). Resolved live; falls
+  // back to the raw id while loading or when the lookup fails.
+  const [escrowAgentName, setEscrowAgentName] = useState(null);
+  // $currentNode rehydrates after first render and may belong to the other
+  // chain — never look an account up on a mismatched node (null falls back
+  // to this chain's default node inside getObjects).
+  const escrowNodeUrl =
+    currentNode && currentNode.chain === chain && currentNode.url
+      ? currentNode.url
+      : null;
+  useEffect(() => {
+    setEscrowAgentName(null);
+    const escrowId = openAttachMeta?.details?.escrow?.account;
+    if (!openMessage || openAttachMeta?.type !== "barter" || !escrowId) {
+      return undefined;
+    }
+    let cancelled = false;
+    getObjects(chain, [escrowId], escrowNodeUrl)
+      .then((accounts) => {
+        if (cancelled) {
+          return;
+        }
+        const found = (accounts || []).find((a) => a && a.id === escrowId);
+        if (found && typeof found.name === "string" && found.name) {
+          setEscrowAgentName(found.name);
+        }
+      })
+      .catch(() => {
+        // keep raw id fallback
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [openMessage, openAttachMeta, chain, escrowNodeUrl]);
 
   const favouriteAssets = useStore($favouriteAssets);
   const favouritePairs = useStore($favouritePairs);
@@ -1446,12 +1718,31 @@ export default function Trollbox(properties) {
                       {openMessage.displayAuthor}
                     </DialogTitle>
                     <DialogDescription className="font-mono">
-                      {openMessage.id}
+                      {openMessage.account}
                     </DialogDescription>
                   </div>
-                  <Badge variant="secondary" className="ml-auto shrink-0">
-                    #{openMessage.channel ?? activeChannel}
-                  </Badge>
+                  <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+                    {openRoleLabel ? (
+                      <Badge
+                        variant="outline"
+                        className="shrink-0 text-[11px]"
+                      >
+                        {openRoleLabel}
+                      </Badge>
+                    ) : null}
+                    {openDonorBadge ? (
+                      <Badge
+                        variant="outline"
+                        title={openDonorTitle}
+                        className={donorBadgeDialogClassName(openDonorBadge.rank)}
+                      >
+                        {openDonorLabel}
+                      </Badge>
+                    ) : null}
+                    <Badge variant="secondary" className="shrink-0">
+                      #{openMessage.channel ?? activeChannel}
+                    </Badge>
+                  </div>
                 </div>
               </DialogHeader>
               <Textarea
@@ -1476,7 +1767,7 @@ export default function Trollbox(properties) {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="ml-auto h-7 shrink-0"
+                            className="ml-auto h-7 shrink-0 hover:bg-accent/60"
                           >
                             {t("Trollbox:attachActions", "Actions")}
                           </Button>
@@ -1511,7 +1802,7 @@ export default function Trollbox(properties) {
                         </p>
                         {openAttachMeta.details.offer.map((l, i) => (
                           <p key={i} className="font-mono text-muted-foreground">
-                            {l.amount} {l.symbol}
+                            {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
                           </p>
                         ))}
                       </div>
@@ -1521,14 +1812,16 @@ export default function Trollbox(properties) {
                         </p>
                         {openAttachMeta.details.want.map((l, i) => (
                           <p key={i} className="font-mono text-muted-foreground">
-                            {l.amount} {l.symbol}
+                            {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
                           </p>
                         ))}
                       </div>
                       {openAttachMeta.details.escrow ? (
                         <p className="text-muted-foreground">
                           {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
-                            account: openAttachMeta.details.escrow.account,
+                            account: escrowAgentName
+                              ? `${escrowAgentName} (${openAttachMeta.details.escrow.account})`
+                              : openAttachMeta.details.escrow.account,
                             fee: openAttachMeta.details.escrow.fee,
                             first:
                               openAttachMeta.details.escrow.first === "me"
@@ -1541,9 +1834,28 @@ export default function Trollbox(properties) {
                   ) : null}
                 </div>
               ) : null}
-              <p className="text-xs text-muted-foreground">
-                {openMessage.account}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-xs text-muted-foreground truncate flex-1 min-w-0">
+                  {openMessage.id}
+                </p>
+                {loggedIn && openMessage.account !== currentUserId ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-auto shrink-0 text-muted-foreground hover:text-destructive"
+                    onClick={() => {
+                      setBlockTarget({
+                        account: openMessage.account,
+                        displayAuthor: openMessage.displayAuthor,
+                      });
+                      setOpenMessage(null);
+                    }}
+                  >
+                    <Ban className="mr-1 h-3.5 w-3.5" />
+                    {t("Trollbox:blockUser", "Block user")}
+                  </Button>
+                ) : null}
+              </div>
             </>
           ) : null}
         </DialogContent>

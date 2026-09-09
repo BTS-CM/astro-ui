@@ -410,6 +410,7 @@ export default function TrollboxAttachDialog(properties) {
     marketSearch,
     pools,
     allowedTypes,
+    initialValue,
     onAttach,
   } = properties;
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });

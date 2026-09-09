@@ -59,7 +59,6 @@ export default function TrollboxRisks() {
             )}
           >
             <li>{t("Trollbox:riskLinks1")}</li>
-            <li>{t("Trollbox:riskLinks2")}</li>
             <li>{t("Trollbox:riskLinks3")}</li>
           </RiskGroup>
 

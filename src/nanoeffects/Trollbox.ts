@@ -135,6 +135,74 @@ export type TrollboxProbe = {
   reason?: "missing" | "error";
 };
 
+export type TrollboxRoles = {
+  witnesses: string[];
+  committee: string[];
+};
+
+let rolesCache: {
+  at: number;
+  chain: string;
+  node: string;
+  roles: TrollboxRoles;
+} | null = null;
+const ROLES_TTL_MS = 10 * 60 * 1000;
+
+/**
+ * Account IDs of the currently active witnesses and committee members,
+ * derived from global properties (active_witnesses / active_committee_
+ * members object IDs → witness_account / committee_member_account).
+ * Cached per node (roles only change at maintenance intervals); failures
+ * fall back to stale cache or empty lists — roles are decorative only.
+ */
+export async function fetchRoleAccountIds(
+  chain: string,
+  node: string
+): Promise<TrollboxRoles> {
+  const now = Date.now();
+  if (
+    rolesCache &&
+    rolesCache.chain === chain &&
+    rolesCache.node === node &&
+    now - rolesCache.at < ROLES_TTL_MS
+  ) {
+    return rolesCache.roles;
+  }
+  const empty: TrollboxRoles = { witnesses: [], committee: [] };
+  try {
+    const roles = await withApi(node, async (api) => {
+      const props = await api.db_api().exec("get_global_properties", []);
+      const witnessIds: string[] = props?.active_witnesses ?? [];
+      const committeeIds: string[] = props?.active_committee_members ?? [];
+      const objs: any[] =
+        (await api
+          .db_api()
+          .exec("get_objects", [[...witnessIds, ...committeeIds]])) ?? [];
+      const witnesses: string[] = [];
+      const committee: string[] = [];
+      for (const o of objs) {
+        if (!o || typeof o.id !== "string") {
+          continue;
+        }
+        if (typeof o.witness_account === "string") {
+          witnesses.push(o.witness_account);
+        } else if (typeof o.committee_member_account === "string") {
+          committee.push(o.committee_member_account);
+        }
+      }
+      return { witnesses, committee };
+    });
+    rolesCache = { at: now, chain, node, roles };
+    return roles;
+  } catch (error) {
+    console.warn("Trollbox: could not load witness/committee roles:", error);
+    if (rolesCache && rolesCache.chain === chain && rolesCache.node === node) {
+      return rolesCache.roles;
+    }
+    return empty;
+  }
+}
+
 export type TrollboxMessage = {
   id: string;
   account: string;
