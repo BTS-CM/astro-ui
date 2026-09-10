@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ForumThread from '../components/ForumThread.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+---
+
+<Layout title="Forum Thread">
+	<main>
+		<PageHeader client:only="react" page="forum" />
+		<ForumThread client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/forum_thread.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: hsl(var(--foreground));
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

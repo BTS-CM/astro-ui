@@ -3,6 +3,11 @@ import ByteBuffer from "./ByteBuffer.js";
 import types from "./types.js";
 import SerializerImpl from "./serializer.js";
 import { validateAttachmentShape } from "../../lib/trollboxAttach.js";
+import {
+  isForumTopicCatalog,
+  validateReplyShape,
+  validateTopicShape,
+} from "../../lib/forumPost.js";
 
 // types.js / ByteBuffer.js use the bare Buffer global, which browsers do
 // not provide. Same per-module polyfill as AirdropCalculate.jsx: install it
@@ -43,6 +48,10 @@ export const custom_plugin_operation = static_variant([account_storage_map]);
 // custom_operations plugin ignores this field; a constant keeps chain
 // explorers filterable and leaves the channel in the catalog + JSON payload.
 export const TROLLBOX_OP_ID = 9199;
+
+// Same convention for forum topics/replies/deletes: one below the
+// trollbox id so the two apps stay separately filterable on-chain.
+export const FORUM_OP_ID = 9198;
 
 // BitShares operation id for custom_operation (protocol/operations.hpp).
 export const CUSTOM_OPERATION_ID = 35;
@@ -234,4 +243,104 @@ export function decodeTrollboxValue(storageObject) {
     text: raw.text,
     attach,
   };
+}
+
+/**
+ * Encode a forum topic (ad + OP unified) into custom_operation.data hex.
+ * Topics live in `forum-<channel>` catalogs under key `th`. Shape is
+ * exactly {title, text} — the catalog IS the type, and authorship is the
+ * chain-stamped payer, so no t/v/u/ln fields are stored.
+ */
+export function buildForumTopicData({ catalog, key, title, text, maxBytes = maxMessageBytes() }) {
+  if (typeof catalog !== "string" || !/^forum-(general|announcements|trading|governance|dev)$/.test(catalog)) {
+    throw new Error("unknown forum channel catalog");
+  }
+  const valid = validateTopicShape({ title, text });
+  if (!valid) {
+    throw new Error("invalid forum topic (title 3-120 chars, text 1-1500 chars)");
+  }
+  const value = JSON.stringify(valid);
+  const bytes = utf8Length(value);
+  if (bytes > maxBytes) {
+    throw new Error(`topic is ${bytes - maxBytes} bytes over the size limit (${maxBytes} bytes)`);
+  }
+  assertKey(key);
+  return packAccountStorageMap({ remove: false, catalog, entries: [[key, value]] });
+}
+
+/**
+ * Encode a forum reply into custom_operation.data hex. Replies live in
+ * `forum-topic-<hash16>` catalogs; threading is a `> ` quote convention
+ * inside text, not a protocol field. Shape is exactly {text}.
+ */
+export function buildForumReplyData({ catalog, key, text, maxBytes = maxMessageBytes() }) {
+  if (!isForumTopicCatalog(catalog)) {
+    throw new Error("unknown forum thread catalog");
+  }
+  const valid = validateReplyShape({ text });
+  if (!valid) {
+    throw new Error("invalid forum reply (text 1-1500 chars)");
+  }
+  const value = JSON.stringify(valid);
+  const bytes = utf8Length(value);
+  if (bytes > maxBytes) {
+    throw new Error(`reply is ${bytes - maxBytes} bytes over the size limit (${maxBytes} bytes)`);
+  }
+  assertKey(key);
+  return packAccountStorageMap({ remove: false, catalog, entries: [[key, value]] });
+}
+
+/**
+ * Decode an account_storage_object value from a forum catalog into a
+ * normalized topic ({kind: "topic", title, text}) or reply
+ * ({kind: "reply", text}). The catalog determines the expected shape —
+ * cross-shaped payloads return null. Authorship comes only from
+ * storageObject.account (chain-stamped); no author fields are read.
+ */
+export function decodeForumValue(storageObject) {
+  if (!storageObject) {
+    return null;
+  }
+  const { catalog, key } = storageObject;
+  let raw = storageObject.value;
+  if (typeof raw === "string") {
+    try {
+      raw = JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+  if (typeof catalog === "string" && /^forum-(general|announcements|trading|governance|dev)$/.test(catalog)) {
+    const valid = validateTopicShape(raw);
+    if (!valid) {
+      return null;
+    }
+    return {
+      id: storageObject.id,
+      account: storageObject.account,
+      catalog,
+      key,
+      kind: "topic",
+      title: valid.title,
+      text: valid.text,
+    };
+  }
+  if (isForumTopicCatalog(catalog)) {
+    const valid = validateReplyShape(raw);
+    if (!valid) {
+      return null;
+    }
+    return {
+      id: storageObject.id,
+      account: storageObject.account,
+      catalog,
+      key,
+      kind: "reply",
+      text: valid.text,
+    };
+  }
+  return null;
 }

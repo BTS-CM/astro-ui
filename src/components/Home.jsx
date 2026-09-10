@@ -172,6 +172,7 @@ const ITEM_ICONS = {
   top_markets: TrendingUp,
   top_pools: Droplets,
   trollbox: MessageSquare,
+  forum: MessageSquare,
   docs: BookOpen,
 };
 
@@ -370,6 +371,7 @@ export default function Home(properties) {
     { key: "top_pools", href: "/top-pools.html", titleKey: "Home:top_pools.title", subtitleKey: "Home:top_pools.subtitle", hoverKeys: ["Home:top_pools.hover1", "Home:top_pools.hover2"] },
     { key: "top_operations", href: "/top-operations.html", titleKey: "Home:top_operations.title", subtitleKey: "Home:top_operations.subtitle", hoverKeys: ["Home:top_operations.hover1", "Home:top_operations.hover2"] },
     { key: "trollbox", href: "/trollbox.html", titleKey: "Home:trollbox.title", subtitleKey: "Home:trollbox.subtitle", hoverKeys: ["Home:trollbox.hover1", "Home:trollbox.hover2"] },
+    { key: "forum", href: "/forum.html", titleKey: "Home:forum.title", subtitleKey: "Home:forum.subtitle", hoverKeys: ["Home:forum.hover1", "Home:forum.hover2"] },
   ];
 
   const governance = [

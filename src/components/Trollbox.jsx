@@ -74,7 +74,6 @@ import {
   Paperclip,
   Radio,
   Send,
-  Server,
   FlaskConical,
   RefreshCw,
   TriangleAlert,
@@ -83,7 +82,7 @@ import {
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode, setCurrentNode } from "@/stores/node.ts";
+import { $currentNode } from "@/stores/node.ts";
 import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
 import {
   $favouriteAssets,
@@ -110,7 +109,6 @@ import {
   fetchChannelMessages,
   fetchMaxMessageBytes,
   fetchRoleAccountIds,
-  findSupportingNode,
   isPluginMissingError,
   isSupportedTrollboxLang,
   channelAllowsAttach,
@@ -507,8 +505,6 @@ export default function Trollbox(properties) {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
   const [refreshNonce, setRefreshNonce] = useState(0);
-  const [finding, setFinding] = useState(false);
-  const [switchNotice, setSwitchNotice] = useState(null);
   const [composeError, setComposeError] = useState(null);
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
@@ -715,22 +711,6 @@ export default function Trollbox(properties) {
       clearInterval(timer);
     };
   }, [chain, probe.state, probe.node, channelInfo, activeCatalog, refreshNonce]);
-
-  const handleFindNode = async () => {
-    setFinding(true);
-    setSwitchNotice(null);
-    try {
-      const url = await findSupportingNode(chain);
-      if (url) {
-        setCurrentNode(chain, url);
-        setSwitchNotice({ kind: "found", url });
-      } else {
-        setProbe({ state: "none", node: nodeUrl });
-      }
-    } finally {
-      setFinding(false);
-    }
-  };
 
   const handleSend = async () => {
     setComposeError(null);
@@ -1272,24 +1252,16 @@ export default function Trollbox(properties) {
                     )
                   : t(
                       "Trollbox:probeUnsupported",
-                      "This node does not run the custom_operations plugin, so chat history cannot be read here. Broadcasting still works from any node; switching to a plugin node makes history visible."
+                      "This node does not run the custom_operations plugin, so chat history cannot be read here. Broadcasting still works from any node; choose a node with the plugin enabled in node settings to read history."
                     )}
             </p>
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleFindNode}
-                disabled={finding}
+                onClick={() => window.location.assign("/nodes.html")}
               >
-                {finding ? (
-                  <Spinner className="mr-1 h-3 w-3" />
-                ) : (
-                  <Server className="mr-1 h-3 w-3" />
-                )}
-                {finding
-                  ? t("Trollbox:findingNode", "Scanning nodes…")
-                  : t("Trollbox:findNode", "Find a supported node")}
+                {t("Trollbox:changeNode", "Go to node settings")}
               </Button>
               <Button
                 variant="ghost"
@@ -1300,13 +1272,6 @@ export default function Trollbox(properties) {
                 {t("Trollbox:retry", "Retry")}
               </Button>
             </div>
-            {switchNotice?.kind === "found" ? (
-              <p>
-                {t("Trollbox:switchedNode", "Switched to {{node}}.", {
-                  node: switchNotice.url,
-                })}
-              </p>
-            ) : null}
           </AlertDescription>
         </Alert>
       ) : null}

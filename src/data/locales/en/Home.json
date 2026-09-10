@@ -535,5 +535,11 @@
         "subtitle": "On-chain chat on the BitShares blockchain.",
         "hover1": "Chat with other users, stored permanently on the blockchain.",
         "hover2": "The sender pays a small network fee per message."
+    },
+    "forum": {
+        "title": "Forum",
+        "subtitle": "On-chain discussion on the BitShares blockchain.",
+        "hover1": "Start topics and reply, stored permanently on the blockchain.",
+        "hover2": "The sender pays a small network fee per post."
     }
 }
