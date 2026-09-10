@@ -1,14 +1,40 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import Forum from '../components/Forum.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const btsMarkets = btsMarketData.map(collection => collection.data);
+const testMarkets = testMarketData.map(collection => collection.data);
+const btsPoolsList = btsPools.map(collection => collection.data);
+const testPoolsList = testPools.map(collection => collection.data);
 ---
 
 <Layout title="Forum">
 	<main>
 		<PageHeader client:only="react" page="forum" />
-		<Forum client:only="react" />
+		<Forum
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={btsMarkets}
+			_marketSearchTEST={testMarkets}
+			_poolsBTS={btsPoolsList}
+			_poolsTEST={testPoolsList}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/forum.astro" />
 	</main>
 </Layout>

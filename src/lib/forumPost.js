@@ -8,6 +8,10 @@
  * - Authorship is NEVER taken from payload fields: there are no `u`/`v`/`t`
  *   fields at all. The author is always `storageObject.account`
  *   (chain-stamped payer). Display names resolve live via get_accounts.
+ * - Topics/replies carry an optional `attach` (trollbox attachment shape,
+ *   at most one per post). Attachment validation is injected by the caller
+ *   (customOperations.js wires validateAttachmentShape) to keep this
+ *   module dependency-free.
  * - The catalog IS the type: objects in `forum-<channel>` are topics,
  *   objects in `forum-topic-<hash16>` are replies. Cross-shaped payloads
  *   are hidden.
@@ -101,8 +105,6 @@ export function isThreadKey(v) {
 export const FORUM_TITLE_MIN = 3;
 export const FORUM_TITLE_MAX = 120;
 export const FORUM_TEXT_MAX_CHARS = 1500;
-/** Max rendered `> ` quote lines before collapsing the rest. */
-export const FORUM_QUOTE_LINE_MAX = 8;
 
 function isPlainObject(v) {
   return !!v && typeof v === "object" && !Array.isArray(v);
@@ -135,62 +137,63 @@ function isTextString(v) {
 
 /**
  * Validate a raw topic value (from a `forum-<channel>` catalog).
- * Shape is exactly {title, text} — no t/v/u/ln fields. Returns the
- * canonical {title, text} (trimmed) or null.
+ * Shape is {title, text} with an optional `attach` (trollbox attachment
+ * shape, at most one). Returns the canonical {title, text, attach?}
+ * (trimmed) or null. Authorship is never read here — it always comes
+ * from storageObject.account (chain-stamped payer).
  */
-export function validateTopicShape(raw) {
-  if (!isPlainObject(raw) || !hasExactKeys(raw, ["title", "text"])) {
+export function validateTopicShape(raw, validateAttachment) {
+  if (!isPlainObject(raw)) {
+    return null;
+  }
+  const hasAttach = Object.prototype.hasOwnProperty.call(raw, "attach");
+  if (!hasExactKeys(raw, hasAttach ? ["title", "text", "attach"] : ["title", "text"])) {
     return null;
   }
   if (!isTitleString(raw.title) || !isTextString(raw.text)) {
     return null;
   }
-  return { title: raw.title.trim(), text: raw.text.trim() };
+  const out = { title: raw.title.trim(), text: raw.text.trim() };
+  if (hasAttach) {
+    if (typeof validateAttachment !== "function") {
+      return null;
+    }
+    const attach = validateAttachment(raw.attach);
+    if (!attach) {
+      return null;
+    }
+    out.attach = attach;
+  }
+  return out;
 }
 
 /**
  * Validate a raw reply value (from a `forum-topic-<hash>` catalog).
- * Shape is exactly {text}; threading is a `> ` quote convention inside
- * the text, not a protocol field. Returns {text} (trimmed) or null.
+ * Shape is {text} with an optional `attach`. Threading is a `> ` quote
+ * convention inside the text, not a protocol field. Returns {text,
+ * attach?} (trimmed) or null.
  */
-export function validateReplyShape(raw) {
-  if (!isPlainObject(raw) || !hasExactKeys(raw, ["text"])) {
+export function validateReplyShape(raw, validateAttachment) {
+  if (!isPlainObject(raw)) {
+    return null;
+  }
+  const hasAttach = Object.prototype.hasOwnProperty.call(raw, "attach");
+  if (!hasExactKeys(raw, hasAttach ? ["text", "attach"] : ["text"])) {
     return null;
   }
   if (!isTextString(raw.text)) {
     return null;
   }
-  return { text: raw.text.trim() };
-}
-
-/**
- * Split reply text into {quotes, body}: leading `> ` / `>` lines are the
- * quote block (social convention only — never trusted as authorship).
- * Returns at most FORUM_QUOTE_LINE_MAX quote lines plus overflow count.
- */
-export function splitQuote(text) {
-  const lines = String(text ?? "").split("\n");
-  const quotes = [];
-  let i = 0;
-  // Only a leading quote block counts; `>` lines after body text stay body.
-  let inQuote = true;
-  for (; i < lines.length; i++) {
-    const line = lines[i];
-    if (inQuote && /^\s*> ?/.test(line)) {
-      quotes.push(line.replace(/^\s*> ?/, ""));
-    } else {
-      inQuote = false;
-      break;
+  const out = { text: raw.text.trim() };
+  if (hasAttach) {
+    if (typeof validateAttachment !== "function") {
+      return null;
     }
+    const attach = validateAttachment(raw.attach);
+    if (!attach) {
+      return null;
+    }
+    out.attach = attach;
   }
-  const body = lines.slice(i).join("\n").trim();
-  const overflow =
-    quotes.length > FORUM_QUOTE_LINE_MAX
-      ? quotes.length - FORUM_QUOTE_LINE_MAX
-      : 0;
-  return {
-    quotes: quotes.slice(0, FORUM_QUOTE_LINE_MAX),
-    quoteOverflow: overflow,
-    body,
-  };
+  return out;
 }

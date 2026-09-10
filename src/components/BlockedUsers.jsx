@@ -42,7 +42,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { Ban, ShieldOff, Trash2, UserX, Plus } from "lucide-react";
+import { Ban, EyeOff, ShieldOff, Trash2, UserX, Plus } from "lucide-react";
 
 import {
   $blockList,
@@ -50,6 +50,12 @@ import {
   addBlockedUser,
   removeBlockedUser,
 } from "@/stores/blocklist.ts";
+
+import {
+  $hiddenForumTopics,
+  unhideAllForumTopics,
+  unhideForumTopic,
+} from "@/stores/forum.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
@@ -112,6 +118,42 @@ const BlockedUserRow = React.memo(function BlockedUserRow({
   );
 });
 
+const HiddenTopicRow = React.memo(function HiddenTopicRow({
+  index,
+  style,
+  chainHiddenTopics,
+  _chain,
+  t,
+}) {
+  const item = chainHiddenTopics[index];
+  if (!item) return null;
+  return (
+    <div style={{ ...style, paddingRight: "10px" }}>
+      <Card className="mb-2 bg-card/60 border-border hover:bg-accent/30 hover:border-border transition-all rounded-xl">
+        <CardHeader className="px-4 py-3 flex flex-row items-center justify-between gap-3">
+          <div className="space-y-1 min-w-0">
+            <CardTitle className="text-sm text-foreground truncate">
+              <span className="font-semibold">{item.title}</span>
+              <span className="ml-2 text-xs font-normal text-muted-foreground/60">
+                #{item.channel}
+              </span>
+              <span className="ml-2 text-xs font-mono font-normal text-muted-foreground/60">
+                {item.account}
+              </span>
+            </CardTitle>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <RemoveButton
+              onClick={() => unhideForumTopic(_chain, item.channel, item.key)}
+              label={t("Forum:unhideTopic", "Unhide topic")}
+            />
+          </div>
+        </CardHeader>
+      </Card>
+    </div>
+  );
+});
+
 export default function BlockedUsers() {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
@@ -148,6 +190,17 @@ export default function BlockedUsers() {
     return userBlockList[_chain] ?? [];
   }, [userBlockList, _chain]);
 
+  const hiddenForumTopics = useSyncExternalStore(
+    $hiddenForumTopics.subscribe,
+    $hiddenForumTopics.get,
+    () => true
+  );
+
+  const chainHiddenTopics = useMemo(() => {
+    if (!hiddenForumTopics) return [];
+    return hiddenForumTopics[_chain] ?? [];
+  }, [hiddenForumTopics, _chain]);
+
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState();
 
@@ -161,6 +214,11 @@ export default function BlockedUsers() {
   const blockedRowProps = useMemo(
     () => ({ chainUserBlockList, _chain, t }),
     [chainUserBlockList, _chain, t]
+  );
+
+  const hiddenRowProps = useMemo(
+    () => ({ chainHiddenTopics, _chain, t }),
+    [chainHiddenTopics, _chain, t]
   );
 
   return (
@@ -300,6 +358,66 @@ export default function BlockedUsers() {
                   <EmptyTitle className="text-foreground/80">{t("Blocklist:usersEmptyTitle")}</EmptyTitle>
                   <EmptyDescription className="text-muted-foreground">
                     {t("Blocklist:usersEmptyDescription")}
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-danger))]" />
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
+                    <EyeOff className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
+                  </span>
+                  {t("Forum:hiddenTopicsTitle", "Hidden forum topics")}
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5 ml-11">
+                  {t(
+                    "Forum:hiddenTopicsDesc",
+                    "Topics you hid in the forum. Hidden entries for topics that disappear from the channel results are cleared automatically."
+                  )}
+                </p>
+              </div>
+              {chainHiddenTopics && chainHiddenTopics.length ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => unhideAllForumTopics(_chain)}
+                >
+                  {t("Forum:unhideAll", "Unhide all")}
+                </Button>
+              ) : null}
+            </div>
+          </CardHeader>
+          <CardContent>
+            {chainHiddenTopics && chainHiddenTopics.length ? (
+              <div className="w-full h-[320px]">
+                <List
+                  rowComponent={HiddenTopicRow}
+                  rowCount={chainHiddenTopics.length}
+                  rowHeight={72}
+                  height={320}
+                  width="100%"
+                  rowProps={hiddenRowProps}
+                />
+              </div>
+            ) : (
+              <Empty className="mt-2 border border-border/60 rounded-xl bg-accent/20">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
+                    <EyeOff className="h-6 w-6" />
+                  </EmptyMedia>
+                  <EmptyTitle className="text-foreground/80">{t("Forum:hiddenTopicsEmpty", "No hidden topics")}</EmptyTitle>
+                  <EmptyDescription className="text-muted-foreground">
+                    {t(
+                      "Forum:hiddenTopicsEmptyDesc",
+                      "Hide a forum topic to remove it from your topic lists."
+                    )}
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>

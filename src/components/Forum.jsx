@@ -41,7 +41,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -50,19 +49,36 @@ import {
 } from "@/components/ui/tooltip";
 
 import {
+  ArrowLeftRight,
   Ban,
   CircleCheck,
+  Check,
+  Coins,
+  Droplets,
+  EyeOff,
   FlaskConical,
+  HandCoins,
+  Handshake,
   MessageSquare,
-  MessageSquareText,
+  Paperclip,
   RefreshCw,
   Send,
   TriangleAlert,
+  X,
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
+import {
+  $hiddenForumTopics,
+  $viewedForumTopics,
+  $watchedForumTopics,
+  hideForumTopic,
+  pruneHiddenForumTopics,
+  pruneViewedForumTopics,
+  pruneWatchedForumTopics,
+} from "@/stores/forum.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
 import {
   $customTheme,
@@ -76,18 +92,24 @@ import {
   fetchMaxMessageBytes,
   isPluginMissingError,
   probeTrollboxSupport,
+  storageIdNum,
+  verifyAttachmentOnChain,
 } from "@/nanoeffects/Trollbox.ts";
 import {
   FORUM_CHANNELS,
+  countThreadReplies,
   fetchForumTopics,
-  fetchThreadReplies,
+  fetchForumTopicsTail,
 } from "@/nanoeffects/Forum.ts";
 import {
   FORUM_TITLE_MAX,
   forumChannelCatalog,
-  forumTopicCatalog,
-  isThreadKey,
 } from "@/lib/forumPost.js";
+import {
+  attachKind,
+  resolveAttachmentMeta,
+  validateAttachmentShape,
+} from "@/lib/trollboxAttach.js";
 import {
   FORUM_OP_ID,
   buildForumTopicData,
@@ -97,13 +119,45 @@ import {
 } from "@/bts/serializer/customOperations.js";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import TrollboxRisks from "@/components/TrollboxRisks.jsx";
+import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
+import ForumEditor from "@/components/ForumEditor.jsx";
 import { Avatar } from "@/components/Avatar.tsx";
+import { getTopDonators } from "@/nanoeffects/TopDonators.ts";
+import {
+  DONATIONS_ASSET_ID,
+  DONATIONS_LIMIT,
+  DONATIONS_LOOKBACK_DAYS,
+  DONATIONS_TARGET_ID,
+} from "@/config/donations.ts";
+import {
+  buildDonorRankMap,
+  donorBadgeClassName,
+  donorBadgeText,
+} from "@/lib/donorBadge.js";
 
 const POLL_MS = 30000;
 const FORUM_ROW_HEIGHT = 96;
 const FORUM_MAX_TOPICS = 200;
 const FORUM_CHANNEL_PARAM = "channel";
 const TOPIC_PREVIEW_CHARS = 140;
+
+// Unlike the trollbox, every attachment kind is allowed in every forum
+// channel. One attachment per topic/reply, enforced by the shape.
+const FORUM_ATTACH_TYPES = ["asset", "pair", "pool", "offer", "barter"];
+
+function AttachTypeIcon({ type, className }) {
+  const Icon =
+    type === "pair"
+      ? ArrowLeftRight
+      : type === "pool"
+        ? Droplets
+        : type === "offer"
+          ? HandCoins
+          : type === "barter"
+            ? Handshake
+            : Coins;
+  return <Icon className={className ?? "h-3 w-3"} />;
+}
 
 function channelFromUrl() {
   try {
@@ -140,23 +194,41 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
   roleCommitteeIds,
   roleWitnessLabel,
   roleCommitteeLabel,
-  replyCounts,
-  repliesLabel,
+  donorRank,
+  donorLabel,
+  topDonorLabel,
+  donorTitle,
+  topDonorTitle,
+  hideLabel,
+  viewedKeys,
+  viewedLabel,
+  unreadCounts,
+  unreadLabel,
+  attachMetas,
+  attachBadgeLabel,
   onOpenTopic,
   onBlockUser,
+  onHideTopic,
 }) {
   const topic = visibleTopics[index];
   if (!topic) {
     return null;
   }
   const own = topic.account === currentUserId;
-  const count = replyCounts[topic.key];
+  const unreadCount = unreadCounts[topic.key];
+  const attachMeta = attachMetas[topic.key] || null;
   const roleLabel = [
     roleWitnessIds.includes(topic.account) ? roleWitnessLabel : null,
     roleCommitteeIds.includes(topic.account) ? roleCommitteeLabel : null,
   ]
     .filter(Boolean)
     .join(" · ");
+  const donor = donorBadgeText(topic.account, donorRank, {
+    donorLabel,
+    topDonorLabel,
+    donorTitle,
+    topDonorTitle,
+  });
   return (
     <div style={{ ...style, paddingBottom: "8px" }}>
       <div className="grid grid-cols-12 gap-2">
@@ -188,17 +260,45 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
                   </span>
                 ) : null}
                 <span className="truncate font-semibold">{topic.title}</span>
-                <span className="ml-auto inline-flex shrink-0 items-center gap-1">
-                  {roleLabel ? (
-                    <span className="inline-flex shrink-0 items-center rounded border border-border bg-accent/30 px-1.5 py-px text-[10px] font-medium text-muted-foreground">
-                      {roleLabel}
-                    </span>
-                  ) : null}
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground" title={repliesLabel}>
-                    <MessageSquareText className="h-3 w-3" />
-                    {typeof count === "number" ? count : "…"}
+                {typeof unreadCount === "number" && unreadCount > 0 ? (
+                  <span
+                    title={(unreadLabel || "").replace("{{count}}", String(unreadCount))}
+                    className="inline-flex shrink-0 items-center rounded border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-px text-[10px] font-medium text-emerald-700 dark:text-emerald-400"
+                  >
+                    {unreadCount}
                   </span>
-                </span>
+                ) : null}
+                {attachMeta ? (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
+                    <AttachTypeIcon type={attachMeta.type} />
+                    <span className="max-w-[140px] truncate">{attachBadgeLabel(attachMeta)}</span>
+                  </span>
+                ) : null}
+                {viewedKeys.has(topic.key) ? (
+                  <span
+                    title={viewedLabel}
+                    className="shrink-0 text-muted-foreground/60"
+                  >
+                    <Check className="h-3.5 w-3.5" />
+                  </span>
+                ) : null}
+                {roleLabel || donor ? (
+                  <span className="ml-auto inline-flex shrink-0 items-center gap-1">
+                    {roleLabel ? (
+                      <span className="inline-flex shrink-0 items-center rounded border border-border bg-accent/30 px-1.5 py-px text-[10px] font-medium text-muted-foreground">
+                        {roleLabel}
+                      </span>
+                    ) : null}
+                    {donor ? (
+                      <span
+                        title={donor.title}
+                        className={donorBadgeClassName(donor.badge.rank)}
+                      >
+                        {donor.label}
+                      </span>
+                    ) : null}
+                  </span>
+                ) : null}
               </ItemTitle>
               <p className="w-full pr-2 text-sm font-normal leading-normal text-muted-foreground line-clamp-2">
                 <span className="mr-1.5 text-xs">{topic.displayAuthor}</span>
@@ -207,7 +307,29 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
             </ItemContent>
           </Item>
         </div>
-        <div className="col-span-1 flex items-center justify-center">
+        <div className="col-span-1 flex flex-col items-center justify-center gap-1">
+          {canBlock ? (
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label={hideLabel}
+                    disabled={own}
+                    onClick={() => onHideTopic(topic)}
+                    className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground disabled:opacity-40"
+                  >
+                    <EyeOff className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <p>{hideLabel}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
           {canBlock ? (
             <TooltipProvider delayDuration={300}>
               <Tooltip>
@@ -236,7 +358,15 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
   );
 });
 
-export default function Forum() {
+export default function Forum(properties) {
+  const {
+    _assetsBTS = [],
+    _assetsTEST = [],
+    _marketSearchBTS = [],
+    _marketSearchTEST = [],
+    _poolsBTS = [],
+    _poolsTEST = [],
+  } = properties || {};
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
   const currentUser = useStore($currentUser);
@@ -263,6 +393,11 @@ export default function Forum() {
   const chain = (currentUser && currentUser.chain) || "bitshares";
   const nodeUrl = (currentNode && currentNode.url) || "";
 
+  const chainAssets = chain === "bitshares" ? _assetsBTS : _assetsTEST;
+  const chainMarketSearch =
+    chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+  const chainPools = chain === "bitshares" ? _poolsBTS : _poolsTEST;
+
   useInitCache(chain, []);
 
   const [activeChannel, setActiveChannel] = useState(() => channelFromUrl());
@@ -280,11 +415,49 @@ export default function Forum() {
   const [composeError, setComposeError] = useState(null);
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
+  const [verifyingAttach, setVerifyingAttach] = useState(false);
   const [blockTarget, setBlockTarget] = useState(null);
   const [showFriends, setShowFriends] = useState(false);
+  const [showWatching, setShowWatching] = useState(false);
+  const [query, setQuery] = useState("");
+  const [sortDir, setSortDir] = useState("desc");
+  const [unreadCounts, setUnreadCounts] = useState({});
+  const [checkingUnread, setCheckingUnread] = useState(false);
+  const [checkNonce, setCheckNonce] = useState(0);
   const [maxBytes, setMaxBytes] = useState(() => maxMessageBytes());
   const [roleIds, setRoleIds] = useState({ witnesses: [], committee: [] });
-  const [replyCounts, setReplyCounts] = useState({});
+  const [donorRank, setDonorRank] = useState({});
+
+  // Monthly Referrer donor ranks (decorative only; mainnet only; failures
+  // silently yield no badges). Same source as /monthly_referrer.html.
+  useEffect(() => {
+    if (chain !== "bitshares") {
+      setDonorRank({});
+      return undefined;
+    }
+    let cancelled = false;
+    getTopDonators(
+      DONATIONS_TARGET_ID,
+      DONATIONS_ASSET_ID,
+      DONATIONS_LIMIT,
+      DONATIONS_LOOKBACK_DAYS
+    )
+      .then((donors) => {
+        if (!cancelled) {
+          setDonorRank(buildDonorRankMap(donors));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDonorRank({});
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [chain]);
 
   const channelInfo = useMemo(
     () => FORUM_CHANNELS.find((c) => c.id === activeChannel),
@@ -315,6 +488,10 @@ export default function Forum() {
       if (activeChannelRef.current !== v) {
         setTopics([]);
         setTopicsError(null);
+        setQuery("");
+        setSortDir("desc");
+        setPendingAttach(null);
+        maxIdRef.current = null;
         setActiveChannel(v);
       }
     };
@@ -380,20 +557,48 @@ export default function Forum() {
     };
   }, [chain, nodeUrl]);
 
-  // Load + poll the active channel catalog while reads are supported.
+  // Max seen storage ID for the active channel. The first load scans
+  // the full catalog; later polls fetch only the tail (IDs >= max) and
+  // merge it below. Short pages already terminate scans, so empty pages
+  // are never fetched. Newest-first order is preserved because the tail
+  // holds every object newer than the cache.
+  const maxIdRef = useRef(null);
+
+  // Load the active channel catalog while reads are supported.
   useEffect(() => {
     if (probe.state !== "live" || !channelInfo || !catalog) {
       return undefined;
     }
     let cancelled = false;
-    setLoadingTopics(true);
+    const since = maxIdRef.current;
+    if (!since) {
+      setLoadingTopics(true);
+    }
     setTopicsError(null);
-    fetchForumTopics(chain, probe.node, catalog, activeChannel)
+    const loader = since
+      ? fetchForumTopicsTail(chain, probe.node, catalog, activeChannel, since)
+      : fetchForumTopics(chain, probe.node, catalog, activeChannel);
+    loader
       .then((list) => {
-        if (!cancelled) {
-          setTopics(list);
-          setLoadingTopics(false);
+        if (cancelled) {
+          return;
         }
+        if (since) {
+          setTopics((prev) => {
+            const ids = new Set(prev.map((topic) => topic.id));
+            const merged = prev.concat(
+              list.filter((topic) => !ids.has(topic.id))
+            );
+            merged.sort((a, b) => storageIdNum(b.id) - storageIdNum(a.id));
+            const capped = merged.slice(0, 2000);
+            maxIdRef.current = capped.length ? capped[0].id : since;
+            return capped;
+          });
+        } else {
+          maxIdRef.current = list.length ? list[0].id : null;
+          setTopics(list);
+        }
+        setLoadingTopics(false);
       })
       .catch((error) => {
         if (cancelled) {
@@ -415,47 +620,20 @@ export default function Forum() {
     };
   }, [chain, probe.state, probe.node, channelInfo, catalog, activeChannel, refreshNonce]);
 
-  // Lazy reply counts for the newest topics (best-effort, cached).
+  // Auto-clean hidden/viewed/watched entries whose topic no longer appears
+  // in the channel results. Only runs after a successful, non-empty load —
+  // never on error or empty results — so node-view skew can't wipe state
+  // while a fetch is failing. Skipped when the local cache hits its cap
+  // (ancient topics may be truncated from view, not gone on-chain).
   useEffect(() => {
-    if (probe.state !== "live" || topics.length === 0) {
-      return undefined;
+    if (topicsError || topics.length === 0 || topics.length >= 2000) {
+      return;
     }
-    let cancelled = false;
-    const slice = topics.slice(0, 25).filter((topic) => !(topic.key in replyCounts));
-    if (slice.length === 0) {
-      return undefined;
-    }
-    (async () => {
-      const entries = await Promise.all(
-        slice.map(async (topic) => {
-          const cc = forumTopicCatalog(topic.account, topic.key);
-          if (!cc || !isThreadKey(topic.key)) {
-            return [topic.key, 0];
-          }
-          try {
-            const replies = await fetchThreadReplies(chain, probe.node, cc);
-            return [topic.key, replies.length];
-          } catch {
-            return [topic.key, null];
-          }
-        })
-      );
-      if (!cancelled) {
-        setReplyCounts((prev) => {
-          const next = { ...prev };
-          for (const [key, count] of entries) {
-            if (count !== null) {
-              next[key] = count;
-            }
-          }
-          return next;
-        });
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [topics, probe.state, probe.node, chain]); // eslint-disable-line react-hooks/exhaustive-deps
+    const fetchedKeys = new Set(topics.map((topic) => topic.key));
+    pruneHiddenForumTopics(chain, activeChannel, fetchedKeys);
+    pruneViewedForumTopics(chain, activeChannel, fetchedKeys);
+    pruneWatchedForumTopics(chain, activeChannel, fetchedKeys);
+  }, [topics, topicsError, activeChannel, chain]);
 
   const handlePost = async () => {
     setComposeError(null);
@@ -472,12 +650,43 @@ export default function Forum() {
     if (!catalog) {
       return;
     }
+    let attach = null;
+    if (pendingAttach) {
+      const shape = validateAttachmentShape(pendingAttach.attach);
+      if (!shape) {
+        setComposeError(
+          t("Trollbox:attachInvalid", "Attachment is invalid — pick again.")
+        );
+        return;
+      }
+      setVerifyingAttach(true);
+      try {
+        const ok = await verifyAttachmentOnChain(
+          chain,
+          probe.state === "live" ? probe.node : nodeUrl,
+          shape
+        );
+        if (!ok) {
+          setComposeError(
+            t(
+              "Trollbox:attachGone",
+              "Attachment no longer exists on-chain — pick again."
+            )
+          );
+          return;
+        }
+      } finally {
+        setVerifyingAttach(false);
+      }
+      attach = shape;
+    }
     try {
       const data = buildForumTopicData({
         catalog,
         key: buildMessageKey(),
         title: trimmedTitle,
         text,
+        attach,
         maxBytes,
       });
       setPendingOp([
@@ -522,6 +731,14 @@ export default function Forum() {
   const currentUserId = (currentUser && currentUser.id) || null;
 
   const userBlockList = useStore($userBlockList);
+  const hiddenForumTopics = useStore($hiddenForumTopics);
+  const viewedForumTopics = useStore($viewedForumTopics);
+  const viewedKeys = useMemo(() => {
+    const list = (viewedForumTopics && viewedForumTopics[chain]) || [];
+    return new Set(
+      list.filter((v) => v.channel === activeChannel).map((v) => v.key)
+    );
+  }, [viewedForumTopics, chain, activeChannel]);
   const blockedIds = useMemo(
     () =>
       new Set(
@@ -538,15 +755,20 @@ export default function Forum() {
       ),
     [userBlockList, chain]
   );
-  const filteredTopics = useMemo(
-    () =>
-      topics.filter(
-        (topic) =>
-          !blockedIds.has(topic.account) &&
-          !blockedNames.has((topic.displayAuthor || "").toLowerCase())
-      ),
-    [topics, blockedIds, blockedNames]
-  );
+  const filteredTopics = useMemo(() => {
+    const hidden = ((hiddenForumTopics && hiddenForumTopics[chain]) || []).filter(
+      (h) => h.channel === activeChannel
+    );
+    const hiddenKeys = new Set(
+      hidden.map((h) => `${h.key} ${h.account}`)
+    );
+    return topics.filter(
+      (topic) =>
+        !blockedIds.has(topic.account) &&
+        !blockedNames.has((topic.displayAuthor || "").toLowerCase()) &&
+        !hiddenKeys.has(`${topic.key} ${topic.account}`)
+    );
+  }, [topics, blockedIds, blockedNames, hiddenForumTopics, activeChannel, chain]);
   const favouriteUsers = useStore($favouriteUsers);
   const favouriteIds = useMemo(
     () =>
@@ -575,17 +797,132 @@ export default function Forum() {
         : filteredTopics,
     [filteredTopics, showFriends, favouriteIds, favouriteNames]
   );
-  const visibleTopics = useMemo(
-    () => friendTopics.slice(0, FORUM_MAX_TOPICS),
-    [friendTopics]
-  );
+  const watchedForumTopics = useStore($watchedForumTopics);
+  const watchingTopics = useMemo(() => {
+    const watched = new Set(
+      ((watchedForumTopics && watchedForumTopics[chain]) || []).map(
+        (w) => `${w.channel} ${w.key}`
+      )
+    );
+    return filteredTopics.filter(
+      (topic) =>
+        topic.account === currentUserId ||
+        watched.has(`${activeChannel} ${topic.key}`)
+    );
+  }, [filteredTopics, watchedForumTopics, chain, currentUserId, activeChannel]);
+  const visibleTopics = useMemo(() => {
+    const base = showWatching ? watchingTopics : friendTopics;
+    const q = query.trim().toLowerCase();
+    const searched = q
+      ? base.filter(
+          (topic) =>
+            topic.title.toLowerCase().includes(q) ||
+            topic.text.toLowerCase().includes(q) ||
+            topic.displayAuthor.toLowerCase().includes(q) ||
+            topic.account.toLowerCase().includes(q)
+        )
+      : base;
+    const sorted = [...searched].sort((a, b) =>
+      sortDir === "desc"
+        ? storageIdNum(b.id) - storageIdNum(a.id)
+        : storageIdNum(a.id) - storageIdNum(b.id)
+    );
+    return sorted.slice(0, FORUM_MAX_TOPICS);
+  }, [friendTopics, watchingTopics, showWatching, query, sortDir]);
   const hiddenBlockedCount = topics.length - filteredTopics.length;
 
+  // Unread-reply checks for the Watching tab: sequential, capped, only
+  // while the tab is open (plus manual refresh). Each check is a tail
+  // scan from the last-seen reply cursor — usually one short page.
+  const watchingKeys = useMemo(
+    () => watchingTopics.map((topic) => topic.key).join(","),
+    [watchingTopics]
+  );
+  useEffect(() => {
+    if (!showWatching || probe.state !== "live") {
+      return undefined;
+    }
+    let cancelled = false;
+    setCheckingUnread(true);
+    (async () => {
+      const viewed = (viewedForumTopics && viewedForumTopics[chain]) || [];
+      const cursors = {};
+      for (const v of viewed) {
+        if (v.channel === activeChannel) {
+          cursors[v.key] = v.lastReplyId ?? null;
+        }
+      }
+      const slice = watchingTopics.slice(0, 20);
+      const counts = {};
+      for (const topic of slice) {
+        if (cancelled) {
+          return;
+        }
+        const cc = forumTopicCatalog(topic.account, topic.key);
+        if (!cc) {
+          continue;
+        }
+        try {
+          counts[topic.key] = await countThreadReplies(
+            probe.node,
+            cc,
+            cursors[topic.key] ?? null
+          );
+        } catch {
+          // keep previous count (or none) on failure
+        }
+      }
+      if (!cancelled) {
+        setUnreadCounts(counts);
+        setCheckingUnread(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // watchingKeys: refire when the watched set itself changes, not on
+    // every poll merge (new array identities).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showWatching, probe.state, probe.node, chain, activeChannel, checkNonce, watchingKeys]);
+
+  // Resolve attachments to display metadata using trusted lists only.
+  // Unresolvable attachments yield no badge (never render raw payload).
+  const attachMetas = useMemo(() => {
+    const map = {};
+    for (const topic of visibleTopics) {
+      if (topic.attach) {
+        const meta = resolveAttachmentMeta(topic.attach, {
+          assets: chainAssets,
+          pools: chainPools,
+        });
+        if (meta) {
+          map[topic.key] = meta;
+        }
+      }
+    }
+    return map;
+  }, [visibleTopics, chainAssets, chainPools]);
+
+  const attachBadgeLabel = useCallback(
+    (meta) =>
+      meta.type === "barter"
+        ? t("Trollbox:attachTypeBarter", "Barter")
+        : meta.label,
+    [t]
+  );
+
   const blockLabel = t("Forum:blockUser", "Block user");
+  const hideLabel = t("Forum:hideTopic", "Hide topic");
+  const viewedLabel = t("Forum:viewedTopic", "Viewed");
+  const unreadLabel = t("Forum:unreadReplies", "{{count}} new replies");
   const blockSelfLabel = t("Forum:blockSelf", "You can't block yourself");
   const ltmLabel = t("Forum:ltmMember", "Lifetime member");
   const roleWitnessLabel = t("Forum:roleWitnessBadge", "witness");
   const roleCommitteeLabel = t("Forum:roleCommitteeBadge", "committee member");
+  const donorLabel = t("Forum:donorBadge", "donor");
+  const topDonorLabel = t("Forum:topDonorBadge", "top donor");
+  const donorTitle = t("Forum:donorBadgeTitle", "Monthly donor");
+  const topDonorTitle = t("Forum:topDonorBadgeTitle", "Top donor #{{rank}}");
 
   const handleOpenTopic = useCallback(
     (topic) => {
@@ -599,6 +936,21 @@ export default function Forum() {
     }
     setBlockTarget(topic);
   }, []);
+  const handleHideTopic = useCallback(
+    (topic) => {
+      if (!topic || !topic.key || topic.account === currentUserId) {
+        return;
+      }
+      hideForumTopic(chain, {
+        channel: activeChannel,
+        key: topic.key,
+        account: topic.account,
+        title: topic.title,
+        at: Date.now(),
+      });
+    },
+    [chain, activeChannel, currentUserId]
+  );
   const handleConfirmBlock = useCallback(() => {
     setBlockTarget((target) => {
       if (target && target.account) {
@@ -622,25 +974,48 @@ export default function Forum() {
       roleCommitteeIds: roleIds.committee,
       roleWitnessLabel,
       roleCommitteeLabel,
-      replyCounts,
-      repliesLabel: t("Forum:replies", "replies"),
-      onOpenTopic: handleOpenTopic,
-      onBlockUser: handleBlockUser,
-    }),
-    [
-      visibleTopics,
-      loggedIn,
-      currentUserId,
-      blockLabel,
-      blockSelfLabel,
+      donorRank,
+      donorLabel,
+      topDonorLabel,
+      donorTitle,
+      topDonorTitle,
+      hideLabel,
+      viewedKeys,
+      viewedLabel,
+  unreadCounts,
+  unreadLabel,
+  attachMetas,
+  attachBadgeLabel,
+  onOpenTopic: handleOpenTopic,
+  onBlockUser: handleBlockUser,
+  onHideTopic: handleHideTopic,
+}),
+[
+  visibleTopics,
+  loggedIn,
+  currentUserId,
+  blockLabel,
+  blockSelfLabel,
+  hideLabel,
+  viewedKeys,
+  viewedLabel,
+  unreadCounts,
+  unreadLabel,
+  attachMetas,
+  attachBadgeLabel,
       ltmLabel,
       roleIds,
       roleWitnessLabel,
       roleCommitteeLabel,
-      replyCounts,
+      donorRank,
+      donorLabel,
+      topDonorLabel,
+      donorTitle,
+      topDonorTitle,
       t,
       handleOpenTopic,
       handleBlockUser,
+      handleHideTopic,
     ]
   );
 
@@ -719,7 +1094,14 @@ export default function Forum() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setRefreshNonce((n) => n + 1)}
+                onClick={() => {
+                  // Force a full rescan (not just the tail): clears the
+                  // high-water mark so edits to older topics reappear too.
+                  setTopics([]);
+                  setTopicsError(null);
+                  maxIdRef.current = null;
+                  setRefreshNonce((n) => n + 1);
+                }}
               >
                 <RefreshCw className="mr-1 h-3 w-3" />
                 {t("Forum:retry", "Retry")}
@@ -735,7 +1117,10 @@ export default function Forum() {
           setActiveChannel(v);
           setTopics([]);
           setTopicsError(null);
-          setReplyCounts({});
+          setQuery("");
+          setSortDir("desc");
+          setPendingAttach(null);
+          maxIdRef.current = null;
         }}
       >
         <Card className="mb-4 relative overflow-hidden">
@@ -792,10 +1177,13 @@ export default function Forum() {
                 aria-label={t("Forum:filterLabel", "Topic filter")}
               >
                 <Button
-                  variant={!showFriends ? "secondary" : "ghost"}
+                  variant={!showFriends && !showWatching ? "secondary" : "ghost"}
                   size="sm"
                   className="h-7 px-2.5 text-xs"
-                  onClick={() => setShowFriends(false)}
+                  onClick={() => {
+                    setShowFriends(false);
+                    setShowWatching(false);
+                  }}
                 >
                   {t("Forum:filterAll", "All")}
                 </Button>
@@ -803,14 +1191,92 @@ export default function Forum() {
                   variant={showFriends ? "secondary" : "ghost"}
                   size="sm"
                   className="h-7 px-2.5 text-xs"
-                  onClick={() => setShowFriends(true)}
+                  onClick={() => {
+                    setShowFriends(true);
+                    setShowWatching(false);
+                  }}
                 >
                   {t("Forum:filterFriends", "Friends")}
+                </Button>
+                <Button
+                  variant={showWatching ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-2.5 text-xs"
+                  onClick={() => {
+                    setShowFriends(false);
+                    setShowWatching(true);
+                  }}
+                >
+                  {t("Forum:filterWatching", "Watching")}
                 </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent>
+            <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="relative min-w-0 flex-1">
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t("Forum:searchPlaceholder", "Search loaded topics…")}
+                  aria-label={t("Forum:searchLabel", "Search topics")}
+                  className="h-8 pr-8 text-xs"
+                />
+                {query ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-6 w-6 -translate-y-1/2 text-muted-foreground"
+                    aria-label={t("Forum:clearSearch", "Clear search")}
+                    onClick={() => setQuery("")}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                ) : null}
+              </div>
+              <div
+                className="flex shrink-0 items-center gap-1 rounded-lg border border-border p-0.5"
+                role="tablist"
+                aria-label={t("Forum:sortLabel", "Topic order")}
+              >
+                <Button
+                  variant={sortDir === "desc" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-2.5 text-xs"
+                  onClick={() => setSortDir("desc")}
+                >
+                  {t("Forum:sortNewest", "Newest")}
+                </Button>
+                <Button
+                  variant={sortDir === "asc" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-2.5 text-xs"
+                  onClick={() => setSortDir("asc")}
+                >
+                  {t("Forum:sortOldest", "Oldest")}
+                </Button>
+                {showWatching ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2.5 text-xs"
+                    disabled={checkingUnread}
+                    onClick={() => setCheckNonce((n) => n + 1)}
+                    title={t("Forum:checkReplies", "Check for new replies")}
+                  >
+                    {checkingUnread ? (
+                      <Spinner className="mr-1 h-3 w-3" />
+                    ) : (
+                      <RefreshCw className="mr-1 h-3 w-3" />
+                    )}
+                    {t("Forum:checkReplies", "Check for new replies")}
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+            <p className="mb-2 text-[11px] text-muted-foreground">
+              {t("Forum:searchHint", "Search covers loaded topics only.")}
+            </p>
             {probe.state === "live" ? (
               <div
                 className="rounded-xl border border-border p-2"
@@ -830,23 +1296,39 @@ export default function Forum() {
                       variant="outline"
                       size="sm"
                       className="mt-2"
-                      onClick={() => setRefreshNonce((n) => n + 1)}
+                      onClick={() => {
+                        setTopics([]);
+                        setTopicsError(null);
+                        maxIdRef.current = null;
+                        setRefreshNonce((n) => n + 1);
+                      }}
                     >
                       {t("Forum:retry", "Retry")}
                     </Button>
                   </div>
                 ) : visibleTopics.length === 0 ? (
                   <div className="p-6 text-sm text-muted-foreground text-center">
-                    {t(
-                      "Forum:topicsEmpty",
-                      "No topics in {{channel}} yet — start the first one below.",
-                      { channel: activeChannel }
-                    )}
+                    {query.trim()
+                      ? t(
+                          "Forum:searchEmpty",
+                          "No loaded topics match “{{query}}”.",
+                          { query: query.trim() }
+                        )
+                      : showWatching
+                        ? t(
+                            "Forum:watchingEmpty",
+                            "Nothing watched yet — open a thread and use Watch to follow its replies. Topics you start are watched automatically."
+                          )
+                        : t(
+                            "Forum:topicsEmpty",
+                            "No topics in {{channel}} yet — start the first one below.",
+                            { channel: activeChannel }
+                          )}
                     {hiddenBlockedCount > 0 ? (
                       <span className="mt-1 block text-xs">
                         {t(
                           "Forum:hiddenBlocked",
-                          "{{count}} hidden from blocked users.",
+                          "{{count}} hidden from your view.",
                           { count: hiddenBlockedCount }
                         )}
                       </span>
@@ -858,7 +1340,7 @@ export default function Forum() {
                       <p className="px-3 pt-2 text-xs text-muted-foreground">
                         {t(
                           "Forum:hiddenBlocked",
-                          "{{count}} hidden from blocked users.",
+                          "{{count}} hidden from your view.",
                           { count: hiddenBlockedCount }
                         )}
                       </p>
@@ -893,14 +1375,22 @@ export default function Forum() {
                 {t("Forum:newTopicTitle", "Start a new topic")}
               </CardTitle>
               <div>
-                <Label htmlFor="forum-title" className="text-xs">
-                  {t("Forum:titleLabel", "Title (3–120 characters)")}
-                </Label>
+                <div className="mb-1 flex items-baseline justify-between gap-2">
+                  <Label htmlFor="forum-title" className="text-xs">
+                    {t("Forum:titleLabel", "Title (3–120 characters)")}
+                  </Label>
+                  <span className="text-[11px] text-muted-foreground">
+                    {t("Forum:titleCount", "{{count}} / {{max}}", {
+                      count: title.trim().length,
+                      max: FORUM_TITLE_MAX,
+                    })}
+                  </span>
+                </div>
                 <Input
                   id="forum-title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  maxLength={FORUM_TITLE_MAX + 20}
+                  maxLength={FORUM_TITLE_MAX}
                   placeholder={
                     loggedIn
                       ? t("Forum:titlePlaceholder", "What is this topic about?")
@@ -910,26 +1400,69 @@ export default function Forum() {
                 />
               </div>
               <div>
-                <Label htmlFor="forum-body" className="text-xs">
+                <div className="mb-1 text-xs font-medium">
                   {t("Forum:bodyLabel", "Body — the language you write in sets the topic language (max ~1500 characters)")}
-                </Label>
-                <Textarea
-                  id="forum-body"
+                </div>
+                <ForumEditor
                   value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  rows={4}
+                  onChange={setDraft}
+                  dark={isDark}
+                  disabled={!loggedIn}
+                  minHeight={240}
                   placeholder={
                     loggedIn
                       ? t("Forum:bodyPlaceholder", "Write the opening post…")
                       : t("Forum:composerLogin", "Log in to post on-chain topics.")
                   }
-                  disabled={!loggedIn}
                 />
               </div>
               <div className="flex items-center gap-2">
+                {pendingAttach ? (
+                  <Badge
+                    variant="secondary"
+                    className="shrink-0 max-w-[320px] h-10 gap-1.5 px-2.5"
+                    title={t(
+                      "Trollbox:attachAttachedTitle",
+                      "Attached {{type}}: {{label}}",
+                      {
+                        type: attachKind(pendingAttach.attach) ?? "item",
+                        label: pendingAttach.label,
+                      }
+                    )}
+                  >
+                    <AttachTypeIcon
+                      type={attachKind(pendingAttach.attach) ?? "asset"}
+                      className="h-4 w-4 shrink-0"
+                    />
+                    <span className="truncate text-xs">{pendingAttach.label}</span>
+                    <button
+                      type="button"
+                      aria-label={t("Trollbox:attachRemove", "Remove attachment")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPendingAttach(null);
+                      }}
+                      className="shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </Badge>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="shrink-0"
+                    disabled={!loggedIn}
+                    onClick={() => setAttachOpen(true)}
+                    title={t("Trollbox:attachButton", "Attach asset, pair, pool or offer")}
+                    aria-label={t("Trollbox:attachButton", "Attach asset, pair, pool or offer")}
+                  >
+                    <Paperclip className="h-4 w-4" />
+                  </Button>
+                )}
                 <Button
                   onClick={handlePost}
-                  disabled={!loggedIn || !title.trim() || !draft.trim()}
+                  disabled={!loggedIn || !title.trim() || !draft.trim() || verifyingAttach}
                   size="sm"
                 >
                   <Send className="mr-1 h-3.5 w-3.5" />
@@ -983,6 +1516,7 @@ export default function Forum() {
                   setShowDialog(false);
                   setTitle("");
                   setDraft("");
+                  setPendingAttach(null);
                   setRefreshNonce((n) => n + 1);
                 }}
                 key={`forum-${activeChannel}-${pendingOp[0].data.slice(0, 32)}`}
@@ -997,6 +1531,19 @@ export default function Forum() {
                 trxJSON={pendingOp}
               />
             ) : null}
+            <TrollboxAttachDialog
+              open={attachOpen}
+              onOpenChange={setAttachOpen}
+              chain={chain}
+              nodeUrl={probe.state === "live" ? probe.node : nodeUrl}
+              usr={currentUser}
+              assets={chainAssets}
+              marketSearch={chainMarketSearch}
+              pools={chainPools}
+              allowedTypes={FORUM_ATTACH_TYPES}
+              initialValue={pendingAttach}
+              onAttach={(picked) => setPendingAttach(picked)}
+            />
           </CardContent>
         </Card>
       </Tabs>

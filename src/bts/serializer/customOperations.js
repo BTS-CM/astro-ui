@@ -49,7 +49,7 @@ export const custom_plugin_operation = static_variant([account_storage_map]);
 // explorers filterable and leaves the channel in the catalog + JSON payload.
 export const TROLLBOX_OP_ID = 9199;
 
-// Same convention for forum topics/replies/deletes: one below the
+// Same convention for forum topics and replies: one below the
 // trollbox id so the two apps stay separately filterable on-chain.
 export const FORUM_OP_ID = 9198;
 
@@ -248,16 +248,24 @@ export function decodeTrollboxValue(storageObject) {
 /**
  * Encode a forum topic (ad + OP unified) into custom_operation.data hex.
  * Topics live in `forum-<channel>` catalogs under key `th`. Shape is
- * exactly {title, text} — the catalog IS the type, and authorship is the
+ * {title, text} plus an optional `attach` (validated trollbox attachment,
+ * at most one). The catalog IS the type, and authorship is the
  * chain-stamped payer, so no t/v/u/ln fields are stored.
  */
-export function buildForumTopicData({ catalog, key, title, text, maxBytes = maxMessageBytes() }) {
+export function buildForumTopicData({ catalog, key, title, text, attach = null, maxBytes = maxMessageBytes() }) {
   if (typeof catalog !== "string" || !/^forum-(general|announcements|trading|governance|dev)$/.test(catalog)) {
     throw new Error("unknown forum channel catalog");
   }
-  const valid = validateTopicShape({ title, text });
+  const valid = validateTopicShape({ title, text }, validateAttachmentShape);
   if (!valid) {
     throw new Error("invalid forum topic (title 3-120 chars, text 1-1500 chars)");
+  }
+  if (attach !== null && attach !== undefined) {
+    const shape = validateAttachmentShape(attach);
+    if (!shape) {
+      throw new Error("invalid forum topic attachment");
+    }
+    valid.attach = shape;
   }
   const value = JSON.stringify(valid);
   const bytes = utf8Length(value);
@@ -271,15 +279,23 @@ export function buildForumTopicData({ catalog, key, title, text, maxBytes = maxM
 /**
  * Encode a forum reply into custom_operation.data hex. Replies live in
  * `forum-topic-<hash16>` catalogs; threading is a `> ` quote convention
- * inside text, not a protocol field. Shape is exactly {text}.
+ * inside text, not a protocol field. Shape is {text} plus an optional
+ * `attach` (at most one).
  */
-export function buildForumReplyData({ catalog, key, text, maxBytes = maxMessageBytes() }) {
+export function buildForumReplyData({ catalog, key, text, attach = null, maxBytes = maxMessageBytes() }) {
   if (!isForumTopicCatalog(catalog)) {
     throw new Error("unknown forum thread catalog");
   }
-  const valid = validateReplyShape({ text });
+  const valid = validateReplyShape({ text }, validateAttachmentShape);
   if (!valid) {
     throw new Error("invalid forum reply (text 1-1500 chars)");
+  }
+  if (attach !== null && attach !== undefined) {
+    const shape = validateAttachmentShape(attach);
+    if (!shape) {
+      throw new Error("invalid forum reply attachment");
+    }
+    valid.attach = shape;
   }
   const value = JSON.stringify(valid);
   const bytes = utf8Length(value);
@@ -292,10 +308,11 @@ export function buildForumReplyData({ catalog, key, text, maxBytes = maxMessageB
 
 /**
  * Decode an account_storage_object value from a forum catalog into a
- * normalized topic ({kind: "topic", title, text}) or reply
- * ({kind: "reply", text}). The catalog determines the expected shape —
- * cross-shaped payloads return null. Authorship comes only from
- * storageObject.account (chain-stamped); no author fields are read.
+ * normalized topic ({kind: "topic", title, text, attach}) or reply
+ * ({kind: "reply", text, attach}). The catalog determines the expected
+ * shape — cross-shaped or bad-attachment payloads return null.
+ * Authorship comes only from storageObject.account (chain-stamped); no
+ * author fields are read.
  */
 export function decodeForumValue(storageObject) {
   if (!storageObject) {
@@ -314,7 +331,7 @@ export function decodeForumValue(storageObject) {
     return null;
   }
   if (typeof catalog === "string" && /^forum-(general|announcements|trading|governance|dev)$/.test(catalog)) {
-    const valid = validateTopicShape(raw);
+    const valid = validateTopicShape(raw, validateAttachmentShape);
     if (!valid) {
       return null;
     }
@@ -326,10 +343,11 @@ export function decodeForumValue(storageObject) {
       kind: "topic",
       title: valid.title,
       text: valid.text,
+      attach: valid.attach ?? null,
     };
   }
   if (isForumTopicCatalog(catalog)) {
-    const valid = validateReplyShape(raw);
+    const valid = validateReplyShape(raw, validateAttachmentShape);
     if (!valid) {
       return null;
     }
@@ -340,6 +358,7 @@ export function decodeForumValue(storageObject) {
       key,
       kind: "reply",
       text: valid.text,
+      attach: valid.attach ?? null,
     };
   }
   return null;
