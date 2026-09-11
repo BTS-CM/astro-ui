@@ -103,6 +103,7 @@ import {
 } from "@/nanoeffects/Forum.ts";
 import {
   FORUM_TITLE_MAX,
+  attachmentNoun,
   forumChannelCatalog,
 } from "@/lib/forumPost.js";
 import {
@@ -139,7 +140,6 @@ const POLL_MS = 30000;
 const FORUM_ROW_HEIGHT = 96;
 const FORUM_MAX_TOPICS = 200;
 const FORUM_CHANNEL_PARAM = "channel";
-const TOPIC_PREVIEW_CHARS = 140;
 
 // Unlike the trollbox, every attachment kind is allowed in every forum
 // channel. One attachment per topic/reply, enforced by the shape.
@@ -168,13 +168,6 @@ function channelFromUrl() {
   } catch {
     return "general";
   }
-}
-
-function truncatePreview(text, max = TOPIC_PREVIEW_CHARS) {
-  if (!text) {
-    return "";
-  }
-  return text.length > max ? `${text.slice(0, max)}…` : text;
 }
 
 function threadUrl(channel, threadKey) {
@@ -206,6 +199,7 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
   unreadLabel,
   attachMetas,
   attachBadgeLabel,
+  attachTitleFor,
   onOpenTopic,
   onBlockUser,
   onHideTopic,
@@ -268,12 +262,6 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
                     {unreadCount}
                   </span>
                 ) : null}
-                {attachMeta ? (
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
-                    <AttachTypeIcon type={attachMeta.type} />
-                    <span className="max-w-[140px] truncate">{attachBadgeLabel(attachMeta)}</span>
-                  </span>
-                ) : null}
                 {viewedKeys.has(topic.key) ? (
                   <span
                     title={viewedLabel}
@@ -300,10 +288,21 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
                   </span>
                 ) : null}
               </ItemTitle>
-              <p className="w-full pr-2 text-sm font-normal leading-normal text-muted-foreground line-clamp-2">
-                <span className="mr-1.5 text-xs">{topic.displayAuthor}</span>
-                {truncatePreview(topic.text)}
-              </p>
+              <div className="flex w-full min-w-0 items-center gap-2 pr-2">
+                <p className="min-w-0 flex-1 truncate text-xs font-normal leading-normal text-muted-foreground">
+                  {topic.displayAuthor}
+                  <span className="ml-1.5 font-mono opacity-70">{topic.account}</span>
+                </p>
+                {attachMeta ? (
+                  <span
+                    className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-accent/40 px-1.5 py-0.5 text-[11px] font-medium text-foreground"
+                    title={attachTitleFor(topic)}
+                  >
+                    <AttachTypeIcon type={attachMeta.type} />
+                    <span className="max-w-[140px] truncate">{attachBadgeLabel(attachMeta)}</span>
+                  </span>
+                ) : null}
+              </div>
             </ItemContent>
           </Item>
         </div>
@@ -911,6 +910,27 @@ export default function Forum(properties) {
     [t]
   );
 
+  const attachTitleFor = useCallback(
+    (topic) => {
+      const meta = attachMetas[topic.key];
+      if (!meta) {
+        return undefined;
+      }
+      return t(
+        "Forum:attachHoverTitle",
+        "{{user}} has attached this {{item}} to their post.",
+        {
+          user: topic.displayAuthor,
+          item: t(
+            `Forum:attachNoun${meta.type[0].toUpperCase()}${meta.type.slice(1)}`,
+            attachmentNoun(meta.type)
+          ),
+        }
+      );
+    },
+    [t, attachMetas]
+  );
+
   const blockLabel = t("Forum:blockUser", "Block user");
   const hideLabel = t("Forum:hideTopic", "Hide topic");
   const viewedLabel = t("Forum:viewedTopic", "Viewed");
@@ -982,27 +1002,29 @@ export default function Forum(properties) {
       hideLabel,
       viewedKeys,
       viewedLabel,
-  unreadCounts,
-  unreadLabel,
-  attachMetas,
-  attachBadgeLabel,
-  onOpenTopic: handleOpenTopic,
-  onBlockUser: handleBlockUser,
-  onHideTopic: handleHideTopic,
-}),
-[
-  visibleTopics,
-  loggedIn,
-  currentUserId,
-  blockLabel,
-  blockSelfLabel,
-  hideLabel,
-  viewedKeys,
-  viewedLabel,
-  unreadCounts,
-  unreadLabel,
-  attachMetas,
-  attachBadgeLabel,
+      unreadCounts,
+      unreadLabel,
+      attachMetas,
+      attachBadgeLabel,
+      attachTitleFor,
+      onOpenTopic: handleOpenTopic,
+      onBlockUser: handleBlockUser,
+      onHideTopic: handleHideTopic,
+    }),
+    [
+      visibleTopics,
+      loggedIn,
+      currentUserId,
+      blockLabel,
+      blockSelfLabel,
+      hideLabel,
+      viewedKeys,
+      viewedLabel,
+      unreadCounts,
+      unreadLabel,
+      attachMetas,
+      attachBadgeLabel,
+      attachTitleFor,
       ltmLabel,
       roleIds,
       roleWitnessLabel,

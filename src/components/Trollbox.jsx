@@ -123,6 +123,7 @@ import {
   resolveAttachmentMeta,
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
+import { attachmentNoun } from "@/lib/forumPost.js";
 import { getTopDonators } from "@/nanoeffects/TopDonators.ts";
 import {
   DONATIONS_ASSET_ID,
@@ -1707,6 +1708,9 @@ export default function Trollbox(properties) {
                     <Badge variant="secondary" className="shrink-0">
                       #{openMessage.channel ?? activeChannel}
                     </Badge>
+                    <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                      {openMessage.id}
+                    </span>
                   </div>
                 </div>
               </DialogHeader>
@@ -1716,100 +1720,109 @@ export default function Trollbox(properties) {
                 value={openMessage.text}
                 className="min-h-[120px]"
               />
-              {openAttachMeta ? (
-                <div className="rounded-md border border-border p-3 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <AttachTypeIcon
-                      type={openAttachMeta.type}
-                      className="h-4 w-4 shrink-0"
-                    />
-                    <span className="text-sm font-semibold truncate">
-                      {attachBadgeLabel(openAttachMeta)}
+              <div className="flex items-center gap-1.5">
+                {openAttachMeta ? (
+                  <span
+                    className="inline-flex min-w-0 max-w-[55%] shrink flex-col justify-center rounded-xl border border-border bg-accent/20 px-2.5 py-1.5"
+                    title={t("Forum:attachHoverTitle", "{{user}} has attached this {{item}} to their post.", {
+                      user: openMessage.displayAuthor,
+                      item: t(
+                        `Forum:attachNoun${openAttachMeta.type[0].toUpperCase()}${openAttachMeta.type.slice(1)}`,
+                        attachmentNoun(openAttachMeta.type)
+                      ),
+                    })}
+                  >
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <AttachTypeIcon
+                        type={openAttachMeta.type}
+                        className="h-4 w-4 shrink-0"
+                      />
+                      <span className="truncate text-xs font-semibold">
+                        {attachBadgeLabel(openAttachMeta)}
+                      </span>
                     </span>
-                    {openAttachActions.length > 0 ? (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                    {openAttachMeta.type === "barter" &&
+                    openAttachMeta.details ? (
+                      <span className="mt-1 block min-w-0 text-[11px] leading-snug">
+                        <span className="block truncate font-semibold text-foreground/80">
+                          {t("Trollbox:barterTheirOffer", "They offer")}:{" "}
+                          <span className="font-mono font-normal text-muted-foreground">
+                            {openAttachMeta.details.offer.map((l) => `${l.amount} ${l.symbol}`).join(" · ")}
+                          </span>
+                        </span>
+                        <span className="block truncate font-semibold text-foreground/80">
+                          {t("Trollbox:barterTheirWant", "They want")}:{" "}
+                          <span className="font-mono font-normal text-muted-foreground">
+                            {openAttachMeta.details.want.map((l) => `${l.amount} ${l.symbol}`).join(" · ")}
+                          </span>
+                        </span>
+                        {openAttachMeta.details.escrow ? (
+                          <span className="block truncate text-muted-foreground">
+                            {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
+                              account: escrowAgentName
+                                ? `${escrowAgentName} (${openAttachMeta.details.escrow.account})`
+                                : openAttachMeta.details.escrow.account,
+                              fee: openAttachMeta.details.escrow.fee,
+                              first:
+                                openAttachMeta.details.escrow.first === "me"
+                                  ? t("Trollbox:barterCreatorFirst", "Poster")
+                                  : t("Trollbox:barterCounterpartyFirst", "Counterparty"),
+                            })}
+                          </span>
+                        ) : null}
+                      </span>
+                    ) : null}
+                  </span>
+                ) : null}
+                {openAttachMeta && openAttachActions.length > 0 ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="ml-auto h-7 shrink-0 hover:bg-accent/60"
+                            className="h-7 shrink-0 hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.4)] text-[11px]"
+                        title={t("Forum:attachActionsTitle", "Attached {{item}} actions", {
+                          item: t(
+                            `Forum:attachNoun${openAttachMeta.type[0].toUpperCase()}${openAttachMeta.type.slice(1)}`,
+                            attachmentNoun(openAttachMeta.type)
+                          ),
+                        })}
+                      >
+                        <AttachTypeIcon
+                          type={openAttachMeta.type}
+                          className="mr-1 h-3 w-3"
+                        />
+                        {t("Trollbox:attachActions", "Actions")}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      {openAttachActions.map((a) =>
+                        a.href ? (
+                          <DropdownMenuItem key={a.key} asChild>
+                            <a href={a.href}>
+                              {attachActionLabel(t, a)}
+                            </a>
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem
+                            key={a.key}
+                            onSelect={() => a.onSelect && a.onSelect()}
                           >
-                            {t("Trollbox:attachActions", "Actions")}
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {openAttachActions.map((a) =>
-                            a.href ? (
-                              <DropdownMenuItem key={a.key} asChild>
-                                <a href={a.href}>
-                                  {attachActionLabel(t, a)}
-                                </a>
-                              </DropdownMenuItem>
-                            ) : (
-                              <DropdownMenuItem
-                                key={a.key}
-                                onSelect={() => a.onSelect && a.onSelect()}
-                              >
-                                {attachActionLabel(t, a)}
-                              </DropdownMenuItem>
-                            )
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    ) : null}
-                  </div>
-                  {openAttachMeta.type === "barter" &&
-                  openAttachMeta.details ? (
-                    <div className="text-xs space-y-1.5">
-                      <div>
-                        <p className="font-semibold text-foreground/80">
-                          {t("Trollbox:barterTheirOffer", "They offer")}
-                        </p>
-                        {openAttachMeta.details.offer.map((l, i) => (
-                          <p key={i} className="font-mono text-muted-foreground">
-                            {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
-                          </p>
-                        ))}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground/80">
-                          {t("Trollbox:barterTheirWant", "They want")}
-                        </p>
-                        {openAttachMeta.details.want.map((l, i) => (
-                          <p key={i} className="font-mono text-muted-foreground">
-                            {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
-                          </p>
-                        ))}
-                      </div>
-                      {openAttachMeta.details.escrow ? (
-                        <p className="text-muted-foreground">
-                          {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
-                            account: escrowAgentName
-                              ? `${escrowAgentName} (${openAttachMeta.details.escrow.account})`
-                              : openAttachMeta.details.escrow.account,
-                            fee: openAttachMeta.details.escrow.fee,
-                            first:
-                              openAttachMeta.details.escrow.first === "me"
-                                ? t("Trollbox:barterCreatorFirst", "Poster")
-                                : t("Trollbox:barterCounterpartyFirst", "Counterparty"),
-                          })}
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
-              <div className="flex items-center gap-2">
-                <p className="text-xs text-muted-foreground truncate flex-1 min-w-0">
-                  {openMessage.id}
-                </p>
-                {loggedIn && openMessage.account !== currentUserId ? (
-                  <>
+                            {attachActionLabel(t, a)}
+                          </DropdownMenuItem>
+                        )
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : null}
+                <span className="ml-auto flex shrink-0 items-center gap-2">
+                  {loggedIn && openMessage.account !== currentUserId ? (
+                    <>
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
-                      className="ml-auto shrink-0"
+                      className="ml-auto shrink-0 hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.4)]"
                     >
                       <a
                         href={`/transfer.html?to=${encodeURIComponent(
@@ -1837,6 +1850,7 @@ export default function Trollbox(properties) {
                     </Button>
                   </>
                 ) : null}
+                </span>
               </div>
             </>
           ) : null}

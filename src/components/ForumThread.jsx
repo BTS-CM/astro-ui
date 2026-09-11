@@ -13,6 +13,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -36,6 +37,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   ArrowLeft,
@@ -80,6 +87,7 @@ import {
   findForumTopic,
 } from "@/nanoeffects/Forum.ts";
 import {
+  attachmentNoun,
   forumChannelCatalog,
   forumTopicCatalog,
   isThreadKey,
@@ -202,7 +210,7 @@ function TipButton({ account, displayAuthor, currentUserId, loggedIn, t }) {
     return null;
   }
   return (
-    <Button variant="outline" size="sm" asChild className="h-7 shrink-0 text-[11px]">
+    <Button variant="outline" size="sm" asChild className="h-7 shrink-0 text-[11px] hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.4)]">
       <a href={`/transfer.html?to=${encodeURIComponent(displayAuthor || account)}`}>
         <HandCoins className="mr-1 h-3 w-3" />
         {t("Trollbox:tipUser", "Tip user")}
@@ -708,12 +716,12 @@ export default function ForumThread(properties) {
   );
 
   /**
-   * Inline attachment block for a topic/reply: resolved label, action
-   * links, favourite toggles, barter legs. Renders nothing when the
-   * attachment fails to resolve (never raw payload). Offer actions are
-   * gated on live verification; unverified offers show a stale note.
+   * Attachment details for the card footer: resolved label plus barter
+   * legs. Sized to its content (never full width) and truncating — the
+   * footer caps it so actions always stay visible. Renders nothing when
+   * the attachment fails to resolve (never raw payload).
    */
-  const renderAttachBlock = (post) => {
+  const renderAttachDetails = (post) => {
     if (!post || !post.attach) {
       return null;
     }
@@ -723,48 +731,48 @@ export default function ForumThread(properties) {
     }
     if (meta.type === "offer" && !offerVerifiedIds.includes(post.attach.id)) {
       return (
-        <div className="mt-2 rounded-lg border border-border bg-accent/20 px-2.5 py-1.5 text-xs text-muted-foreground">
+        <span className="inline-flex min-w-0 max-w-[60%] shrink items-center rounded-lg border border-border bg-accent/20 px-2.5 py-1.5 text-xs text-muted-foreground truncate">
           {t(
             "Forum:attachOfferStale",
             "Attached offer {{label}} is no longer available on-chain.",
             { label: meta.label }
           )}
-        </div>
+        </span>
       );
     }
-    const actions = attachActionsFor(post, meta);
     return (
-      <div className="mt-2 rounded-xl border border-border bg-accent/20 p-2.5">
-        <div className="mb-1.5 flex min-w-0 items-center gap-1.5">
+      <span
+        className="inline-flex min-w-0 max-w-[60%] shrink flex-col justify-center rounded-xl border border-border bg-accent/20 px-2.5 py-1.5"
+        title={t("Forum:attachHoverTitle", "{{user}} has attached this {{item}} to their post.", {
+          user: post.displayAuthor || post.account,
+          item: t(
+            `Forum:attachNoun${meta.type[0].toUpperCase()}${meta.type.slice(1)}`,
+            attachmentNoun(meta.type)
+          ),
+        })}
+      >
+        <span className="flex min-w-0 items-center gap-1.5">
           <AttachTypeIcon type={meta.type} className="h-4 w-4 shrink-0" />
           <span className="truncate text-xs font-semibold">
             {meta.type === "barter" ? t("Trollbox:attachTypeBarter", "Barter") : meta.label}
           </span>
-        </div>
+        </span>
         {meta.type === "barter" && meta.details ? (
-          <div className="mb-1.5 text-xs space-y-1.5">
-            <div>
-              <p className="font-semibold text-foreground/80">
-                {t("Trollbox:barterTheirOffer", "They offer")}
-              </p>
-              {meta.details.offer.map((l, i) => (
-                <p key={i} className="font-mono text-muted-foreground">
-                  {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
-                </p>
-              ))}
-            </div>
-            <div>
-              <p className="font-semibold text-foreground/80">
-                {t("Trollbox:barterTheirWant", "They want")}
-              </p>
-              {meta.details.want.map((l, i) => (
-                <p key={i} className="font-mono text-muted-foreground">
-                  {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
-                </p>
-              ))}
-            </div>
+          <span className="mt-1 block min-w-0 text-[11px] leading-snug">
+            <span className="block truncate font-semibold text-foreground/80">
+              {t("Trollbox:barterTheirOffer", "They offer")}:{" "}
+              <span className="font-mono font-normal text-muted-foreground">
+                {meta.details.offer.map((l) => `${l.amount} ${l.symbol}`).join(" · ")}
+              </span>
+            </span>
+            <span className="block truncate font-semibold text-foreground/80">
+              {t("Trollbox:barterTheirWant", "They want")}:{" "}
+              <span className="font-mono font-normal text-muted-foreground">
+                {meta.details.want.map((l) => `${l.amount} ${l.symbol}`).join(" · ")}
+              </span>
+            </span>
             {meta.details.escrow ? (
-              <p className="text-muted-foreground">
+              <span className="block truncate text-muted-foreground">
                 {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
                   account: escrowNames[meta.details.escrow.account]
                     ? `${escrowNames[meta.details.escrow.account]} (${meta.details.escrow.account})`
@@ -775,30 +783,69 @@ export default function ForumThread(properties) {
                       ? t("Trollbox:barterCreatorFirst", "Poster")
                       : t("Trollbox:barterCounterpartyFirst", "Counterparty"),
                 })}
-              </p>
+              </span>
             ) : null}
-          </div>
+          </span>
         ) : null}
-        <div className="flex flex-wrap gap-1.5">
+      </span>
+    );
+  };
+
+  /**
+   * Trollbox-style attachment actions dropdown for the card footer:
+   * outline "Actions" trigger, links vs callbacks per action. Offer
+   * actions render only after live verification.
+   */
+  const renderAttachDropdown = (post) => {
+    if (!post || !post.attach) {
+      return null;
+    }
+    const meta = attachMetas[post.id];
+    if (!meta) {
+      return null;
+    }
+    if (meta.type === "offer" && !offerVerifiedIds.includes(post.attach.id)) {
+      return null;
+    }
+    const actions = attachActionsFor(post, meta);
+    if (actions.length === 0) {
+      return null;
+    }
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 shrink-0 hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.4)] text-[11px]"
+            title={t("Forum:attachActionsTitle", "Attached {{item}} actions", {
+              item: t(
+                `Forum:attachNoun${meta.type[0].toUpperCase()}${meta.type.slice(1)}`,
+                attachmentNoun(meta.type)
+              ),
+            })}
+          >
+            <AttachTypeIcon type={meta.type} className="mr-1 h-3 w-3" />
+            {t("Trollbox:attachActions", "Actions")}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
           {actions.map((action) =>
             action.href ? (
-              <Button key={action.key} variant="outline" size="sm" asChild className="h-7 text-[11px]">
+              <DropdownMenuItem key={action.key} asChild>
                 <a href={action.href}>{attachActionLabel(action)}</a>
-              </Button>
+              </DropdownMenuItem>
             ) : (
-              <Button
+              <DropdownMenuItem
                 key={action.key}
-                variant="ghost"
-                size="sm"
-                className="h-7 text-[11px]"
-                onClick={action.onSelect}
+                onSelect={() => action.onSelect && action.onSelect()}
               >
                 {attachActionLabel(action)}
-              </Button>
+              </DropdownMenuItem>
             )
           )}
-        </div>
-      </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   };
 
@@ -948,11 +995,11 @@ export default function ForumThread(properties) {
   const replyCard = (reply) => {
     const own = reply.account === currentUserId;
     return (
-      <div
+      <Card
         key={reply.id}
-        className="rounded-xl border border-border bg-card/40 p-3"
+        className="overflow-hidden bg-card/40"
       >
-        <div className="mb-1.5 flex min-w-0 items-center gap-2">
+        <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b border-border p-3">
           <Avatar
             size={28}
             name={reply.displayAuthor}
@@ -963,8 +1010,17 @@ export default function ForumThread(properties) {
           <span className="text-xs font-normal text-muted-foreground shrink-0">
             {reply.account}
           </span>
-          {roleBadge(reply.account)}
-          {donorBadge(reply.account, true)}
+          <span className="ml-auto flex shrink-0 items-center gap-1">
+            {roleBadge(reply.account)}
+            {donorBadge(reply.account, true)}
+          </span>
+        </CardHeader>
+        <CardContent className="p-3">
+          <ReplyBody text={reply.text} dark={isDark} />
+        </CardContent>
+        <CardFooter className="flex items-center gap-1.5 border-t border-border bg-accent/20 p-2.5">
+          {renderAttachDetails(reply)}
+          {renderAttachDropdown(reply)}
           <span className="ml-auto flex shrink-0 items-center gap-1">
             <TooltipProvider delayDuration={300}>
               <Tooltip>
@@ -1015,10 +1071,8 @@ export default function ForumThread(properties) {
               </TooltipProvider>
             )}
           </span>
-        </div>
-        <ReplyBody text={reply.text} dark={isDark} />
-        {renderAttachBlock(reply)}
-      </div>
+        </CardFooter>
+      </Card>
     );
   };
 
@@ -1182,8 +1236,8 @@ export default function ForumThread(properties) {
             </div>
           ) : null}
           {topic ? (
-            <div className="rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-card/60 p-4">
-              <div className="mb-2 flex min-w-0 items-center gap-2">
+            <Card className="overflow-hidden border-[hsl(var(--accent-1)/0.4)] bg-card/60">
+              <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b border-border p-4">
                 <Avatar
                   size={32}
                   name={topic.displayAuthor}
@@ -1196,8 +1250,17 @@ export default function ForumThread(properties) {
                 <span className="text-xs font-normal text-muted-foreground shrink-0">
                   {topic.account}
                 </span>
-                {roleBadge(topic.account)}
-                {donorBadge(topic.account, true)}
+                <span className="ml-auto flex shrink-0 items-center gap-1">
+                  {roleBadge(topic.account)}
+                  {donorBadge(topic.account, true)}
+                </span>
+              </CardHeader>
+              <CardContent className="p-4">
+                <ForumMarkdown text={topic.text} dark={isDark} />
+              </CardContent>
+              <CardFooter className="flex items-center gap-1.5 border-t border-border bg-accent/20 p-2.5">
+                {renderAttachDetails(topic)}
+                {renderAttachDropdown(topic)}
                 <span className="ml-auto flex shrink-0 items-center gap-1">
                   <TipButton
                     account={topic.account}
@@ -1262,10 +1325,8 @@ export default function ForumThread(properties) {
                     </TooltipProvider>
                   )}
                 </span>
-              </div>
-              <ForumMarkdown text={topic.text} dark={isDark} />
-              {renderAttachBlock(topic)}
-            </div>
+              </CardFooter>
+            </Card>
           ) : null}
 
           {hiddenBlockedCount > 0 ? (

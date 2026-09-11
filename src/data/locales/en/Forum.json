@@ -90,5 +90,12 @@
     "missingDesc": "No topic with this id was found in this channel — check the link, or try a node with the plugin enabled.",
     "mismatchTitle": "Thread failed verification",
     "mismatchDesc": "The thread pointer does not match its author's identity hash, so it is hidden instead of rendered.",
-    "attachOfferStale": "Attached offer {{label}} is no longer available on-chain."
+    "attachOfferStale": "Attached offer {{label}} is no longer available on-chain.",
+    "attachHoverTitle": "{{user}} has attached this {{item}} to their post.",
+    "attachActionsTitle": "Attached {{item}} actions",
+    "attachNounAsset": "asset",
+    "attachNounPair": "trading pair",
+    "attachNounPool": "liquidity pool",
+    "attachNounOffer": "credit offer",
+    "attachNounBarter": "barter proposal"
 }

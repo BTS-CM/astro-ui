@@ -221,9 +221,16 @@ export const Avatar = ({
 
   useEffect(() => {
     function calculate() {
-      const avatar = document.querySelector(
-        `#avatar${extra}_${name ? name.replaceAll(".", "") : ""}`
-      ) as HTMLElement;
+      // getElementById (not querySelector): ids embed storage ids like
+      // "7.0.416" whose dots are class selectors to querySelector and
+      // throw. IDs may also be absent (virtualized rows unmount
+      // off-screen), so bail out instead of crashing.
+      const avatar = document.getElementById(
+        `avatar${extra}_${name ? name.replaceAll(".", "") : ""}`
+      ) as HTMLElement | null;
+      if (!avatar) {
+        return;
+      }
 
       const { left, top, width, height } = avatar.getBoundingClientRect();
       const centerX = left + width / 2;

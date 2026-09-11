@@ -77,6 +77,25 @@ export function forumTopicCatalog(accountId, threadKey) {
   return h ? `forum-topic-${h}` : null;
 }
 
+/** Display noun for an attachment kind ("pair" → "trading pair").
+ *  Used for hover text; callers translate via Forum:attachNoun* keys. */
+export function attachmentNoun(type) {
+  switch (type) {
+    case "asset":
+      return "asset";
+    case "pair":
+      return "trading pair";
+    case "pool":
+      return "liquidity pool";
+    case "offer":
+      return "credit offer";
+    case "barter":
+      return "barter proposal";
+    default:
+      return "attachment";
+  }
+}
+
 /** True when `catalog` is a well-formed thread-reply catalog name. */
 export function isForumTopicCatalog(catalog) {
   return typeof catalog === "string" && /^forum-topic-[0-9a-f]{16}$/.test(catalog);
