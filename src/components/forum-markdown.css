@@ -24,7 +24,12 @@
   line-height: 1.4;
   margin: 0.75em 0 0.375em;
 }
-.forum-md h4 { font-size: 1rem; }
+.forum-md h4 {
+  font-size: 1rem;
+  color: hsl(var(--accent-1-fg));
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.25);
+  padding-bottom: 0.25em;
+}
 .forum-md h5 { font-size: 0.9rem; }
 .forum-md h6 { font-size: 0.8rem; }
 
@@ -40,7 +45,7 @@
   padding: 0.375rem 0.625rem;
   border-left: 2px solid hsl(var(--accent-1) / 0.6);
   border-radius: 0.375rem;
-  background: hsl(var(--accent) / 0.3);
+  background: hsl(var(--accent-1) / 0.08);
   color: hsl(var(--muted-foreground));
   font-style: italic;
 }
@@ -64,15 +69,17 @@
 .forum-md :not(pre) > code {
   padding: 0.1em 0.3em;
   border-radius: 0.375rem;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--accent) / 0.5);
+  border: 1px solid hsl(var(--accent-1) / 0.3);
+  background: hsl(var(--accent-1) / 0.1);
+  color: hsl(var(--accent-1-fg));
 }
 .forum-md pre {
   margin: 0 0 0.625em;
   padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--accent) / 0.3);
+  border: 1px solid hsl(var(--accent-1) / 0.25);
+  border-left: 2px solid hsl(var(--accent-1) / 0.6);
+  background: hsl(var(--accent-1) / 0.06);
   overflow-x: auto;
   max-height: 24rem;
   overflow-y: auto;
@@ -87,7 +94,7 @@
 .forum-md-tablewrap {
   margin: 0 0 0.625em;
   overflow-x: auto;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--accent-1) / 0.25);
   border-radius: 0.5rem;
 }
 .forum-md table {
@@ -98,13 +105,14 @@
 .forum-md th,
 .forum-md td {
   padding: 0.375rem 0.625rem;
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.15);
   text-align: left;
   white-space: nowrap;
 }
 .forum-md thead th {
   font-weight: 600;
-  background: hsl(var(--accent) / 0.4);
+  background: hsl(var(--accent-1) / 0.12);
+  color: hsl(var(--accent-1-fg));
 }
 .forum-md tbody tr:last-child th,
 .forum-md tbody tr:last-child td {
@@ -113,8 +121,10 @@
 
 .forum-md hr {
   margin: 0.875em 0;
-  border-color: hsl(var(--border));
+  border-color: hsl(var(--accent-1) / 0.3);
 }
+
+/* Strike/italic/bold inherit body color; nothing to do. */
 
 /* uiw preview chrome we don't need in read-only view. */
 .forum-md .copied,
@@ -125,7 +135,7 @@
 /* Composer preview pane (editor on top, preview below). */
 .forum-editor-preview {
   margin-top: 0.5rem;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--accent-1) / 0.25);
   border-radius: 0.5rem;
   overflow: hidden;
 }
@@ -135,12 +145,33 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: hsl(var(--muted-foreground));
-  background: hsl(var(--accent) / 0.4);
-  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--accent-1-fg));
+  background: hsl(var(--accent-1) / 0.1);
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.25);
 }
 .forum-editor-preview-body {
   padding: 0.625rem 0.75rem;
   max-height: 22rem;
   overflow-y: auto;
+}
+
+/* Editor chrome (toolbar + frame), scoped so uiw defaults elsewhere
+ * are untouched. Higher specificity than the uiw stylesheet. */
+.forum-editor .w-md-editor {
+  border: 1px solid hsl(var(--accent-1) / 0.25);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.forum-editor .w-md-editor-toolbar {
+  background: hsl(var(--accent-1) / 0.08);
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.25);
+}
+.forum-editor .w-md-editor-toolbar button:hover {
+  background: hsl(var(--accent-1) / 0.15);
+}
+.forum-editor .w-md-editor-toolbar button svg {
+  color: hsl(var(--accent-1-fg));
+}
+.forum-editor .w-md-editor-text {
+  background: transparent;
 }

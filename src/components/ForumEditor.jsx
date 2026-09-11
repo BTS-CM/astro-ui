@@ -64,7 +64,7 @@ function ForumEditor({
     [placeholder, disabled]
   );
   return (
-    <div data-color-mode={dark ? "dark" : "light"}>
+    <div className="forum-editor" data-color-mode={dark ? "dark" : "light"}>
       <MDEditor
         value={value}
         onChange={(next) => onChange(next || "")}

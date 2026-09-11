@@ -230,7 +230,11 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
           <Item
             variant="outline"
             size="sm"
-            className="h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]"
+            className={`h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]${
+              own
+                ? " border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.07)]"
+                : ""
+            }`}
             onClick={() => onOpenTopic(topic)}
           >
             <ItemMedia>
@@ -1150,10 +1154,23 @@ export default function Forum(properties) {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
           />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
+          />
           <CardHeader className="pb-2 relative">
-            <CardTitle className="text-base">
-              {t("Forum:channelsTitle", "Channels")}
-            </CardTitle>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)]">
+                <MessageSquare className="h-3.5 w-3.5" />
+              </span>
+              <CardTitle className="text-base">
+                {t("Forum:channelsTitle", "Channels")}
+              </CardTitle>
+            </div>
             <CardDescription>
               {t(
                 "Forum:channelsSubtitle",
@@ -1162,7 +1179,7 @@ export default function Forum(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <TabsList className="mb-1 flex-wrap h-auto">
+            <TabsList className="mb-1 flex-wrap h-auto bg-[hsl(var(--accent-1)/0.08)] border border-[hsl(var(--accent-1)/0.2)]">
               {FORUM_CHANNELS.map((c) => (
                 <TabsTrigger key={c.id} value={c.id}>
                   #{c.id}
@@ -1176,6 +1193,14 @@ export default function Forum(properties) {
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
           />
           <CardHeader className="pb-3 relative">
             <div className="flex items-center gap-2">
@@ -1194,7 +1219,7 @@ export default function Forum(properties) {
                 })}
               </CardTitle>
               <div
-                className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-border p-0.5"
+                className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-0.5"
                 role="tablist"
                 aria-label={t("Forum:filterLabel", "Topic filter")}
               >
@@ -1242,7 +1267,7 @@ export default function Forum(properties) {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={t("Forum:searchPlaceholder", "Search loaded topics…")}
                   aria-label={t("Forum:searchLabel", "Search topics")}
-                  className="h-8 pr-8 text-xs"
+                  className="h-8 pr-8 text-xs focus-visible:border-[hsl(var(--accent-1)/0.5)] focus-visible:ring-[hsl(var(--accent-1)/0.3)]"
                 />
                 {query ? (
                   <Button
@@ -1257,7 +1282,7 @@ export default function Forum(properties) {
                 ) : null}
               </div>
               <div
-                className="flex shrink-0 items-center gap-1 rounded-lg border border-border p-0.5"
+                className="flex shrink-0 items-center gap-1 rounded-lg border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-0.5"
                 role="tablist"
                 aria-label={t("Forum:sortLabel", "Topic order")}
               >
@@ -1301,7 +1326,7 @@ export default function Forum(properties) {
             </p>
             {probe.state === "live" ? (
               <div
-                className="rounded-xl border border-border p-2"
+                className="rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.06)] to-transparent p-2"
                 style={{ minHeight: 7 * FORUM_ROW_HEIGHT }}
               >
                 {loadingTopics && topics.length === 0 ? (
@@ -1392,8 +1417,11 @@ export default function Forum(properties) {
               </div>
             )}
 
-            <div className="mt-4 space-y-2 rounded-xl border border-border p-3">
-              <CardTitle className="text-sm">
+            <div className="mt-4 space-y-2 rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.06)] to-transparent p-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)]">
+                  <Send className="h-3 w-3" />
+                </span>
                 {t("Forum:newTopicTitle", "Start a new topic")}
               </CardTitle>
               <div>
@@ -1413,6 +1441,7 @@ export default function Forum(properties) {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   maxLength={FORUM_TITLE_MAX}
+                  className="focus-visible:border-[hsl(var(--accent-1)/0.5)] focus-visible:ring-[hsl(var(--accent-1)/0.3)]"
                   placeholder={
                     loggedIn
                       ? t("Forum:titlePlaceholder", "What is this topic about?")
@@ -1486,6 +1515,7 @@ export default function Forum(properties) {
                   onClick={handlePost}
                   disabled={!loggedIn || !title.trim() || !draft.trim() || verifyingAttach}
                   size="sm"
+                  className="shadow-[0_0_14px_-4px_hsl(var(--accent-1)/0.6)]"
                 >
                   <Send className="mr-1 h-3.5 w-3.5" />
                   {t("Forum:postTopic", "Post topic")}
@@ -1570,7 +1600,7 @@ export default function Forum(properties) {
         </Card>
       </Tabs>
 
-      <TrollboxRisks />
+      <TrollboxRisks page="forum" />
 
       <AlertDialog
         open={!!blockTarget}

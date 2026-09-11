@@ -55,7 +55,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -76,6 +75,7 @@ import {
   Send,
   FlaskConical,
   RefreshCw,
+  Trash2,
   TriangleAlert,
   CircleCheck,
   X,
@@ -124,6 +124,7 @@ import {
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
 import { attachmentNoun } from "@/lib/forumPost.js";
+import { buildRemoveOp } from "@/lib/customRemove.js";
 import { getTopDonators } from "@/nanoeffects/TopDonators.ts";
 import {
   DONATIONS_ASSET_ID,
@@ -348,7 +349,11 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
           <Item
             variant="outline"
             size="sm"
-            className="h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]"
+            className={`h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]${
+              isOwn
+                ? " border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.07)]"
+                : ""
+            }`}
             onClick={() => onOpenMessage(m)}
           >
             <ItemMedia>
@@ -511,6 +516,9 @@ export default function Trollbox(properties) {
   const [showDialog, setShowDialog] = useState(false);
   const [openMessage, setOpenMessage] = useState(null);
   const [blockTarget, setBlockTarget] = useState(null);
+  const [removeTarget, setRemoveTarget] = useState(null);
+  const [removePendingOp, setRemovePendingOp] = useState(null);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [attachOpen, setAttachOpen] = useState(false);
   const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
   const [verifyingAttach, setVerifyingAttach] = useState(false);
@@ -953,6 +961,28 @@ export default function Trollbox(properties) {
       return null;
     });
   }, [chain]);
+  const handleConfirmRemove = useCallback(() => {
+    if (!removeTarget || !currentUser || !currentUser.id) {
+      return;
+    }
+    if (removeTarget.account !== currentUser.id) {
+      return;
+    }
+    try {
+      const op = buildRemoveOp({
+        payer: currentUser.id,
+        catalog: removeTarget.catalog,
+        key: removeTarget.key,
+        opId: TROLLBOX_OP_ID,
+      });
+      setRemovePendingOp(op);
+      setShowRemoveDialog(true);
+      setRemoveTarget(null);
+    } catch (error) {
+      setComposeError(error?.message ?? String(error));
+      setRemoveTarget(null);
+    }
+  }, [removeTarget, currentUser]);
   const messageRowProps = useMemo(
     () => ({
       visibleMessages,
@@ -1290,6 +1320,14 @@ export default function Trollbox(properties) {
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
         />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
+        />
         <CardHeader className="pb-2 relative">
           <div className="flex items-center gap-2">
             <CardTitle className="flex items-center gap-2 text-base flex-1 min-w-0">
@@ -1345,7 +1383,7 @@ export default function Trollbox(properties) {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
-            <TabsList className="mb-1 flex-wrap h-auto">
+            <TabsList className="mb-1 flex-wrap h-auto bg-[hsl(var(--accent-1)/0.08)] border border-[hsl(var(--accent-1)/0.2)]">
               {TROLLBOX_CHANNELS.map((c) => (
                 <TabsTrigger key={c.id} value={c.id}>
                   #{c.id}
@@ -1359,6 +1397,14 @@ export default function Trollbox(properties) {
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
         />
         <CardHeader className="pb-3 relative">
           <div className="flex items-center gap-2">
@@ -1377,7 +1423,7 @@ export default function Trollbox(properties) {
               })}
             </CardTitle>
             <div
-              className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-border p-0.5"
+              className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-0.5"
               role="tablist"
               aria-label={t("Trollbox:filterLabel", "Message filter")}
             >
@@ -1403,7 +1449,7 @@ export default function Trollbox(properties) {
         <CardContent>
                 {probe.state === "live" ? (
                   <div
-                    className="rounded-xl border border-border p-2"
+                    className="rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.06)] to-transparent p-2"
                     style={{ minHeight: TROLLBOX_MIN_ROWS * TROLLBOX_ROW_HEIGHT }}
                   >
                     {loadingMessages && messages.length === 0 ? (
@@ -1565,6 +1611,7 @@ export default function Trollbox(properties) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               maxLength={maxBytes}
+              className="focus-visible:border-[hsl(var(--accent-1)/0.5)] focus-visible:ring-[hsl(var(--accent-1)/0.3)]"
               placeholder={
                 loggedIn
                   ? t("Trollbox:composerPlaceholder", "Message {{channel}}…", {
@@ -1583,6 +1630,7 @@ export default function Trollbox(properties) {
             <Button
               disabled={!loggedIn || !draft.trim() || verifyingAttach}
               onClick={handleSend}
+              className="shadow-[0_0_14px_-4px_hsl(var(--accent-1)/0.6)]"
               title={t("Trollbox:sendTitle", "Prepare a custom operation for signing in Beet")}
             >
               {verifyingAttach ? (
@@ -1658,7 +1706,7 @@ export default function Trollbox(properties) {
       </Card>
       </Tabs>
 
-      <TrollboxRisks />
+      <TrollboxRisks page="trollbox" />
 
       <Dialog
         open={!!openMessage}
@@ -1668,17 +1716,27 @@ export default function Trollbox(properties) {
           }
         }}
       >
-        <DialogContent className="sm:max-w-[50%]">
+        <DialogContent className="sm:max-w-[50%] overflow-hidden border-[hsl(var(--accent-1)/0.35)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.08)] to-transparent">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.6)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
           {openMessage ? (
             <>
               <DialogHeader>
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    size={44}
-                    name={openMessage.displayAuthor}
-                    extra="trollbox-dialog"
-                    expression={{ eye: "normal", mouth: "open" }}
-                  />
+                <div className="flex items-center gap-3 rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-3">
+                  <span className="shrink-0 rounded-full ring-2 ring-[hsl(var(--accent-1)/0.45)] ring-offset-2 ring-offset-background">
+                    <Avatar
+                      size={44}
+                      name={openMessage.displayAuthor}
+                      extra="trollbox-dialog"
+                      expression={{ eye: "normal", mouth: "open" }}
+                    />
+                  </span>
                   <div className="min-w-0">
                     <DialogTitle className="truncate">
                       {openMessage.displayAuthor}
@@ -1705,7 +1763,10 @@ export default function Trollbox(properties) {
                         {openDonorLabel}
                       </Badge>
                     ) : null}
-                    <Badge variant="secondary" className="shrink-0">
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.12)]"
+                    >
                       #{openMessage.channel ?? activeChannel}
                     </Badge>
                     <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
@@ -1714,16 +1775,13 @@ export default function Trollbox(properties) {
                   </div>
                 </div>
               </DialogHeader>
-              <Textarea
-                disabled
-                readOnly
-                value={openMessage.text}
-                className="min-h-[120px]"
-              />
+              <div className="min-h-[120px] max-h-[40vh] overflow-y-auto whitespace-pre-wrap break-words rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-4 text-[15px] leading-relaxed text-foreground">
+                {openMessage.text}
+              </div>
               <div className="flex items-center gap-1.5">
                 {openAttachMeta ? (
                   <span
-                    className="inline-flex min-w-0 max-w-[55%] shrink flex-col justify-center rounded-xl border border-border bg-accent/20 px-2.5 py-1.5"
+                    className="inline-flex min-w-0 max-w-[55%] shrink flex-col justify-center rounded-xl border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] px-2.5 py-1.5"
                     title={t("Forum:attachHoverTitle", "{{user}} has attached this {{item}} to their post.", {
                       user: openMessage.displayAuthor,
                       item: t(
@@ -1850,6 +1908,17 @@ export default function Trollbox(properties) {
                     </Button>
                   </>
                 ) : null}
+                  {loggedIn && openMessage.account === currentUserId ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                      onClick={() => setRemoveTarget(openMessage)}
+                    >
+                      <Trash2 className="mr-1 h-3.5 w-3.5" />
+                      {t("Trollbox:removeMessage", "Remove")}
+                    </Button>
+                  ) : null}
                 </span>
               </div>
             </>
@@ -1917,6 +1986,66 @@ export default function Trollbox(properties) {
           ) : null}
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog
+        open={!!removeTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setRemoveTarget(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          {removeTarget ? (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {t("Trollbox:removeConfirmTitle", "Remove this message?")}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t(
+                    "Trollbox:removeConfirmDesc",
+                    "This removes the message from the custom_operations plugin catalogue so apps stop listing it. It does NOT remove the data from the blockchain — block history still contains it."
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="rounded-md border border-border p-3 text-sm space-y-1">
+                <p className="text-foreground font-mono text-xs">
+                  {removeTarget.catalog} / {removeTarget.key}
+                </p>
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  {t("Trollbox:removeCancel", "Cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmRemove}>
+                  {t("Trollbox:removeContinue", "Continue")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          ) : null}
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {showRemoveDialog && removePendingOp && loggedIn ? (
+        <DeepLinkDialog
+          operationNames={["custom"]}
+          username={currentUser.username}
+          usrChain={chain}
+          userID={currentUser.id}
+          dismissCallback={() => {
+            setShowRemoveDialog(false);
+            setRemovePendingOp(null);
+            setOpenMessage(null);
+            setRefreshNonce((n) => n + 1);
+          }}
+          key={`trollbox-remove-${removePendingOp[0].data.slice(0, 32)}`}
+          headerText={t("Trollbox:removeDialogHeader", "Removing message as {{user}}", {
+            user: currentUser.username,
+          })}
+          trxJSON={removePendingOp}
+        />
+      ) : null}
     </div>
   );
 }

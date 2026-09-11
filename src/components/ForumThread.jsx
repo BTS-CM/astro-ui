@@ -61,6 +61,7 @@ import {
   Quote,
   RefreshCw,
   Send,
+  Trash2,
   TriangleAlert,
   X,
 } from "lucide-react";
@@ -106,6 +107,7 @@ import {
   maxMessageBytes,
   utf8Length,
 } from "@/bts/serializer/customOperations.js";
+import { buildRemoveOp } from "@/lib/customRemove.js";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import TrollboxRisks from "@/components/TrollboxRisks.jsx";
 import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
@@ -278,6 +280,9 @@ export default function ForumThread(properties) {
   const [composeError, setComposeError] = useState(null);
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [removeTarget, setRemoveTarget] = useState(null);
+  const [removePendingOp, setRemovePendingOp] = useState(null);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [attachOpen, setAttachOpen] = useState(false);
   const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
   const [verifyingAttach, setVerifyingAttach] = useState(false);
@@ -731,7 +736,7 @@ export default function ForumThread(properties) {
     }
     if (meta.type === "offer" && !offerVerifiedIds.includes(post.attach.id)) {
       return (
-        <span className="inline-flex min-w-0 max-w-[60%] shrink items-center rounded-lg border border-border bg-accent/20 px-2.5 py-1.5 text-xs text-muted-foreground truncate">
+        <span className="inline-flex min-w-0 max-w-[60%] shrink items-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] px-2.5 py-1.5 text-xs text-muted-foreground truncate">
           {t(
             "Forum:attachOfferStale",
             "Attached offer {{label}} is no longer available on-chain.",
@@ -742,7 +747,7 @@ export default function ForumThread(properties) {
     }
     return (
       <span
-        className="inline-flex min-w-0 max-w-[60%] shrink flex-col justify-center rounded-xl border border-border bg-accent/20 px-2.5 py-1.5"
+        className="inline-flex min-w-0 max-w-[60%] shrink flex-col justify-center rounded-xl border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] px-2.5 py-1.5"
         title={t("Forum:attachHoverTitle", "{{user}} has attached this {{item}} to their post.", {
           user: post.displayAuthor || post.account,
           item: t(
@@ -941,6 +946,28 @@ export default function ForumThread(properties) {
       return null;
     });
   }, [chain]);
+  const handleConfirmRemove = useCallback(() => {
+    if (!removeTarget || !currentUser || !currentUser.id) {
+      return;
+    }
+    if (removeTarget.account && removeTarget.account !== currentUser.id) {
+      return;
+    }
+    try {
+      const op = buildRemoveOp({
+        payer: currentUser.id,
+        catalog: removeTarget.catalog,
+        key: removeTarget.key,
+        opId: FORUM_OP_ID,
+      });
+      setRemovePendingOp(op);
+      setShowRemoveDialog(true);
+      setRemoveTarget(null);
+    } catch (error) {
+      setComposeError(error?.message ?? String(error));
+      setRemoveTarget(null);
+    }
+  }, [removeTarget, currentUser]);
 
   const blockLabel = t("Forum:blockUser", "Block user");
   const blockSelfLabel = t("Forum:blockSelf", "You can't block yourself");
@@ -997,15 +1024,21 @@ export default function ForumThread(properties) {
     return (
       <Card
         key={reply.id}
-        className="overflow-hidden bg-card/40"
+        className={`overflow-hidden bg-card${
+          own
+            ? " border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.1)] to-transparent"
+            : " border-[hsl(var(--accent-1)/0.15)]"
+        }`}
       >
-        <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b border-border p-3">
-          <Avatar
-            size={28}
-            name={reply.displayAuthor}
-            extra={`forum-reply-${reply.id}`}
-            expression={{ eye: "normal", mouth: "open" }}
-          />
+        <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.08)] to-transparent p-3">
+          <span className="shrink-0 rounded-full ring-2 ring-[hsl(var(--accent-1)/0.4)] ring-offset-2 ring-offset-background">
+            <Avatar
+              size={28}
+              name={reply.displayAuthor}
+              extra={`forum-reply-${reply.id}`}
+              expression={{ eye: "normal", mouth: "open" }}
+            />
+          </span>
           <span className="truncate text-sm font-medium">{reply.displayAuthor}</span>
           <span className="text-xs font-normal text-muted-foreground shrink-0">
             {reply.account}
@@ -1018,7 +1051,7 @@ export default function ForumThread(properties) {
         <CardContent className="p-3">
           <ReplyBody text={reply.text} dark={isDark} />
         </CardContent>
-        <CardFooter className="flex items-center gap-1.5 border-t border-border bg-accent/20 p-2.5">
+        <CardFooter className="flex items-center gap-1.5 border-t border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.06)] p-2.5">
           {renderAttachDetails(reply)}
           {renderAttachDropdown(reply)}
           <span className="ml-auto flex shrink-0 items-center gap-1">
@@ -1028,7 +1061,7 @@ export default function ForumThread(properties) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 px-1.5 text-[11px]"
+                    className="h-7 px-1.5 text-[11px] hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)]"
                     disabled={!loggedIn}
                     onClick={() => handleQuote(reply.text)}
                     title={t("Forum:quote", "Quote")}
@@ -1070,6 +1103,33 @@ export default function ForumThread(properties) {
                 </Tooltip>
               </TooltipProvider>
             )}
+            {own && threadCatalog ? (
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-1.5 text-[11px] text-muted-foreground hover:text-destructive"
+                      disabled={!loggedIn}
+                      onClick={() =>
+                        setRemoveTarget({
+                          catalog: threadCatalog,
+                          key: reply.key,
+                          label: reply.text?.slice(0, 80) ?? reply.key,
+                          account: reply.account,
+                        })
+                      }
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>{t("Forum:removeReply", "Remove")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : null}
           </span>
         </CardFooter>
       </Card>
@@ -1236,14 +1296,20 @@ export default function ForumThread(properties) {
             </div>
           ) : null}
           {topic ? (
-            <Card className="overflow-hidden border-[hsl(var(--accent-1)/0.4)] bg-card/60">
-              <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b border-border p-4">
-                <Avatar
-                  size={32}
-                  name={topic.displayAuthor}
-                  extra={`forum-op-${topic.id}`}
-                  expression={{ eye: "normal", mouth: "open" }}
-                />
+            <Card className="relative overflow-hidden border-[hsl(var(--accent-1)/0.4)] bg-card bg-gradient-to-b from-[hsl(var(--accent-1)/0.07)] to-transparent">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+              />
+              <CardHeader className="relative flex flex-row items-center gap-2 space-y-0 border-b border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.1)] to-transparent p-4">
+                <span className="shrink-0 rounded-full ring-2 ring-[hsl(var(--accent-1)/0.45)] ring-offset-2 ring-offset-background">
+                  <Avatar
+                    size={32}
+                    name={topic.displayAuthor}
+                    extra={`forum-op-${topic.id}`}
+                    expression={{ eye: "normal", mouth: "open" }}
+                  />
+                </span>
                 <span className="truncate text-sm font-medium">
                   {topic.displayAuthor}
                 </span>
@@ -1255,10 +1321,10 @@ export default function ForumThread(properties) {
                   {donorBadge(topic.account, true)}
                 </span>
               </CardHeader>
-              <CardContent className="p-4">
+              <CardContent className="relative p-4">
                 <ForumMarkdown text={topic.text} dark={isDark} />
               </CardContent>
-              <CardFooter className="flex items-center gap-1.5 border-t border-border bg-accent/20 p-2.5">
+              <CardFooter className="relative flex items-center gap-1.5 border-t border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.06)] p-2.5">
                 {renderAttachDetails(topic)}
                 {renderAttachDropdown(topic)}
                 <span className="ml-auto flex shrink-0 items-center gap-1">
@@ -1324,6 +1390,32 @@ export default function ForumThread(properties) {
                       </Tooltip>
                     </TooltipProvider>
                   )}
+                  {loggedIn && topic.account === currentUserId ? (
+                    <TooltipProvider delayDuration={300}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-1.5 text-[11px] text-muted-foreground hover:text-destructive"
+                            onClick={() =>
+                              setRemoveTarget({
+                                catalog: topic.catalog,
+                                key: topic.key,
+                                label: topic.title,
+                                account: topic.account,
+                              })
+                            }
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <p>{t("Forum:removeTopic", "Remove")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : null}
                 </span>
               </CardFooter>
             </Card>
@@ -1346,6 +1438,7 @@ export default function ForumThread(properties) {
               <Button
                 variant="outline"
                 size="sm"
+                className="hover:border-[hsl(var(--accent-1)/0.4)] hover:bg-[hsl(var(--accent-1)/0.08)]"
                 onClick={() =>
                   setVisibleCount((c) => c + REPLY_PAGE_SIZE)
                 }
@@ -1366,6 +1459,14 @@ export default function ForumThread(properties) {
             <span
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
             />
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
@@ -1449,6 +1550,7 @@ export default function ForumThread(properties) {
                   onClick={handleReply}
                   disabled={!loggedIn || !draft.trim() || verifyingAttach}
                   size="sm"
+                  className="shadow-[0_0_14px_-4px_hsl(var(--accent-1)/0.6)]"
                 >
                   <Send className="mr-1 h-3.5 w-3.5" />
                   {t("Forum:postReply", "Post reply")}
@@ -1503,7 +1605,7 @@ export default function ForumThread(properties) {
         />
       ) : null}
 
-      <TrollboxRisks />
+      <TrollboxRisks page="forum" />
 
       <TrollboxAttachDialog
         open={attachOpen}
@@ -1547,6 +1649,64 @@ export default function ForumThread(properties) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog
+        open={!!removeTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setRemoveTarget(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("Forum:removeConfirmTitle", "Remove this post?")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(
+                "Forum:removeConfirmDesc",
+                "This removes the post from the custom_operations plugin catalogue so apps stop listing it. It does NOT remove the data from the blockchain — block history still contains it."
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {removeTarget ? (
+            <div className="rounded-md border border-border p-3 text-sm space-y-1">
+              <p className="text-foreground font-mono text-xs">
+                {removeTarget.catalog} / {removeTarget.key}
+              </p>
+              {removeTarget.label ? (
+                <p className="text-muted-foreground truncate">{removeTarget.label}</p>
+              ) : null}
+            </div>
+          ) : null}
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("Forum:removeCancel", "Cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmRemove}>
+              {t("Forum:removeContinue", "Continue")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {showRemoveDialog && removePendingOp && loggedIn ? (
+        <DeepLinkDialog
+          operationNames={["custom"]}
+          username={currentUser.username}
+          usrChain={chain}
+          userID={currentUser.id}
+          dismissCallback={() => {
+            setShowRemoveDialog(false);
+            setRemovePendingOp(null);
+            setRefreshNonce((n) => n + 1);
+          }}
+          key={`forum-remove-${removePendingOp[0].data.slice(0, 32)}`}
+          headerText={t("Forum:removeDialogHeader", "Removing post as {{user}}", {
+            user: currentUser.username,
+          })}
+          trxJSON={removePendingOp}
+        />
+      ) : null}
     </div>
   );
 }
