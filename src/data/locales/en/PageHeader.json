@@ -122,7 +122,8 @@
     "network_fees": "Browse every network fee in full — standard costs, per-KByte charges and lifetime member rates.",
     "explorer": "Use this page to lookup any account, asset, object, transaction hash or block number and view the raw JSON with copy and favourites.",
     "change_password": "Use the form below to change your cloud wallet password via an account_update operation.",
-    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain."
+    "trollbox": "Chat with the community in channels that live entirely on the BitShares blockchain.",
+    "forum": "Discuss in topics that live entirely on the BitShares blockchain."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

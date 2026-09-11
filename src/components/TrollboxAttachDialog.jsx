@@ -988,7 +988,11 @@ export default function TrollboxAttachDialog(properties) {
               marketSearch={marketSearch}
               chain={chain}
               balances={usrBalances}
-              triggerLabel={t("Trollbox:attachSelectAsset", "Select asset…")}
+              triggerLabel={
+                picked
+                  ? picked.label
+                  : t("Trollbox:attachSelectAsset", "Select asset…")
+              }
               triggerVariant="outline"
               triggerClassName="w-full"
             />
@@ -1001,30 +1005,44 @@ export default function TrollboxAttachDialog(properties) {
         {view === "pair" ? (
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
-              <AssetDropDown
-                assetSymbol={assetA ? assetA.symbol : ""}
-                assetData={null}
-                storeCallback={(symbol) => pickAsset(symbol, "A")}
-                otherAsset={assetB ? assetB.symbol : undefined}
-                marketSearch={marketSearch}
-                chain={chain}
-                balances={usrBalances}
-                triggerLabel={t("Trollbox:attachSelectA", "First asset…")}
-                triggerVariant="outline"
-                triggerClassName="w-full"
-              />
-              <AssetDropDown
-                assetSymbol={assetB ? assetB.symbol : ""}
-                assetData={null}
-                storeCallback={(symbol) => pickAsset(symbol, "B")}
-                otherAsset={assetA ? assetA.symbol : undefined}
-                marketSearch={marketSearch}
-                chain={chain}
-                balances={usrBalances}
-                triggerLabel={t("Trollbox:attachSelectB", "Second asset…")}
-                triggerVariant="outline"
-                triggerClassName="w-full"
-              />
+              <div className="space-y-1.5 min-w-0">
+                <Label>{t("Trollbox:poolAssetA", "Asset A")}</Label>
+                <AssetDropDown
+                  assetSymbol={assetA ? assetA.symbol : ""}
+                  assetData={null}
+                  storeCallback={(symbol) => pickAsset(symbol, "A")}
+                  otherAsset={assetB ? assetB.symbol : undefined}
+                  marketSearch={marketSearch}
+                  chain={chain}
+                  balances={usrBalances}
+                  triggerLabel={
+                    assetA
+                      ? assetA.symbol
+                      : t("Trollbox:attachSelectA", "First asset…")
+                  }
+                  triggerVariant="outline"
+                  triggerClassName="w-full"
+                />
+              </div>
+              <div className="space-y-1.5 min-w-0">
+                <Label>{t("Trollbox:poolAssetB", "Asset B")}</Label>
+                <AssetDropDown
+                  assetSymbol={assetB ? assetB.symbol : ""}
+                  assetData={null}
+                  storeCallback={(symbol) => pickAsset(symbol, "B")}
+                  otherAsset={assetA ? assetA.symbol : undefined}
+                  marketSearch={marketSearch}
+                  chain={chain}
+                  balances={usrBalances}
+                  triggerLabel={
+                    assetB
+                      ? assetB.symbol
+                      : t("Trollbox:attachSelectB", "Second asset…")
+                  }
+                  triggerVariant="outline"
+                  triggerClassName="w-full"
+                />
+              </div>
             </div>
             {picked ? (
               <Badge variant="secondary">{picked.label}</Badge>

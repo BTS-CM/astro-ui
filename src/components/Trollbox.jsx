@@ -55,7 +55,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -74,16 +73,16 @@ import {
   Paperclip,
   Radio,
   Send,
-  Server,
   FlaskConical,
   RefreshCw,
+  Trash2,
   TriangleAlert,
   CircleCheck,
   X,
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode, setCurrentNode } from "@/stores/node.ts";
+import { $currentNode } from "@/stores/node.ts";
 import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
 import {
   $favouriteAssets,
@@ -110,7 +109,6 @@ import {
   fetchChannelMessages,
   fetchMaxMessageBytes,
   fetchRoleAccountIds,
-  findSupportingNode,
   isPluginMissingError,
   isSupportedTrollboxLang,
   channelAllowsAttach,
@@ -125,6 +123,8 @@ import {
   resolveAttachmentMeta,
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
+import { attachmentNoun } from "@/lib/forumPost.js";
+import { buildRemoveOp } from "@/lib/customRemove.js";
 import { getTopDonators } from "@/nanoeffects/TopDonators.ts";
 import {
   DONATIONS_ASSET_ID,
@@ -349,7 +349,11 @@ const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
           <Item
             variant="outline"
             size="sm"
-            className="h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]"
+            className={`h-full cursor-pointer overflow-hidden hover:bg-accent/50 hover:border-[hsl(var(--accent-1)/0.4)]${
+              isOwn
+                ? " border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.07)]"
+                : ""
+            }`}
             onClick={() => onOpenMessage(m)}
           >
             <ItemMedia>
@@ -507,13 +511,14 @@ export default function Trollbox(properties) {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
   const [refreshNonce, setRefreshNonce] = useState(0);
-  const [finding, setFinding] = useState(false);
-  const [switchNotice, setSwitchNotice] = useState(null);
   const [composeError, setComposeError] = useState(null);
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [openMessage, setOpenMessage] = useState(null);
   const [blockTarget, setBlockTarget] = useState(null);
+  const [removeTarget, setRemoveTarget] = useState(null);
+  const [removePendingOp, setRemovePendingOp] = useState(null);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [attachOpen, setAttachOpen] = useState(false);
   const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
   const [verifyingAttach, setVerifyingAttach] = useState(false);
@@ -715,22 +720,6 @@ export default function Trollbox(properties) {
       clearInterval(timer);
     };
   }, [chain, probe.state, probe.node, channelInfo, activeCatalog, refreshNonce]);
-
-  const handleFindNode = async () => {
-    setFinding(true);
-    setSwitchNotice(null);
-    try {
-      const url = await findSupportingNode(chain);
-      if (url) {
-        setCurrentNode(chain, url);
-        setSwitchNotice({ kind: "found", url });
-      } else {
-        setProbe({ state: "none", node: nodeUrl });
-      }
-    } finally {
-      setFinding(false);
-    }
-  };
 
   const handleSend = async () => {
     setComposeError(null);
@@ -972,6 +961,28 @@ export default function Trollbox(properties) {
       return null;
     });
   }, [chain]);
+  const handleConfirmRemove = useCallback(() => {
+    if (!removeTarget || !currentUser || !currentUser.id) {
+      return;
+    }
+    if (removeTarget.account !== currentUser.id) {
+      return;
+    }
+    try {
+      const op = buildRemoveOp({
+        payer: currentUser.id,
+        catalog: removeTarget.catalog,
+        key: removeTarget.key,
+        opId: TROLLBOX_OP_ID,
+      });
+      setRemovePendingOp(op);
+      setShowRemoveDialog(true);
+      setRemoveTarget(null);
+    } catch (error) {
+      setComposeError(error?.message ?? String(error));
+      setRemoveTarget(null);
+    }
+  }, [removeTarget, currentUser]);
   const messageRowProps = useMemo(
     () => ({
       visibleMessages,
@@ -1272,24 +1283,16 @@ export default function Trollbox(properties) {
                     )
                   : t(
                       "Trollbox:probeUnsupported",
-                      "This node does not run the custom_operations plugin, so chat history cannot be read here. Broadcasting still works from any node; switching to a plugin node makes history visible."
+                      "This node does not run the custom_operations plugin, so chat history cannot be read here. Broadcasting still works from any node; choose a node with the plugin enabled in node settings to read history."
                     )}
             </p>
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleFindNode}
-                disabled={finding}
+                onClick={() => window.location.assign("/nodes.html")}
               >
-                {finding ? (
-                  <Spinner className="mr-1 h-3 w-3" />
-                ) : (
-                  <Server className="mr-1 h-3 w-3" />
-                )}
-                {finding
-                  ? t("Trollbox:findingNode", "Scanning nodes…")
-                  : t("Trollbox:findNode", "Find a supported node")}
+                {t("Trollbox:changeNode", "Go to node settings")}
               </Button>
               <Button
                 variant="ghost"
@@ -1300,13 +1303,6 @@ export default function Trollbox(properties) {
                 {t("Trollbox:retry", "Retry")}
               </Button>
             </div>
-            {switchNotice?.kind === "found" ? (
-              <p>
-                {t("Trollbox:switchedNode", "Switched to {{node}}.", {
-                  node: switchNotice.url,
-                })}
-              </p>
-            ) : null}
           </AlertDescription>
         </Alert>
       ) : null}
@@ -1323,6 +1319,14 @@ export default function Trollbox(properties) {
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
         />
         <CardHeader className="pb-2 relative">
           <div className="flex items-center gap-2">
@@ -1379,7 +1383,7 @@ export default function Trollbox(properties) {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
-            <TabsList className="mb-1 flex-wrap h-auto">
+            <TabsList className="mb-1 flex-wrap h-auto bg-[hsl(var(--accent-1)/0.08)] border border-[hsl(var(--accent-1)/0.2)]">
               {TROLLBOX_CHANNELS.map((c) => (
                 <TabsTrigger key={c.id} value={c.id}>
                   #{c.id}
@@ -1393,6 +1397,14 @@ export default function Trollbox(properties) {
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.5)] to-transparent"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl"
         />
         <CardHeader className="pb-3 relative">
           <div className="flex items-center gap-2">
@@ -1411,7 +1423,7 @@ export default function Trollbox(properties) {
               })}
             </CardTitle>
             <div
-              className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-border p-0.5"
+              className="ml-auto flex shrink-0 items-center gap-1 rounded-lg border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-0.5"
               role="tablist"
               aria-label={t("Trollbox:filterLabel", "Message filter")}
             >
@@ -1437,7 +1449,7 @@ export default function Trollbox(properties) {
         <CardContent>
                 {probe.state === "live" ? (
                   <div
-                    className="rounded-xl border border-border p-2"
+                    className="rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.06)] to-transparent p-2"
                     style={{ minHeight: TROLLBOX_MIN_ROWS * TROLLBOX_ROW_HEIGHT }}
                   >
                     {loadingMessages && messages.length === 0 ? (
@@ -1599,6 +1611,7 @@ export default function Trollbox(properties) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               maxLength={maxBytes}
+              className="focus-visible:border-[hsl(var(--accent-1)/0.5)] focus-visible:ring-[hsl(var(--accent-1)/0.3)]"
               placeholder={
                 loggedIn
                   ? t("Trollbox:composerPlaceholder", "Message {{channel}}…", {
@@ -1617,6 +1630,7 @@ export default function Trollbox(properties) {
             <Button
               disabled={!loggedIn || !draft.trim() || verifyingAttach}
               onClick={handleSend}
+              className="shadow-[0_0_14px_-4px_hsl(var(--accent-1)/0.6)]"
               title={t("Trollbox:sendTitle", "Prepare a custom operation for signing in Beet")}
             >
               {verifyingAttach ? (
@@ -1692,7 +1706,7 @@ export default function Trollbox(properties) {
       </Card>
       </Tabs>
 
-      <TrollboxRisks />
+      <TrollboxRisks page="trollbox" />
 
       <Dialog
         open={!!openMessage}
@@ -1702,17 +1716,27 @@ export default function Trollbox(properties) {
           }
         }}
       >
-        <DialogContent className="sm:max-w-[50%]">
+        <DialogContent className="sm:max-w-[50%] overflow-hidden border-[hsl(var(--accent-1)/0.35)] bg-gradient-to-b from-[hsl(var(--accent-1)/0.08)] to-transparent">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.6)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
           {openMessage ? (
             <>
               <DialogHeader>
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    size={44}
-                    name={openMessage.displayAuthor}
-                    extra="trollbox-dialog"
-                    expression={{ eye: "normal", mouth: "open" }}
-                  />
+                <div className="flex items-center gap-3 rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-3">
+                  <span className="shrink-0 rounded-full ring-2 ring-[hsl(var(--accent-1)/0.45)] ring-offset-2 ring-offset-background">
+                    <Avatar
+                      size={44}
+                      name={openMessage.displayAuthor}
+                      extra="trollbox-dialog"
+                      expression={{ eye: "normal", mouth: "open" }}
+                    />
+                  </span>
                   <div className="min-w-0">
                     <DialogTitle className="truncate">
                       {openMessage.displayAuthor}
@@ -1739,112 +1763,124 @@ export default function Trollbox(properties) {
                         {openDonorLabel}
                       </Badge>
                     ) : null}
-                    <Badge variant="secondary" className="shrink-0">
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.12)]"
+                    >
                       #{openMessage.channel ?? activeChannel}
                     </Badge>
+                    <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                      {openMessage.id}
+                    </span>
                   </div>
                 </div>
               </DialogHeader>
-              <Textarea
-                disabled
-                readOnly
-                value={openMessage.text}
-                className="min-h-[120px]"
-              />
-              {openAttachMeta ? (
-                <div className="rounded-md border border-border p-3 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <AttachTypeIcon
-                      type={openAttachMeta.type}
-                      className="h-4 w-4 shrink-0"
-                    />
-                    <span className="text-sm font-semibold truncate">
-                      {attachBadgeLabel(openAttachMeta)}
+              <div className="min-h-[120px] max-h-[40vh] overflow-y-auto whitespace-pre-wrap break-words rounded-xl border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.05)] p-4 text-[15px] leading-relaxed text-foreground">
+                {openMessage.text}
+              </div>
+              <div className="flex items-center gap-1.5">
+                {openAttachMeta ? (
+                  <span
+                    className="inline-flex min-w-0 max-w-[55%] shrink flex-col justify-center rounded-xl border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] px-2.5 py-1.5"
+                    title={t("Forum:attachHoverTitle", "{{user}} has attached this {{item}} to their post.", {
+                      user: openMessage.displayAuthor,
+                      item: t(
+                        `Forum:attachNoun${openAttachMeta.type[0].toUpperCase()}${openAttachMeta.type.slice(1)}`,
+                        attachmentNoun(openAttachMeta.type)
+                      ),
+                    })}
+                  >
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <AttachTypeIcon
+                        type={openAttachMeta.type}
+                        className="h-4 w-4 shrink-0"
+                      />
+                      <span className="truncate text-xs font-semibold">
+                        {attachBadgeLabel(openAttachMeta)}
+                      </span>
                     </span>
-                    {openAttachActions.length > 0 ? (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                    {openAttachMeta.type === "barter" &&
+                    openAttachMeta.details ? (
+                      <span className="mt-1 block min-w-0 text-[11px] leading-snug">
+                        <span className="block truncate font-semibold text-foreground/80">
+                          {t("Trollbox:barterTheirOffer", "They offer")}:{" "}
+                          <span className="font-mono font-normal text-muted-foreground">
+                            {openAttachMeta.details.offer.map((l) => `${l.amount} ${l.symbol}`).join(" · ")}
+                          </span>
+                        </span>
+                        <span className="block truncate font-semibold text-foreground/80">
+                          {t("Trollbox:barterTheirWant", "They want")}:{" "}
+                          <span className="font-mono font-normal text-muted-foreground">
+                            {openAttachMeta.details.want.map((l) => `${l.amount} ${l.symbol}`).join(" · ")}
+                          </span>
+                        </span>
+                        {openAttachMeta.details.escrow ? (
+                          <span className="block truncate text-muted-foreground">
+                            {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
+                              account: escrowAgentName
+                                ? `${escrowAgentName} (${openAttachMeta.details.escrow.account})`
+                                : openAttachMeta.details.escrow.account,
+                              fee: openAttachMeta.details.escrow.fee,
+                              first:
+                                openAttachMeta.details.escrow.first === "me"
+                                  ? t("Trollbox:barterCreatorFirst", "Poster")
+                                  : t("Trollbox:barterCounterpartyFirst", "Counterparty"),
+                            })}
+                          </span>
+                        ) : null}
+                      </span>
+                    ) : null}
+                  </span>
+                ) : null}
+                {openAttachMeta && openAttachActions.length > 0 ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="ml-auto h-7 shrink-0 hover:bg-accent/60"
+                            className="h-7 shrink-0 hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.4)] text-[11px]"
+                        title={t("Forum:attachActionsTitle", "Attached {{item}} actions", {
+                          item: t(
+                            `Forum:attachNoun${openAttachMeta.type[0].toUpperCase()}${openAttachMeta.type.slice(1)}`,
+                            attachmentNoun(openAttachMeta.type)
+                          ),
+                        })}
+                      >
+                        <AttachTypeIcon
+                          type={openAttachMeta.type}
+                          className="mr-1 h-3 w-3"
+                        />
+                        {t("Trollbox:attachActions", "Actions")}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      {openAttachActions.map((a) =>
+                        a.href ? (
+                          <DropdownMenuItem key={a.key} asChild>
+                            <a href={a.href}>
+                              {attachActionLabel(t, a)}
+                            </a>
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem
+                            key={a.key}
+                            onSelect={() => a.onSelect && a.onSelect()}
                           >
-                            {t("Trollbox:attachActions", "Actions")}
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {openAttachActions.map((a) =>
-                            a.href ? (
-                              <DropdownMenuItem key={a.key} asChild>
-                                <a href={a.href}>
-                                  {attachActionLabel(t, a)}
-                                </a>
-                              </DropdownMenuItem>
-                            ) : (
-                              <DropdownMenuItem
-                                key={a.key}
-                                onSelect={() => a.onSelect && a.onSelect()}
-                              >
-                                {attachActionLabel(t, a)}
-                              </DropdownMenuItem>
-                            )
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    ) : null}
-                  </div>
-                  {openAttachMeta.type === "barter" &&
-                  openAttachMeta.details ? (
-                    <div className="text-xs space-y-1.5">
-                      <div>
-                        <p className="font-semibold text-foreground/80">
-                          {t("Trollbox:barterTheirOffer", "They offer")}
-                        </p>
-                        {openAttachMeta.details.offer.map((l, i) => (
-                          <p key={i} className="font-mono text-muted-foreground">
-                            {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
-                          </p>
-                        ))}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground/80">
-                          {t("Trollbox:barterTheirWant", "They want")}
-                        </p>
-                        {openAttachMeta.details.want.map((l, i) => (
-                          <p key={i} className="font-mono text-muted-foreground">
-                            {l.amount} {l.symbol} ({l.id ?? `1.3.${l.instance}`})
-                          </p>
-                        ))}
-                      </div>
-                      {openAttachMeta.details.escrow ? (
-                        <p className="text-muted-foreground">
-                          {t("Trollbox:barterEscrowLine", "Escrow {{account}} · fee {{fee}} BTS · {{first}} sends first", {
-                            account: escrowAgentName
-                              ? `${escrowAgentName} (${openAttachMeta.details.escrow.account})`
-                              : openAttachMeta.details.escrow.account,
-                            fee: openAttachMeta.details.escrow.fee,
-                            first:
-                              openAttachMeta.details.escrow.first === "me"
-                                ? t("Trollbox:barterCreatorFirst", "Poster")
-                                : t("Trollbox:barterCounterpartyFirst", "Counterparty"),
-                          })}
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
-              <div className="flex items-center gap-2">
-                <p className="text-xs text-muted-foreground truncate flex-1 min-w-0">
-                  {openMessage.id}
-                </p>
-                {loggedIn && openMessage.account !== currentUserId ? (
-                  <>
+                            {attachActionLabel(t, a)}
+                          </DropdownMenuItem>
+                        )
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : null}
+                <span className="ml-auto flex shrink-0 items-center gap-2">
+                  {loggedIn && openMessage.account !== currentUserId ? (
+                    <>
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
-                      className="ml-auto shrink-0"
+                      className="ml-auto shrink-0 hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.4)]"
                     >
                       <a
                         href={`/transfer.html?to=${encodeURIComponent(
@@ -1872,6 +1908,18 @@ export default function Trollbox(properties) {
                     </Button>
                   </>
                 ) : null}
+                  {loggedIn && openMessage.account === currentUserId ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                      onClick={() => setRemoveTarget(openMessage)}
+                    >
+                      <Trash2 className="mr-1 h-3.5 w-3.5" />
+                      {t("Trollbox:removeMessage", "Remove")}
+                    </Button>
+                  ) : null}
+                </span>
               </div>
             </>
           ) : null}
@@ -1938,6 +1986,66 @@ export default function Trollbox(properties) {
           ) : null}
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog
+        open={!!removeTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setRemoveTarget(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          {removeTarget ? (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {t("Trollbox:removeConfirmTitle", "Remove this message?")}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t(
+                    "Trollbox:removeConfirmDesc",
+                    "This removes the message from the custom_operations plugin catalogue so apps stop listing it. It does NOT remove the data from the blockchain — block history still contains it."
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="rounded-md border border-border p-3 text-sm space-y-1">
+                <p className="text-foreground font-mono text-xs">
+                  {removeTarget.catalog} / {removeTarget.key}
+                </p>
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  {t("Trollbox:removeCancel", "Cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmRemove}>
+                  {t("Trollbox:removeContinue", "Continue")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          ) : null}
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {showRemoveDialog && removePendingOp && loggedIn ? (
+        <DeepLinkDialog
+          operationNames={["custom"]}
+          username={currentUser.username}
+          usrChain={chain}
+          userID={currentUser.id}
+          dismissCallback={() => {
+            setShowRemoveDialog(false);
+            setRemovePendingOp(null);
+            setOpenMessage(null);
+            setRefreshNonce((n) => n + 1);
+          }}
+          key={`trollbox-remove-${removePendingOp[0].data.slice(0, 32)}`}
+          headerText={t("Trollbox:removeDialogHeader", "Removing message as {{user}}", {
+            user: currentUser.username,
+          })}
+          trxJSON={removePendingOp}
+        />
+      ) : null}
     </div>
   );
 }

@@ -156,6 +156,7 @@ const ICONS = {
   airdrop_calculate: Calculator,
   blocked_users: UserX,
   trollbox: MessageSquare,
+  forum: MessageSquare,
 };
 
 // Matches a nav item href against the current path. The root ("/") must match
@@ -369,6 +370,7 @@ export default function PageHeader(properties) {
         { slug: "pools", title: "Home:pools.title", description: "Home:pools.subtitle", href: "/pools.html" },
         { slug: "top_operations", title: "Home:top_operations.title", description: "Home:top_operations.subtitle", href: "/top-operations.html" },
         { slug: "trollbox", title: "Home:trollbox.title", description: "Home:trollbox.subtitle", href: "/trollbox.html" },
+        { slug: "forum", title: "Home:forum.title", description: "Home:forum.subtitle", href: "/forum.html" },
       ],
     },
     {

@@ -72,6 +72,8 @@
         "/vote": "Bitshares Delegated Proof of Stake voting system",
         "/withdraw_permissions": "Bitshares withdraw permissions form",
         "/witnesses": "Bitshares Witnesses",
-        "/trollbox": "Trollbox"
+        "/trollbox": "Trollbox",
+        "/forum": "Forum",
+        "/forum_thread": "Forum Thread"
     }
 }

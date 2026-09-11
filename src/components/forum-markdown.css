@@ -1,0 +1,177 @@
+/* Forum markdown rendering (viewer). Scoped under .forum-md so the uiw
+ * preview defaults can be tuned to the app theme without leaking out.
+ * Structural XSS notes: links/images never reach the DOM (component
+ * neutering + sanitize schema); this file is presentation only. */
+
+.forum-md {
+  min-width: 0;
+  overflow-wrap: break-word;
+  font-size: 0.875rem;
+  line-height: 1.625;
+}
+
+.forum-md > .wmde-markdown {
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Keep headings subordinate to the page (h1-h3 demote to h4 in code). */
+.forum-md h4,
+.forum-md h5,
+.forum-md h6 {
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0.75em 0 0.375em;
+}
+.forum-md h4 {
+  font-size: 1rem;
+  color: hsl(var(--accent-1-fg));
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.25);
+  padding-bottom: 0.25em;
+}
+.forum-md h5 { font-size: 0.9rem; }
+.forum-md h6 { font-size: 0.8rem; }
+
+.forum-md p {
+  margin: 0 0 0.625em;
+}
+.forum-md p:last-child {
+  margin-bottom: 0;
+}
+
+.forum-md blockquote {
+  margin: 0 0 0.625em;
+  padding: 0.375rem 0.625rem;
+  border-left: 2px solid hsl(var(--accent-1) / 0.6);
+  border-radius: 0.375rem;
+  background: hsl(var(--accent-1) / 0.08);
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+.forum-md blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.forum-md ul,
+.forum-md ol {
+  margin: 0 0 0.625em;
+  padding-left: 1.375rem;
+}
+.forum-md ul { list-style: disc; }
+.forum-md ol { list-style: decimal; }
+.forum-md li + li { margin-top: 0.125rem; }
+
+/* Inline code + fenced blocks. */
+.forum-md code {
+  font-size: 0.8125em;
+}
+.forum-md :not(pre) > code {
+  padding: 0.1em 0.3em;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--accent-1) / 0.3);
+  background: hsl(var(--accent-1) / 0.1);
+  color: hsl(var(--accent-1-fg));
+}
+.forum-md pre {
+  margin: 0 0 0.625em;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--accent-1) / 0.25);
+  border-left: 2px solid hsl(var(--accent-1) / 0.6);
+  background: hsl(var(--accent-1) / 0.06);
+  overflow-x: auto;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+.forum-md pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+/* GFM tables: horizontal scroll instead of layout breakage. */
+.forum-md-tablewrap {
+  margin: 0 0 0.625em;
+  overflow-x: auto;
+  border: 1px solid hsl(var(--accent-1) / 0.25);
+  border-radius: 0.5rem;
+}
+.forum-md table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8125rem;
+}
+.forum-md th,
+.forum-md td {
+  padding: 0.375rem 0.625rem;
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.15);
+  text-align: left;
+  white-space: nowrap;
+}
+.forum-md thead th {
+  font-weight: 600;
+  background: hsl(var(--accent-1) / 0.12);
+  color: hsl(var(--accent-1-fg));
+}
+.forum-md tbody tr:last-child th,
+.forum-md tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.forum-md hr {
+  margin: 0.875em 0;
+  border-color: hsl(var(--accent-1) / 0.3);
+}
+
+/* Strike/italic/bold inherit body color; nothing to do. */
+
+/* uiw preview chrome we don't need in read-only view. */
+.forum-md .copied,
+.forum-md .octicon-copy {
+  display: none;
+}
+
+/* Composer preview pane (editor on top, preview below). */
+.forum-editor-preview {
+  margin-top: 0.5rem;
+  border: 1px solid hsl(var(--accent-1) / 0.25);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.forum-editor-preview-caption {
+  padding: 0.25rem 0.625rem;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: hsl(var(--accent-1-fg));
+  background: hsl(var(--accent-1) / 0.1);
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.25);
+}
+.forum-editor-preview-body {
+  padding: 0.625rem 0.75rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+/* Editor chrome (toolbar + frame), scoped so uiw defaults elsewhere
+ * are untouched. Higher specificity than the uiw stylesheet. */
+.forum-editor .w-md-editor {
+  border: 1px solid hsl(var(--accent-1) / 0.25);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.forum-editor .w-md-editor-toolbar {
+  background: hsl(var(--accent-1) / 0.08);
+  border-bottom: 1px solid hsl(var(--accent-1) / 0.25);
+}
+.forum-editor .w-md-editor-toolbar button:hover {
+  background: hsl(var(--accent-1) / 0.15);
+}
+.forum-editor .w-md-editor-toolbar button svg {
+  color: hsl(var(--accent-1-fg));
+}
+.forum-editor .w-md-editor-text {
+  background: transparent;
+}

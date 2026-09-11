@@ -172,6 +172,7 @@ const ITEM_ICONS = {
   top_markets: TrendingUp,
   top_pools: Droplets,
   trollbox: MessageSquare,
+  forum: MessageSquare,
   custom_authorities: KeyRound,
   blind_transfers: EyeOff,
 };
@@ -261,6 +262,7 @@ export default function AppSidebar() {
     { slug: "top_pools", title: "Home:top_pools.title", href: "/top-pools.html" },
     { slug: "top_operations", title: "Home:top_operations.title", href: "/top-operations.html" },
     { slug: "trollbox", title: "Home:trollbox.title", href: "/trollbox.html" },
+    { slug: "forum", title: "Home:forum.title", href: "/forum.html" },
   ];
 
   const governanceHeading = [

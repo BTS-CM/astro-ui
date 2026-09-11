@@ -102,8 +102,9 @@ const pages = [
   "Explorer",
   "Common",
   "Charts",
-  "Trollbox",
-  "PageTitles"
+   "Trollbox",
+   "Forum",
+   "PageTitles"
 ];
 
 const locale = persistentAtom("locale", "en");

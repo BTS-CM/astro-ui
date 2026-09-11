@@ -63,4 +63,5 @@ export const THEMABLE_PAGES = [
   { slug: "airdrop_calculate", label: "Airdrop" },
   { slug: "top-operations", label: "Top Operations" },
   { slug: "trollbox", label: "Trollbox" },
+  { slug: "forum", label: "Forum" },
 ];
