@@ -409,7 +409,7 @@
         "blockchainSubtitle": "ブロックチェーンデータ、プール、トラッカーを探索",
         "governanceSubtitle": "投票、ロール登録、ワーカー提案の作成",
         "invoicingSubtitle": "オンチェーンで請求書を作成、送信、支払い",
-        "settingsSubtitle": "アカウント一覧、ノード、設定",
+        "settingsSubtitle": "ノード、設定",
         "airdropSubtitle": "1つのアセットを多くのアカウントに一括送信",
         "communitySubtitle": "コミュニティとチャット、議論、学習",
         "liquidityPoolsSubtitle": "流動性プールでスワップ、ステーキング、追跡、探索"

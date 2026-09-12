@@ -210,12 +210,12 @@ export default function AppSidebar() {
   const transferFundsHeading = [
     { slug: "transfer", title: "Home:transfer.title", href: "/transfer.html" },
     { slug: "timed_transfer", title: "Home:timed_transfer.title", href: "/timed_transfer.html" },
-    { slug: "htlc", title: "Home:htlc.title", href: "/htlc.html" },
     {
       slug: "withdraw_permissions",
       title: "Home:withdraw_permission.title",
       href: "/withdraw_permissions.html",
     },
+    { slug: "htlc", title: "Home:htlc.title", href: "/htlc.html" },
     { slug: "create_vesting", title: "Home:create_vesting.title", href: "/create_vesting.html" },
     { slug: "blind_transfers", title: "BlindTransfers:title", href: "/blind_transfers.html" },
     { slug: "airdrop_calculate", title: "Home:airdrop_calculate.title", href: "/airdrop_calculate.html" },
@@ -261,18 +261,20 @@ export default function AppSidebar() {
     { slug: "deals", title: "Home:deals.title", href: "/deals.html" },
     { slug: "proposals", title: "Home:proposals.title", href: "/proposals.html" },
     { slug: "favourites", title: "Home:favourites.title", href: "/favourites.html" },
+    { slug: "vesting", title: "Home:vesting.title", href: "/vesting.html" },
     {
       slug: "custom_authorities",
       title: "CustomAuthorities:title",
       href: "/custom_authorities.html",
     },
-    { slug: "vesting", title: "Home:vesting.title", href: "/vesting.html" },
+    { slug: "accountLists", title: "Home:accountLists.title", href: "/account_lists.html" },
   ];
 
   const blockchainOverviewsHeading = [
     { slug: "explorer", title: "Home:explorer.title", href: "/explorer.html" },
     { slug: "blocks", title: "Home:blocks.title", href: "/blocks.html" },
     { slug: "top_operations", title: "Home:top_operations.title", href: "/top-operations.html" },
+    { slug: "network_fees", title: "Home:network_fees.title", href: "/network_fees.html" },
   ];
 
   const communityHeading = [
@@ -298,13 +300,11 @@ export default function AppSidebar() {
 
   const settingsHeading = [
     { slug: "home", title: "Home:home_link.title", href: ".html" },
-    { slug: "accountLists", title: "Home:accountLists.title", href: "/account_lists.html" },
-    { slug: "blocked_users", title: "Home:blocked_users.title", href: "/blocked-users.html" },
-    { slug: "ltm", title: "Home:ltm.title", href: "/ltm.html" },
-    { slug: "nodes", title: "Home:nodes.title", href: "/nodes.html" },
-    { slug: "network_fees", title: "Home:network_fees.title", href: "/network_fees.html" },
     { slug: "create_account", title: "Home:create_account.title", href: "/create_account.html" },
+    { slug: "ltm", title: "Home:ltm.title", href: "/ltm.html" },
     { slug: "change_password", title: "Home:change_password.title", href: "/change_password.html" },
+    { slug: "nodes", title: "Home:nodes.title", href: "/nodes.html" },
+    { slug: "blocked_users", title: "Home:blocked_users.title", href: "/blocked-users.html" },
     { slug: "configure_visuals", title: "Home:configure_visuals.title", href: "/visuals.html" },
     { slug: "theme_customizer", title: "Home:theme_customizer.title", href: "/theme.html" },
     { slug: "page_themes", title: "Home:page_themes.title", href: "/page_themes.html" },

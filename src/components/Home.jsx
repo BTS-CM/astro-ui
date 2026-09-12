@@ -368,14 +368,16 @@ export default function Home(properties) {
     { key: "deals", href: "/deals.html", titleKey: "Home:deals.title", subtitleKey: "Home:deals.subtitle", hoverKeys: ["Home:deals.hover1", "Home:deals.hover2"] },
     { key: "proposals", href: "/proposals.html", titleKey: "Home:proposals.title", subtitleKey: "Home:proposals.subtitle", hoverKeys: ["Home:proposals.hover1", "Home:proposals.hover2"] },
     { key: "favourites", href: "/favourites.html", titleKey: "Home:favourites.title", subtitleKey: "Home:favourites.subtitle", hoverKeys: ["Home:favourites.hover1", "Home:favourites.hover2"] },
-    { key: "custom_authorities", href: "/custom_authorities.html", titleKey: "Home:custom_authorities.title", subtitleKey: "Home:custom_authorities.subtitle", hoverKeys: ["Home:custom_authorities.hover1", "Home:custom_authorities.hover2", "Home:custom_authorities.hover3"] },
     { key: "vesting", href: "/vesting.html", titleKey: "Home:vesting.title", subtitleKey: "Home:vesting.subtitle", hoverKeys: ["Home:vesting.hover1", "Home:vesting.hover2"] },
+    { key: "custom_authorities", href: "/custom_authorities.html", titleKey: "Home:custom_authorities.title", subtitleKey: "Home:custom_authorities.subtitle", hoverKeys: ["Home:custom_authorities.hover1", "Home:custom_authorities.hover2", "Home:custom_authorities.hover3"] },
+    { key: "accountLists", href: "/account_lists.html", titleKey: "Home:accountLists.title", subtitleKey: "Home:accountLists.subtitle", hoverKeys: ["Home:accountLists.hover1", "Home:accountLists.hover2", "Home:accountLists.hover3"] },
   ];
 
   const blockchainOverviews = [
     { key: "explorer", href: "/explorer.html", titleKey: "Home:explorer.title", subtitleKey: "Home:explorer.subtitle", hoverKeys: ["Home:explorer.hover1", "Home:explorer.hover2", "Home:explorer.hover3"] },
     { key: "blocks", href: "/blocks.html", titleKey: "Home:blocks.title", subtitleKey: "Home:blocks.subtitle", hoverKeys: ["Home:blocks.hover1", "Home:blocks.hover2", "Home:blocks.hover3"] },
     { key: "top_operations", href: "/top-operations.html", titleKey: "Home:top_operations.title", subtitleKey: "Home:top_operations.subtitle", hoverKeys: ["Home:top_operations.hover1", "Home:top_operations.hover2"] },
+    { key: "network_fees", href: "/network_fees.html", titleKey: "Home:network_fees.title", subtitleKey: "Home:network_fees.subtitle", hoverKeys: ["Home:network_fees.hover1", "Home:network_fees.hover2"] },
   ];
 
   const community = [
@@ -403,13 +405,11 @@ export default function Home(properties) {
   ];
 
   const settings = [
-    { key: "accountLists", href: "/account_lists.html", titleKey: "Home:accountLists.title", subtitleKey: "Home:accountLists.subtitle", hoverKeys: ["Home:accountLists.hover1", "Home:accountLists.hover2", "Home:accountLists.hover3"] },
-    { key: "blocked_users", href: "/blocked-users.html", titleKey: "Home:blocked_users.title", subtitleKey: "Home:blocked_users.subtitle", hoverKeys: ["Home:blocked_users.hover1", "Home:blocked_users.hover2"] },
-    { key: "ltm", href: "/ltm.html", titleKey: "Home:ltm.title", subtitleKey: "Home:ltm.subtitle", hoverKeys: ["Home:ltm.hover1", "Home:ltm.hover2", "Home:ltm.hover3", "Home:ltm.hover4"] },
-    { key: "nodes", href: "/nodes.html", titleKey: "Home:nodes.title", subtitleKey: "Home:nodes.subtitle", hoverKeys: ["Home:nodes.hover1", "Home:nodes.hover2"] },
-    { key: "network_fees", href: "/network_fees.html", titleKey: "Home:network_fees.title", subtitleKey: "Home:network_fees.subtitle", hoverKeys: ["Home:network_fees.hover1", "Home:network_fees.hover2"] },
     { key: "create_account", href: "/create_account.html", titleKey: "Home:create_account.title", subtitleKey: "Home:create_account.subtitle", hoverKeys: ["Home:create_account.hover1", "Home:create_account.hover2"] },
+    { key: "ltm", href: "/ltm.html", titleKey: "Home:ltm.title", subtitleKey: "Home:ltm.subtitle", hoverKeys: ["Home:ltm.hover1", "Home:ltm.hover2", "Home:ltm.hover3", "Home:ltm.hover4"] },
     { key: "change_password", href: "/change_password.html", titleKey: "Home:change_password.title", subtitleKey: "Home:change_password.subtitle", hoverKeys: ["Home:change_password.hover1", "Home:change_password.hover2"] },
+    { key: "nodes", href: "/nodes.html", titleKey: "Home:nodes.title", subtitleKey: "Home:nodes.subtitle", hoverKeys: ["Home:nodes.hover1", "Home:nodes.hover2"] },
+    { key: "blocked_users", href: "/blocked-users.html", titleKey: "Home:blocked_users.title", subtitleKey: "Home:blocked_users.subtitle", hoverKeys: ["Home:blocked_users.hover1", "Home:blocked_users.hover2"] },
     { key: "configure_visuals", href: "/visuals.html", titleKey: "Home:configure_visuals.title", subtitleKey: "Home:configure_visuals.subtitle", hoverKeys: ["Home:configure_visuals.hover1", "Home:configure_visuals.hover2"] },
     { key: "theme_customizer", href: "/theme.html", titleKey: "Home:theme_customizer.title", subtitleKey: "Home:theme_customizer.subtitle", hoverKeys: ["Home:theme_customizer.hover1", "Home:theme_customizer.hover2"] },
     { key: "page_themes", href: "/page_themes.html", titleKey: "Home:page_themes.title", subtitleKey: "Home:page_themes.subtitle", hoverKeys: ["Home:page_themes.hover1"] },

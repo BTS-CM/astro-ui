@@ -444,7 +444,7 @@
         "blockchainSubtitle": "Explore blockchain data, pools and trackers",
         "governanceSubtitle": "Vote, register roles and create worker proposals",
         "invoicingSubtitle": "Create, send and pay invoices on-chain",
-        "settingsSubtitle": "Account lists, nodes and configuration",
+        "settingsSubtitle": "Nodes and configuration",
         "airdropSubtitle": "Bulk send one asset to many accounts",
         "communitySubtitle": "Chat, discuss and learn with the community",
         "liquidityPoolsSubtitle": "Swap, stake, track and explore liquidity pools"
