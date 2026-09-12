@@ -401,7 +401,7 @@
         }
     },
     "sections": {
-        "exchangingSubtitle": "DEX에서 거래, 스왑, 스테이킹 및 물물교환",
+        "exchangingSubtitle": "DEX에서 거래 및 물물교환",
         "transferSubtitle": "자산을 전송하고 권한 관리",
         "debtSubtitle": "대출, 거래 및 담보부 채무 발행",
         "assetCreationSubtitle": "토큰, 스마트코인 및 유동성 풀 생성",
@@ -410,7 +410,9 @@
         "governanceSubtitle": "투표, 역할 등록 및 워커 제안 생성",
         "invoicingSubtitle": "온체인에서 청구서 생성, 전송 및 결제",
         "settingsSubtitle": "계정 목록, 노드 및 설정",
-        "airdropSubtitle": "하나의 자산을 여러 계정에 대량 전송"
+        "airdropSubtitle": "하나의 자산을 여러 계정에 대량 전송",
+        "communitySubtitle": "커뮤니티와 채팅, 토론 및 학습",
+        "liquidityPoolsSubtitle": "유동성 풀 스왑, 스테이킹, 추적 및 탐색"
     },
     "configure_visuals": {
         "title": "비주얼 구성",
@@ -484,7 +486,7 @@
         "hover2": "가장 활발한 거래 페어를 찾기에 좋습니다.",
         "dialogDescription": "이 시장 페어를 거래할 곳을 선택하세요.",
         "openDex": "DEX 지정가 주문에서 열기",
-        "openInstant": "Instant Swap에서 열기"
+        "openInstant": "Instant Trade에서 열기"
     },
     "monthly_referrer": {
         "title": "월간 추천인",

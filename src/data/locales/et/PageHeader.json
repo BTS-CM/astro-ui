@@ -131,5 +131,20 @@
   "createAccount": "Loo konto",
   "transferFundsHeading": "Raha ülekandmine",
   "exchangeFundsHeading": "Vaheta vahendeid",
-  "airdropHeading": "Airdrop"
+  "airdropHeading": "Airdrop",
+  "communityHeading": "Kogukond",
+  "liquidityPoolsHeading": "Likviidsuspütlid",
+  "navShort": {
+    "exchange": "Vahetus",
+    "transfer": "Ülekanded",
+    "debt": "Võlg",
+    "assets": "Varad",
+    "account": "Konto",
+    "blockchain": "Blockchain",
+    "governance": "Juhtimine",
+    "invoicing": "Arveldus",
+    "settings": "Seaded",
+    "community": "Kogukond",
+    "liquidityPools": "Likviidsuspütlid"
+  }
 }

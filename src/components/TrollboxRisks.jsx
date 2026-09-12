@@ -55,7 +55,7 @@ export default function TrollboxRisks({ page = "trollbox" }) {
   // Follow the page's selected theme (same source as the surrounding
   // trollbox/forum cards) so the card re-tints on theme switches and
   // adjusts its text/glow per light/dark mode.
-  const pair = resolveSectionAccent(getThemeForPage(page), "blockchain");
+  const pair = resolveSectionAccent(getThemeForPage(page), "community");
   const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
 
   return (

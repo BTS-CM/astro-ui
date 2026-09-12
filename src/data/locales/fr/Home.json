@@ -401,7 +401,7 @@
         }
     },
     "sections": {
-        "exchangingSubtitle": "Échangez, swappez, stakez et troquez sur le DEX",
+        "exchangingSubtitle": "Échangez et troquez sur le DEX",
         "transferSubtitle": "Envoyez des actifs et gérez les permissions",
         "debtSubtitle": "Empruntez, prêtez et émettez de la dette adossée",
         "assetCreationSubtitle": "Créez des tokens, des smartcoins et des pools de liquidité",
@@ -410,7 +410,9 @@
         "governanceSubtitle": "Votez, enregistrez des rôles et créez des propositions de worker",
         "invoicingSubtitle": "Créez, envoyez et payez des factures on-chain",
         "settingsSubtitle": "Listes de comptes, nœuds et configuration",
-        "airdropSubtitle": "Envoyer un actif en masse à plusieurs comptes"
+        "airdropSubtitle": "Envoyer un actif en masse à plusieurs comptes",
+        "communitySubtitle": "Discutez, débattez et apprenez avec la communauté",
+        "liquidityPoolsSubtitle": "Swappez, stakez, suivez et explorez les pools de liquidité"
     },
     "configure_visuals": {
         "title": "Configurer les visuels",
@@ -484,7 +486,7 @@
         "hover2": "Idéal pour repérer les paires de trading les plus actives.",
         "dialogDescription": "Choisissez où trader cette paire de marché.",
         "openDex": "Ouvrir dans un ordre à cours limité DEX",
-        "openInstant": "Ouvrir dans Instant Swap"
+        "openInstant": "Ouvrir dans Instant Trade"
     },
     "monthly_referrer": {
         "title": "Parrain mensuel",

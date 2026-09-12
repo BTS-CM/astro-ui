@@ -466,7 +466,7 @@ export default function Trollbox(properties) {
     return () => obs.disconnect();
   }, []);
   const isDark = resolvedTheme ? resolvedTheme === "dark" : domIsDark;
-  const pair = resolveSectionAccent(getThemeForPage("trollbox"), "blockchain");
+  const pair = resolveSectionAccent(getThemeForPage("trollbox"), "community");
   const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
 
   const chain = (currentUser && currentUser.chain) || "bitshares";

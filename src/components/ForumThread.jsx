@@ -250,7 +250,7 @@ export default function ForumThread(properties) {
     return () => obs.disconnect();
   }, []);
   const isDark = resolvedTheme ? resolvedTheme === "dark" : domIsDark;
-  const pair = resolveSectionAccent(getThemeForPage("forum"), "blockchain");
+  const pair = resolveSectionAccent(getThemeForPage("forum"), "community");
   const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
 
   const chain = (currentUser && currentUser.chain) || "bitshares";

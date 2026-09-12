@@ -1,16 +1,18 @@
 import { persistentAtom } from "@nanostores/persistent";
 
-export const HOME_SECTION_ORDER_KEY = "bts-ui-home-section-order";
+export const HOME_SECTION_ORDER_KEY = "bts-ui-home-section-order-v2";
 
 export const DEFAULT_SECTION_ORDER = [
   "exchanging",
+  "liquidityPools",
   "transfer",
   "debt",
   "assetCreation",
   "account",
-  "invoicing",
-  "governance",
   "blockchain",
+  "community",
+  "governance",
+  "invoicing",
   "settings",
 ];
 

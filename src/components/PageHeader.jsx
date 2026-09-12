@@ -15,10 +15,12 @@ import {
 } from "@/components/ui/hover-card";
 
 import {
+  Activity,
   ChevronDown,
   Sparkles,
   Send,
   LineChart,
+  TrendingUp,
   Wallet,
   ClipboardList,
   Star,
@@ -123,9 +125,12 @@ const ICONS = {
   deals: FileSignature,
   vesting: Hourglass,
   proposals: Gavel,
+  recent_activity: Activity,
   blocks: Database,
   custom_pool_tracker: BarChart3,
   pools: Droplets,
+  top_markets: TrendingUp,
+  top_pools: Droplets,
   vote: Vote,
   witnesses: Eye,
   committee: Users,
@@ -297,19 +302,36 @@ export default function PageHeader(properties) {
     {
       id: "exchanging",
       label: "PageHeader:exchangingFundsHeading",
+      shortLabel: "PageHeader:navShort.exchange",
+      shortFallback: "Exchange",
       icon: Repeat,
       items: [
         { slug: "dex", title: "Home:dex.title", description: "Home:dex.subtitle", href: "/dex.html" },
         { slug: "instant_trade", title: "Home:instant_trade.title", description: "Home:instant_trade.subtitle", href: "/instant_trade.html" },
-        { slug: "swap", title: "Home:swap.title", description: "Home:swap.subtitle", href: "/swap.html" },
-        { slug: "stake", title: "Home:stake.title", description: "Home:stake.subtitle", href: "/stake.html" },
         { slug: "barter", title: "Home:barter.title", description: "Home:barter.subtitle", href: "/barter.html" },
         { slug: "tfund_user", title: "Home:tfund_user.title", description: "Home:tfund_user.subtitle", href: "/tfund_user.html" },
+        { slug: "top_markets", title: "Home:top_markets.title", description: "Home:top_markets.subtitle", href: "/top-markets.html" },
+      ],
+    },
+    {
+      id: "liquidityPools",
+      label: "PageHeader:liquidityPoolsHeading",
+      shortLabel: "PageHeader:navShort.liquidityPools",
+      shortFallback: "Liquidity pools",
+      icon: Droplets,
+      items: [
+        { slug: "swap", title: "Home:swap.title", description: "Home:swap.subtitle", href: "/swap.html" },
+        { slug: "stake", title: "Home:stake.title", description: "Home:stake.subtitle", href: "/stake.html" },
+        { slug: "pools", title: "Home:pools.title", description: "Home:pools.subtitle", href: "/pools.html" },
+        { slug: "custom_pool_tracker", title: "Home:custom_pool_tracker.title", description: "Home:custom_pool_tracker.subtitle", href: "/custom_pool_overview.html" },
+        { slug: "top_pools", title: "Home:top_pools.title", description: "Home:top_pools.subtitle", href: "/top-pools.html" },
       ],
     },
     {
       id: "transfer",
       label: "PageHeader:transferFundsHeading",
+      shortLabel: "PageHeader:navShort.transfer",
+      shortFallback: "Transfer",
       icon: Send,
       items: [
         { slug: "transfer", title: "Home:transfer.title", description: "Home:transfer.subtitle", href: "/transfer.html" },
@@ -319,11 +341,14 @@ export default function PageHeader(properties) {
         { slug: "create_vesting", title: "Home:create_vesting.title", description: "Home:create_vesting.subtitle", href: "/create_vesting.html" },
         { slug: "blind_transfers", title: "BlindTransfers:title", description: "BlindTransfers:description", href: "/blind_transfers.html" },
         { slug: "airdrop_calculate", title: "Home:airdrop_calculate.title", description: "Home:airdrop_calculate.subtitle", href: "/airdrop_calculate.html" },
+        { slug: "monthly_referrer", title: "Home:monthly_referrer.title", description: "Home:monthly_referrer.subtitle", href: "/monthly_referrer.html" },
       ],
     },
     {
       id: "debt",
       label: "PageHeader:formsOfDebtHeading",
+      shortLabel: "PageHeader:navShort.debt",
+      shortFallback: "Debt",
       icon: Coins,
       items: [
         { slug: "borrow", title: "Home:borrow.title", description: "Home:borrow.subtitle", href: "/borrow.html" },
@@ -335,47 +360,64 @@ export default function PageHeader(properties) {
     {
       id: "assetCreation",
       label: "PageHeader:assetCreation",
+      shortLabel: "PageHeader:navShort.assets",
+      shortFallback: "Assets",
       icon: Gem,
       items: [
         { slug: "create_uia", title: "Home:create_uia.title", description: "Home:create_uia.subtitle", href: "/create_uia.html" },
         { slug: "create_smartcoin", title: "Home:create_smartcoin.title", description: "Home:create_smartcoin.subtitle", href: "/create_smartcoin.html" },
         { slug: "create_liquidity_pool", title: "Home:create_liquidity_pool.title", description: "Home:create_liquidity_pool.subtitle", href: "/create_pool.html" },
+        { slug: "issued_assets", title: "Home:issued_assets.title", description: "Home:issued_assets.subtitle", href: "/issued_assets.html" },
       ],
     },
     {
       id: "account",
       label: "PageHeader:accountOverviewsHeading",
+      shortLabel: "PageHeader:navShort.account",
+      shortFallback: "Account",
       icon: Wallet,
       items: [
         { slug: "portfolio_balances", title: "Home:portfolio_balances.title", description: "Home:portfolio_balances.subtitle", href: "/balances.html" },
         { slug: "portfolio_open_orders", title: "Home:portfolio_open_orders.title", description: "Home:portfolio_open_orders.subtitle", href: "/open-orders.html" },
+        { slug: "recent_activity", title: "Home:recent_activity.title", description: "Home:recent_activity.subtitle", href: "/recent-activity.html" },
         { slug: "call_orders", title: "CallOrders:title", description: "CallOrders:description", href: "/call-orders.html" },
-        { slug: "custom_authorities", title: "CustomAuthorities:title", description: "CustomAuthorities:description", href: "/custom_authorities.html" },
-        { slug: "favourites", title: "Home:favourites.title", description: "Home:favourites.subtitle", href: "/favourites.html" },
-        { slug: "issued_assets", title: "Home:issued_assets.title", description: "Home:issued_assets.subtitle", href: "/issued_assets.html" },
         { slug: "offers", title: "Home:offers.title", description: "Home:offers.subtitle", href: "/offers.html" },
         { slug: "deals", title: "Home:deals.title", description: "Home:deals.subtitle", href: "/deals.html" },
-        { slug: "vesting", title: "Home:vesting.title", description: "Home:vesting.subtitle", href: "/vesting.html" },
         { slug: "proposals", title: "Home:proposals.title", description: "Home:proposals.subtitle", href: "/proposals.html" },
+        { slug: "favourites", title: "Home:favourites.title", description: "Home:favourites.subtitle", href: "/favourites.html" },
+        { slug: "custom_authorities", title: "CustomAuthorities:title", description: "CustomAuthorities:description", href: "/custom_authorities.html" },
+        { slug: "vesting", title: "Home:vesting.title", description: "Home:vesting.subtitle", href: "/vesting.html" },
       ],
     },
     {
       id: "blockchain",
       label: "PageHeader:blockchainOverviewsHeading",
+      shortLabel: "PageHeader:navShort.blockchain",
+      shortFallback: "Blockchain",
       icon: Globe,
       items: [
         { slug: "explorer", title: "Home:explorer.title", description: "Home:explorer.subtitle", href: "/explorer.html" },
         { slug: "blocks", title: "Home:blocks.title", description: "Home:blocks.subtitle", href: "/blocks.html" },
-        { slug: "custom_pool_tracker", title: "Home:custom_pool_tracker.title", description: "Home:custom_pool_tracker.subtitle", href: "/custom_pool_overview.html" },
-        { slug: "pools", title: "Home:pools.title", description: "Home:pools.subtitle", href: "/pools.html" },
         { slug: "top_operations", title: "Home:top_operations.title", description: "Home:top_operations.subtitle", href: "/top-operations.html" },
+      ],
+    },
+    {
+      id: "community",
+      label: "PageHeader:communityHeading",
+      shortLabel: "PageHeader:navShort.community",
+      shortFallback: "Community",
+      icon: MessageSquare,
+      items: [
         { slug: "trollbox", title: "Home:trollbox.title", description: "Home:trollbox.subtitle", href: "/trollbox.html" },
         { slug: "forum", title: "Home:forum.title", description: "Home:forum.subtitle", href: "/forum.html" },
+        { slug: "docs", title: "Home:docs.title", description: "Home:docs.subtitle", href: "docs/docs-index.html" },
       ],
     },
     {
       id: "governance",
       label: "PageHeader:governanceHeading",
+      shortLabel: "PageHeader:navShort.governance",
+      shortFallback: "Governance",
       icon: Vote,
       items: [
         { slug: "vote", title: "Home:vote.title", description: "Home:vote.subtitle", href: "/vote.html" },
@@ -391,6 +433,8 @@ export default function PageHeader(properties) {
     {
       id: "invoicing",
       label: "PageHeader:invoicingHeading",
+      shortLabel: "PageHeader:navShort.invoicing",
+      shortFallback: "Invoicing",
       icon: Receipt,
       items: [
         { slug: "invoice_inventory", title: "Home:invoice_inventory.title", description: "Home:invoice_inventory.subtitle", href: "/invoice_inventory.html" },
@@ -402,19 +446,20 @@ export default function PageHeader(properties) {
     {
       id: "settings",
       label: "PageHeader:settingsHeading",
+      shortLabel: "PageHeader:navShort.settings",
+      shortFallback: "Settings",
       icon: SlidersHorizontal,
       items: [
         { slug: "accountLists", title: "Home:accountLists.title", description: "Home:accountLists.subtitle", href: "/account_lists.html" },
+        { slug: "blocked_users", title: "Home:blocked_users.title", description: "Home:blocked_users.subtitle", href: "/blocked-users.html" },
         { slug: "ltm", title: "Home:ltm.title", description: "Home:ltm.subtitle", href: "/ltm.html" },
         { slug: "nodes", title: "Home:nodes.title", description: "Home:nodes.subtitle", href: "/nodes.html" },
         { slug: "network_fees", title: "Home:network_fees.title", description: "Home:network_fees.subtitle", href: "/network_fees.html" },
         { slug: "create_account", title: "Home:create_account.title", description: "Home:create_account.subtitle", href: "/create_account.html" },
         { slug: "change_password", title: "Home:change_password.title", description: "Home:change_password.subtitle", href: "/change_password.html" },
-        { slug: "monthly_referrer", title: "Home:monthly_referrer.title", description: "Home:monthly_referrer.subtitle", href: "/monthly_referrer.html" },
         { slug: "configure_visuals", title: "Home:configure_visuals.title", description: "Home:configure_visuals.subtitle", href: "/visuals.html" },
         { slug: "theme_customizer", title: "Home:theme_customizer.title", description: "Home:theme_customizer.subtitle", href: "/theme.html" },
         { slug: "page_themes", title: "Home:page_themes.title", description: "Home:page_themes.subtitle", href: "/page_themes.html" },
-        { slug: "docs", title: "Home:docs.title", description: "Home:docs.subtitle", href: "docs/docs-index.html" },
       ],
     },
   ];
@@ -535,7 +580,7 @@ export default function PageHeader(properties) {
                       active ? "dark:!text-white text-foreground" : "dark:!text-white/70 dark:group-hover/navtrigger:!text-white text-muted-foreground group-hover/navtrigger:text-foreground"
                     )}
                   />
-                  <span className="whitespace-nowrap">{t(section.label)}</span>
+                  <span className="whitespace-nowrap">{t(section.shortLabel, section.shortFallback)}</span>
                   <ChevronDown
                     className="h-3.5 w-3.5 shrink-0 dark:!text-white/60 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180 group-data-[state=open]:dark:!text-white group-data-[state=open]:text-foreground"
                     aria-hidden="true"

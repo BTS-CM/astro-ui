@@ -131,5 +131,20 @@
   "createAccount": "계정 만들기",
   "transferFundsHeading": "자금 이체",
   "exchangeFundsHeading": "자금 교환",
-  "airdropHeading": "Airdrop"
+  "airdropHeading": "Airdrop",
+  "communityHeading": "커뮤니티",
+  "liquidityPoolsHeading": "유동성 풀",
+  "navShort": {
+    "exchange": "거래",
+    "transfer": "전송",
+    "debt": "부채",
+    "assets": "자산",
+    "account": "계정",
+    "blockchain": "블록체인",
+    "governance": "거버넌스",
+    "invoicing": "청구",
+    "settings": "설정",
+    "community": "커뮤니티",
+    "liquidityPools": "유동성 풀"
+  }
 }

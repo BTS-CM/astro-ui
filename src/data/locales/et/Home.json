@@ -401,7 +401,7 @@
         }
     },
     "sections": {
-        "exchangingSubtitle": "Kauple, vaheta, stake'i ja barterda DEX-is",
+        "exchangingSubtitle": "Kauple ja barterda DEX-is",
         "transferSubtitle": "Saada varasid ja halda õigusi",
         "debtSubtitle": "Võta laenu, anna laenu ja emiteeri tagatud võlg",
         "assetCreationSubtitle": "Loo tokeneid, smartcoine ja likviidsuspütleid",
@@ -410,7 +410,9 @@
         "governanceSubtitle": "Hääleta, registreeri rolle ja loo töötajapakkumisi",
         "invoicingSubtitle": "Loo, saada ja maksa arveid plokiahelas",
         "settingsSubtitle": "Kontonimekirjad, sõlmed ja seadistus",
-        "airdropSubtitle": "Saada üks vara korraga mitmele kontole"
+        "airdropSubtitle": "Saada üks vara korraga mitmele kontole",
+        "communitySubtitle": "Vestle, arutle ja õpi koos kogukonnaga",
+        "liquidityPoolsSubtitle": "Vaheta, stake'i, jälgi ja uuri likviidsuspütleid"
     },
     "configure_visuals": {
         "title": "Konfigureeri visuaale",
@@ -484,7 +486,7 @@
         "hover2": "Suurepärane kõige aktiivsemate kaubanduspaaride tuvastamiseks.",
         "dialogDescription": "Vali, kus seda turupaari kaubelda.",
         "openDex": "Ava DEX limiit-orderina",
-        "openInstant": "Ava Instant Swapis"
+        "openInstant": "Ava Instant Trade'is"
     },
     "monthly_referrer": {
         "title": "Kuuline soovitaja",

@@ -131,5 +131,20 @@
   "createAccount": "アカウントの作成",
   "transferFundsHeading": "資金の移動",
   "exchangeFundsHeading": "資金を交換",
-  "airdropHeading": "Airdrop"
+  "airdropHeading": "Airdrop",
+  "communityHeading": "コミュニティ",
+  "liquidityPoolsHeading": "流動性プール",
+  "navShort": {
+    "exchange": "取引",
+    "transfer": "送金",
+    "debt": "借入",
+    "assets": "アセット",
+    "account": "アカウント",
+    "blockchain": "ブロックチェーン",
+    "governance": "ガバナンス",
+    "invoicing": "請求",
+    "settings": "設定",
+    "community": "コミュニティ",
+    "liquidityPools": "流動性プール"
+  }
 }

@@ -401,7 +401,7 @@
         }
     },
     "sections": {
-        "exchangingSubtitle": "DEXで取引、スワップ、ステーキング、物々交換",
+        "exchangingSubtitle": "DEXで取引、物々交換",
         "transferSubtitle": "アセットを送信し、権限を管理",
         "debtSubtitle": "借り入れ、貸し出し、そして担保付債務を発行",
         "assetCreationSubtitle": "トークン、スマートコイン、流動性プールを作成",
@@ -410,7 +410,9 @@
         "governanceSubtitle": "投票、ロール登録、ワーカー提案の作成",
         "invoicingSubtitle": "オンチェーンで請求書を作成、送信、支払い",
         "settingsSubtitle": "アカウント一覧、ノード、設定",
-        "airdropSubtitle": "1つのアセットを多くのアカウントに一括送信"
+        "airdropSubtitle": "1つのアセットを多くのアカウントに一括送信",
+        "communitySubtitle": "コミュニティとチャット、議論、学習",
+        "liquidityPoolsSubtitle": "流動性プールでスワップ、ステーキング、追跡、探索"
     },
     "configure_visuals": {
         "title": "ビジュアルを設定",
@@ -484,7 +486,7 @@
         "hover2": "最も活発な取引ペアを見つけるのに最適です。",
         "dialogDescription": "この市場ペアをどこで取引するか選択してください。",
         "openDex": "DEX 指値注文で開く",
-        "openInstant": "Instant Swap で開く"
+        "openInstant": "Instant Trade で開く"
     },
     "monthly_referrer": {
         "title": "月間リフェララー",

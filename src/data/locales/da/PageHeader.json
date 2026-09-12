@@ -131,5 +131,20 @@
   "createAccount": "Opret konto",
   "transferFundsHeading": "Overfør midler",
   "exchangeFundsHeading": "Veksl penge",
-  "airdropHeading": "Airdrop"
+  "airdropHeading": "Airdrop",
+  "communityHeading": "Fællesskab",
+  "liquidityPoolsHeading": "Likviditetspools",
+  "navShort": {
+    "exchange": "Exchange",
+    "transfer": "Overfør",
+    "debt": "Gæld",
+    "assets": "Aktiver",
+    "account": "Konto",
+    "blockchain": "Blockchain",
+    "governance": "Styring",
+    "invoicing": "Fakturering",
+    "settings": "Indstillinger",
+    "community": "Fællesskab",
+    "liquidityPools": "Likviditetspools"
+  }
 }

@@ -132,5 +132,20 @@
   "createAccount": "Create Account",
   "transferFundsHeading": "Transfer funds",
   "exchangeFundsHeading": "Exchange funds",
-  "airdropHeading": "Airdrop"
+  "airdropHeading": "Airdrop",
+  "communityHeading": "Community",
+  "liquidityPoolsHeading": "Liquidity pools",
+  "navShort": {
+    "exchange": "Exchange",
+    "transfer": "Transfer",
+    "debt": "Debt",
+    "assets": "Assets",
+    "account": "Account",
+    "blockchain": "Blockchain",
+    "governance": "Governance",
+    "invoicing": "Invoicing",
+    "settings": "Settings",
+    "community": "Community",
+    "liquidityPools": "Liquidity pools"
+  }
 }

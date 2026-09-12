@@ -27,6 +27,8 @@ export const NAV_SECTIONS = [
   "blockchain",
   "governance",
   "invoicing",
+  "liquidityPools",
+  "community",
   "settings",
 ] as const;
 
@@ -107,6 +109,8 @@ export const DEFAULT_SECTION_ACCENTS: Record<NavSection, AccentPair> = {
   blockchain: { primary: "#64748b", secondary: "#6b7280" },
   governance: { primary: "#6366f1", secondary: "#8b5cf6" },
   invoicing: { primary: "#f59e0b", secondary: "#f97316" },
+  liquidityPools: { primary: "#06b6d4", secondary: "#14b8a6" },
+  community: { primary: "#ec4899", secondary: "#8b5cf6" },
   settings: { primary: "#8b5cf6", secondary: "#f43f5e" },
 };
 

@@ -436,7 +436,7 @@
         "scrollForMore": "Scroll for more"
     },
     "sections": {
-        "exchangingSubtitle": "Trade, swap, stake and barter on the DEX",
+        "exchangingSubtitle": "Trade and barter on the DEX",
         "transferSubtitle": "Send assets and manage permissions",
         "debtSubtitle": "Borrow, lend and issue collateralized debt",
         "assetCreationSubtitle": "Create tokens, smartcoins and liquidity pools",
@@ -445,7 +445,9 @@
         "governanceSubtitle": "Vote, register roles and create worker proposals",
         "invoicingSubtitle": "Create, send and pay invoices on-chain",
         "settingsSubtitle": "Account lists, nodes and configuration",
-        "airdropSubtitle": "Bulk send one asset to many accounts"
+        "airdropSubtitle": "Bulk send one asset to many accounts",
+        "communitySubtitle": "Chat, discuss and learn with the community",
+        "liquidityPoolsSubtitle": "Swap, stake, track and explore liquidity pools"
     },
     "configure_visuals": {
         "title": "Configure Visuals",
@@ -493,7 +495,7 @@
         "hover2": "Great for spotting the busiest trading pairs.",
         "dialogDescription": "Choose where to trade this market pair.",
         "openDex": "Open in DEX limit order",
-        "openInstant": "Open in Instant Swap"
+        "openInstant": "Open in Instant Trade"
     },
     "testnetUnsupported": "This feature queries the public BitShares Elasticsearch index, which is only available on the mainnet. Testnet is not supported.",
     "top_pools": {

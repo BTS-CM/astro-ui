@@ -81,6 +81,7 @@ import {
   TrendingUp,
   ReceiptText,
   MessageSquare,
+  BookOpen,
 } from "lucide-react";
 import { useStore } from "@nanostores/react";
 import { useTheme } from "next-themes";
@@ -98,6 +99,8 @@ const CANONICAL_SECTION = {
   chain: "blockchain",
   gov: "governance",
   invoicing: "invoicing",
+  liquidity: "liquidityPools",
+  community: "community",
   settings: "settings",
 };
 
@@ -110,11 +113,14 @@ const SECTION_ICONS = {
   chain: Globe,
   gov: Vote,
   invoicing: Receipt,
+  liquidity: Droplets,
+  community: MessageSquare,
   settings: SlidersHorizontal,
 };
 
 const ITEM_ICONS = {
   dex: LineChart,
+  explorer: Database,
   instant_trade: Zap,
   swap: ArrowLeftRight,
   stake: Lock,
@@ -173,6 +179,7 @@ const ITEM_ICONS = {
   top_pools: Droplets,
   trollbox: MessageSquare,
   forum: MessageSquare,
+  docs: BookOpen,
   custom_authorities: KeyRound,
   blind_transfers: EyeOff,
 };
@@ -183,10 +190,21 @@ export default function AppSidebar() {
   const exchangingFundsHeading = [
     { slug: "dex", title: "Home:dex.title", href: "/dex.html" },
     { slug: "instant_trade", title: "Home:instant_trade.title", href: "/instant_trade.html" },
-    { slug: "swap", title: "Home:swap.title", href: "/swap.html" },
-    { slug: "stake", title: "Home:stake.title", href: "/stake.html" },
     { slug: "barter", title: "Home:barter.title", href: "/barter.html" },
     { slug: "tfund_user", title: "Home:tfund_user.title", href: "/tfund_user.html" },
+    { slug: "top_markets", title: "Home:top_markets.title", href: "/top-markets.html" },
+  ];
+
+  const liquidityPoolsHeading = [
+    { slug: "swap", title: "Home:swap.title", href: "/swap.html" },
+    { slug: "stake", title: "Home:stake.title", href: "/stake.html" },
+    { slug: "pools", title: "Home:pools.title", href: "/pools.html" },
+    {
+      slug: "custom_pool_tracker",
+      title: "Home:custom_pool_tracker.title",
+      href: "/custom_pool_overview.html",
+    },
+    { slug: "top_pools", title: "Home:top_pools.title", href: "/top-pools.html" },
   ];
 
   const transferFundsHeading = [
@@ -201,6 +219,7 @@ export default function AppSidebar() {
     { slug: "create_vesting", title: "Home:create_vesting.title", href: "/create_vesting.html" },
     { slug: "blind_transfers", title: "BlindTransfers:title", href: "/blind_transfers.html" },
     { slug: "airdrop_calculate", title: "Home:airdrop_calculate.title", href: "/airdrop_calculate.html" },
+    { slug: "monthly_referrer", title: "Home:monthly_referrer.title", href: "/monthly_referrer.html" },
   ];
 
   const formsOfDebtHeading = [
@@ -222,6 +241,7 @@ export default function AppSidebar() {
       title: "Home:create_liquidity_pool.title",
       href: "/create_pool.html",
     },
+    { slug: "issued_assets", title: "Home:issued_assets.title", href: "/issued_assets.html" },
   ];
 
   const accountOverviewsHeading = [
@@ -231,38 +251,34 @@ export default function AppSidebar() {
       title: "Home:portfolio_open_orders.title",
       href: "/open-orders.html",
     },
+    { slug: "recent_activity", title: "Home:recent_activity.title", href: "/recent-activity.html" },
     {
       slug: "call_orders",
       title: "CallOrders:title",
       href: "/call-orders.html",
     },
+    { slug: "offers", title: "Home:offers.title", href: "/offers.html" },
+    { slug: "deals", title: "Home:deals.title", href: "/deals.html" },
+    { slug: "proposals", title: "Home:proposals.title", href: "/proposals.html" },
+    { slug: "favourites", title: "Home:favourites.title", href: "/favourites.html" },
     {
       slug: "custom_authorities",
       title: "CustomAuthorities:title",
       href: "/custom_authorities.html",
     },
-    { slug: "favourites", title: "Home:favourites.title", href: "/favourites.html" },
-    { slug: "issued_assets", title: "Home:issued_assets.title", href: "/issued_assets.html" },
-    { slug: "offers", title: "Home:offers.title", href: "/offers.html" },
-    { slug: "deals", title: "Home:deals.title", href: "/deals.html" },
     { slug: "vesting", title: "Home:vesting.title", href: "/vesting.html" },
-    { slug: "proposals", title: "Home:proposals.title", href: "/proposals.html" },
-    { slug: "recent_activity", title: "Home:recent_activity.title", href: "/recent-activity.html" },
   ];
 
   const blockchainOverviewsHeading = [
+    { slug: "explorer", title: "Home:explorer.title", href: "/explorer.html" },
     { slug: "blocks", title: "Home:blocks.title", href: "/blocks.html" },
-    {
-      slug: "custom_pool_tracker",
-      title: "Home:custom_pool_tracker.title",
-      href: "/custom_pool_overview.html",
-    },
-    { slug: "pools", title: "Home:pools.title", href: "/pools.html" },
-    { slug: "top_markets", title: "Home:top_markets.title", href: "/top-markets.html" },
-    { slug: "top_pools", title: "Home:top_pools.title", href: "/top-pools.html" },
     { slug: "top_operations", title: "Home:top_operations.title", href: "/top-operations.html" },
+  ];
+
+  const communityHeading = [
     { slug: "trollbox", title: "Home:trollbox.title", href: "/trollbox.html" },
     { slug: "forum", title: "Home:forum.title", href: "/forum.html" },
+    { slug: "docs", title: "Home:docs.title", href: "docs/docs-index.html" },
   ];
 
   const governanceHeading = [
@@ -289,7 +305,6 @@ export default function AppSidebar() {
     { slug: "network_fees", title: "Home:network_fees.title", href: "/network_fees.html" },
     { slug: "create_account", title: "Home:create_account.title", href: "/create_account.html" },
     { slug: "change_password", title: "Home:change_password.title", href: "/change_password.html" },
-    { slug: "monthly_referrer", title: "Home:monthly_referrer.title", href: "/monthly_referrer.html" },
     { slug: "configure_visuals", title: "Home:configure_visuals.title", href: "/visuals.html" },
     { slug: "theme_customizer", title: "Home:theme_customizer.title", href: "/theme.html" },
     { slug: "page_themes", title: "Home:page_themes.title", href: "/page_themes.html" },
@@ -321,47 +336,57 @@ export default function AppSidebar() {
   const sections = [
     {
       key: "exchanging",
-      label: t("PageHeader:exchangingFundsHeading"),
+      label: t("PageHeader:navShort.exchange", "Exchange"),
       items: exchangingFundsHeading,
     },
     {
       key: "transfer",
-      label: t("PageHeader:transferFundsHeading"),
+      label: t("PageHeader:navShort.transfer", "Transfer"),
       items: transferFundsHeading,
     },
     {
       key: "debt",
-      label: t("PageHeader:formsOfDebtHeading"),
+      label: t("PageHeader:navShort.debt", "Debt"),
       items: formsOfDebtHeading,
     },
     {
       key: "assets",
-      label: t("PageHeader:assetCreation"),
+      label: t("PageHeader:navShort.assets", "Assets"),
       items: assetCreation,
     },
     {
       key: "accounts",
-      label: t("PageHeader:accountOverviewsHeading"),
+      label: t("PageHeader:navShort.account", "Account"),
       items: accountOverviewsHeading,
     },
     {
+      key: "liquidity",
+      label: t("PageHeader:navShort.liquidityPools", "Liquidity pools"),
+      items: liquidityPoolsHeading,
+    },
+    {
       key: "invoicing",
-      label: t("PageHeader:invoicingHeading"),
+      label: t("PageHeader:navShort.invoicing", "Invoicing"),
       items: invoicingHeading,
     },
     {
       key: "gov",
-      label: t("PageHeader:governanceHeading"),
+      label: t("PageHeader:navShort.governance", "Governance"),
       items: governanceHeading,
     },
     {
       key: "chain",
-      label: t("PageHeader:blockchainOverviewsHeading"),
+      label: t("PageHeader:navShort.blockchain", "Blockchain"),
       items: blockchainOverviewsHeading,
     },
     {
+      key: "community",
+      label: t("PageHeader:navShort.community", "Community"),
+      items: communityHeading,
+    },
+    {
       key: "settings",
-      label: t("PageHeader:settingsHeading"),
+      label: t("PageHeader:navShort.settings", "Settings"),
       items: settingsHeading,
     },
   ];

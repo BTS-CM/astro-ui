@@ -128,7 +128,22 @@
     "multiwallet": "Multiwallet",
     "tfund_user": "Same-T-Fund-Trade",
     "createAccount": "Konto erstellen",
-    "transferFundsHeading": "Geld überweisen",
-    "exchangeFundsHeading": "Geld tauschen",
-    "airdropHeading": "Airdrop"
+  "transferFundsHeading": "Geld überweisen",
+  "exchangeFundsHeading": "Geld tauschen",
+  "airdropHeading": "Airdrop",
+  "communityHeading": "Community",
+  "liquidityPoolsHeading": "Liquiditätspools",
+  "navShort": {
+    "exchange": "Exchange",
+    "transfer": "Transfer",
+    "debt": "Schulden",
+    "assets": "Assets",
+    "account": "Konto",
+    "blockchain": "Blockchain",
+    "governance": "Governance",
+    "invoicing": "Rechnungen",
+    "settings": "Einstellungen",
+    "community": "Community",
+    "liquidityPools": "Liquiditätspools"
+  }
 }

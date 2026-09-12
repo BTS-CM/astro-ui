@@ -131,5 +131,20 @@
   "createAccount": "สร้างบัญชี",
   "transferFundsHeading": "โอนเงิน",
   "exchangeFundsHeading": "แลกเปลี่ยนกองทุน",
-  "airdropHeading": "Airdrop"
+  "airdropHeading": "Airdrop",
+  "communityHeading": "ชุมชน",
+  "liquidityPoolsHeading": "สระสภาพคล่อง",
+  "navShort": {
+    "exchange": "แลกเปลี่ยน",
+    "transfer": "โอนเงิน",
+    "debt": "หนี้",
+    "assets": "สินทรัพย์",
+    "account": "บัญชี",
+    "blockchain": "บล็อกเชน",
+    "governance": "ธรรมาภิบาล",
+    "invoicing": "ใบแจ้งหนี้",
+    "settings": "การตั้งค่า",
+    "community": "ชุมชน",
+    "liquidityPools": "สระสภาพคล่อง"
+  }
 }

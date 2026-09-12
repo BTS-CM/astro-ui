@@ -187,11 +187,13 @@ const SECTION_META = {
   blockchain: { icon: Globe, titleKey: "PageHeader:blockchainOverviewsHeading", subtitleKey: "Home:sections.blockchainSubtitle" },
   governance: { icon: Vote, titleKey: "PageHeader:governanceHeading", subtitleKey: "Home:sections.governanceSubtitle" },
   invoicing: { icon: Receipt, titleKey: "PageHeader:invoicingHeading", subtitleKey: "Home:sections.invoicingSubtitle" },
+  liquidityPools: { icon: Droplets, titleKey: "PageHeader:liquidityPoolsHeading", subtitleKey: "Home:sections.liquidityPoolsSubtitle" },
+  community: { icon: MessageSquare, titleKey: "PageHeader:communityHeading", subtitleKey: "Home:sections.communitySubtitle" },
   settings: { icon: Wrench, titleKey: "PageHeader:settingsHeading", subtitleKey: "Home:sections.settingsSubtitle" },
 };
 
 // Group/type identifiers isolate homepage sections from any other
-// DragDropProvider on the page. All 9 sections share one group so they
+// DragDropProvider on the page. All 11 sections share one group so they
 // sort vertically within a single list.
 const HOME_SECTION_GROUP = "home-sections";
 const HOME_SECTION_TYPE = "home-section";
@@ -319,10 +321,17 @@ export default function Home(properties) {
   const exchangingFunds = [
     { key: "dex", href: "/dex.html", titleKey: "Home:dex.title", subtitleKey: "Home:dex.subtitle", hoverKeys: ["Home:dex.hover1", "Home:dex.hover2", "Home:dex.hover3", "Home:dex.hover4"] },
     { key: "instant_trade", href: "/instant_trade.html", titleKey: "Home:instant_trade.title", subtitleKey: "Home:instant_trade.subtitle", hoverKeys: ["Home:instant_trade.hover1", "Home:instant_trade.hover2", "Home:instant_trade.hover3"] },
-    { key: "swap", href: "/swap.html", titleKey: "Home:swap.title", subtitleKey: "Home:swap.subtitle", hoverKeys: ["Home:swap.hover1", "Home:swap.hover2", "Home:swap.hover3"] },
-    { key: "stake", href: "/stake.html", titleKey: "Home:stake.title", subtitleKey: "Home:stake.subtitle", hoverKeys: ["Home:stake.hover1", "Home:stake.hover2", "Home:stake.hover3"] },
     { key: "barter", href: "/barter.html", titleKey: "Home:barter.title", subtitleKey: "Home:barter.subtitle", hoverKeys: ["Home:barter.hover1", "Home:barter.hover2", "Home:barter.hover3"] },
     { key: "tfund_user", href: "/tfund_user.html", titleKey: "Home:tfund_user.title", subtitleKey: "Home:tfund_user.subtitle", hoverKeys: ["Home:tfund_user.hover1", "Home:tfund_user.hover2", "Home:tfund_user.hover3"] },
+    { key: "top_markets", href: "/top-markets.html", titleKey: "Home:top_markets.title", subtitleKey: "Home:top_markets.subtitle", hoverKeys: ["Home:top_markets.hover1", "Home:top_markets.hover2"] },
+  ];
+
+  const liquidityPools = [
+    { key: "swap", href: "/swap.html", titleKey: "Home:swap.title", subtitleKey: "Home:swap.subtitle", hoverKeys: ["Home:swap.hover1", "Home:swap.hover2", "Home:swap.hover3"] },
+    { key: "stake", href: "/stake.html", titleKey: "Home:stake.title", subtitleKey: "Home:stake.subtitle", hoverKeys: ["Home:stake.hover1", "Home:stake.hover2", "Home:stake.hover3"] },
+    { key: "pools", href: "/pools.html", titleKey: "Home:pools.title", subtitleKey: "Home:pools.subtitle", hoverKeys: ["Home:pools.hover1", "Home:pools.hover2", "Home:pools.hover3"] },
+    { key: "custom_pool_tracker", href: "/custom_pool_overview.html", titleKey: "Home:custom_pool_tracker.title", subtitleKey: "Home:custom_pool_tracker.subtitle", hoverKeys: ["Home:custom_pool_tracker.hover1", "Home:custom_pool_tracker.hover2"] },
+    { key: "top_pools", href: "/top-pools.html", titleKey: "Home:top_pools.title", subtitleKey: "Home:top_pools.subtitle", hoverKeys: ["Home:top_pools.hover1", "Home:top_pools.hover2"] },
   ];
 
   const transferFunds = [
@@ -333,6 +342,7 @@ export default function Home(properties) {
     { key: "create_vesting", href: "/create_vesting.html", titleKey: "Home:create_vesting.title", subtitleKey: "Home:create_vesting.subtitle", hoverKeys: ["Home:create_vesting.hover1", "Home:create_vesting.hover2", "Home:create_vesting.hover3", "Home:create_vesting.hover4"] },
     { key: "blind_transfers", href: "/blind_transfers.html", titleKey: "Home:blind_transfers.title", subtitleKey: "Home:blind_transfers.subtitle", hoverKeys: ["Home:blind_transfers.hover1", "Home:blind_transfers.hover2", "Home:blind_transfers.hover3"] },
     { key: "airdrop_calculate", href: "/airdrop_calculate.html", titleKey: "Home:airdrop_calculate.title", subtitleKey: "Home:airdrop_calculate.subtitle", hoverKeys: ["Home:airdrop_calculate.hover1", "Home:airdrop_calculate.hover2", "Home:airdrop_calculate.hover3"] },
+    { key: "monthly_referrer", href: "/monthly_referrer.html", titleKey: "Home:monthly_referrer.title", subtitleKey: "Home:monthly_referrer.subtitle", hoverKeys: ["Home:monthly_referrer.hover1", "Home:monthly_referrer.hover2", "Home:monthly_referrer.hover3"] },
   ];
 
   const formsOfDebt = [
@@ -346,32 +356,32 @@ export default function Home(properties) {
     { key: "create_uia", href: "/create_uia.html", titleKey: "Home:create_uia.title", subtitleKey: "Home:create_uia.subtitle", hoverKeys: ["Home:create_uia.hover1", "Home:create_uia.hover2", "Home:create_uia.hover3"] },
     { key: "create_smartcoin", href: "/create_smartcoin.html", titleKey: "Home:create_smartcoin.title", subtitleKey: "Home:create_smartcoin.subtitle", hoverKeys: ["Home:create_smartcoin.hover1", "Home:create_smartcoin.hover2", "Home:create_smartcoin.hover3"] },
     { key: "create_liquidity_pool", href: "/create_pool.html", titleKey: "Home:create_liquidity_pool.title", subtitleKey: "Home:create_liquidity_pool.subtitle", hoverKeys: ["Home:create_liquidity_pool.hover1", "Home:create_liquidity_pool.hover2", "Home:create_liquidity_pool.hover3"] },
+    { key: "issued_assets", href: "/issued_assets.html", titleKey: "Home:issued_assets.title", subtitleKey: "Home:issued_assets.subtitle", hoverKeys: ["Home:issued_assets.hover1", "Home:issued_assets.hover2", "Home:issued_assets.hover3"] },
   ];
 
   const accountOverviews = [
     { key: "portfolio_balances", href: "/balances.html", titleKey: "Home:portfolio_balances.title", subtitleKey: "Home:portfolio_balances.subtitle", hoverKeys: ["Home:portfolio_balances.hover1", "Home:portfolio_balances.hover2", "Home:portfolio_balances.hover3"] },
     { key: "portfolio_open_orders", href: "/open-orders.html", titleKey: "Home:portfolio_open_orders.title", subtitleKey: "Home:portfolio_open_orders.subtitle", hoverKeys: ["Home:portfolio_open_orders.hover1", "Home:portfolio_open_orders.hover2", "Home:portfolio_open_orders.hover3"] },
+    { key: "recent_activity", href: "/recent-activity.html", titleKey: "Home:recent_activity.title", subtitleKey: "Home:recent_activity.subtitle", hoverKeys: ["Home:recent_activity.hover1", "Home:recent_activity.hover2"] },
     { key: "call_orders", href: "/call-orders.html", titleKey: "Home:call_orders.title", subtitleKey: "Home:call_orders.subtitle", hoverKeys: ["Home:call_orders.hover1", "Home:call_orders.hover2", "Home:call_orders.hover3"] },
-    { key: "custom_authorities", href: "/custom_authorities.html", titleKey: "Home:custom_authorities.title", subtitleKey: "Home:custom_authorities.subtitle", hoverKeys: ["Home:custom_authorities.hover1", "Home:custom_authorities.hover2", "Home:custom_authorities.hover3"] },
-    { key: "favourites", href: "/favourites.html", titleKey: "Home:favourites.title", subtitleKey: "Home:favourites.subtitle", hoverKeys: ["Home:favourites.hover1", "Home:favourites.hover2"] },
-    { key: "issued_assets", href: "/issued_assets.html", titleKey: "Home:issued_assets.title", subtitleKey: "Home:issued_assets.subtitle", hoverKeys: ["Home:issued_assets.hover1", "Home:issued_assets.hover2", "Home:issued_assets.hover3"] },
     { key: "offers", href: "/offers.html", titleKey: "Home:offers.title", subtitleKey: "Home:offers.subtitle", hoverKeys: ["Home:offers.hover1", "Home:offers.hover2"] },
     { key: "deals", href: "/deals.html", titleKey: "Home:deals.title", subtitleKey: "Home:deals.subtitle", hoverKeys: ["Home:deals.hover1", "Home:deals.hover2"] },
-    { key: "vesting", href: "/vesting.html", titleKey: "Home:vesting.title", subtitleKey: "Home:vesting.subtitle", hoverKeys: ["Home:vesting.hover1", "Home:vesting.hover2"] },
     { key: "proposals", href: "/proposals.html", titleKey: "Home:proposals.title", subtitleKey: "Home:proposals.subtitle", hoverKeys: ["Home:proposals.hover1", "Home:proposals.hover2"] },
-    { key: "recent_activity", href: "/recent-activity.html", titleKey: "Home:recent_activity.title", subtitleKey: "Home:recent_activity.subtitle", hoverKeys: ["Home:recent_activity.hover1", "Home:recent_activity.hover2"] },
+    { key: "favourites", href: "/favourites.html", titleKey: "Home:favourites.title", subtitleKey: "Home:favourites.subtitle", hoverKeys: ["Home:favourites.hover1", "Home:favourites.hover2"] },
+    { key: "custom_authorities", href: "/custom_authorities.html", titleKey: "Home:custom_authorities.title", subtitleKey: "Home:custom_authorities.subtitle", hoverKeys: ["Home:custom_authorities.hover1", "Home:custom_authorities.hover2", "Home:custom_authorities.hover3"] },
+    { key: "vesting", href: "/vesting.html", titleKey: "Home:vesting.title", subtitleKey: "Home:vesting.subtitle", hoverKeys: ["Home:vesting.hover1", "Home:vesting.hover2"] },
   ];
 
   const blockchainOverviews = [
     { key: "explorer", href: "/explorer.html", titleKey: "Home:explorer.title", subtitleKey: "Home:explorer.subtitle", hoverKeys: ["Home:explorer.hover1", "Home:explorer.hover2", "Home:explorer.hover3"] },
     { key: "blocks", href: "/blocks.html", titleKey: "Home:blocks.title", subtitleKey: "Home:blocks.subtitle", hoverKeys: ["Home:blocks.hover1", "Home:blocks.hover2", "Home:blocks.hover3"] },
-    { key: "custom_pool_tracker", href: "/custom_pool_overview.html", titleKey: "Home:custom_pool_tracker.title", subtitleKey: "Home:custom_pool_tracker.subtitle", hoverKeys: ["Home:custom_pool_tracker.hover1", "Home:custom_pool_tracker.hover2"] },
-    { key: "pools", href: "/pools.html", titleKey: "Home:pools.title", subtitleKey: "Home:pools.subtitle", hoverKeys: ["Home:pools.hover1", "Home:pools.hover2", "Home:pools.hover3"] },
-    { key: "top_markets", href: "/top-markets.html", titleKey: "Home:top_markets.title", subtitleKey: "Home:top_markets.subtitle", hoverKeys: ["Home:top_markets.hover1", "Home:top_markets.hover2"] },
-    { key: "top_pools", href: "/top-pools.html", titleKey: "Home:top_pools.title", subtitleKey: "Home:top_pools.subtitle", hoverKeys: ["Home:top_pools.hover1", "Home:top_pools.hover2"] },
     { key: "top_operations", href: "/top-operations.html", titleKey: "Home:top_operations.title", subtitleKey: "Home:top_operations.subtitle", hoverKeys: ["Home:top_operations.hover1", "Home:top_operations.hover2"] },
+  ];
+
+  const community = [
     { key: "trollbox", href: "/trollbox.html", titleKey: "Home:trollbox.title", subtitleKey: "Home:trollbox.subtitle", hoverKeys: ["Home:trollbox.hover1", "Home:trollbox.hover2"] },
     { key: "forum", href: "/forum.html", titleKey: "Home:forum.title", subtitleKey: "Home:forum.subtitle", hoverKeys: ["Home:forum.hover1", "Home:forum.hover2"] },
+    { key: "docs", href: "docs/docs-index.html", titleKey: "Home:docs.title", subtitleKey: "Home:docs.subtitle", hoverKeys: ["Home:docs.hover1"] },
   ];
 
   const governance = [
@@ -400,11 +410,9 @@ export default function Home(properties) {
     { key: "network_fees", href: "/network_fees.html", titleKey: "Home:network_fees.title", subtitleKey: "Home:network_fees.subtitle", hoverKeys: ["Home:network_fees.hover1", "Home:network_fees.hover2"] },
     { key: "create_account", href: "/create_account.html", titleKey: "Home:create_account.title", subtitleKey: "Home:create_account.subtitle", hoverKeys: ["Home:create_account.hover1", "Home:create_account.hover2"] },
     { key: "change_password", href: "/change_password.html", titleKey: "Home:change_password.title", subtitleKey: "Home:change_password.subtitle", hoverKeys: ["Home:change_password.hover1", "Home:change_password.hover2"] },
-    { key: "monthly_referrer", href: "/monthly_referrer.html", titleKey: "Home:monthly_referrer.title", subtitleKey: "Home:monthly_referrer.subtitle", hoverKeys: ["Home:monthly_referrer.hover1", "Home:monthly_referrer.hover2", "Home:monthly_referrer.hover3"] },
     { key: "configure_visuals", href: "/visuals.html", titleKey: "Home:configure_visuals.title", subtitleKey: "Home:configure_visuals.subtitle", hoverKeys: ["Home:configure_visuals.hover1", "Home:configure_visuals.hover2"] },
     { key: "theme_customizer", href: "/theme.html", titleKey: "Home:theme_customizer.title", subtitleKey: "Home:theme_customizer.subtitle", hoverKeys: ["Home:theme_customizer.hover1", "Home:theme_customizer.hover2"] },
     { key: "page_themes", href: "/page_themes.html", titleKey: "Home:page_themes.title", subtitleKey: "Home:page_themes.subtitle", hoverKeys: ["Home:page_themes.hover1"] },
-    { key: "docs", href: "docs/docs-index.html", titleKey: "Home:docs.title", subtitleKey: "Home:docs.subtitle", hoverKeys: ["Home:docs.hover1"] },
   ];
 
 const renderHoverCard = (card, sectionKey) => {
@@ -563,9 +571,11 @@ const renderHoverCard = (card, sectionKey) => {
     debt: formsOfDebt,
     assetCreation,
     account: accountOverviews,
+    liquidityPools,
     invoicing,
     governance,
     blockchain: blockchainOverviews,
+    community,
     settings,
   };
 
