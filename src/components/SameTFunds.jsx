@@ -271,6 +271,9 @@ export default function SameTFunds(properties) {
 
   const defaultCoreSymbol = _chain === "bitshares" ? "BTS" : "TEST";
 
+  const [thisInput, setThisInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   // ─── Fund Row ───────────────────────────────────────────────────
   const Row = useCallback(({ index, style }) => {
     let fund;
@@ -826,6 +829,10 @@ export default function SameTFunds(properties) {
       );
     }
 
+    const MAX_VISIBLE_FUNDS = 7;
+    const DESKTOP_ROW_HEIGHT = 112;
+    const MOBILE_ROW_HEIGHT = 168;
+
     return (
       <div className="w-full mt-3">
         <div className="rounded-xl border border-[hsl(var(--accent-1)/0.1)] bg-card/30 overflow-hidden">
@@ -833,8 +840,14 @@ export default function SameTFunds(properties) {
             <List
               rowComponent={Row}
               rowCount={funds.length}
-              rowHeight={112}
+              rowHeight={DESKTOP_ROW_HEIGHT}
               rowProps={{}}
+              style={{
+                height:
+                  Math.min(funds.length, MAX_VISIBLE_FUNDS) *
+                  DESKTOP_ROW_HEIGHT,
+                width: "100%",
+              }}
               key={`list-${view}`}
             />
           </div>
@@ -842,8 +855,14 @@ export default function SameTFunds(properties) {
             <List
               rowComponent={Row}
               rowCount={funds.length}
-              rowHeight={168}
+              rowHeight={MOBILE_ROW_HEIGHT}
               rowProps={{}}
+              style={{
+                height:
+                  Math.min(funds.length, MAX_VISIBLE_FUNDS) *
+                  MOBILE_ROW_HEIGHT,
+                width: "100%",
+              }}
               key={`list-${view}-mobile`}
             />
           </div>
@@ -877,8 +896,6 @@ export default function SameTFunds(properties) {
   }, [sameTFunds, lenderAccounts, assets]);
 
   const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
-  const [thisInput, setThisInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   useEffect(() => {
     if (fundSearch && thisInput) {
       if (!isValid(thisInput)) {
