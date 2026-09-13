@@ -50,10 +50,124 @@ import CustomThemeStyle from '@/components/CustomThemeStyle.jsx'
 						document.head.appendChild(el);
 					} catch (e) {}
 				}
+			// SYS-09 W3: per-page accent vars persisted by CustomThemeStyle
+			// ({ themeId, accents: { slug: css } }). Applied here so colourful
+			// pages don't flash default-purple accents on reload. Stale entries
+			// (theme switched since) are skipped via themeId match. Regenerate
+			// ROUTE_SLUG from src/pages/*/page props if routes change.
+			var ROUTE_SLUG = {
+					"account_lists": "AccountLists",
+					"airdrop_calculate": "airdrop_calculate",
+					"balances": "portfolio-balances",
+					"barter": "barter",
+					"blind_transfers": "blind_transfers",
+					"blocked-users": "blocked-users",
+					"blocks": "blocks",
+					"borrow": "borrow",
+					"call-orders": "call-orders",
+					"change_password": "change_password",
+					"committee": "committee",
+					"committee_parameters": "committee_parameters",
+					"create_account": "create_account",
+					"create_invoice": "create_invoice",
+					"create_pool": "create_pool",
+					"create_smartcoin": "create_smartcoin",
+					"create_ticket": "create_ticket",
+					"create_uia": "uia",
+					"create_vesting": "create_vesting",
+					"create_worker": "create_worker",
+					"custom_authorities": "custom_authorities",
+					"custom_pool_overview": "custom_pool_overview",
+					"custom_pool_tracker": "custom_pool_tracker",
+					"deals": "deals",
+					"dex": "dex",
+					"edit_deal": "deals",
+					"explorer": "explorer",
+					"favourites": "favourites",
+					"featured": "featured",
+					"forum": "forum",
+					"forum_thread": "forum",
+					"governance": "governance",
+					"htlc": "htlc",
+					"index": "index",
+					"instant_trade": "instant_trade",
+					"invoice_inventory": "invoice_inventory",
+					"issued_assets": "issuedAssets",
+					"lend": "offereditor",
+					"ltm": "ltm",
+					"monthly_referrer": "monthly_referrer",
+					"network_fees": "network_fees",
+					"nodes": "nodes",
+					"offer": "offer",
+					"offers": "offers",
+					"open-orders": "portfolio-open-orders",
+					"order": "order",
+					"page_themes": "page_themes",
+					"pay_invoice": "pay_invoice",
+					"pools": "pools",
+					"proposals": "proposals",
+					"publish_feed": "publish_feed",
+					"recent-activity": "portfolio-recent-activity",
+					"settlement": "settlement",
+					"smartcoin": "smartcoin",
+					"smartcoins": "smartcoins",
+					"stake": "stake",
+					"stored_invoices": "stored_invoices",
+					"swap": "pool",
+					"tfund_user": "tfund_user",
+					"tfunds": "tfunds",
+					"theme": "theme_customizer",
+					"ticket_leaderboard": "ticket_leaderboard",
+					"timed_transfer": "timed_transfer",
+					"top-markets": "top-markets",
+					"top-operations": "top-operations",
+					"top-pools": "top-pools",
+					"transfer": "transfer",
+					"trollbox": "trollbox",
+					"vesting": "vesting",
+					"visuals": "configure_visuals",
+					"vote": "vote",
+					"withdraw_permissions": "withdraw_permissions",
+					"witnesses": "witnesses"
+			};
+			function currentSlug() {
+				try {
+					var path = window.location.pathname || "/";
+					if (path === "/" || path === "" || path === "/index.html") return "index";
+					var m = path.match(/\/([^\/]+?)(?:\.html)?\/?$/);
+					if (!m) return null;
+					if (m[1] === "index") return "index";
+					return ROUTE_SLUG[m[1]] || null;
+				} catch (e) { return null; }
+			}
+			function applyPageAccent() {
+				try {
+					var slug = currentSlug();
+					if (!slug) return;
+					var activeRaw = localStorage.getItem("customTheme:activeThemeId");
+					var activeId = activeRaw ? JSON.parse(activeRaw) : "default";
+					var raw = localStorage.getItem("btsThemePageCss");
+					if (!raw) return;
+					var stored = JSON.parse(raw);
+					if (!stored || stored.themeId !== activeId) return;
+					var css = stored.accents && stored.accents[slug];
+					if (!css) return;
+					var el = document.getElementById("custom-theme-vars");
+					if (!el) {
+						el = document.createElement("style");
+						el.id = "custom-theme-vars";
+					}
+					// Append AFTER the token css so page roles win; the final
+					// appendChild in applyCustomTheme keeps cascade order.
+					if (el.textContent) el.textContent += "\n" + css;
+					else el.textContent = css;
+				} catch (e) {}
+			}
 				applyCustomTheme();
+				applyPageAccent();
 				if (!window.__customThemeInit) {
 					window.__customThemeInit = true;
-					document.addEventListener("astro:after-swap", applyCustomTheme);
+					document.addEventListener("astro:after-swap", function () { applyCustomTheme(); applyPageAccent(); });
 				}
 			})();
 		</script>

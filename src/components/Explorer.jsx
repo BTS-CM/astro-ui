@@ -191,7 +191,7 @@ export default function Explorer() {
           }}
           title={isFavUser(result.account.id) ? t("Explorer:removeFavourite") : t("Explorer:favourite")}
         >
-          <Star className={`h-4 w-4 ${isFavUser(result.account.id) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`} />
+          <Star className={`h-4 w-4 ${isFavUser(result.account.id) ? "fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" : "text-muted-foreground"}`} />
         </Button>
       );
       openDialog(
@@ -229,7 +229,7 @@ export default function Explorer() {
           }}
           title={isFavAsset(result.asset.id) ? t("Explorer:removeFavourite") : t("Explorer:favourite")}
         >
-          <Star className={`h-4 w-4 ${isFavAsset(result.asset.id) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`} />
+          <Star className={`h-4 w-4 ${isFavAsset(result.asset.id) ? "fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" : "text-muted-foreground"}`} />
         </Button>
       );
       openDialog(t("Explorer:asset.dialogTitle", { symbol: result.asset.symbol, id: result.asset.id }), t("Explorer:asset.dialogSubtitle", { chain }), result, fav);

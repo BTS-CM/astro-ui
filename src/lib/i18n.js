@@ -45,6 +45,7 @@ const pages = [
   "PortfolioTabs",
   "PublishFeed",
   "Settlement",
+  "SettlementBids",
   "Smartcoin",
   "Smartcoins",
   "Transfer",

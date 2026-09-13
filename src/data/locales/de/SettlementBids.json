@@ -1,0 +1,19 @@
+{
+    "title": "Auf Abrechnungsfonds bieten",
+    "description": "Alle Smartcoins, deren Abrechnungsfonds Sicherheiten hält. Bieten Sie, um einen Anteil zu beanspruchen.",
+    "searchPlaceholder": "Symbol suchen...",
+    "searchLabel": "Assets nach Symbol suchen",
+    "clearSearch": "Suche löschen",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fonds",
+    "listingFunds": "Auflistung {{count}} Assets mit Abrechnungsfonds",
+    "noFunds": "Keine Abrechnungsfonds gefunden",
+    "noFundsDescription": "Derzeit hält kein Smartcoin Sicherheiten in seinem Abrechnungsfonds.",
+    "fund": "Fonds",
+    "collateral": "Sicherheit",
+    "bidButton": "Bieten",
+    "showingOf": "{{filtered}} von {{total}} werden angezeigt",
+    "noFilterResults": "Keine Assets entsprechen der aktuellen Suche",
+    "clearFilters": "Suche zurücksetzen"
+}

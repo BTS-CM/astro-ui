@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/card";
 
 import { Palette, RotateCcw } from "lucide-react";
+import { PRESET_PALETTES } from "./WaveBackground.jsx";
 
 const PALETTES = [
   { id: "rainbow", labelKey: "Visuals:palettes.rainbow" },
@@ -100,8 +101,41 @@ function ColorField({ label, value, onChange }) {
   );
 }
 
-function SettingRow({ label, description, children }) {
+// Value readout chips rotate A1/A2/A3 so slider rows differentiate.
+// Full literal class strings — Tailwind cannot build them dynamically.
+const VALUE_CHIP_TINT = {
+  1: "border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))]",
+  2: "border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))]",
+  3: "border-[hsl(var(--accent-3)/0.3)] bg-[hsl(var(--accent-3)/0.1)] text-[hsl(var(--accent-3-fg))]",
+};
+
+function ValueChip({ accent, wide, children }) {
   return (
+    <span
+      className={`text-right text-sm font-mono tabular-nums rounded-md border px-1.5 py-0.5 ${
+        wide ? "w-12" : "w-10"
+      } ${VALUE_CHIP_TINT[accent] || VALUE_CHIP_TINT[1]}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+function PaletteDots({ colors }) {
+  return (
+    <span className="flex -space-x-1 shrink-0">
+      {colors.map((c, i) => (
+        <span
+          key={i}
+          className="h-3 w-3 rounded-full border border-black/30"
+          style={{ backgroundColor: c }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function SettingRow({ label, description, children }) {  return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-start py-3 border-b border-border/60 last:border-b-0">
       <div className="sm:col-span-1">
         <Label className="text-sm font-medium text-foreground/70">{label}</Label>
@@ -149,20 +183,38 @@ export default function ConfigureVisuals() {
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
       <div className="grid grid-cols-1 gap-3">
+        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-3)/0.1)] blur-3xl"
+          />
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-3)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+                <Palette className="h-4.5 w-4.5" strokeWidth={2.25} />
+              </span>
+              <div>
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                  {t("Visuals:pageTitle")}
+                </h2>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">
+                  {t("Visuals:pageDescription")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
           <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-3))]" />
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                <Palette className="h-5 w-5 text-[hsl(var(--accent-1-fg))] dark:text-[hsl(var(--accent-1-fg))]" />
-              </span>
-              {t("Visuals:pageTitle")}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground ml-11">
-              {t("Visuals:pageDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-1">
+          <CardContent className="space-y-1 pt-3">
             <SettingRow
               label={t("Visuals:waveCount")}
               description={t("Visuals:waveCountDesc")}
@@ -177,9 +229,7 @@ export default function ConfigureVisuals() {
                   className="flex-1"
                   variant="violet"
                 />
-                <span className="w-10 text-right text-sm font-mono tabular-nums text-foreground/70">
-                  {safeWaveCount}
-                </span>
+                <ValueChip accent={1}>{safeWaveCount}</ValueChip>
               </div>
             </SettingRow>
 
@@ -199,9 +249,9 @@ export default function ConfigureVisuals() {
                   className="flex-1"
                   variant="cyan"
                 />
-                <span className="w-12 text-right text-sm font-mono tabular-nums text-foreground/70">
+                <ValueChip accent={2} wide>
                   {safeWaveSpeed.toFixed(2)}x
-                </span>
+                </ValueChip>
               </div>
             </SettingRow>
 
@@ -221,9 +271,9 @@ export default function ConfigureVisuals() {
                   className="flex-1"
                   variant="emerald"
                 />
-                <span className="w-12 text-right text-sm font-mono tabular-nums text-foreground/70">
+                <ValueChip accent={3} wide>
                   {safeWaveThickness.toFixed(2)}x
-                </span>
+                </ValueChip>
               </div>
             </SettingRow>
 
@@ -239,17 +289,39 @@ export default function ConfigureVisuals() {
                   <SelectValue className="text-foreground/70" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border ">
-                  {PALETTES.map((p) => (
-                    <SelectItem key={p.id} value={p.id} className="text-foreground/70 focus:bg-accent focus:text-foreground">
-                      {t(p.labelKey)}
-                    </SelectItem>
-                  ))}
+                  {PALETTES.map((p) => {
+                    const pairs =
+                      p.id === "custom"
+                        ? [[customColor1, customColor2]]
+                        : PRESET_PALETTES[p.id] || [];
+                    const dots = pairs.slice(0, 3).map((pair) => pair[0]);
+                    return (
+                      <SelectItem key={p.id} value={p.id} className="text-foreground/70 focus:bg-accent focus:text-foreground">
+                        <span className="flex items-center gap-2">
+                          <PaletteDots colors={dots} />
+                          {t(p.labelKey)}
+                        </span>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </SettingRow>
 
             {wavePalette === "custom" && (
               <div className="py-3 space-y-4">
+                <div
+                  className="h-10 w-full rounded-xl border border-[hsl(var(--accent-1)/0.3)] shadow-[0_0_18px_-6px_hsl(var(--accent-1)/0.5)]"
+                  style={{
+                    background: `linear-gradient(to right, ${customColor1}, ${customColor2})`,
+                  }}
+                  aria-hidden="true"
+                />
+                <div className="flex items-center gap-2 text-xs font-mono">
+                  <span className="rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[hsl(var(--accent-1-fg))]">{customColor1}</span>
+                  <span className="text-muted-foreground">→</span>
+                  <span className="rounded-md border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-1.5 py-0.5 text-[hsl(var(--accent-2-fg))]">{customColor2}</span>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <ColorField
                     label={t("Visuals:customColor1")}
@@ -284,9 +356,9 @@ export default function ConfigureVisuals() {
                   className="flex-1"
                   variant="amber"
                 />
-                <span className="w-12 text-right text-sm font-mono tabular-nums text-foreground/70">
+                <ValueChip accent={1} wide>
                   {safeAurora.toFixed(2)}x
-                </span>
+                </ValueChip>
               </div>
             </SettingRow>
 
@@ -306,9 +378,7 @@ export default function ConfigureVisuals() {
                   className="flex-1"
                   variant="rose"
                 />
-                <span className="w-10 text-right text-sm font-mono tabular-nums text-foreground/70">
-                  {safeBlur}
-                </span>
+                <ValueChip accent={2}>{safeBlur}</ValueChip>
               </div>
             </SettingRow>
 
@@ -332,13 +402,18 @@ export default function ConfigureVisuals() {
               </div>
             </SettingRow>
 
-            <div className="pt-6 pb-2">
-              <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                {t("Visuals:externalServices.heading")}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("Visuals:externalServices.description")}
-              </p>
+            <div className="pt-6 pb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-2)/0.15)] shrink-0">
+                <Palette className="h-4 w-4 text-[hsl(var(--accent-2-fg))]" />
+              </span>
+              <div>
+                <h3 className="text-base font-semibold tracking-tight text-[hsl(var(--accent-2-fg))]">
+                  {t("Visuals:externalServices.heading")}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t("Visuals:externalServices.description")}
+                </p>
+              </div>
             </div>
 
             <SettingRow

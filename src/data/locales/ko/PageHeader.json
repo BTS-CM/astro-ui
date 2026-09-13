@@ -75,6 +75,7 @@
     "portfolio-open-orders": "이 페이지를 사용하여 공개 지정가 주문을 검토하고 신속하게 거래, 업데이트 또는 취소할 수 있습니다.",
     "portfolio-recent-activity": "이 페이지를 사용하여 최신 온체인 작업을 찾아보고 기본 JSON을 검사하세요.",
     "settlement": "스마트코인 결제 자금에 입찰하려면 아래 양식을 사용하세요.",
+    "settlement_bids": "결제 자금에 담보를 보유한 모든 스마트코인을 찾아보고, 그 지분을 청구하기 위해 입찰하세요.",
     "smartcoin": "담보부 부채를 발행하려면 아래 양식을 사용하십시오.",
     "smartcoins": "아래 인터페이스를 사용하여 차입할 자산을 찾으세요.",
     "stake": "유동성 풀에 자산을 스테이킹하려면 이 양식을 사용하세요.",
@@ -122,7 +123,9 @@
     "explorer": "이 페이지에서 계정, 자산, 객체, 트랜잭션 해시 또는 블록 번호를 조회하고 복사 및 즐겨찾기와 함께 원시 JSON을 봅니다.",
     "top-operations": "이 페이지를 사용하여 지난 30일 동안 가장 자주 실행된 블록체인 작업을 발생 횟수 순으로 확인하세요.",
     "change_password": "아래 양식을 사용하여 account_update 작업을 통해 클라우드 지갑 비밀번호를 변경하세요.",
-    "trollbox": "BitShares 블록체인에 존재하는 채널에서 커뮤니티와 채팅하세요."
+    "trollbox": "BitShares 블록체인에 존재하는 채널에서 커뮤니티와 채팅하세요.",
+    "committee_parameters": "Propose new global blockchain parameters. Changes apply at maintenance after committee approval.",
+    "page_themes": "Assign a different saved theme to each page, or keep every page on the active theme."
   },
   "back": "돌아가기",
   "usage": "다음과 함께 사용하도록 설계됨 ",

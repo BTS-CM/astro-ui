@@ -1,6 +1,6 @@
 import { persistentMap } from "@nanostores/persistent";
 import { atom } from "nanostores";
-import { buildThemeCss } from "@/lib/tailwindPalette.js";
+import { buildThemeCss, hexToHsl } from "@/lib/tailwindPalette.js";
 
 // localStorage key holding the compiled CSS of the active theme. Read by the
 // blocking inline <head> script so themes apply before first paint (no FOUC),
@@ -71,6 +71,11 @@ export type CustomTheme = {
   pageAccents?: Record<string, AccentTriple>;
   // Optional single accent applied to all pages that lack a per-page override.
   globalAccent?: AccentTriple;
+  // Optional dark-mode variants (SYS-03): when set, the dark-mode accent roles
+  // use these instead of the light triples. Absence means "same in both modes"
+  // (current behaviour for all presets) — never a fallback to defaults.
+  darkPageAccents?: Record<string, AccentTriple>;
+  darkStatusAccents?: Partial<Record<StatusRole, string>>;
   // True while the theme is a draft — not yet persisted to storage.
   draft?: boolean;
 };
@@ -147,6 +152,7 @@ export const PAGE_ACCENTS: Record<string, AccentTriple> = {
   vote: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#a855f7" },
   witnesses: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#a855f7" },
   committee: { primary: "#8b5cf6", secondary: "#6366f1", tertiary: "#a855f7" },
+  committee_parameters: { primary: "#7c3aed", secondary: "#8b5cf6", tertiary: "#6366f1" },
   governance: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#a855f7" },
   create_ticket: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#a855f7" },
   deals: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#a855f7" },
@@ -155,7 +161,8 @@ export const PAGE_ACCENTS: Record<string, AccentTriple> = {
   dex: { primary: "#06b6d4", secondary: "#0ea5e9", tertiary: "#6366f1" },
   order: { primary: "#f59e0b", secondary: "#0ea5e9", tertiary: "#6366f1" },
   offer: { primary: "#06b6d4", secondary: "#0ea5e9", tertiary: "#6366f1" },
-  settlement: { primary: "#f59e0b", secondary: "#0ea5e9", tertiary: "#6366f1" },
+  settlement: { primary: "#f43f5e", secondary: "#0ea5e9", tertiary: "#f59e0b" },
+  settlement_bids: { primary: "#f43f5e", secondary: "#0ea5e9", tertiary: "#f59e0b" },
   "portfolio-open-orders": { primary: "#06b6d4", secondary: "#0ea5e9", tertiary: "#6366f1" },
   "portfolio-recent-activity": { primary: "#3b82f6", secondary: "#06b6d4", tertiary: "#6366f1" },
   "portfolio-balances": { primary: "#10b981", secondary: "#14b8a6", tertiary: "#0ea5e9" },
@@ -181,7 +188,118 @@ export const PAGE_ACCENTS: Record<string, AccentTriple> = {
   configure_visuals: { primary: "#8b5cf6", secondary: "#6366f1", tertiary: "#d946ef" },
   airdrop_calculate: { primary: "#8b5cf6", secondary: "#d946ef", tertiary: "#6366f1" },
   "top-operations": { primary: "#10b981", secondary: "#0ea5e9", tertiary: "#8b5cf6" },
+  // Phase 3 (PG-020): previously uncatalogued slugs. Triples are derived from
+  // each page's nav-section identity (same families as DEFAULT_SECTION_ACCENTS)
+  // instead of the slate brandTriple fallback they rendered before, so these
+  // pages carry deliberate colour on the default theme. Catalogue entries only
+  // affect the pristine "default" theme (see resolvePageAccent).
+  "call-orders": { primary: "#10b981", secondary: "#0ea5e9", tertiary: "#14b8a6" },
+  change_password: { primary: "#8b5cf6", secondary: "#f43f5e", tertiary: "#a855f7" },
+  explorer: { primary: "#64748b", secondary: "#6b7280", tertiary: "#94a3b8" },
+  forum: { primary: "#8b5cf6", secondary: "#ec4899", tertiary: "#a855f7" },
+  index: { primary: "#6366f1", secondary: "#d946ef", tertiary: "#8b5cf6" },
+  monthly_referrer: { primary: "#0ea5e9", secondary: "#3b82f6", tertiary: "#06b6d4" },
+  network_fees: { primary: "#38bdf8", secondary: "#0ea5e9", tertiary: "#64748b" },
+  page_themes: { primary: "#a855f7", secondary: "#ec4899", tertiary: "#8b5cf6" },
+  publish_feed: { primary: "#10b981", secondary: "#14b8a6", tertiary: "#0ea5e9" },
+  "top-markets": { primary: "#06b6d4", secondary: "#3b82f6", tertiary: "#0ea5e9" },
+  "top-pools": { primary: "#06b6d4", secondary: "#14b8a6", tertiary: "#0ea5e9" },
+  trollbox: { primary: "#ec4899", secondary: "#8b5cf6", tertiary: "#d946ef" },
+  blind_transfers: { primary: "#0ea5e9", secondary: "#3b82f6", tertiary: "#06b6d4" },
+  custom_authorities: { primary: "#10b981", secondary: "#0ea5e9", tertiary: "#14b8a6" },
+  nodes: { primary: "#64748b", secondary: "#6b7280", tertiary: "#94a3b8" },
+  theme_customizer: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#a855f7" },
 };
+
+// Canonical nav section per Astro page slug. Sidebar item slugs that differ
+// from page slugs are normalized here (e.g. swap→pool, lend→offereditor).
+// Used to give every page section-appropriate hues on non-default themes.
+export const PAGE_SECTIONS: Record<string, NavSection> = {
+  dex: "exchanging",
+  instant_trade: "exchanging",
+  barter: "exchanging",
+  tfund_user: "exchanging",
+  "top-markets": "exchanging",
+  order: "exchanging",
+  pool: "liquidityPools",
+  stake: "liquidityPools",
+  pools: "liquidityPools",
+  custom_pool_tracker: "liquidityPools",
+  custom_pool_overview: "liquidityPools",
+  "top-pools": "liquidityPools",
+  create_pool: "liquidityPools",
+  transfer: "transfer",
+  timed_transfer: "transfer",
+  withdraw_permissions: "transfer",
+  htlc: "transfer",
+  create_vesting: "transfer",
+  blind_transfers: "transfer",
+  airdrop_calculate: "transfer",
+  monthly_referrer: "transfer",
+  borrow: "debt",
+  offereditor: "debt",
+  smartcoins: "debt",
+  smartcoin: "debt",
+  settlement_bids: "debt",
+  tfunds: "debt",
+  publish_feed: "debt",
+  settlement: "debt",
+  offer: "debt",
+  uia: "assetCreation",
+  create_smartcoin: "assetCreation",
+  issuedAssets: "assetCreation",
+  "portfolio-balances": "account",
+  "portfolio-open-orders": "account",
+  "portfolio-recent-activity": "account",
+  "call-orders": "account",
+  offers: "account",
+  deals: "account",
+  proposals: "account",
+  favourites: "account",
+  vesting: "account",
+  custom_authorities: "account",
+  AccountLists: "account",
+  explorer: "blockchain",
+  blocks: "blockchain",
+  "top-operations": "blockchain",
+  network_fees: "blockchain",
+  trollbox: "community",
+  forum: "community",
+  vote: "governance",
+  witnesses: "governance",
+  committee: "governance",
+  committee_parameters: "governance",
+  governance: "governance",
+  create_worker: "governance",
+  create_ticket: "governance",
+  ticket_leaderboard: "governance",
+  invoice_inventory: "invoicing",
+  create_invoice: "invoicing",
+  pay_invoice: "invoicing",
+  stored_invoices: "invoicing",
+  create_account: "settings",
+  ltm: "settings",
+  change_password: "settings",
+  nodes: "settings",
+  "blocked-users": "settings",
+  configure_visuals: "settings",
+  theme_customizer: "settings",
+  page_themes: "settings",
+  index: "settings",
+  featured: "exchanging",
+};
+
+// Section-derived triple: the theme's pair for the page's nav section plus a
+// tertiary from the neighbor table. Gives every mapped page distinct,
+// section-appropriate hues on every theme without per-preset data entry.
+function resolveSectionTriple(theme: CustomTheme, section: NavSection): AccentTriple {
+  const pair = resolveSectionAccent(theme, section);
+  return {
+    primary: pair.primary,
+    secondary: pair.secondary,
+    tertiary: TERTIARY_HEX[pair.primary] || pair.secondary,
+  };
+}
 
 // Fallback triple derived from the brand pair for pages not yet catalogued.
 function brandTriple(theme: CustomTheme): AccentTriple {
@@ -217,6 +335,7 @@ export const DEFAULT_ITEM_ACCENTS: Record<string, AccentPair> = {
   borrow: { primary: "#10b981", secondary: "#14b8a6" },
   lend: { primary: "#f59e0b", secondary: "#f97316" },
   smartcoins: { primary: "#6366f1", secondary: "#06b6d4" },
+  settlement_bids: { primary: "#f43f5e", secondary: "#f59e0b" },
   tfunds: { primary: "#f43f5e", secondary: "#ef4444" },
   portfolio_balances: { primary: "#10b981", secondary: "#14b8a6" },
   portfolio_open_orders: { primary: "#06b6d4", secondary: "#0ea5e9" },
@@ -245,6 +364,14 @@ export const DEFAULT_ITEM_ACCENTS: Record<string, AccentPair> = {
   ltm: { primary: "#f59e0b", secondary: "#eab308" },
   nodes: { primary: "#14b8a6", secondary: "#06b6d4" },
   create_account: { primary: "#10b981", secondary: "#22c55e" },
+  change_password: { primary: "#8b5cf6", secondary: "#f43f5e" },
+  call_orders: { primary: "#10b981", secondary: "#0ea5e9" },
+  network_fees: { primary: "#38bdf8", secondary: "#0ea5e9" },
+  page_themes: { primary: "#a855f7", secondary: "#ec4899" },
+  explorer: { primary: "#64748b", secondary: "#6b7280" },
+  monthly_referrer: { primary: "#0ea5e9", secondary: "#3b82f6" },
+  blind_transfers: { primary: "#0ea5e9", secondary: "#3b82f6" },
+  custom_authorities: { primary: "#10b981", secondary: "#0ea5e9" },
   blocked_users: { primary: "#f43f5e", secondary: "#ef4444" },
   configure_visuals: { primary: "#8b5cf6", secondary: "#d946ef" },
   theme_customizer: { primary: "#8b5cf6", secondary: "#d946ef" },
@@ -261,6 +388,8 @@ type MakeThemeOpts = {
   tokenOverrides?: Record<string, PaletteRef>;
   pageAccents?: Record<string, AccentTriple>;
   globalAccent?: AccentTriple;
+  darkPageAccents?: Record<string, AccentTriple>;
+  darkStatusAccents?: Partial<Record<StatusRole, string>>;
 };
 
 function makeTheme(
@@ -281,6 +410,8 @@ function makeTheme(
     statusAccents: opts.statusAccents || {},
     pageAccents: opts.pageAccents,
     globalAccent: opts.globalAccent,
+    darkPageAccents: opts.darkPageAccents,
+    darkStatusAccents: opts.darkStatusAccents,
   };
 }
 
@@ -295,7 +426,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
 
   // ── Ocean ────────────────────────────────────────────────────────────
   ocean: makeTheme("ocean", "Ocean", "dark", { hex: "#0891b2" }, {
-    brand: { primary: "#06b6d4", secondary: "#3b82f6" },
+    brand: { primary: "#06b6d4", secondary: "#22d3ee" },
     tokenOverrides: {
       primary: { hex: "#06b6d4" },
       secondary: { hex: "#2563eb" },
@@ -307,16 +438,17 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     sectionAccents: {
       exchanging: { primary: "#06b6d4", secondary: "#0ea5e9" },
       transfer: { primary: "#0ea5e9", secondary: "#3b82f6" },
-      debt: { primary: "#3b82f6", secondary: "#6366f1" },
+      debt: { primary: "#14b8a6", secondary: "#0ea5e9" },
       assetCreation: { primary: "#6366f1", secondary: "#8b5cf6" },
       account: { primary: "#06b6d4", secondary: "#14b8a6" },
       blockchain: { primary: "#3b82f6", secondary: "#6366f1" },
       governance: { primary: "#6366f1", secondary: "#8b5cf6" },
       invoicing: { primary: "#0ea5e9", secondary: "#06b6d4" },
       settings: { primary: "#14b8a6", secondary: "#3b82f6" },
+      liquidityPools: { primary: "#06b6d4", secondary: "#14b8a6" },
+      community: { primary: "#6366f1", secondary: "#8b5cf6" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#06b6d4" },
-    globalAccent: { primary: "#06b6d4", secondary: "#3b82f6", tertiary: "#6366f1" },
     pageAccents: {
       instant_trade: { primary: "#06b6d4", secondary: "#0ea5e9", tertiary: "#3b82f6" },
       pool: { primary: "#3b82f6", secondary: "#06b6d4", tertiary: "#0ea5e9" },
@@ -344,17 +476,18 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     },
     sectionAccents: {
       exchanging: { primary: "#f59e0b", secondary: "#f97316" },
-      transfer: { primary: "#f97316", secondary: "#f43f5e" },
+      transfer: { primary: "#f43f5e", secondary: "#fb7185" },
       debt: { primary: "#f43f5e", secondary: "#ef4444" },
       assetCreation: { primary: "#ec4899", secondary: "#f43f5e" },
       account: { primary: "#f97316", secondary: "#f59e0b" },
       blockchain: { primary: "#fb923c", secondary: "#f97316" },
       governance: { primary: "#f43f5e", secondary: "#ef4444" },
-      invoicing: { primary: "#f97316", secondary: "#f59e0b" },
+      invoicing: { primary: "#eab308", secondary: "#f59e0b" },
       settings: { primary: "#f59e0b", secondary: "#fbbf24" },
+      liquidityPools: { primary: "#f97316", secondary: "#f59e0b" },
+      community: { primary: "#ec4899", secondary: "#f43f5e" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
-    globalAccent: { primary: "#f97316", secondary: "#f43f5e", tertiary: "#f59e0b" },
     pageAccents: {
       instant_trade: { primary: "#f59e0b", secondary: "#f97316", tertiary: "#f43f5e" },
       pool: { primary: "#f97316", secondary: "#f43f5e", tertiary: "#f59e0b" },
@@ -383,16 +516,17 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     sectionAccents: {
       exchanging: { primary: "#10b981", secondary: "#14b8a6" },
       transfer: { primary: "#14b8a6", secondary: "#06b6d4" },
-      debt: { primary: "#10b981", secondary: "#22c55e" },
-      assetCreation: { primary: "#14b8a6", secondary: "#06b6d4" },
+      debt: { primary: "#22c55e", secondary: "#4ade80" },
+      assetCreation: { primary: "#0d9488", secondary: "#2dd4bf" },
       account: { primary: "#14b8a6", secondary: "#06b6d4" },
       blockchain: { primary: "#059669", secondary: "#10b981" },
-      governance: { primary: "#10b981", secondary: "#14b8a6" },
+      governance: { primary: "#059669", secondary: "#34d399" },
       invoicing: { primary: "#34d399", secondary: "#10b981" },
       settings: { primary: "#22c55e", secondary: "#34d399" },
+      liquidityPools: { primary: "#14b8a6", secondary: "#06b6d4" },
+      community: { primary: "#34d399", secondary: "#10b981" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#14b8a6" },
-    globalAccent: { primary: "#10b981", secondary: "#14b8a6", tertiary: "#06b6d4" },
     pageAccents: {
       instant_trade: { primary: "#10b981", secondary: "#14b8a6", tertiary: "#f59e0b" },
       pool: { primary: "#14b8a6", secondary: "#06b6d4", tertiary: "#10b981" },
@@ -409,7 +543,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
 
   // ── High Contrast ────────────────────────────────────────────────────
   contrast: makeTheme("contrast", "High Contrast", "dark", { hex: "#eab308" }, {
-    brand: { primary: "#eab308", secondary: "#f59e0b" },
+    brand: { primary: "#eab308", secondary: "#f97316" },
     tokenOverrides: {
       primary: { hex: "#facc15" },
       secondary: { hex: "#f59e0b" },
@@ -427,10 +561,13 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       blockchain: { primary: "#84cc16", secondary: "#22c55e" },
       governance: { primary: "#eab308", secondary: "#f59e0b" },
       invoicing: { primary: "#f59e0b", secondary: "#f97316" },
-      settings: { primary: "#eab308", secondary: "#f59e0b" },
+      // Achromatic anchor (warm paper white): deliberately near-white, which
+      // the unthemed-gray guard exempts — mid-grays would be voided instead.
+      settings: { primary: "#f3efe7", secondary: "#ddd6c7" },
+      liquidityPools: { primary: "#eab308", secondary: "#84cc16" },
+      community: { primary: "#f59e0b", secondary: "#eab308" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#06b6d4" },
-    globalAccent: { primary: "#eab308", secondary: "#f59e0b", tertiary: "#f97316" },
     pageAccents: {
       instant_trade: { primary: "#eab308", secondary: "#f59e0b", tertiary: "#f97316" },
       pool: { primary: "#f59e0b", secondary: "#eab308", tertiary: "#84cc16" },
@@ -448,7 +585,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
   // ── Terracotta & Teal ────────────────────────────────────────────────
   // Palette: ["#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51"]
   terracottaTeal: makeTheme("terracottaTeal", "Terracotta & Teal", "dark", { hex: "#0d9488" }, {
-    brand: { primary: "#14b8a6", secondary: "#f97316" },
+    brand: { primary: "#14b8a6", secondary: "#e76f51" },
     tokenOverrides: {
       primary: { hex: "#14b8a6" },
       secondary: { hex: "#fb923c" },
@@ -459,17 +596,18 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     },
     sectionAccents: {
       exchanging: { primary: "#14b8a6", secondary: "#06b6d4" },
-      transfer: { primary: "#14b8a6", secondary: "#0ea5e9" },
+      transfer: { primary: "#e76f51", secondary: "#f97316" },
       debt: { primary: "#10b981", secondary: "#14b8a6" },
       assetCreation: { primary: "#f97316", secondary: "#f59e0b" },
       account: { primary: "#14b8a6", secondary: "#06b6d4" },
       blockchain: { primary: "#06b6d4", secondary: "#0ea5e9" },
       governance: { primary: "#f97316", secondary: "#f59e0b" },
-      invoicing: { primary: "#f59e0b", secondary: "#f97316" },
+      invoicing: { primary: "#e76f51", secondary: "#f4a261" },
       settings: { primary: "#f97316", secondary: "#fb923c" },
+      liquidityPools: { primary: "#14b8a6", secondary: "#06b6d4" },
+      community: { primary: "#e76f51", secondary: "#f97316" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#06b6d4" },
-    globalAccent: { primary: "#14b8a6", secondary: "#f97316", tertiary: "#f59e0b" },
     pageAccents: {
       instant_trade: { primary: "#14b8a6", secondary: "#f59e0b", tertiary: "#f97316" },
       pool: { primary: "#06b6d4", secondary: "#14b8a6", tertiary: "#3b82f6" },
@@ -498,17 +636,18 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     },
     sectionAccents: {
       exchanging: { primary: "#f97316", secondary: "#f59e0b" },
-      transfer: { primary: "#f97316", secondary: "#f43f5e" },
+      transfer: { primary: "#ea580c", secondary: "#f43f5e" },
       debt: { primary: "#10b981", secondary: "#14b8a6" },
       assetCreation: { primary: "#f59e0b", secondary: "#f97316" },
       account: { primary: "#10b981", secondary: "#14b8a6" },
       blockchain: { primary: "#fb923c", secondary: "#f97316" },
       governance: { primary: "#f97316", secondary: "#ef4444" },
-      invoicing: { primary: "#f59e0b", secondary: "#f97316" },
+      invoicing: { primary: "#ca8a04", secondary: "#a16207" },
       settings: { primary: "#10b981", secondary: "#34d399" },
+      liquidityPools: { primary: "#10b981", secondary: "#14b8a6" },
+      community: { primary: "#f97316", secondary: "#f59e0b" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#14b8a6" },
-    globalAccent: { primary: "#f97316", secondary: "#10b981", tertiary: "#f59e0b" },
     pageAccents: {
       instant_trade: { primary: "#f97316", secondary: "#f59e0b", tertiary: "#10b981" },
       pool: { primary: "#10b981", secondary: "#14b8a6", tertiary: "#06b6d4" },
@@ -545,9 +684,10 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       governance: { primary: "#3b82f6", secondary: "#06b6d4" },
       invoicing: { primary: "#ef4444", secondary: "#f97316" },
       settings: { primary: "#6366f1", secondary: "#8b5cf6" },
+      liquidityPools: { primary: "#3b82f6", secondary: "#06b6d4" },
+      community: { primary: "#ef4444", secondary: "#f97316" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#06b6d4" },
-    globalAccent: { primary: "#ef4444", secondary: "#3b82f6", tertiary: "#06b6d4" },
     pageAccents: {
       instant_trade: { primary: "#ef4444", secondary: "#3b82f6", tertiary: "#06b6d4" },
       pool: { primary: "#3b82f6", secondary: "#06b6d4", tertiary: "#6366f1" },
@@ -564,8 +704,8 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
 
   // ── Nordic Crimson ───────────────────────────────────────────────────
   // Palette: ["#2B2D42", "#8D99AE", "#EDF2F4", "#EF233C", "#D90429"]
-  nordicCrimson: makeTheme("nordicCrimson", "Nordic Crimson", "dark", { hex: "#1e293b" }, {
-    brand: { primary: "#ef4444", secondary: "#64748b" },
+  nordicCrimson: makeTheme("nordicCrimson", "Nordic Crimson", "dark", { hex: "#251f28" }, {
+    brand: { primary: "#ef4444", secondary: "#94a3b8" },
     tokenOverrides: {
       primary: { hex: "#ef4444" },
       secondary: { hex: "#94a3b8" },
@@ -584,18 +724,19 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       governance: { primary: "#ef4444", secondary: "#f97316" },
       invoicing: { primary: "#ef4444", secondary: "#f59e0b" },
       settings: { primary: "#f43f5e", secondary: "#ef4444" },
+      liquidityPools: { primary: "#3b82f6", secondary: "#06b6d4" },
+      community: { primary: "#f43f5e", secondary: "#ec4899" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#64748b" },
-    globalAccent: { primary: "#ef4444", secondary: "#9ca3af", tertiary: "#f43f5e" },
     pageAccents: {
       instant_trade: { primary: "#ef4444", secondary: "#64748b", tertiary: "#f43f5e" },
-      pool: { primary: "#64748b", secondary: "#ef4444", tertiary: "#6b7280" },
+      pool: { primary: "#f43f5e", secondary: "#ef4444", tertiary: "#64748b" },
       stake: { primary: "#ef4444", secondary: "#f43f5e", tertiary: "#64748b" },
       transfer: { primary: "#ef4444", secondary: "#f97316", tertiary: "#64748b" },
-      dex: { primary: "#64748b", secondary: "#ef4444", tertiary: "#6b7280" },
+      dex: { primary: "#ef4444", secondary: "#64748b", tertiary: "#f43f5e" },
       proposals: { primary: "#ef4444", secondary: "#64748b", tertiary: "#f43f5e" },
       vote: { primary: "#ef4444", secondary: "#8b5cf6", tertiary: "#64748b" },
-      account: { primary: "#64748b", secondary: "#6b7280", tertiary: "#ef4444" },
+      account: { primary: "#b91c1c", secondary: "#64748b", tertiary: "#ef4444" },
       settings: { primary: "#64748b", secondary: "#71717a", tertiary: "#ef4444" },
       featured: { primary: "#ef4444", secondary: "#64748b", tertiary: "#f43f5e" },
     },
@@ -618,14 +759,15 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       transfer: { primary: "#f97316", secondary: "#ef4444" },
       debt: { primary: "#ef4444", secondary: "#f43f5e" },
       assetCreation: { primary: "#f97316", secondary: "#eab308" },
-      account: { primary: "#f59e0b", secondary: "#f97316" },
-      blockchain: { primary: "#fbbf24", secondary: "#f97316" },
+      account: { primary: "#3b82f6", secondary: "#06b6d4" },
+      blockchain: { primary: "#0ea5e9", secondary: "#3b82f6" },
       governance: { primary: "#ef4444", secondary: "#f97316" },
       invoicing: { primary: "#f97316", secondary: "#f59e0b" },
       settings: { primary: "#fbbf24", secondary: "#f97316" },
+      liquidityPools: { primary: "#3b82f6", secondary: "#06b6d4" },
+      community: { primary: "#f59e0b", secondary: "#f97316" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#3b82f6" },
-    globalAccent: { primary: "#f97316", secondary: "#ef4444", tertiary: "#f59e0b" },
     pageAccents: {
       instant_trade: { primary: "#f97316", secondary: "#f59e0b", tertiary: "#ef4444" },
       pool: { primary: "#f59e0b", secondary: "#f97316", tertiary: "#eab308" },
@@ -642,8 +784,8 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
 
   // ── Sage & Moss ──────────────────────────────────────────────────────
   // Palette: ["#6B705C", "#A5A58D", "#B7B7A4", "#FFE8D6", "#DDBEA9"]
-  sageMoss: makeTheme("sageMoss", "Sage & Moss", "light", { hex: "#57534e" }, {
-    brand: { primary: "#78716c", secondary: "#f97316" },
+  sageMoss: makeTheme("sageMoss", "Sage & Moss", "light", { hex: "#6B705C" }, {
+    brand: { primary: "#6B705C", secondary: "#d97706" },
     tokenOverrides: {
       primary: { hex: "#57534e" },
       secondary: { hex: "#a8a29e" },
@@ -662,9 +804,10 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       governance: { primary: "#f97316", secondary: "#fb923c" },
       invoicing: { primary: "#f59e0b", secondary: "#f97316" },
       settings: { primary: "#fb923c", secondary: "#f59e0b" },
+      liquidityPools: { primary: "#10b981", secondary: "#14b8a6" },
+      community: { primary: "#f59e0b", secondary: "#f97316" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#14b8a6" },
-    globalAccent: { primary: "#a8a29e", secondary: "#f59e0b", tertiary: "#10b981" },
     pageAccents: {
       instant_trade: { primary: "#78716c", secondary: "#f59e0b", tertiary: "#10b981" },
       pool: { primary: "#f59e0b", secondary: "#78716c", tertiary: "#f97316" },
@@ -682,7 +825,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
   // ── Deep Ocean ───────────────────────────────────────────────────────
   // Palette: ["#03045E", "#023E8A", "#0077B6", "#0096C7", "#00B4D8"]
   deepOcean: makeTheme("deepOcean", "Deep Ocean", "dark", { hex: "#1d4ed8" }, {
-    brand: { primary: "#3b82f6", secondary: "#06b6d4" },
+    brand: { primary: "#2563eb", secondary: "#0891b2" },
     tokenOverrides: {
       primary: { hex: "#3b82f6" },
       secondary: { hex: "#06b6d4" },
@@ -696,14 +839,15 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       transfer: { primary: "#3b82f6", secondary: "#6366f1" },
       debt: { primary: "#06b6d4", secondary: "#3b82f6" },
       assetCreation: { primary: "#0ea5e9", secondary: "#3b82f6" },
-      account: { primary: "#06b6d4", secondary: "#14b8a6" },
-      blockchain: { primary: "#3b82f6", secondary: "#0ea5e9" },
+      account: { primary: "#06b6d4", secondary: "#7dd3fc" },
+      blockchain: { primary: "#0c4a6e", secondary: "#082f49" },
       governance: { primary: "#3b82f6", secondary: "#06b6d4" },
-      invoicing: { primary: "#0ea5e9", secondary: "#06b6d4" },
+      invoicing: { primary: "#0ea5e9", secondary: "#7dd3fc" },
       settings: { primary: "#0ea5e9", secondary: "#6366f1" },
+      liquidityPools: { primary: "#06b6d4", secondary: "#0ea5e9" },
+      community: { primary: "#3b82f6", secondary: "#6366f1" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#06b6d4" },
-    globalAccent: { primary: "#3b82f6", secondary: "#06b6d4", tertiary: "#0ea5e9" },
     pageAccents: {
       instant_trade: { primary: "#3b82f6", secondary: "#06b6d4", tertiary: "#0ea5e9" },
       pool: { primary: "#06b6d4", secondary: "#3b82f6", tertiary: "#6366f1" },
@@ -727,7 +871,6 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       secondary: { hex: "#7dd3fc" },
       accent: { hex: "#7dd3fc" },
       ring: { hex: "#f472b6" },
-      destructive: { hex: "#f87171" },
       sidebarAccent: { hex: "#ec4899" },
     },
     sectionAccents: {
@@ -740,14 +883,15 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       governance: { primary: "#ec4899", secondary: "#a855f7" },
       invoicing: { primary: "#0ea5e9", secondary: "#ec4899" },
       settings: { primary: "#a855f7", secondary: "#ec4899" },
+      liquidityPools: { primary: "#0ea5e9", secondary: "#06b6d4" },
+      community: { primary: "#ec4899", secondary: "#f43f5e" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
-    globalAccent: { primary: "#ec4899", secondary: "#0ea5e9", tertiary: "#a855f7" },
     pageAccents: {
       instant_trade: { primary: "#ec4899", secondary: "#0ea5e9", tertiary: "#a855f7" },
       pool: { primary: "#0ea5e9", secondary: "#ec4899", tertiary: "#3b82f6" },
       stake: { primary: "#a855f7", secondary: "#ec4899", tertiary: "#d946ef" },
-      transfer: { primary: "#ec4899", secondary: "#f43f5e", tertiary: "#0ea5e9" },
+      transfer: { primary: "#f472b6", secondary: "#fb7185", tertiary: "#0ea5e9" },
       dex: { primary: "#0ea5e9", secondary: "#3b82f6", tertiary: "#ec4899" },
       proposals: { primary: "#a855f7", secondary: "#ec4899", tertiary: "#8b5cf6" },
       vote: { primary: "#ec4899", secondary: "#a855f7", tertiary: "#d946ef" },
@@ -760,7 +904,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
   // ── Dusty Rose ───────────────────────────────────────────────────────
   // Palette: ["#FFCDB2", "#FFB4A2", "#E5989B", "#B5828C", "#6D6875"]
   dustyRose: makeTheme("dustyRose", "Dusty Rose", "light", { hex: "#fb7185" }, {
-    brand: { primary: "#f43f5e", secondary: "#a855f7" },
+    brand: { primary: "#f43f5e", secondary: "#c084fc" },
     tokenOverrides: {
       primary: { hex: "#fb7185" },
       secondary: { hex: "#a855f7" },
@@ -779,9 +923,10 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       governance: { primary: "#f43f5e", secondary: "#a855f7" },
       invoicing: { primary: "#ec4899", secondary: "#f43f5e" },
       settings: { primary: "#d946ef", secondary: "#a855f7" },
+      liquidityPools: { primary: "#8b5cf6", secondary: "#a855f7" },
+      community: { primary: "#f43f5e", secondary: "#ec4899" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#a855f7" },
-    globalAccent: { primary: "#f43f5e", secondary: "#a855f7", tertiary: "#ec4899" },
     pageAccents: {
       instant_trade: { primary: "#f43f5e", secondary: "#a855f7", tertiary: "#ec4899" },
       pool: { primary: "#a855f7", secondary: "#f43f5e", tertiary: "#8b5cf6" },
@@ -801,7 +946,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
   twilightGray: makeTheme("twilightGray", "Twilight Gray", "dark", { hex: "#312e81" }, {
     brand: { primary: "#6366f1", secondary: "#f43f5e" },
     tokenOverrides: {
-      primary: { hex: "#6366f1" },
+      primary: { hex: "#4f46e5" },
       secondary: { hex: "#fda4af" },
       accent: { hex: "#c084fc" },
       ring: { hex: "#818cf8" },
@@ -810,17 +955,18 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     },
     sectionAccents: {
       exchanging: { primary: "#6366f1", secondary: "#8b5cf6" },
-      transfer: { primary: "#6366f1", secondary: "#3b82f6" },
+      transfer: { primary: "#f43f5e", secondary: "#fb7185" },
       debt: { primary: "#8b5cf6", secondary: "#6366f1" },
       assetCreation: { primary: "#a855f7", secondary: "#8b5cf6" },
       account: { primary: "#6366f1", secondary: "#8b5cf6" },
-      blockchain: { primary: "#8b5cf6", secondary: "#a855f7" },
+      blockchain: { primary: "#64748b", secondary: "#94a3b8" },
       governance: { primary: "#a855f7", secondary: "#6366f1" },
       invoicing: { primary: "#a855f7", secondary: "#8b5cf6" },
       settings: { primary: "#8b5cf6", secondary: "#f43f5e" },
+      liquidityPools: { primary: "#6366f1", secondary: "#3b82f6" },
+      community: { primary: "#f43f5e", secondary: "#a855f7" },
     },
-    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#6366f1" },
-    globalAccent: { primary: "#6366f1", secondary: "#f43f5e", tertiary: "#a855f7" },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
     pageAccents: {
       instant_trade: { primary: "#6366f1", secondary: "#f43f5e", tertiary: "#a855f7" },
       pool: { primary: "#a855f7", secondary: "#6366f1", tertiary: "#8b5cf6" },
@@ -830,7 +976,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       proposals: { primary: "#a855f7", secondary: "#8b5cf6", tertiary: "#6366f1" },
       vote: { primary: "#6366f1", secondary: "#a855f7", tertiary: "#f43f5e" },
       account: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#10b981" },
-      settings: { primary: "#64748b", secondary: "#6366f1", tertiary: "#a855f7" },
+      settings: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#64748b" },
       featured: { primary: "#6366f1", secondary: "#f43f5e", tertiary: "#a855f7" },
     },
   }),
@@ -838,7 +984,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
   // ── Retro Sunset ─────────────────────────────────────────────────────
   // Palette: ["#355C7D", "#6C5B7B", "#C06C84", "#F67280", "#F8B195"]
   retroSunset: makeTheme("retroSunset", "Retro Sunset", "dark", { hex: "#1e40af" }, {
-    brand: { primary: "#f43f5e", secondary: "#a855f7" },
+    brand: { primary: "#f43f5e", secondary: "#d946ef" },
     tokenOverrides: {
       primary: { hex: "#fb7185" },
       secondary: { hex: "#a855f7" },
@@ -857,9 +1003,10 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       governance: { primary: "#f43f5e", secondary: "#ef4444" },
       invoicing: { primary: "#f97316", secondary: "#f43f5e" },
       settings: { primary: "#d946ef", secondary: "#f43f5e" },
+      liquidityPools: { primary: "#a855f7", secondary: "#8b5cf6" },
+      community: { primary: "#f43f5e", secondary: "#ec4899" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#a855f7" },
-    globalAccent: { primary: "#f43f5e", secondary: "#a855f7", tertiary: "#ec4899" },
     pageAccents: {
       instant_trade: { primary: "#f43f5e", secondary: "#ec4899", tertiary: "#f97316" },
       pool: { primary: "#a855f7", secondary: "#f43f5e", tertiary: "#8b5cf6" },
@@ -887,18 +1034,19 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       sidebarAccent: { hex: "#0f766e" },
     },
     sectionAccents: {
-      exchanging: { primary: "#14b8a6", secondary: "#06b6d4" },
-      transfer: { primary: "#14b8a6", secondary: "#3b82f6" },
+      exchanging: { primary: "#f59e0b", secondary: "#f97316" },
+      transfer: { primary: "#fcd34d", secondary: "#f59e0b" },
       debt: { primary: "#10b981", secondary: "#14b8a6" },
       assetCreation: { primary: "#f59e0b", secondary: "#f97316" },
       account: { primary: "#10b981", secondary: "#06b6d4" },
-      blockchain: { primary: "#14b8a6", secondary: "#0ea5e9" },
+      blockchain: { primary: "#0ea5e9", secondary: "#38bdf8" },
       governance: { primary: "#14b8a6", secondary: "#10b981" },
       invoicing: { primary: "#f59e0b", secondary: "#f97316" },
       settings: { primary: "#f59e0b", secondary: "#14b8a6" },
+      liquidityPools: { primary: "#10b981", secondary: "#06b6d4" },
+      community: { primary: "#f59e0b", secondary: "#f97316" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#06b6d4" },
-    globalAccent: { primary: "#14b8a6", secondary: "#f59e0b", tertiary: "#10b981" },
     pageAccents: {
       instant_trade: { primary: "#14b8a6", secondary: "#f59e0b", tertiary: "#10b981" },
       pool: { primary: "#06b6d4", secondary: "#14b8a6", tertiary: "#3b82f6" },
@@ -916,7 +1064,7 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
   // ── Cyber Luxury ─────────────────────────────────────────────────────
   // Palette: ["#000814", "#001D3D", "#003566", "#FFC300", "#ffd60a"]
   cyberLuxury: makeTheme("cyberLuxury", "Cyber Luxury", "dark", { hex: "#1e3a8a" }, {
-    brand: { primary: "#f59e0b", secondary: "#3b82f6" },
+    brand: { primary: "#f59e0b", secondary: "#1e40af" },
     tokenOverrides: {
       primary: { hex: "#fbbf24" },
       secondary: { hex: "#2563eb" },
@@ -928,16 +1076,17 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     sectionAccents: {
       exchanging: { primary: "#f59e0b", secondary: "#eab308" },
       transfer: { primary: "#f59e0b", secondary: "#f97316" },
-      debt: { primary: "#3b82f6", secondary: "#6366f1" },
+      debt: { primary: "#1e40af", secondary: "#3b82f6" },
       assetCreation: { primary: "#eab308", secondary: "#f59e0b" },
-      account: { primary: "#3b82f6", secondary: "#06b6d4" },
+      account: { primary: "#1e40af", secondary: "#06b6d4" },
       blockchain: { primary: "#06b6d4", secondary: "#3b82f6" },
       governance: { primary: "#f59e0b", secondary: "#3b82f6" },
       invoicing: { primary: "#eab308", secondary: "#f59e0b" },
       settings: { primary: "#6366f1", secondary: "#06b6d4" },
+      liquidityPools: { primary: "#06b6d4", secondary: "#3b82f6" },
+      community: { primary: "#f59e0b", secondary: "#eab308" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#3b82f6" },
-    globalAccent: { primary: "#f59e0b", secondary: "#3b82f6", tertiary: "#eab308" },
     pageAccents: {
       instant_trade: { primary: "#f59e0b", secondary: "#eab308", tertiary: "#3b82f6" },
       pool: { primary: "#3b82f6", secondary: "#f59e0b", tertiary: "#06b6d4" },
@@ -966,24 +1115,25 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
     },
     sectionAccents: {
       exchanging: { primary: "#f59e0b", secondary: "#f97316" },
-      transfer: { primary: "#f59e0b", secondary: "#eab308" },
+      transfer: { primary: "#fbbf24", secondary: "#f59e0b" },
       debt: { primary: "#3b82f6", secondary: "#2563eb" },
       assetCreation: { primary: "#f59e0b", secondary: "#f97316" },
       account: { primary: "#2563eb", secondary: "#3b82f6" },
       blockchain: { primary: "#f97316", secondary: "#fb923c" },
       governance: { primary: "#f59e0b", secondary: "#fbbf24" },
-      invoicing: { primary: "#f59e0b", secondary: "#f97316" },
+      invoicing: { primary: "#fbbf24", secondary: "#f59e0b" },
       settings: { primary: "#fb923c", secondary: "#f59e0b" },
+      liquidityPools: { primary: "#2563eb", secondary: "#3b82f6" },
+      community: { primary: "#f59e0b", secondary: "#f97316" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#64748b" },
-    globalAccent: { primary: "#f59e0b", secondary: "#9ca3af", tertiary: "#9ca3af" },
     pageAccents: {
       instant_trade: { primary: "#f59e0b", secondary: "#64748b", tertiary: "#f97316" },
-      pool: { primary: "#64748b", secondary: "#f59e0b", tertiary: "#6b7280" },
+      pool: { primary: "#f59e0b", secondary: "#64748b", tertiary: "#f97316" },
       stake: { primary: "#64748b", secondary: "#6b7280", tertiary: "#f59e0b" },
       transfer: { primary: "#f59e0b", secondary: "#f97316", tertiary: "#64748b" },
       dex: { primary: "#f59e0b", secondary: "#eab308", tertiary: "#64748b" },
-      proposals: { primary: "#64748b", secondary: "#f59e0b", tertiary: "#6b7280" },
+      proposals: { primary: "#f59e0b", secondary: "#f97316", tertiary: "#64748b" },
       vote: { primary: "#f59e0b", secondary: "#64748b", tertiary: "#8b5cf6" },
       account: { primary: "#64748b", secondary: "#6b7280", tertiary: "#f59e0b" },
       settings: { primary: "#64748b", secondary: "#71717a", tertiary: "#f59e0b" },
@@ -1000,22 +1150,22 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       secondary: { hex: "#7dd3fc" },
       accent: { hex: "#fcd34d" },
       ring: { hex: "#f472b6" },
-      destructive: { hex: "#f87171" },
       sidebarAccent: { hex: "#ec4899" },
     },
     sectionAccents: {
       exchanging: { primary: "#ec4899", secondary: "#f43f5e" },
       transfer: { primary: "#0ea5e9", secondary: "#3b82f6" },
-      debt: { primary: "#f59e0b", secondary: "#f97316" },
+      debt: { primary: "#14b8a6", secondary: "#2dd4bf" },
       assetCreation: { primary: "#ec4899", secondary: "#d946ef" },
       account: { primary: "#0ea5e9", secondary: "#06b6d4" },
       blockchain: { primary: "#a855f7", secondary: "#6366f1" },
-      governance: { primary: "#ec4899", secondary: "#0ea5e9" },
+      governance: { primary: "#0ea5e9", secondary: "#22d3ee" },
       invoicing: { primary: "#f59e0b", secondary: "#f97316" },
       settings: { primary: "#a855f7", secondary: "#0ea5e9" },
+      liquidityPools: { primary: "#0ea5e9", secondary: "#06b6d4" },
+      community: { primary: "#ec4899", secondary: "#f43f5e" },
     },
     statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
-    globalAccent: { primary: "#ec4899", secondary: "#0ea5e9", tertiary: "#f59e0b" },
     pageAccents: {
       instant_trade: { primary: "#ec4899", secondary: "#0ea5e9", tertiary: "#f59e0b" },
       pool: { primary: "#0ea5e9", secondary: "#ec4899", tertiary: "#3b82f6" },
@@ -1058,11 +1208,29 @@ const NEUTRAL_GRAYS = new Set([
   "#a8a29e",
 ]);
 
+// A single endpoint reads as "unthemed" when it is a dull mid-gray: low
+// saturation but not near-white (near-white anchors are a deliberate,
+// high-contrast choice, never stale data).
+function looksUnthemed(hex: string): boolean {
+  let hsl: { h: number; s: number; l: number } | null = null;
+  try {
+    hsl = hexToHsl(hex);
+  } catch {
+    return true;
+  }
+  if (!hsl) return true;
+  if (hsl.l > 90) return false;
+  return hsl.s < 14;
+}
+
 function isNeutralGray(pair: AccentPair | undefined): boolean {
   if (!pair) return false;
   const p = (pair.primary || "").toLowerCase();
   const s = (pair.secondary || "").toLowerCase();
-  return NEUTRAL_GRAYS.has(p) || NEUTRAL_GRAYS.has(s);
+  if (NEUTRAL_GRAYS.has(p) || NEUTRAL_GRAYS.has(s)) return true;
+  // Generalise beyond the hardcoded list: near-achromatic, non-white pairs
+  // count as unthemed too, so future grays and off-grays can't slip through.
+  return looksUnthemed(p) || looksUnthemed(s);
 }
 
 // A section uses its explicit override if set. Otherwise the pristine "default"
@@ -1114,15 +1282,30 @@ export function resolveStatusAll(theme: CustomTheme): Record<StatusRole, string>
   };
 }
 
+// Dark-mode variants (SYS-03). Returns the theme's dark triple/status map, or
+// null when the theme doesn't define one — null means "same in both modes"
+// (buildAccentVars falls back to the light values per role), never defaults.
+export function resolveDarkPageAccent(theme: CustomTheme, page: string): AccentTriple | null {
+  return theme?.darkPageAccents?.[page] || null;
+}
+
+export function resolveDarkStatusAll(theme: CustomTheme): Partial<Record<StatusRole, string>> | null {
+  if (!theme?.darkStatusAccents || !Object.keys(theme.darkStatusAccents).length) return null;
+  return theme.darkStatusAccents;
+}
+
 // Page component accent triple. Precedence: explicit per-page override →
-// theme-wide global accent → catalogued page default → brand fallback.
-// Precedence: explicit per-page override → theme-wide global accent → for the
-// pristine "default" theme the faithful catalogued default → otherwise the
-// theme's brand (so selecting/customizing a theme recolors page components) →
-// catalogued default → brand fallback.
+// theme-wide global accent (when set) → section-derived triple (non-default
+// themes) → catalogued page default (default theme) → brand fallback.
+// The section step keeps every page in its nav-section hue family on every
+// theme; hand-tuned pageAccents and user-set globalAccent still win.
 export function resolvePageAccent(theme: CustomTheme, page: string): AccentTriple {
   if (theme?.pageAccents?.[page]) return theme.pageAccents[page];
   if (theme?.globalAccent) return theme.globalAccent;
+  const section = PAGE_SECTIONS[page];
+  if (section && theme && theme.id !== "default") {
+    return resolveSectionTriple(theme, section);
+  }
   if (theme && theme.id === "default") {
     return PAGE_ACCENTS[page] || brandTriple(theme);
   }
@@ -1193,6 +1376,98 @@ export function duplicateDraftTheme(id: string): string | null {
   return newId;
 }
 
+export function isValidHexColor(hex: unknown): hex is string {
+  return (
+    typeof hex === "string" &&
+    /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex.trim())
+  );
+}
+
+function sanitizePaletteRef(ref: unknown): PaletteRef | undefined {
+  if (ref && typeof ref === "object" && isValidHexColor((ref as PaletteRef).hex)) {
+    return { hex: (ref as PaletteRef).hex.trim() };
+  }
+  return undefined;
+}
+
+// Drop malformed hex values from a theme object so a bad import or draft can
+// never emit "null" CSS variables (hexToHsl returns null for garbage, which
+// would serialize into the injected <style>). Returns a shallow-cleaned copy;
+// the seed is validated by callers (a theme without a valid seed is rejected).
+export function sanitizeThemeColors<T extends CustomTheme>(theme: T): T {
+  const cleanRefMap = (
+    map: Record<string, PaletteRef> | undefined
+  ): Record<string, PaletteRef> | undefined => {
+    if (!map) return map;
+    const out: Record<string, PaletteRef> = {};
+    for (const [k, v] of Object.entries(map)) {
+      const clean = sanitizePaletteRef(v);
+      if (clean) out[k] = clean;
+    }
+    return out;
+  };
+  const cleanPair = (
+    pair: AccentPair | undefined
+  ): AccentPair | undefined => {
+    if (!pair) return pair;
+    if (isValidHexColor(pair.primary) && isValidHexColor(pair.secondary)) {
+      return { primary: pair.primary.trim(), secondary: pair.secondary.trim() };
+    }
+    return undefined;
+  };
+  const cleanTriple = (
+    triple: AccentTriple | undefined
+  ): AccentTriple | undefined => {
+    if (!triple) return triple;
+    if (
+      isValidHexColor(triple.primary) &&
+      isValidHexColor(triple.secondary) &&
+      isValidHexColor(triple.tertiary)
+    ) {
+      return {
+        primary: triple.primary.trim(),
+        secondary: triple.secondary.trim(),
+        tertiary: triple.tertiary.trim(),
+      };
+    }
+    return undefined;
+  };
+  const cleanRecord = (
+    map: Record<string, any> | undefined,
+    clean: (v: any) => any
+  ): Record<string, any> | undefined => {
+    if (!map) return map;
+    const out: Record<string, any> = {};
+    for (const [k, v] of Object.entries(map)) {
+      const c = clean(v);
+      if (c) out[k] = c;
+    }
+    return out;
+  };
+  const cleanStatus = (
+    map: Partial<Record<StatusRole, string>> | undefined
+  ): Partial<Record<StatusRole, string>> | undefined => {
+    if (!map) return map;
+    const out: Partial<Record<StatusRole, string>> = {};
+    for (const [k, v] of Object.entries(map)) {
+      if (isValidHexColor(v)) out[k as StatusRole] = (v as string).trim();
+    }
+    return out;
+  };
+  return {
+    ...theme,
+    seed: sanitizePaletteRef(theme.seed) || { hex: "#7c3aed" },
+    tokenOverrides: cleanRefMap(theme.tokenOverrides) || {},
+    brand: cleanPair(theme.brand),
+    sectionAccents: cleanRecord(theme.sectionAccents, cleanPair) || {},
+    statusAccents: cleanStatus(theme.statusAccents) || {},
+    pageAccents: cleanRecord(theme.pageAccents, cleanTriple) || {},
+    globalAccent: cleanTriple(theme.globalAccent),
+    darkPageAccents: cleanRecord(theme.darkPageAccents, cleanTriple),
+    darkStatusAccents: cleanStatus(theme.darkStatusAccents),
+  };
+}
+
 export function saveDraftTheme(
   draft: CustomTheme,
   editedName: string
@@ -1205,7 +1480,7 @@ export function saveDraftTheme(
   );
   if (existingId) {
     // Overwrite existing theme (keep its id)
-    const { draft: _draft, ...saved } = { ...draft, id: existingId, name: trimmedName };
+    const { draft: _draft, ...saved } = sanitizeThemeColors({ ...draft, id: existingId, name: trimmedName });
     themes[existingId] = saved;
     $customTheme.setKey("themes", themes);
     $draftTheme.set(null);
@@ -1214,7 +1489,7 @@ export function saveDraftTheme(
   }
   // Create new theme
   const newId = genId();
-  const { draft: _draft, ...saved } = { ...draft, id: newId, name: trimmedName };
+  const { draft: _draft, ...saved } = sanitizeThemeColors({ ...draft, id: newId, name: trimmedName });
   themes[newId] = saved;
   $customTheme.setKey("themes", themes);
   $draftTheme.set(null);
@@ -1359,6 +1634,44 @@ export function updatePageAccent(id: string, page: string, triple: AccentTriple 
   $customTheme.setKey("themes", themes);
 }
 
+export function updateDarkPageAccent(id: string, page: string, triple: AccentTriple | null) {
+  const draft = $draftTheme.get();
+  if (draft?.id === id) {
+    const darkPageAccents = { ...(draft.darkPageAccents || {}) };
+    if (!triple) delete darkPageAccents[page];
+    else darkPageAccents[page] = triple;
+    $draftTheme.set({ ...draft, darkPageAccents });
+    return;
+  }
+  const themes = { ...$customTheme.get().themes };
+  const theme = themes[id];
+  if (!theme) return;
+  const darkPageAccents = { ...(theme.darkPageAccents || {}) };
+  if (!triple) delete darkPageAccents[page];
+  else darkPageAccents[page] = triple;
+  themes[id] = { ...theme, darkPageAccents };
+  $customTheme.setKey("themes", themes);
+}
+
+export function updateDarkStatusAccent(id: string, role: StatusRole, color: string | null) {
+  const draft = $draftTheme.get();
+  if (draft?.id === id) {
+    const darkStatusAccents = { ...(draft.darkStatusAccents || {}) };
+    if (!color) delete darkStatusAccents[role];
+    else darkStatusAccents[role] = color;
+    $draftTheme.set({ ...draft, darkStatusAccents });
+    return;
+  }
+  const themes = { ...$customTheme.get().themes };
+  const theme = themes[id];
+  if (!theme) return;
+  const darkStatusAccents = { ...(theme.darkStatusAccents || {}) };
+  if (!color) delete darkStatusAccents[role];
+  else darkStatusAccents[role] = color;
+  themes[id] = { ...theme, darkStatusAccents };
+  $customTheme.setKey("themes", themes);
+}
+
 export function updateGlobalAccent(id: string, triple: AccentTriple | null) {
   const draft = $draftTheme.get();
   if (draft?.id === id) {
@@ -1423,10 +1736,10 @@ export function exportTheme(id: string): string {
 export function importTheme(json: string): string | null {
   try {
     const parsed = JSON.parse(json) as CustomTheme;
-    if (!parsed || !parsed.seed) return null;
+    if (!parsed || !sanitizePaletteRef(parsed.seed)) return null;
     const id = genId();
     const themes = { ...$customTheme.get().themes };
-    themes[id] = {
+    const cleaned = sanitizeThemeColors({
       ...parsed,
       id,
       name: parsed.name ? `${parsed.name} (imported)` : "Imported theme",
@@ -1436,7 +1749,11 @@ export function importTheme(json: string): string | null {
       statusAccents: parsed.statusAccents || {},
       pageAccents: parsed.pageAccents || {},
       globalAccent: parsed.globalAccent,
-    };
+      darkPageAccents: parsed.darkPageAccents,
+      darkStatusAccents: parsed.darkStatusAccents,
+    });
+    const { draft: _draft, ...saved } = cleaned;
+    themes[id] = saved;
     $customTheme.setKey("themes", themes);
     $customTheme.setKey("activeThemeId", id);
     return id;
@@ -1468,6 +1785,12 @@ export function compileThemeCss(theme: CustomTheme): string {
 
 // Persist the active (global) theme CSS so the blocking <head> script can
 // apply it before first paint on the next load, just like the dark-mode class.
+// NOTE (accepted tradeoff, SYS-09): only the global token CSS is persisted,
+// not the per-page --accent-* vars (which need $currentPage, unavailable to
+// the head script). On reload onto a colourful non-default page there can be a
+// one-frame accent flash (default-purple → theme) after hydration; tokens
+// themselves are FOUC-free. Fixing fully would require a persisted
+// pathname→slug→accent map in the head script.
 function persistActiveCss() {
   if (typeof localStorage === "undefined") return;
   try {

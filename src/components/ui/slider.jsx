@@ -14,30 +14,33 @@ const VARIANTS = {
     range: "bg-[hsl(var(--accent-1))]",
     thumb: "border-[hsl(var(--accent-1)/0.50)] bg-[hsl(var(--accent-1))] shadow-[color:hsl(var(--accent-1)/0.30)]",
   },
+  // Named variants map to theme roles (not fixed hues) so settings sliders
+  // follow the active theme while keeping per-setting variety. Variant names
+  // are kept stable for existing callers (e.g. ConfigureVisuals).
   violet: {
-    track: "bg-violet-500/20",
-    range: "bg-violet-500",
-    thumb: "border-violet-400/50 bg-violet-500 shadow-violet-500/30",
+    track: "bg-[hsl(var(--accent-1)/0.20)]",
+    range: "bg-[hsl(var(--accent-1))]",
+    thumb: "border-[hsl(var(--accent-1)/0.50)] bg-[hsl(var(--accent-1))] shadow-[hsl(var(--accent-1)/0.30)]",
   },
   cyan: {
-    track: "bg-cyan-500/20",
-    range: "bg-cyan-500",
-    thumb: "border-cyan-400/50 bg-cyan-500 shadow-cyan-500/30",
+    track: "bg-[hsl(var(--accent-2)/0.20)]",
+    range: "bg-[hsl(var(--accent-2))]",
+    thumb: "border-[hsl(var(--accent-2)/0.50)] bg-[hsl(var(--accent-2))] shadow-[hsl(var(--accent-2)/0.30)]",
   },
   emerald: {
-    track: "bg-emerald-500/20",
-    range: "bg-emerald-500",
-    thumb: "border-emerald-400/50 bg-emerald-500 shadow-emerald-500/30",
+    track: "bg-[hsl(var(--accent-success)/0.20)]",
+    range: "bg-[hsl(var(--accent-success))]",
+    thumb: "border-[hsl(var(--accent-success)/0.50)] bg-[hsl(var(--accent-success))] shadow-[hsl(var(--accent-success)/0.30)]",
   },
   amber: {
-    track: "bg-amber-500/20",
-    range: "bg-amber-500",
-    thumb: "border-amber-400/50 bg-amber-500 shadow-amber-500/30",
+    track: "bg-[hsl(var(--accent-warning)/0.20)]",
+    range: "bg-[hsl(var(--accent-warning))]",
+    thumb: "border-[hsl(var(--accent-warning)/0.50)] bg-[hsl(var(--accent-warning))] shadow-[hsl(var(--accent-warning)/0.30)]",
   },
   rose: {
-    track: "bg-rose-500/20",
-    range: "bg-rose-500",
-    thumb: "border-rose-400/50 bg-rose-500 shadow-rose-500/30",
+    track: "bg-[hsl(var(--accent-danger)/0.20)]",
+    range: "bg-[hsl(var(--accent-danger))]",
+    thumb: "border-[hsl(var(--accent-danger)/0.50)] bg-[hsl(var(--accent-danger))] shadow-[hsl(var(--accent-danger)/0.30)]",
   },
 };
 

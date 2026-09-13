@@ -155,6 +155,13 @@
         "hover3": "Os preços de liquidação externos são derivados de produtores de rações configurados.",
         "hover4": "A exposição a preços externos pode representar um risco para posições de dívida garantidas."
     },
+    "settlement_bids": {
+        "title": "Dar lance na liquidação",
+        "subtitle": "Dar lances nos fundos de liquidação de smartcoins",
+        "hover1": "Smartcoins com fundo de liquidação positivo detêm garantias aguardando reclamação.",
+        "hover2": "Dê um lance para reivindicar uma parte do fundo de liquidação.",
+        "hover3": "Explore todos os fundos da cadeia em uma única página."
+    },
     "tfunds": {
         "title": "Fundos Same-T",
         "subtitle": "Visualize, crie, atualize e exclua fundos Same-T!",

@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - Publier un flux de prix",
         "/recent-activity": "Activité récente",
         "/settlement": "Formulaire d'émission de smartcoins Bitshares",
+        "/settlement_bids": "Bitshares - Enchérir sur les fonds de règlement",
         "/smartcoin": "Formulaire d'émission de smartcoins Bitshares",
         "/smartcoins": "Smartcoins Bitshares - Trouver un smartcoin à emprunter",
         "/stake": "Formulaire de placement en pool Bitshares",

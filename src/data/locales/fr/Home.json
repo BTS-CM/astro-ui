@@ -155,6 +155,13 @@
         "hover3": "Les prix de règlement externe sont dérivés des producteurs d'aliments configurés.",
         "hover4": "L’exposition aux flux de prix externes peut présenter un risque pour les positions de dette garantie."
     },
+    "settlement_bids": {
+        "title": "Enchérir sur le règlement",
+        "subtitle": "Enchérir sur les fonds de règlement des smartcoins",
+        "hover1": "Les smartcoins avec un fonds de règlement positif détiennent des garanties en attente de réclamation.",
+        "hover2": "Placez une offre pour réclamer une part du fonds de règlement.",
+        "hover3": "Parcourez tous les fonds de la chaîne depuis une seule page."
+    },
     "tfunds": {
         "title": "Fonds identiques",
         "subtitle": "Consultez, créez, mettez à jour, supprimez les fonds Same-T !",

@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - Preisfeed veröffentlichen",
         "/recent-activity": "Letzte Aktivitäten",
         "/settlement": "Bitshares Formular zur Smartcoin-Ausgabe",
+        "/settlement_bids": "Bitshares - Auf Abrechnungsfonds bieten",
         "/smartcoin": "Bitshares Formular zur Smartcoin-Ausgabe",
         "/smartcoins": "Bitshares Smartcoins - Finden Sie einen Smartcoin zum Ausleihen",
         "/stake": "Bitshares Formular für Pool-Staking",

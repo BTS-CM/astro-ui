@@ -75,6 +75,7 @@
     "portfolio-open-orders": "Utilisez cette page pour consulter vos ordres à cours limité et les négocier, les mettre à jour ou les annuler rapidement.",
     "portfolio-recent-activity": "Utilisez cette page pour parcourir vos dernières opérations en chaîne et inspecter le JSON sous-jacent.",
     "settlement": "Utilisez le formulaire ci-dessous pour enchérir sur les fonds de règlement d'un smartcoin",
+    "settlement_bids": "Parcourez tous les smartcoins détenant des garanties dans leur fonds de règlement, et enchérissez pour en réclamer une part",
     "smartcoin": "Utilisez le formulaire ci-dessous pour émettre une dette garantie",
     "smartcoins": "Utilisez l'interface ci-dessous pour localiser un actif à emprunter pour exister",
     "stake": "Utilisez ce formulaire pour miser vos actifs dans des pools de liquidité",
@@ -122,7 +123,9 @@
     "explorer": "Utilisez cette page pour rechercher tout compte, actif, objet, hash de transaction ou numéro de bloc et voir le JSON brut avec copie et favoris.",
     "top-operations": "Utilisez cette page pour voir les opérations blockchain les plus fréquemment exécutées au cours des 30 derniers jours, classées par occurrence.",
     "change_password": "Utilisez le formulaire ci-dessous pour changer le mot de passe de votre portefeuille cloud via une opération account_update.",
-    "trollbox": "Discutez avec la communauté dans des canaux qui vivent entièrement sur la blockchain BitShares."
+    "trollbox": "Discutez avec la communauté dans des canaux qui vivent entièrement sur la blockchain BitShares.",
+    "committee_parameters": "Propose new global blockchain parameters. Changes apply at maintenance after committee approval.",
+    "page_themes": "Assign a different saved theme to each page, or keep every page on the active theme."
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

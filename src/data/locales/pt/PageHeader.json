@@ -75,6 +75,7 @@
     "portfolio-open-orders": "Use esta página para revisar seus pedidos com limite aberto e negociá-los, atualizá-los ou cancelá-los rapidamente.",
     "portfolio-recent-activity": "Use esta página para navegar pelas suas operações on-chain mais recentes e inspecionar o JSON subjacente.",
     "settlement": "Use o formulário abaixo para fazer lances nos fundos de liquidação de uma smartcoin",
+    "settlement_bids": "Explore todas as smartcoins que mantêm garantia em seu fundo de liquidação e faça lances para reivindicar uma parte",
     "smartcoin": "Use o formulário abaixo para emitir dívida garantida",
     "smartcoins": "Use a interface abaixo para localizar um ativo para empréstimo",
     "stake": "Use este formulário para apostar seus ativos em pools de liquidez",
@@ -122,7 +123,9 @@
     "explorer": "Use esta página para pesquisar qualquer conta, ativo, objeto, hash de transação ou número de bloco e ver o JSON com cópia e favoritos.",
     "top-operations": "Use esta página para ver as operações de blockchain mais frequentemente executadas nos últimos 30 dias, classificadas por ocorrência.",
     "change_password": "Use o formulário abaixo para alterar a senha da sua carteira na nuvem via operação account_update.",
-    "trollbox": "Conversa com a comunidade em canais que vivem inteiramente na blockchain BitShares."
+    "trollbox": "Conversa com a comunidade em canais que vivem inteiramente na blockchain BitShares.",
+    "committee_parameters": "Propose new global blockchain parameters. Changes apply at maintenance after committee approval.",
+    "page_themes": "Assign a different saved theme to each page, or keep every page on the active theme."
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

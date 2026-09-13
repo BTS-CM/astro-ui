@@ -1,0 +1,19 @@
+{
+    "title": "Pujar por fondos de liquidación",
+    "description": "Todas las smartcoins cuyo fondo de liquidación tiene garantías. Puja para reclamar una parte.",
+    "searchPlaceholder": "Buscar símbolo...",
+    "searchLabel": "Buscar activos por símbolo",
+    "clearSearch": "Borrar búsqueda",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fondo",
+    "listingFunds": "Listado {{count}} activos con fondos de liquidación",
+    "noFunds": "No se encontraron fondos de liquidación",
+    "noFundsDescription": "Ninguna smartcoin tiene garantías en su fondo de liquidación actualmente.",
+    "fund": "Fondo",
+    "collateral": "Garantía",
+    "bidButton": "Pujar",
+    "showingOf": "Mostrando {{filtered}} de {{total}}",
+    "noFilterResults": "Ningún activo coincide con la búsqueda actual",
+    "clearFilters": "Borrar búsqueda"
+}

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
@@ -179,6 +180,13 @@ const expiryColor = {
   expired: "text-muted-foreground/60 line-through",
 };
 
+const expiryDot = {
+  healthy: "bg-[hsl(var(--accent-success))]",
+  soon: "bg-[hsl(var(--accent-warning))]",
+  imminent: "bg-[hsl(var(--accent-danger))]",
+  expired: "bg-muted-foreground/40",
+};
+
 const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrders, assets, now, showDialog, orderID, setOrderID, setShowDialog, t, usr }) {
   const order = sortedOpenOrders?.[index];
   if (!order) return null;
@@ -228,12 +236,20 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
   return (
     <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
       {/* Mobile: stacked card */}
-      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-cyan-500/30 block md:hidden">
+      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] block md:hidden">
         <CardContent className="p-3 space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-foreground truncate">
               {readableBaseAmount} {sellAsset?.symbol ?? "?"} → {readableQuoteAmount} {buyAsset?.symbol ?? "?"}
             </span>
+            <a href={marketHref} title={marketHref}>
+              <Badge
+                variant="outline"
+                className="shrink-0 border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))] text-[10px] px-1.5 py-0 font-mono"
+              >
+                {sellAsset?.symbol ?? "?"}→{buyAsset?.symbol ?? "?"}
+              </Badge>
+            </a>
           </div>
           <div className="flex items-center gap-3 text-xs">
             <CopyIdButton orderId={orderId} t={t} />
@@ -246,7 +262,8 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
             <TooltipProvider delayDuration={300}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className={cn("text-xs font-semibold cursor-help whitespace-nowrap", expiryColor[expiryStatus])}>
+                  <div className={cn("text-xs font-semibold cursor-help whitespace-nowrap flex items-center gap-1.5", expiryColor[expiryStatus])}>
+                    <span className={cn("inline-block h-1.5 w-1.5 rounded-full shrink-0", expiryDot[expiryStatus])} />
                     {expiryText}
                   </div>
                 </TooltipTrigger>
@@ -278,10 +295,18 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
       </Card>
 
       {/* Desktop: two-row layout */}
-      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-cyan-500/30 hidden md:block">
+      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] hidden md:block">
         <CardContent className="p-3">
           <div className="grid grid-cols-12 gap-4 items-center">
             <div className="col-span-5 flex items-center gap-2 min-w-0">
+              <a href={marketHref} title={marketHref} className="shrink-0">
+                <Badge
+                  variant="outline"
+                  className="border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))] text-[10px] px-1.5 py-0 font-mono"
+                >
+                  {sellAsset?.symbol ?? "?"}→{buyAsset?.symbol ?? "?"}
+                </Badge>
+              </a>
               <span className="text-sm font-semibold text-foreground truncate">
                 {readableBaseAmount} {sellAsset?.symbol ?? "?"} → {readableQuoteAmount} {buyAsset?.symbol ?? "?"}
               </span>
@@ -294,7 +319,8 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
               <TooltipProvider delayDuration={300}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className={cn("text-sm font-semibold cursor-help whitespace-nowrap text-right", expiryColor[expiryStatus])}>
+                    <div className={cn("text-sm font-semibold cursor-help whitespace-nowrap text-right flex items-center justify-end gap-1.5", expiryColor[expiryStatus])}>
+                    <span className={cn("inline-block h-1.5 w-1.5 rounded-full shrink-0", expiryDot[expiryStatus])} />
                     {expiryText}
                   </div>
                 </TooltipTrigger>
@@ -399,7 +425,7 @@ export default function PortfolioOpenOrders({
   const [orderID, setOrderID] = useState();
   const [showDialog, setShowDialog] = useState(false);
   const [now, setNow] = useState(() => Date.now());
-  const [rowHeight, setRowHeight] = useState(88);
+  const [rowHeight, setRowHeight] = useState(108);
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
@@ -410,7 +436,9 @@ export default function PortfolioOpenOrders({
   useEffect(() => {
     if (typeof window === "undefined") return;
     const update = () => {
-      setRowHeight(window.innerWidth < 768 ? 158 : 88);
+      // Stride must exceed the tallest row content (desktop two-line card ≈
+      // 96px, mobile stacked card ≈ 160px); anything smaller overlaps rows.
+      setRowHeight(window.innerWidth < 768 ? 180 : 108);
     };
     update();
     window.addEventListener("resize", update);
@@ -499,44 +527,64 @@ export default function PortfolioOpenOrders({
   return (
     <div className="container mx-auto mt-5 mb-5 max-w-5xl text-foreground">
       <div className="grid grid-cols-1 gap-3">
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
-          <CardTitle className="flex items-center justify-between gap-3 px-5 py-4">
+        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl"
+          />
+          <div className="relative p-5">
+            <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                <ListOrdered className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] shrink-0">
+                <ListOrdered className="h-4.5 w-4.5" strokeWidth={2.25} />
               </span>
               <div className="min-w-0">
-                <span className="text-xl font-bold tracking-tight">
+                <h2 className="text-lg sm:text-xl font-semibold tracking-tight">
                   {t("PortfolioTabs:openOrdersTitle")}
-                </span>
+                </h2>
               </div>
             </div>
-            <Button
-              size="sm"
-              onClick={() => {
-                setOpenOrders(undefined);
-                if (usr && usr.id) {
-                  revalidateAccountLimitOrders(usr.chain, usr.id);
-                }
-                setOpenOrderCounter((c) => c + 1);
-              }}
-              disabled={openOrdersLoading}
-              aria-busy={openOrdersLoading}
-              className="gap-2 bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-foreground"
-            >
-              {openOrdersLoading ? (
-                <Loader2Icon className="h-4 w-4 animate-spin" />
-              ) : (
-                <RefreshCw className="h-4 w-4" />
-              )}
-              <span>{t("PortfolioTabs:refreshOpenOrdersButton")}</span>
-            </Button>
-          </CardTitle>
-        </Card>
-
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <CardContent>
+            <div className="flex items-center gap-2 shrink-0">
+              {hasOrders ? (
+                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
+                  {sortedOpenOrders.length}
+                </span>
+              ) : null}
+              <Button
+                size="sm"
+                onClick={() => {
+                  setOpenOrders(undefined);
+                  if (usr && usr.id) {
+                    revalidateAccountLimitOrders(usr.chain, usr.id);
+                  }
+                  setOpenOrderCounter((c) => c + 1);
+                }}
+                disabled={openOrdersLoading}
+                aria-busy={openOrdersLoading}
+                className="gap-2 bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]"
+              >
+                {openOrdersLoading ? (
+                  <Loader2Icon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4" />
+                )}
+                <span>{t("PortfolioTabs:refreshOpenOrdersButton")}</span>
+              </Button>
+            </div>
+            </div>
+            <span
+              aria-hidden="true"
+              className="block h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.25)] to-transparent my-4"
+            />
+            <div className="mt-1">
             {openOrdersLoading && !hasOrders ? (
               <div
                 className="space-y-2"
@@ -546,7 +594,7 @@ export default function PortfolioOpenOrders({
                 {[0, 1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 p-4 rounded-xl border border-border/60 bg-accent/20"
+                    className="flex items-center gap-3 p-4 rounded-2xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.05)] to-transparent"
                   >
                     <Skeleton className="h-5 w-12 rounded-full bg-accent/50" />
                     <div className="flex-1 space-y-1.5">
@@ -565,8 +613,9 @@ export default function PortfolioOpenOrders({
               </div>
             ) : hasOrders ? (
               <>
-                <div className="flex items-center gap-2 mb-2 mt-2">
-                  <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+                <div className="flex items-center gap-2 mb-2 mt-2 flex-wrap">
+                  <ArrowUpDown className="h-3.5 w-3.5 text-[hsl(var(--accent-1-fg))]" />
+                  <span className="text-xs font-medium text-foreground/70">{t("PortfolioTabs:sortLabel", { defaultValue: "Sort" })}</span>
                   <Select value={sortBy} onValueChange={setSortBy}>
                     <SelectTrigger className="h-8 w-[160px] text-xs bg-accent/30 dark:bg-white/[0.05] border-border text-foreground/70">
                       <SelectValue className="text-foreground/70" />
@@ -596,7 +645,7 @@ export default function PortfolioOpenOrders({
                 </div>
               </>
             ) : (
-              <Empty className="mt-2 border border-border/60 rounded-xl bg-accent/20">
+              <Empty className="mt-2 border border-[hsl(var(--accent-1)/0.2)] rounded-xl bg-[hsl(var(--accent-1)/0.04)]">
                 <EmptyHeader>
                   <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
                     <ClipboardList className="h-6 w-6" />
@@ -607,7 +656,7 @@ export default function PortfolioOpenOrders({
                   </EmptyDescription>
                 </EmptyHeader>
                 <EmptyContent>
-                  <Button asChild className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-foreground">
+                  <Button asChild className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]">
                     <a href="/dex.html">
                       {t("PortfolioTabs:noOpenOrdersCta")}
                     </a>
@@ -615,7 +664,8 @@ export default function PortfolioOpenOrders({
                 </EmptyContent>
               </Empty>
             )}
-          </CardContent>
+            </div>
+          </div>
         </Card>
 
         <DexLiveFooterCard

@@ -53,6 +53,35 @@ function extraParamLabel(key) {
   return EXTRA_PARAM_LABELS[key] || key.replace(/_/g, " ");
 }
 
+// Operation family tints for the op-ID badges (protocol-stable ID sets).
+// Full literal class strings — Tailwind cannot build them dynamically.
+const OP_FAMILY_IDS = {
+  1: new Set([0, 38, 39, 40, 41]),
+  2: new Set([1, 2, 3, 4, 45, 46, 77]),
+  3: new Set([5, 6, 7, 8, 9]),
+  success: new Set([10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 42, 43, 47, 48]),
+  warning: new Set([20, 21, 22, 23, 24, 29, 30, 31, 34]),
+  info: new Set([25, 26, 27, 28, 32, 33, 49, 50, 51, 52, 53]),
+};
+
+const OP_FAMILY_TINT = {
+  1: "border-[hsl(var(--accent-1)/0.35)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))]",
+  2: "border-[hsl(var(--accent-2)/0.35)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))]",
+  3: "border-[hsl(var(--accent-3)/0.35)] bg-[hsl(var(--accent-3)/0.1)] text-[hsl(var(--accent-3-fg))]",
+  success:
+    "border-[hsl(var(--accent-success)/0.35)] bg-[hsl(var(--accent-success)/0.1)] text-[hsl(var(--accent-success-fg))]",
+  warning:
+    "border-[hsl(var(--accent-warning)/0.35)] bg-[hsl(var(--accent-warning)/0.1)] text-[hsl(var(--accent-warning-fg))]",
+  info: "border-[hsl(var(--accent-info)/0.35)] bg-[hsl(var(--accent-info)/0.1)] text-[hsl(var(--accent-info-fg))]",
+};
+
+function opFamilyTint(opId) {
+  for (const [family, ids] of Object.entries(OP_FAMILY_IDS)) {
+    if (ids.has(opId)) return OP_FAMILY_TINT[family];
+  }
+  return null;
+}
+
 function formatFee(satoshis, symbol) {
   return `${humanReadableFloat(Number(satoshis), 5).toFixed(5)} ${symbol}`;
 }
@@ -66,11 +95,13 @@ function DesktopRow({ index, style, rows, symbol, ltmFactor }) {
 
   return (
     <div style={style}>
-      <div className="h-full flex flex-col justify-center px-4 py-2 border border-transparent hover:border-border/60 bg-card/40 rounded-lg">
+      <div className={`h-full flex flex-col justify-center px-4 py-2 border border-transparent border-l-2 hover:border-border/60 hover:bg-[hsl(var(--accent-1)/0.04)] rounded-lg ${index % 2 === 1 ? "bg-[hsl(var(--accent-1)/0.02)]" : "bg-card/40"}`}>
         <div className={DESKTOP_GRID}>
           <Badge
             variant="outline"
-            className="justify-center font-mono text-[11px] text-muted-foreground"
+            className={`justify-center font-mono text-[11px] ${
+              opFamilyTint(row.opId) ?? "text-muted-foreground"
+            }`}
           >
             {row.opId}
           </Badge>
@@ -114,7 +145,10 @@ function DesktopRow({ index, style, rows, symbol, ltmFactor }) {
           <div className="flex flex-wrap gap-x-5 gap-y-0.5 mt-1 pl-[68px] text-xs text-muted-foreground">
             {row.extras.map(([key, satoshis]) => (
               <span key={key}>
-                {extraParamLabel(key)}:{" "}
+                <span className="text-[hsl(var(--accent-2-fg))]">
+                  {extraParamLabel(key)}
+                </span>
+                :{" "}
                 <span className="font-mono">{formatFee(satoshis, symbol)}</span>
                 <span className="ml-1 opacity-70">
                   ({formatFee(satoshis * ltmFactor, symbol)})
@@ -159,11 +193,13 @@ function MobileRow({ index, style, rows, symbol, ltmFactor }) {
 
   return (
     <div style={style}>
-      <div className="h-full px-3 py-2 border border-transparent bg-card/40 rounded-lg">
+      <div className={`h-full px-3 py-2 border border-transparent hover:border-border/60 hover:bg-[hsl(var(--accent-1)/0.04)] rounded-lg ${index % 2 === 1 ? "bg-[hsl(var(--accent-1)/0.02)]" : "bg-card/40"}`}>
         <div className="flex items-center gap-2">
           <Badge
             variant="outline"
-            className="font-mono text-[11px] text-muted-foreground shrink-0"
+            className={`font-mono text-[11px] shrink-0 ${
+              opFamilyTint(row.opId) ?? "text-muted-foreground"
+            }`}
           >
             {row.opId}
           </Badge>
@@ -199,7 +235,9 @@ function MobileRow({ index, style, rows, symbol, ltmFactor }) {
                 key={key}
                 className="flex items-center justify-between gap-2 min-w-0"
               >
-                <span className="shrink-0">{extraParamLabel(key)}</span>
+                <span className="shrink-0 text-[hsl(var(--accent-2-fg))]">
+                  {extraParamLabel(key)}
+                </span>
                 <span className="font-mono truncate">
                   {formatFee(satoshis, symbol)}
                   <span className="ml-1 opacity-70">
@@ -370,6 +408,7 @@ export default function NetworkFees() {
 
         {/* Fee schedule list */}
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
               <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
@@ -428,7 +467,18 @@ export default function NetworkFees() {
                     className={`${DESKTOP_GRID} px-4 pb-2 mb-1 border-b border-border/60 text-xs font-semibold uppercase tracking-wider text-muted-foreground`}
                   >
                     {headings.map((heading, index) => (
-                      <span key={index} className={index > 1 ? "text-right" : ""}>
+                      <span
+                        key={index}
+                        className={
+                          index > 1
+                            ? `text-right rounded px-1 -mx-1 ${
+                                index > 3
+                                  ? "bg-[hsl(var(--accent-success)/0.08)] text-[hsl(var(--accent-success-fg))]"
+                                  : ""
+                              }`
+                            : ""
+                        }
+                      >
                         {heading}
                       </span>
                     ))}

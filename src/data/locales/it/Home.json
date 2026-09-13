@@ -155,6 +155,13 @@
         "hover3": "I prezzi di liquidazione esterni derivano dai produttori di mangimi configurati.",
         "hover4": "L’esposizione ai feed di prezzo esterni può rappresentare un rischio per le posizioni debitorie collateralizzate."
     },
+    "settlement_bids": {
+        "title": "Offri sul regolamento",
+        "subtitle": "Offri sui fondi di regolamento degli smartcoin",
+        "hover1": "Gli smartcoin con un fondo di regolamento positivo detengono garanzie in attesa di reclamo.",
+        "hover2": "Fai un'offerta per reclamare una quota del fondo di regolamento.",
+        "hover3": "Sfoglia tutti i fondi della chain da un'unica pagina."
+    },
     "tfunds": {
         "title": "Fondi Same-T",
         "subtitle": "Visualizza, crea, aggiorna, elimina i fondi Same-T!",

@@ -708,9 +708,9 @@ export default function CreateTicket() {
                     })}
                   </span>
                   {requestExceedsBalance && requestAmount ? (
-                    <span className="text-xs text-red-500">
-                      {t(
-                        "CreateTicket:requestCard.exceedsBalance",
+<span className="text-xs text-[hsl(var(--accent-danger-fg))]">
+{t(
+"CreateTicket:requestCard.exceedsBalance",
                         "Requested amount cannot exceed your BTS balance."
                       )}
                     </span>
@@ -824,7 +824,7 @@ export default function CreateTicket() {
                 {userTotals.byType.liquid > 0 && (
                   <div className="flex items-center justify-between rounded-lg border border-border/60 bg-card/40 px-3 py-2 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
                       <span className="text-muted-foreground">{t("CreateTicket:lockTypeLiquid", "Liquid")}</span>
                     </div>
                     <span className="font-mono text-xs tabular-nums">{userTotals.byType.liquid.toFixed(5)} {assetSymbol}</span>
@@ -997,9 +997,9 @@ export default function CreateTicket() {
                   </div>
                 </div>
                 {isSelectedFrozen ? (
-                  <span className="text-xs text-amber-500">
-                    {t(
-                      "CreateTicket:updateDialog.frozenWarning",
+<span className="text-xs text-[hsl(var(--accent-warning-fg))]">
+{t(
+"CreateTicket:updateDialog.frozenWarning",
                       "This ticket is locked forever and cannot be updated or withdrawn on-chain."
                     )}
                   </span>

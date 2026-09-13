@@ -83,7 +83,10 @@ import {
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
+import { $userBlockList, $blockList, addBlockedUser } from "@/stores/blocklist.ts";
+
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import {
   $favouriteAssets,
   $favouritePairs,
@@ -124,6 +127,7 @@ import {
   validateAttachmentShape,
 } from "@/lib/trollboxAttach.js";
 import { attachmentNoun } from "@/lib/forumPost.js";
+import { humanReadableFloat } from "@/lib/common.js";
 import { buildRemoveOp } from "@/lib/customRemove.js";
 import { getTopDonators } from "@/nanoeffects/TopDonators.ts";
 import {
@@ -134,6 +138,7 @@ import {
 } from "@/config/donations.ts";
 import {
   TROLLBOX_OP_ID,
+  CUSTOM_OPERATION_ID,
   buildMessageKey,
   buildTrollboxData,
   maxMessageBytes,
@@ -266,28 +271,28 @@ function donorBadgeClassName(rank) {
   const base =
     "inline-flex shrink-0 items-center rounded border px-1.5 py-px text-[10px] font-medium";
   if (rank === 1) {
-    return `${base} border-yellow-500/60 bg-yellow-500/15 text-yellow-700 dark:text-yellow-300`;
+    return `${base} border-[hsl(var(--accent-warning)/0.6)] bg-[hsl(var(--accent-warning)/0.15)] text-[hsl(var(--accent-warning-fg))]`;
   }
   if (rank === 2) {
-    return `${base} border-slate-400/60 bg-slate-400/15 text-slate-600 dark:text-slate-300`;
+    return `${base} border-border bg-muted text-muted-foreground`;
   }
   if (rank === 3) {
-    return `${base} border-amber-700/60 bg-amber-700/15 text-amber-700 dark:text-amber-400`;
+    return `${base} border-[hsl(var(--accent-warning)/0.5)] bg-[hsl(var(--accent-warning)/0.08)] text-[hsl(var(--accent-warning-fg))]`;
   }
-  return `${base} border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400`;
+  return `${base} border-[hsl(var(--accent-success)/0.4)] bg-[hsl(var(--accent-success)/0.1)] text-[hsl(var(--accent-success-fg))]`;
 }
 
 function donorBadgeDialogClassName(rank) {
   if (rank === 1) {
-    return "shrink-0 border-yellow-500/60 bg-yellow-500/15 text-[11px] text-yellow-700 dark:text-yellow-300";
+    return "shrink-0 border-[hsl(var(--accent-warning)/0.6)] bg-[hsl(var(--accent-warning)/0.15)] text-[11px] text-[hsl(var(--accent-warning-fg))]";
   }
   if (rank === 2) {
-    return "shrink-0 border-slate-400/60 bg-slate-400/15 text-[11px] text-slate-600 dark:text-slate-300";
+    return "shrink-0 border-border bg-muted text-[11px] text-muted-foreground";
   }
   if (rank === 3) {
-    return "shrink-0 border-amber-700/60 bg-amber-700/15 text-[11px] text-amber-700 dark:text-amber-400";
+    return "shrink-0 border-[hsl(var(--accent-warning)/0.5)] bg-[hsl(var(--accent-warning)/0.08)] text-[11px] text-[hsl(var(--accent-warning-fg))]";
   }
-  return "shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[11px] text-emerald-700 dark:text-emerald-400";
+  return "shrink-0 border-[hsl(var(--accent-success)/0.4)] bg-[hsl(var(--accent-success)/0.1)] text-[11px] text-[hsl(var(--accent-success-fg))]";
 }
 
 const TrollboxMessageRow = React.memo(function TrollboxMessageRow({
@@ -445,6 +450,8 @@ export default function Trollbox(properties) {
     _marketSearchTEST = [],
     _poolsBTS = [],
     _poolsTEST = [],
+    _feeScheduleBTS = [],
+    _feeScheduleTEST = [],
   } = properties || {};
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
@@ -721,6 +728,75 @@ export default function Trollbox(properties) {
     };
   }, [chain, probe.state, probe.node, channelInfo, activeCatalog, refreshNonce]);
 
+  // Custom-operation fee schedule for this chain: base fee plus a
+  // per-kbyte charge on the packed data size (same convention as the
+  // airdrop estimator: fee + price_per_kbyte * ceil(bytes / 1000)).
+  const customFeeSchedule = useMemo(() => {
+    const list = chain === "bitshares" ? _feeScheduleBTS : _feeScheduleTEST;
+    const found = (list || []).find((x) => x && x.id === CUSTOM_OPERATION_ID);
+    return {
+      fee: found?.data?.fee ?? 0,
+      pricePerKbyte: found?.data?.price_per_kbyte ?? 0,
+    };
+  }, [chain, _feeScheduleBTS, _feeScheduleTEST]);
+
+  // Estimated packed-data size (bytes) for the current draft, built with
+  // the exact packing path handleSend uses. Null when there's nothing
+  // sendable (logged out, empty/oversize text, bad attachment).
+  const estimatedPostBytes = useMemo(() => {
+    const text = (draft || "").trim();
+    if (!currentUser || !currentUser.id || !channelInfo || !text) {
+      return null;
+    }
+    let attach = null;
+    if (pendingAttach) {
+      try {
+        attach = validateAttachmentShape(pendingAttach.attach);
+      } catch {
+        attach = null;
+      }
+      if (!attach || !channelAllowsAttach(activeChannel, attachKind(attach))) {
+        return null;
+      }
+    }
+    try {
+      const data = buildTrollboxData({
+        channel: activeChannel,
+        catalog: activeCatalog,
+        key: buildMessageKey(),
+        username: currentUser.username,
+        text,
+        lang: activeLang,
+        attach,
+        maxBytes,
+      });
+      return data.length / 2; // packed hex string -> bytes
+    } catch {
+      return null;
+    }
+  }, [
+    draft,
+    pendingAttach,
+    activeChannel,
+    activeCatalog,
+    currentUser,
+    channelInfo,
+    activeLang,
+    maxBytes,
+  ]);
+
+  // Estimated network fee in BTS (core asset, precision 5). The signing
+  // flow (DeepLinkDialog) computes the exact fee; this is a live preview.
+  const estimatedPostFee = useMemo(() => {
+    if (estimatedPostBytes == null) {
+      return null;
+    }
+    const sats =
+      customFeeSchedule.fee +
+      customFeeSchedule.pricePerKbyte * Math.ceil(estimatedPostBytes / 1000);
+    return humanReadableFloat(sats, 5);
+  }, [estimatedPostBytes, customFeeSchedule]);
+
   const handleSend = async () => {
     setComposeError(null);
     const text = draft.trim();
@@ -838,6 +914,7 @@ export default function Trollbox(properties) {
   const currentUserId = (currentUser && currentUser.id) || null;
 
   const userBlockList = useStore($userBlockList);
+  const blocklist = useStore($blockList);
   const blockedIds = useMemo(
     () =>
       new Set(
@@ -854,15 +931,34 @@ export default function Trollbox(properties) {
       ),
     [userBlockList, chain]
   );
-  const filteredMessages = useMemo(
-    () =>
-      messages.filter(
-        (m) =>
-          !blockedIds.has(m.account) &&
-          !blockedNames.has((m.displayAuthor || "").toLowerCase())
-      ),
-    [messages, blockedIds, blockedNames]
-  );
+  const filteredMessages = useMemo(() => {
+    // Committee blocklist stores sha256 hex of 1.2.x ids (bitshares only).
+    const committeeBlocked =
+      chain === "bitshares" &&
+      blocklist &&
+      blocklist.users &&
+      blocklist.users.length
+        ? new Set(blocklist.users)
+        : null;
+    return messages.filter((m) => {
+      if (blockedIds.has(m.account)) {
+        return false;
+      }
+      if (blockedNames.has((m.displayAuthor || "").toLowerCase())) {
+        return false;
+      }
+      if (committeeBlocked && m.account) {
+        try {
+          if (committeeBlocked.has(toHex(sha256(utf8ToBytes(m.account))))) {
+            return false;
+          }
+        } catch {
+          // Hashing failure must never hide a message.
+        }
+      }
+      return true;
+    });
+  }, [messages, blockedIds, blockedNames, chain, blocklist]);
   const favouriteUsers = useStore($favouriteUsers);
   const favouriteIds = useMemo(
     () =>
@@ -1644,6 +1740,21 @@ export default function Trollbox(properties) {
               variant="outline"
               size="icon"
               className="shrink-0"
+              disabled={!draft.trim()}
+              onClick={() => {
+                setDraft("");
+                setPendingAttach(null);
+                setComposeError(null);
+              }}
+              title={t("Trollbox:clearComposer", "Clear message")}
+              aria-label={t("Trollbox:clearComposer", "Clear message")}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0"
               disabled={probe.state !== "live" || loadingMessages}
               onClick={() => setRefreshNonce((n) => n + 1)}
               title={t("Trollbox:refresh", "Refresh")}
@@ -1656,18 +1767,27 @@ export default function Trollbox(properties) {
             <p className="mt-2 text-xs text-destructive">{composeError}</p>
           ) : null}
           {channelInfo ? (
-            <p className="mt-2 text-xs text-muted-foreground">
-              {t(
-                loggedIn ? "Trollbox:composerHint" : "Trollbox:composerHintLoggedOut",
-                loggedIn
-                  ? "Posting as {{user}} to {{catalog}}."
-                  : "Posting as {{user}} to {{catalog}} would cost a small network fee.",
-                {
-                  user: (currentUser && currentUser.username) || "not-logged-in",
-                  catalog: activeCatalog,
-                }
-              )}
-            </p>
+            <div className="mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+              <p>
+                {t(
+                  loggedIn ? "Trollbox:composerHint" : "Trollbox:composerHintLoggedOut",
+                  loggedIn
+                    ? "Posting as {{user}} to {{catalog}}."
+                    : "Posting as {{user}} to {{catalog}} would cost a small network fee.",
+                  {
+                    user: (currentUser && currentUser.username) || "not-logged-in",
+                    catalog: activeCatalog,
+                  }
+                )}
+              </p>
+              {estimatedPostFee != null ? (
+                <p className="text-right tabular-nums whitespace-nowrap">
+                  {t("Trollbox:composerFee", "Fee: {{fee}} BTS", {
+                    fee: estimatedPostFee,
+                  })}
+                </p>
+              ) : null}
+            </div>
           ) : null}
           {showDialog && pendingOp && loggedIn ? (
             <DeepLinkDialog
@@ -1677,8 +1797,6 @@ export default function Trollbox(properties) {
               userID={currentUser.id}
               dismissCallback={() => {
                 setShowDialog(false);
-                setDraft("");
-                setPendingAttach(null);
                 setRefreshNonce((n) => n + 1);
               }}
               key={`trollbox-${activeChannel}-${activeLang}-${pendingOp[0].data.slice(0, 32)}`}

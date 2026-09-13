@@ -1,0 +1,19 @@
+{
+    "title": "정산 펀드에 입찰하기",
+    "description": "정산 펀드에 담보를 보유한 모든 스마트코인. 입찰하여 지분을 청구하세요.",
+    "searchPlaceholder": "심볼 검색...",
+    "searchLabel": "심볼로 자산 검색",
+    "clearSearch": "검색 지우기",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "펀드",
+    "listingFunds": "정산 펀드가 있는 자산 {{count}}개 표시",
+    "noFunds": "정산 펀드를 찾을 수 없습니다",
+    "noFundsDescription": "현재 정산 펀드에 담보를 보유한 스마트코인이 없습니다.",
+    "fund": "펀드",
+    "collateral": "담보",
+    "bidButton": "입찰",
+    "showingOf": "{{total}}개 중 {{filtered}}개 표시",
+    "noFilterResults": "현재 검색과 일치하는 자산이 없습니다",
+    "clearFilters": "검색 지우기"
+}

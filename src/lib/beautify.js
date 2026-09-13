@@ -648,7 +648,22 @@ export default async function beautify(
         let blacklist_authorities = options.blacklist_authorities;
         let whitelist_markets = options.whitelist_markets;
         let blacklist_markets = options.blacklist_markets;
-        let description = JSON.parse(options.description);
+        let description = {};
+        try {
+            if (
+                typeof options.description === "string" &&
+                options.description.includes("{")
+            ) {
+                description = JSON.parse(options.description);
+            } else if (
+                options.description &&
+                typeof options.description === "object"
+            ) {
+                description = options.description;
+            }
+        } catch {
+            description = {};
+        }
         let nft_object = description ? description.nft_object : null;
 
         let tempRows = [

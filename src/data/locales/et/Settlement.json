@@ -31,7 +31,7 @@
   "operation": "Toimimine: {{operation}}",
   "additionalForceSettlementFee": "Täiendav jõudude arveldamise tasu: {{fee}} %",
   "submit": "Esita",
-  "collateralBiddingDisabled": "Tagatise pakkumine on selle vara puhul keelatud, see toiming lükatakse tagasi.",
+  "collateralBiddingDisabled": "Tagatise pakkumine on selle vara puhul keelatud.",
   "existingCollateralBids": "Olemasolevad tagatispakkumised",
   "existingCollateralBidsDescription": "Need tagatispakkumised on loonud teised kasutajad, kes on huvitatud ülemaailmsetest arveldatud fondidest",
   "bidder": "Pakkuja",

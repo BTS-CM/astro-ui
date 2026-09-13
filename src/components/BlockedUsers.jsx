@@ -72,7 +72,7 @@ function RemoveButton({ onClick, label }) {
             size="icon"
             aria-label={label}
             onClick={onClick}
-            className="h-8 w-8 rounded-full text-muted-foreground/60 hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] transition-colors"
+            className="h-8 w-8 rounded-full text-muted-foreground/60 hover:text-[hsl(var(--accent-danger-fg))] hover:bg-[hsl(var(--accent-danger)/0.15)] transition-colors"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -96,15 +96,20 @@ const BlockedUserRow = React.memo(function BlockedUserRow({
   if (!item) return null;
   return (
     <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-2 bg-card/60 border-border hover:bg-accent/30 hover:border-border transition-all rounded-xl">
+      <Card className="mb-2 bg-card/60 border border-border hover:bg-[hsl(var(--accent-danger)/0.04)] hover:border-[hsl(var(--accent-danger)/0.25)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-danger)/0.4)]">
         <CardHeader className="px-4 py-3 flex flex-row items-center justify-between gap-3">
-          <div className="space-y-1 min-w-0">
-            <CardTitle className="text-sm text-foreground truncate">
-              <span className="font-semibold">{item.name}</span>
-              <span className="ml-2 text-xs font-mono font-normal text-muted-foreground/60">
-                {item.id}
-              </span>
-            </CardTitle>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-danger)/0.3)] bg-[hsl(var(--accent-danger)/0.1)]">
+              <UserX className="h-4 w-4 text-[hsl(var(--accent-danger-fg))]" />
+            </span>
+            <div className="space-y-1 min-w-0">
+              <CardTitle className="text-sm text-foreground truncate">
+                <span className="font-semibold">{item.name}</span>
+                <span className="ml-2 text-xs font-mono font-normal text-muted-foreground/60">
+                  {item.id}
+                </span>
+              </CardTitle>
+            </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <RemoveButton
@@ -129,18 +134,23 @@ const HiddenTopicRow = React.memo(function HiddenTopicRow({
   if (!item) return null;
   return (
     <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-2 bg-card/60 border-border hover:bg-accent/30 hover:border-border transition-all rounded-xl">
+      <Card className="mb-2 bg-card/60 border border-border hover:bg-[hsl(var(--accent-2)/0.04)] hover:border-[hsl(var(--accent-2)/0.25)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)]">
         <CardHeader className="px-4 py-3 flex flex-row items-center justify-between gap-3">
-          <div className="space-y-1 min-w-0">
-            <CardTitle className="text-sm text-foreground truncate">
-              <span className="font-semibold">{item.title}</span>
-              <span className="ml-2 text-xs font-normal text-muted-foreground/60">
-                #{item.channel}
-              </span>
-              <span className="ml-2 text-xs font-mono font-normal text-muted-foreground/60">
-                {item.account}
-              </span>
-            </CardTitle>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)]">
+              <EyeOff className="h-4 w-4 text-[hsl(var(--accent-2-fg))]" />
+            </span>
+            <div className="space-y-1 min-w-0">
+              <CardTitle className="text-sm text-foreground truncate">
+                <span className="font-semibold">{item.title}</span>
+                <span className="ml-2 text-xs font-normal text-muted-foreground/60">
+                  #{item.channel}
+                </span>
+                <span className="ml-2 text-xs font-mono font-normal text-muted-foreground/60">
+                  {item.account}
+                </span>
+              </CardTitle>
+            </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <RemoveButton
@@ -255,7 +265,7 @@ export default function BlockedUsers() {
         </Card>
 
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-danger))]" />
+          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
               <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
@@ -264,7 +274,9 @@ export default function BlockedUsers() {
               {t("Blocklist:committeeHeader")}
             </CardTitle>
             <p className="text-xs text-muted-foreground mt-0.5 ml-11">
-              {t("Blocklist:committeeCount", { count: committeeCount })}
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[hsl(var(--accent-1-fg))]">
+                {t("Blocklist:committeeCount", { count: committeeCount })}
+              </span>
             </p>
           </CardHeader>
           <CardContent>
@@ -286,8 +298,10 @@ export default function BlockedUsers() {
                   {t("Blocklist:usersHeader")}
                 </CardTitle>
                 {chainUserBlockList && chainUserBlockList.length ? (
-                  <p className="text-xs text-muted-foreground mt-0.5 ml-11">
-                    {chainUserBlockList.length}
+                  <p className="mt-0.5 ml-11">
+                    <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-xs text-[hsl(var(--accent-1-fg))]">
+                      {chainUserBlockList.length}
+                    </span>
                   </p>
                 ) : null}
               </div>
@@ -350,9 +364,9 @@ export default function BlockedUsers() {
                 </div>
               </>
             ) : (
-              <Empty className="mt-2 border border-border/60 rounded-xl bg-accent/20">
+              <Empty className="mt-2 border border-[hsl(var(--accent-danger)/0.25)] rounded-xl bg-[hsl(var(--accent-danger)/0.04)]">
                 <EmptyHeader>
-                  <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
+                  <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-danger)/0.12)] text-[hsl(var(--accent-danger-fg))]">
                     <Ban className="h-6 w-6" />
                   </EmptyMedia>
                   <EmptyTitle className="text-foreground/80">{t("Blocklist:usersEmptyTitle")}</EmptyTitle>
@@ -366,13 +380,13 @@ export default function BlockedUsers() {
         </Card>
 
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-danger))]" />
+          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                    <EyeOff className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
+                  <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-2)/0.15)] flex-shrink-0">
+                    <EyeOff className="h-5 w-5 text-[hsl(var(--accent-2-fg))]" />
                   </span>
                   {t("Forum:hiddenTopicsTitle", "Hidden forum topics")}
                 </CardTitle>

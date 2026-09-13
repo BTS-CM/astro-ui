@@ -75,6 +75,7 @@
     "portfolio-open-orders": "Kasutage seda lehte oma avatud limiidi tellimuste ülevaatamiseks ja nendega kiireks kaubeldamiseks, värskendamiseks või tühistamiseks.",
     "portfolio-recent-activity": "Kasutage seda lehte oma viimaste ketisiseste toimingute sirvimiseks ja aluseks oleva JSON-i kontrollimiseks.",
     "settlement": "Smartcoini arveldusfondide pakkumise tegemiseks kasutage allolevat vormi",
+    "settlement_bids": "Sirvige kõiki smartcoine, mis hoiavad tagatist oma arveldusfondis, ja tehke pakkumine selle osa saamiseks",
     "smartcoin": "Kasutage tagatisega võla väljastamiseks allolevat vormi",
     "smartcoins": "Kasutage laenatava vara leidmiseks allolevat liidest",
     "stake": "Kasutage seda vormi oma varade paigutamiseks likviidsusfondidesse",
@@ -122,7 +123,9 @@
     "explorer": "Kasuta lehte iga konto, vara, objekti, tehingu räsi või ploki numbri otsimiseks ja vaata toor JSON-i kopeerimise ja lemmikutega.",
     "top-operations": "Kasuta seda lehte, et vaadata viimase 30 päeva jooksul enim teostatud plokiahela toiminguid, järjestatuna esinemissageduse järgi.",
     "change_password": "Kasuta allolevat vormi oma pilverahakoti parooli muutmiseks account_update operatsiooni kaudu.",
-    "trollbox": "Vestle kogukonnaga kanalites, mis elavad täielikult BitSharesi plokiahelas."
+    "trollbox": "Vestle kogukonnaga kanalites, mis elavad täielikult BitSharesi plokiahelas.",
+    "committee_parameters": "Propose new global blockchain parameters. Changes apply at maintenance after committee approval.",
+    "page_themes": "Assign a different saved theme to each page, or keep every page on the active theme."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

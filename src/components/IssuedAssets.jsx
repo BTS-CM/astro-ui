@@ -16,11 +16,16 @@ import {
   Settings,
   AlertTriangle,
   Sparkles,
+  Search,
+  X,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { cn } from "@/lib/utils";
+import { humanReadableFloat } from "@/lib/common.js";
 
 import { Card } from "@/components/ui/card";
 
@@ -56,6 +61,9 @@ import {
 } from "@/components/ui/empty";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -69,9 +77,97 @@ import { $currentNode } from "@/stores/node.ts";
 import AssetIssuerActions from "./AssetIssuerActions.jsx";
 
 
+function safeParseDescription(description) {
+  if (!description || typeof description !== "string") {
+    return undefined;
+  }
+  const trimmed = description.trim();
+  // Plain text descriptions (e.g. "1 Singapore dollar") are not JSON;
+  // skip parsing unless it looks like a JSON object.
+  if (!trimmed.includes("{")) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return undefined;
+  }
+}
+
+function getSmartcoinWarnings(bitasset) {
+  const reasons = [];
+  if (!bitasset) {
+    return reasons;
+  }
+  try {
+    if (
+      bitasset.current_feed.settlement_price.base.amount === 0 &&
+      bitasset.current_feed.settlement_price.quote.amount === 0
+    ) {
+      reasons.push("noFeed");
+    }
+    if (!bitasset.feeds.length) {
+      reasons.push("noFeeds");
+    }
+    if (
+      parseInt(bitasset.settlement_price.base.amount) > 0 &&
+      parseInt(bitasset.settlement_price.quote.amount)
+    ) {
+      reasons.push("settled");
+    }
+    if (parseInt(bitasset.settlement_fund) > 0) {
+      reasons.push("settlementFund");
+    }
+  } catch {
+    // ignore malformed bitasset payloads
+  }
+  return reasons;
+}
+
+function isInactiveSmartcoin(bitasset) {
+  return getSmartcoinWarnings(bitasset).length > 0;
+}
+
+function hasSettlementFund(bitasset) {
+  if (!bitasset) {
+    return false;
+  }
+  try {
+    return parseInt(bitasset.settlement_fund ?? "0", 10) > 0;
+  } catch {
+    return false;
+  }
+}
+
+function getCurrentSupply(dynamicEntry) {
+  if (!dynamicEntry) {
+    return 0;
+  }
+  const parsed = parseInt(dynamicEntry.current_supply ?? "0", 10);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getHumanSupply(asset, dynamicEntry) {
+  const raw = getCurrentSupply(dynamicEntry);
+  const precision = asset?.precision ?? 0;
+  try {
+    return humanReadableFloat(raw, precision);
+  } catch {
+    return raw;
+  }
+}
+
+function extractAssetIdNumber(assetId) {
+  const parts = String(assetId ?? "").split(".");
+  const maybe = parseInt(parts[2] ?? parts[parts.length - 1], 10);
+  return Number.isFinite(maybe) ? maybe : 0;
+}
+
+
 function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain, currentUser, currentNode }) {
     const [viewJSON, setViewJSON] = useState(false);
     const [json, setJSON] = useState();
+    const [showWarnings, setShowWarnings] = useState(false);
 
     const issuedAsset = relevantAssets[index];
     if (!issuedAsset) {
@@ -88,28 +184,19 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
 
     const description = issuedAsset.options.description;
     let parsedDescription;
-    if (description && description.length) {
-      let _desc;
-      try {
-        _desc = JSON.parse(description);
-      } catch (e) {
-        console.log({ e, id: issuedAsset.id, description });
-      }
-      if (_desc && _desc.hasOwnProperty("main")) {
-        parsedDescription = _desc;
-      }
+    const _desc = safeParseDescription(description);
+    if (_desc && _desc.hasOwnProperty("main")) {
+      parsedDescription = _desc;
     }
 
-    const smartcoinCheck =
-      activeTab === "smartcoins" &&
-      relevantBitassetData &&
-      ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
-        relevantBitassetData.current_feed.settlement_price.quote.amount ===
-          0) ||
-        !relevantBitassetData.feeds.length ||
-        (parseInt(relevantBitassetData.settlement_price.base.amount) > 0 &&
-          parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
-        parseInt(relevantBitassetData.settlement_fund) > 0);
+    const hasSupply = getCurrentSupply(relevantDynamicData) > 0;
+
+    const warningReasons =
+      activeTab === "smartcoins" && relevantBitassetData
+        ? getSmartcoinWarnings(relevantBitassetData)
+        : [];
+
+    const smartcoinCheck = warningReasons.length > 0;
 
     const getAccentColor = () => {
       switch (activeTab) {
@@ -221,7 +308,7 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
                 </DropdownMenuItem>
               </a>
             ) : null}
-            {activeTab === "smartcoins" && smartcoinCheck ? (
+            {activeTab === "smartcoins" && smartcoinCheck && hasSupply ? (
               <a href={`/settlement.html?id=${issuedAsset.id}`}>
                 <DropdownMenuItem>
                   <ArrowRight className="h-3.5 w-3.5 mr-2" />
@@ -320,16 +407,51 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
                       {issuedAsset.symbol}
                     </h3>
                     {smartcoinCheck && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <AlertTriangle className="h-4 w-4 text-[hsl(var(--accent-3-fg))]" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{t("IssuedAssets:inactiveSmartcoin")}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={() => setShowWarnings(true)}
+                                aria-label={t("IssuedAssets:warningDialogTitle", {
+                                  symbol: issuedAsset.symbol,
+                                })}
+                                className="inline-flex items-center rounded-md p-0.5 hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+                              >
+                                <AlertTriangle className="h-4 w-4 text-[hsl(var(--accent-3-fg))]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{t("IssuedAssets:inactiveSmartcoin")}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <Dialog open={showWarnings} onOpenChange={setShowWarnings}>
+                          <DialogContent className="sm:max-w-[500px] !bg-card border border-border">
+                            <DialogHeader>
+                              <DialogTitle>
+                                {t("IssuedAssets:warningDialogTitle", {
+                                  symbol: issuedAsset.symbol,
+                                })}
+                              </DialogTitle>
+                              <DialogDescription className="text-muted-foreground">
+                                {t("IssuedAssets:warningDialogDescription", {
+                                  symbol: issuedAsset.symbol,
+                                  id: issuedAsset.id,
+                                })}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <ul className="list-disc pl-5 space-y-1.5 text-sm text-foreground/80">
+                              {warningReasons.map((reason) => (
+                                <li key={reason}>
+                                  {t(`IssuedAssets:warningReason_${reason}`)}
+                                </li>
+                              ))}
+                            </ul>
+                          </DialogContent>
+                        </Dialog>
+                      </>
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground font-mono">
@@ -347,6 +469,26 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
     );
 }
 const MemoIssuedAssetRow = React.memo(IssuedAssetRow);
+
+function FilteredEmpty({ icon: Icon, onClear, t }) {
+  return (
+    <Empty className="mt-2 border border-dashed border-border rounded-xl bg-card/30">
+      <EmptyHeader>
+        <EmptyMedia variant="icon" className="bg-muted text-muted-foreground">
+          <Icon className="w-6 h-6" />
+        </EmptyMedia>
+        <EmptyTitle className="text-foreground/80">
+          {t("IssuedAssets:noFilterResults")}
+        </EmptyTitle>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="outline" size="sm" onClick={onClear}>
+          {t("IssuedAssets:clearFilters")}
+        </Button>
+      </EmptyContent>
+    </Empty>
+  );
+}
 
 
 export default function IssuedAssets(properties) {
@@ -424,7 +566,52 @@ export default function IssuedAssets(properties) {
 
   const [activeTab, setActiveTab] = useState("uia");
 
-  const relevantAssets = useMemo(() => {
+  // Global toolbar state: persists across tab switches (search/sort/filters).
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortType, setSortType] = useState("default"); // "default" | "alphabetical" | "supply"
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [hideZeroSupply, setHideZeroSupply] = useState(false);
+  const [hideWarned, setHideWarned] = useState(false);
+  const [withSettlementFund, setWithSettlementFund] = useState(false);
+
+  const handleHideWarnedChange = (checked) => {
+    setHideWarned(checked);
+    if (checked) {
+      setWithSettlementFund(false);
+    }
+  };
+
+  const handleWithSettlementFundChange = (checked) => {
+    setWithSettlementFund(checked);
+    if (checked) {
+      setHideWarned(false);
+    }
+  };
+
+  const handleSortClick = (type) => {
+    if (type === sortType) {
+      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortType(type);
+      // Sensible defaults per sort: ID asc, alphabetical asc, supply desc
+      setSortDirection(type === "supply" ? "desc" : "asc");
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setHideZeroSupply(false);
+    setHideWarned(false);
+    setWithSettlementFund(false);
+  };
+
+  const hasActiveFilters =
+    (searchQuery && searchQuery.trim().length > 0) ||
+    hideZeroSupply ||
+    hideWarned ||
+    withSettlementFund;
+
+  const tabAssets = useMemo(() => {
     if (!issuedAssets || !issuedAssets.length) {
       return [];
     }
@@ -434,7 +621,7 @@ export default function IssuedAssets(properties) {
         return issuedAssets.filter(
           (asset) =>
             !asset.bitasset_data_id &&
-            !asset.options.description.includes("nft_object") &&
+            !(asset.options?.description ?? "").includes("nft_object") &&
             !asset.for_liquidity_pool
         );
       case "pools":
@@ -446,14 +633,14 @@ export default function IssuedAssets(properties) {
         return issuedAssets.filter(
           (asset) =>
             asset.bitasset_data_id &&
-            !asset.options.description.includes("condition") &&
-            !asset.options.description.includes("expiry")
+            !(asset.options?.description ?? "").includes("condition") &&
+            !(asset.options?.description ?? "").includes("expiry")
         );
       case "nft":
         return issuedAssets.filter(
           (asset) =>
             !asset.bitasset_data_id &&
-            asset.options.description.includes("nft_object")
+            (asset.options?.description ?? "").includes("nft_object")
         );
       default:
         return [];
@@ -600,6 +787,113 @@ export default function IssuedAssets(properties) {
     };
   }, [priceFeederAccountIDs]);
 
+  const dynamicById = useMemo(() => {
+    const map = new Map();
+    if (dynamicData && dynamicData.length) {
+      for (const entry of dynamicData) {
+        if (entry && entry.id) {
+          map.set(entry.id, entry);
+        }
+      }
+    }
+    return map;
+  }, [dynamicData]);
+
+  const bitassetById = useMemo(() => {
+    const map = new Map();
+    if (bitassetData && bitassetData.length) {
+      for (const entry of bitassetData) {
+        if (entry && entry.id) {
+          map.set(entry.id, entry);
+        }
+      }
+    }
+    return map;
+  }, [bitassetData]);
+
+  const relevantAssets = useMemo(() => {
+    let result = tabAssets ? [...tabAssets] : [];
+
+    const q = (searchQuery ?? "").trim().toLowerCase();
+    if (q) {
+      result = result.filter((asset) =>
+        (asset.symbol ?? "").toLowerCase().includes(q)
+      );
+    }
+
+    if (hideZeroSupply) {
+      // Only filter once dynamic data has loaded; otherwise we'd flash-empty.
+      if (dynamicById.size > 0) {
+        result = result.filter(
+          (asset) =>
+            getCurrentSupply(dynamicById.get(asset.dynamic_asset_data_id)) > 0
+        );
+      }
+    }
+
+    if (hideWarned) {
+      // Only filter once bitasset data has loaded.
+      if (bitassetById.size > 0 || activeTab !== "smartcoins") {
+        result = result.filter((asset) => {
+          if (!asset.bitasset_data_id) {
+            return true;
+          }
+          const bitasset = bitassetById.get(asset.bitasset_data_id);
+          // Keep assets whose bitasset data hasn't loaded yet.
+          if (!bitasset) {
+            return true;
+          }
+          return !isInactiveSmartcoin(bitasset);
+        });
+      }
+    }
+
+    if (withSettlementFund) {
+      // Only filter once bitasset data has loaded.
+      if (bitassetById.size > 0) {
+        result = result.filter((asset) => {
+          if (!asset.bitasset_data_id) {
+            return false;
+          }
+          const bitasset = bitassetById.get(asset.bitasset_data_id);
+          // Drop assets whose bitasset data hasn't loaded yet.
+          if (!bitasset) {
+            return false;
+          }
+          return hasSettlementFund(bitasset);
+        });
+      }
+    }
+
+    const dir = sortDirection === "asc" ? 1 : -1;
+    result.sort((a, b) => {
+      let cmp = 0;
+      if (sortType === "alphabetical") {
+        cmp = (a.symbol ?? "").localeCompare(b.symbol ?? "");
+      } else if (sortType === "supply") {
+        cmp =
+          getHumanSupply(a, dynamicById.get(a.dynamic_asset_data_id)) -
+          getHumanSupply(b, dynamicById.get(b.dynamic_asset_data_id));
+      } else {
+        cmp = extractAssetIdNumber(a.id) - extractAssetIdNumber(b.id);
+      }
+      return cmp * dir;
+    });
+
+    return result;
+  }, [
+    tabAssets,
+    searchQuery,
+    sortType,
+    sortDirection,
+    hideZeroSupply,
+    hideWarned,
+    withSettlementFund,
+    dynamicById,
+    bitassetById,
+    activeTab,
+  ]);
+
   const assetRowProps = useMemo(() => ({ relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain: _chain, currentUser: usr, currentNode }), [relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, _chain, usr, currentNode]);
 
   // Force react-window rows to remount on account/chain switch so reused row
@@ -672,6 +966,124 @@ export default function IssuedAssets(properties) {
             })}
           </div>
 
+          <div className="rounded-xl border border-border bg-card/40 p-3 mb-5 space-y-3">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative w-full sm:w-1/2">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t("IssuedAssets:searchPlaceholder")}
+                  aria-label={t("IssuedAssets:searchLabel")}
+                  className="pl-8 pr-8 h-9 text-sm"
+                />
+                {searchQuery ? (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    aria-label={t("IssuedAssets:clearSearch")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                ) : null}
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 w-full sm:w-1/2">
+                {[
+                  { type: "default", label: t("IssuedAssets:sortDefault") },
+                  { type: "alphabetical", label: t("IssuedAssets:sortAlphabetical") },
+                  { type: "supply", label: t("IssuedAssets:sortSupply") },
+                ].map((opt) => {
+                  const isActive = sortType === opt.type;
+                  return (
+                    <Button
+                      key={opt.type}
+                      type="button"
+                      onClick={() => handleSortClick(opt.type)}
+                      variant={isActive ? "" : "outline"}
+                      size="sm"
+                      className={cn(
+                        "h-9 text-xs",
+                        isActive
+                          ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]"
+                          : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                      )}
+                    >
+                      <span className="truncate">{opt.label}</span>
+                      {isActive ? (
+                        sortDirection === "asc" ? (
+                          <ChevronUp className="ml-1 h-3.5 w-3.5 shrink-0" />
+                        ) : (
+                          <ChevronDown className="ml-1 h-3.5 w-3.5 shrink-0" />
+                        )
+                      ) : null}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="hide-zero-supply"
+                  checked={hideZeroSupply}
+                  onCheckedChange={setHideZeroSupply}
+                />
+                <Label
+                  htmlFor="hide-zero-supply"
+                  className="text-xs text-muted-foreground cursor-pointer"
+                  title={t("IssuedAssets:hideZeroSupplyInfo")}
+                >
+                  {t("IssuedAssets:hideZeroSupply")}
+                </Label>
+              </div>
+              {activeTab === "smartcoins" ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="hide-warned"
+                      checked={hideWarned}
+                      disabled={withSettlementFund}
+                      onCheckedChange={handleHideWarnedChange}
+                    />
+                    <Label
+                      htmlFor="hide-warned"
+                      className="text-xs text-muted-foreground cursor-pointer"
+                      title={t("IssuedAssets:hideWarnedInfo")}
+                    >
+                      {t("IssuedAssets:hideWarned")}
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="with-settlement-fund"
+                      checked={withSettlementFund}
+                      disabled={hideWarned}
+                      onCheckedChange={handleWithSettlementFundChange}
+                    />
+                    <Label
+                      htmlFor="with-settlement-fund"
+                      className="text-xs text-muted-foreground cursor-pointer"
+                      title={t("IssuedAssets:withSettlementFundInfo")}
+                    >
+                      {t("IssuedAssets:withSettlementFund")}
+                    </Label>
+                  </div>
+                </>
+              ) : null}
+              {hasActiveFilters && tabAssets.length !== relevantAssets.length ? (
+                <span className="ml-auto text-[11px] text-muted-foreground font-mono tabular-nums">
+                  {t("IssuedAssets:showingOf", {
+                    filtered: relevantAssets.length,
+                    total: tabAssets.length,
+                  })}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
           {loading ? (
             <div className="flex flex-col items-center gap-3 py-12">
               <Spinner className="size-6 dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]" />
@@ -692,6 +1104,9 @@ export default function IssuedAssets(properties) {
                     </div>
                   )}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
+                    hasActiveFilters && tabAssets.length > 0 ? (
+                      <FilteredEmpty icon={Coins} onClear={clearFilters} t={t} />
+                    ) : (
                     <Empty className="mt-2 border border-dashed border-[hsl(var(--accent-1)/0.2)] rounded-xl bg-[hsl(var(--accent-1)/0.03)]">
                       <EmptyHeader>
                         <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
@@ -707,6 +1122,7 @@ export default function IssuedAssets(properties) {
                         </Button>
                       </EmptyContent>
                     </Empty>
+                    )
                   ) : (
                     <>
                       {dynamicData && dynamicData.length ? (
@@ -758,6 +1174,9 @@ export default function IssuedAssets(properties) {
                     </div>
                   )}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
+                    hasActiveFilters && tabAssets.length > 0 ? (
+                      <FilteredEmpty icon={Layers} onClear={clearFilters} t={t} />
+                    ) : (
                     <Empty className="mt-2 border border-dashed border-[hsl(var(--accent-2)/0.2)] rounded-xl bg-[hsl(var(--accent-2)/0.03)]">
                       <EmptyHeader>
                         <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-2)/0.15)] text-[hsl(var(--accent-2-fg))]">
@@ -773,6 +1192,7 @@ export default function IssuedAssets(properties) {
                         </Button>
                       </EmptyContent>
                     </Empty>
+                    )
                   ) : (
                     <>
                       {dynamicData && dynamicData.length ? (
@@ -824,6 +1244,9 @@ export default function IssuedAssets(properties) {
                     </div>
                   )}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
+                    hasActiveFilters && tabAssets.length > 0 ? (
+                      <FilteredEmpty icon={Droplets} onClear={clearFilters} t={t} />
+                    ) : (
                     <Empty className="mt-2 border border-dashed border-[hsl(var(--accent-1)/0.2)] rounded-xl bg-[hsl(var(--accent-1)/0.03)]">
                       <EmptyHeader>
                         <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
@@ -841,6 +1264,7 @@ export default function IssuedAssets(properties) {
                         </Button>
                       </EmptyContent>
                     </Empty>
+                    )
                   ) : (
                     <>
                       <div className="w-full h-[500px] block md:hidden">
@@ -881,6 +1305,9 @@ export default function IssuedAssets(properties) {
                     </div>
                   )}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
+                    hasActiveFilters && tabAssets.length > 0 ? (
+                      <FilteredEmpty icon={Image} onClear={clearFilters} t={t} />
+                    ) : (
                     <Empty className="mt-2 border border-dashed border-[hsl(var(--accent-3)/0.2)] rounded-xl bg-[hsl(var(--accent-3)/0.03)]">
                       <EmptyHeader>
                         <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-3)/0.15)] text-[hsl(var(--accent-3-fg))]">
@@ -889,6 +1316,7 @@ export default function IssuedAssets(properties) {
                         <EmptyTitle className="text-foreground/80">{t("IssuedAssets:noNFTs")}</EmptyTitle>
                       </EmptyHeader>
                     </Empty>
+                    )
                   ) : (
                     <>
                       <div className="w-full h-[500px] block md:hidden">

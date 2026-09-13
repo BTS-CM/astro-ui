@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - เผยแพร่ฟีดราคา",
         "/recent-activity": "กิจกรรมล่าสุด",
         "/settlement": "แบบฟอร์มออกสมาร์ตคอยน์ Bitshares",
+        "/settlement_bids": "Bitshares - ประมูลกองทุนชำระ",
         "/smartcoin": "แบบฟอร์มออกสมาร์ตคอยน์ Bitshares",
         "/smartcoins": "สมาร์ตคอยน์ Bitshares - ค้นหาสมาร์ตคอยน์เพื่อกู้ยืม",
         "/stake": "แบบฟอร์มสเตคในพูล Bitshares",

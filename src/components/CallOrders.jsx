@@ -46,6 +46,8 @@ import {
   Loader2Icon,
   RefreshCw,
   Zap,
+  AlertTriangle,
+  ShieldAlert,
 } from "lucide-react";
 
 import { List } from "react-window";
@@ -174,12 +176,34 @@ const CallOrderRow = memo(function CallOrderRow({
       ? "text-[hsl(var(--accent-warning-fg))]"
       : "text-[hsl(var(--accent-success-fg))]";
 
+  // Left rail mirrors position health. The whole panel is tinted like the
+  // SimpleSwap sell/receive panels: gradient wash + tinted border + hover glow
+  // per health state, so risk reads at a glance without opening a row.
+  const healthRail =
+    health === "danger"
+      ? "border-l-[hsl(var(--accent-danger)/0.6)]"
+      : health === "warn"
+      ? "border-l-[hsl(var(--accent-warning)/0.6)]"
+      : "border-l-[hsl(var(--accent-success)/0.5)]";
+  const healthPanel =
+    health === "danger"
+      ? "border-[hsl(var(--accent-danger)/0.35)] from-[hsl(var(--accent-danger)/0.08)] to-transparent hover:border-[hsl(var(--accent-danger)/0.6)] hover:shadow-[0_0_24px_-6px_hsl(var(--accent-danger)/0.4)]"
+      : health === "warn"
+      ? "border-[hsl(var(--accent-warning)/0.35)] from-[hsl(var(--accent-warning)/0.08)] to-transparent hover:border-[hsl(var(--accent-warning)/0.6)] hover:shadow-[0_0_24px_-6px_hsl(var(--accent-warning)/0.4)]"
+      : "border-[hsl(var(--accent-1)/0.25)] from-[hsl(var(--accent-1)/0.07)] to-[hsl(var(--accent-1)/0.02)] hover:border-[hsl(var(--accent-1)/0.5)] hover:shadow-[0_0_24px_-6px_hsl(var(--accent-1)/0.35)]";
+  const nearCall = mcr > 0 && health !== "danger" && ratio / mcr < 1.1;
+
   return (
-    <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
+    <div style={{ ...style, paddingRight: "10px", paddingBottom: "6px" }}>
       <button
         type="button"
         onClick={() => onSelect(position)}
-        className="group w-full text-left bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-cyan-500/30"
+        className={cn(
+          "group w-full text-left rounded-2xl border border-l-2 bg-gradient-to-br transition-all",
+          healthPanel,
+          healthRail,
+          nearCall && "ring-1 ring-[hsl(var(--accent-warning)/0.3)]"
+        )}
       >
         <CardContent className="p-3">
           <div className="flex items-center gap-3">
@@ -217,10 +241,10 @@ const CallOrderRow = memo(function CallOrderRow({
                 </div>
               </div>
               <div className="min-w-0 text-left" style={{ flex: "1 1 0" }}>
-                <div className={cn("text-sm font-semibold tabular-nums", healthColor)}>
-                  {ratio.toFixed(3)}
-                  <span className="text-[10px] text-muted-foreground font-normal ml-1">
-                    / {mcr.toFixed(3)}
+                <div className={cn("text-sm font-semibold tabular-nums", ratio > 0 ? healthColor : "text-muted-foreground")}>
+                  {ratio > 0 ? ratio.toFixed(3) : "—"}
+                  <span className="text-[10px] text-[hsl(var(--accent-3-fg))]/70 font-normal ml-1">
+                    / {mcr > 0 ? mcr.toFixed(3) : "—"}
                   </span>
                 </div>
               </div>
@@ -420,7 +444,9 @@ export default function CallOrders({
         debtPrecision
       );
       const mcrRaw = bitasset?.current_feed?.maintenance_collateral_ratio;
-      const mcr = mcrRaw ? Number(mcrRaw) / 10 : 0;
+      // Chain stores MCR in thousandths (1750 = 175% = 1.75x). Dividing by 10
+      // rendered "175.000" and flagged healthy positions as margin calls.
+      const mcr = mcrRaw ? Number(mcrRaw) / 1000 : 0;
 
   const ratio = currentCollateralRatio(
     toRaw(o.collateral),
@@ -455,6 +481,17 @@ export default function CallOrders({
 
   const selectedInfo = selected ? enriched?.[selected.id] : null;
   const selectedDebtAsset = selected ? fullAssetMap[selected.debt_asset] : null;
+  // Hero stats strip (SimpleSwap-style summary): counts per health state.
+  const healthCounts = useMemo(() => {
+    let warn = 0;
+    let danger = 0;
+    for (const k of Object.keys(enriched || {})) {
+      const h = enriched[k].health;
+      if (h === "danger") danger += 1;
+      else if (h === "warn") warn += 1;
+    }
+    return { total: sortedCallOrders?.length ?? 0, warn, danger };
+  }, [enriched, sortedCallOrders]);
   const selectedCollateralAsset = selected
     ? fullAssetMap[selected.collateral_asset]
     : null;
@@ -482,100 +519,108 @@ export default function CallOrders({
   return (
     <div className="container mx-auto mt-5 mb-5 max-w-5xl text-foreground">
       <div className="grid grid-cols-1 gap-3">
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
-          <CardTitle className="flex items-center justify-between gap-3 px-5 py-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                <ListOrdered className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
-              </span>
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35),inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-[hsl(var(--accent-1)/0.2)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-[hsl(var(--accent-2)/0.2)] blur-3xl"
+          />
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <span className="text-xl font-bold tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+                    <ListOrdered className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+                  </span>
                   {t("CallOrders:title")}
-                </span>
-                <div className="text-xs text-muted-foreground truncate">
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
                   {t("CallOrders:description")}
-                </div>
+                </p>
               </div>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setCallOrders(undefined);
+                  setCallOrdersLoading(true);
+                  if (usr && usr.id) {
+                    const store = createUserCallOrdersStore([_chain, usr.id]);
+                    store.invalidate();
+                  }
+                  setCallOrderCounter((c) => c + 1);
+                }}
+                disabled={callOrdersLoading}
+                aria-busy={callOrdersLoading}
+                className="gap-2 shrink-0 bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]"
+              >
+                {callOrdersLoading ? (
+                  <Loader2Icon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4" />
+                )}
+                <span>{t("CallOrders:refreshButton")}</span>
+              </Button>
             </div>
-            <Button
-              size="sm"
-              onClick={() => {
-                setCallOrders(undefined);
-                setCallOrdersLoading(true);
-                if (usr && usr.id) {
-                  const store = createUserCallOrdersStore([_chain, usr.id]);
-                  store.invalidate();
-                }
-                setCallOrderCounter((c) => c + 1);
-              }}
-              disabled={callOrdersLoading}
-              aria-busy={callOrdersLoading}
-              className="gap-2 bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-foreground"
-            >
-              {callOrdersLoading ? (
-                <Loader2Icon className="h-4 w-4 animate-spin" />
-              ) : (
-                <RefreshCw className="h-4 w-4" />
-              )}
-              <span>{t("CallOrders:refreshButton")}</span>
-            </Button>
-          </CardTitle>
-        </Card>
-
-        {hasOrders ? (
-          <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-            <CardContent>
-              {/* Column headers above the list to save row vertical space */}
-              <div className="flex items-center gap-3 px-3 pb-2 mb-1 border-b border-border/60">
-                <div
-                  className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                  style={{ flex: "0 0 50%" }}
-                >
-                  {t("CallOrders:assetHeader")}
-                </div>
-                <div className="flex items-center gap-2 text-left" style={{ flex: "1 1 50%" }}>
-                  <div
-                    className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                    style={{ flex: "1 1 0" }}
-                  >
-                    {t("CallOrders:collateralHeader")}
-                  </div>
-                  <div
-                    className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                    style={{ flex: "1 1 0" }}
-                  >
-                    {t("CallOrders:debtHeader")}
-                  </div>
-                  <div
-                    className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                    style={{ flex: "1 1 0" }}
-                  >
-                    {t("CallOrders:ratioHeader")}
-                  </div>
-                  <div className="w-4 flex-shrink-0" />
-                </div>
-              </div>
-              <div className="w-full h-[400px] -mx-2 pt-2">
-                <List
-                  height={400}
-                  width="100%"
-                  rowComponent={CallOrderRow}
-                  rowCount={sortedCallOrders.length}
-                  rowHeight={rowHeight}
-                  rowProps={callOrderRowProps}
+            {hasOrders ? (
+              <div className="mt-5">
+                <span
+                  aria-hidden="true"
+                  className="block h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.25)] to-transparent mb-3"
                 />
+                {/* Column headers above the list to save row vertical space */}
+                <div className="flex items-center gap-3 px-3 pb-2 mb-1 border-b border-border/60">
+                  <div
+                    className="text-[10px] uppercase tracking-wide text-muted-foreground"
+                    style={{ flex: "0 0 50%" }}
+                  >
+                    {t("CallOrders:assetHeader")}
+                  </div>
+                  <div className="flex items-center gap-2 text-left" style={{ flex: "1 1 50%" }}>
+                    <div
+                      className="text-[10px] uppercase tracking-wide text-muted-foreground"
+                      style={{ flex: "1 1 0" }}
+                    >
+                      {t("CallOrders:collateralHeader")}
+                    </div>
+                    <div
+                      className="text-[10px] uppercase tracking-wide text-muted-foreground"
+                      style={{ flex: "1 1 0" }}
+                    >
+                      {t("CallOrders:debtHeader")}
+                    </div>
+                    <div
+                      className="text-[10px] uppercase tracking-wide text-muted-foreground"
+                      style={{ flex: "1 1 0" }}
+                    >
+                      {t("CallOrders:ratioHeader")}
+                    </div>
+                    <div className="w-4 flex-shrink-0" />
+                  </div>
+                </div>
+                <div className="w-full h-[400px] -mx-2 pt-2">
+                  <List
+                    height={400}
+                    width="100%"
+                    rowComponent={CallOrderRow}
+                    rowCount={sortedCallOrders.length}
+                    rowHeight={rowHeight}
+                    rowProps={callOrderRowProps}
+                  />
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        ) : callOrdersLoading ? (
-          <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-            <CardContent>
-              <div className="space-y-2" aria-busy="true" aria-live="polite">
+            ) : callOrdersLoading ? (
+              <div className="mt-5 space-y-2" aria-busy="true" aria-live="polite">
                 {[0, 1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 p-4 rounded-xl border border-border/60 bg-accent/20"
+                    className="flex items-center gap-3 p-4 rounded-2xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.05)] to-transparent"
                   >
                     <Skeleton className="h-8 w-8 rounded-lg bg-accent/50" />
                     <div className="flex-1 space-y-1.5">
@@ -587,12 +632,8 @@ export default function CallOrders({
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-            <CardContent>
-              <Empty className="mt-2 border border-border/60 rounded-xl bg-accent/20">
+            ) : (
+              <Empty className="mt-5 border border-[hsl(var(--accent-1)/0.2)] rounded-xl bg-[hsl(var(--accent-1)/0.04)]">
                 <EmptyHeader>
                   <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
                     <ListOrdered className="h-6 w-6" />
@@ -605,14 +646,46 @@ export default function CallOrders({
                   </EmptyDescription>
                 </EmptyHeader>
                 <EmptyContent>
-                  <Button asChild className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-foreground">
+                  <Button asChild className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]">
                     <a href="/dex.html">{t("CallOrders:noOrdersCta")}</a>
                   </Button>
                 </EmptyContent>
               </Empty>
-            </CardContent>
-          </Card>
-        )}
+            )}
+            {hasOrders && (healthCounts.warn > 0 || healthCounts.danger > 0) ? (
+              <div className="mt-4">
+                <span
+                  aria-hidden="true"
+                  className="block h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.25)] to-transparent mb-3"
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {healthCounts.warn > 0 ? (
+                    <div className="rounded-2xl border border-[hsl(var(--accent-warning)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-warning)/0.08)] to-transparent p-3 flex items-center gap-2.5">
+                      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(var(--accent-warning)/0.15)] shrink-0">
+                        <AlertTriangle className="h-4 w-4 text-[hsl(var(--accent-warning-fg))]" />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-lg font-extrabold tabular-nums text-[hsl(var(--accent-warning-fg))] leading-none">{healthCounts.warn}</div>
+                        <div className="text-[11px] text-muted-foreground mt-1">{t("CallOrders:nearCallTitle", { defaultValue: "Near call" })}</div>
+                      </div>
+                    </div>
+                  ) : null}
+                  {healthCounts.danger > 0 ? (
+                    <div className="rounded-2xl border border-[hsl(var(--accent-danger)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-danger)/0.08)] to-transparent p-3 flex items-center gap-2.5">
+                      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(var(--accent-danger)/0.15)] shrink-0">
+                        <ShieldAlert className="h-4 w-4 text-[hsl(var(--accent-danger-fg))]" />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-lg font-extrabold tabular-nums text-[hsl(var(--accent-danger-fg))] leading-none">{healthCounts.danger}</div>
+                        <div className="text-[11px] text-muted-foreground mt-1">{t("CallOrders:marginCallTitle", { defaultValue: "Margin call" })}</div>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
 
       {selected && selectedInfo ? (
@@ -637,7 +710,7 @@ export default function CallOrders({
             </DialogHeader>
 
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-lg border border-border bg-accent/20 p-2">
+              <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.07)] to-[hsl(var(--accent-1)/0.02)] p-2">
                 <div className="text-[10px] uppercase text-muted-foreground">
                   {t("CallOrders:dialogCollateral")}
                 </div>
@@ -648,7 +721,7 @@ export default function CallOrders({
                   </span>
                 </div>
               </div>
-              <div className="rounded-lg border border-border bg-accent/20 p-2">
+              <div className="rounded-2xl border border-[hsl(var(--accent-danger)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-danger)/0.08)] to-transparent p-2">
                 <div className="text-[10px] uppercase text-muted-foreground">
                   {t("CallOrders:dialogDebt")}
                 </div>
@@ -659,7 +732,7 @@ export default function CallOrders({
                   </span>
                 </div>
               </div>
-              <div className="rounded-lg border border-border bg-accent/20 p-2">
+              <div className="rounded-2xl border border-[hsl(var(--accent-3)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-3)/0.08)] to-transparent p-2">
                 <div className="text-[10px] uppercase text-muted-foreground">
                   {t("CallOrders:dialogCollateralRatio")}
                 </div>
@@ -671,9 +744,9 @@ export default function CallOrders({
                     ? "text-[hsl(var(--accent-warning-fg))]"
                     : "text-[hsl(var(--accent-success-fg))]"
                 )}>
-                  {selectedInfo.ratio.toFixed(3)}
+                  {selectedInfo.ratio > 0 ? selectedInfo.ratio.toFixed(3) : "—"}
                   <span className="text-[10px] font-normal text-muted-foreground ml-1">
-                    / {selectedInfo.mcr.toFixed(3)}
+                    / {selectedInfo.mcr > 0 ? selectedInfo.mcr.toFixed(3) : "—"}
                   </span>
                 </div>
               </div>
@@ -682,7 +755,7 @@ export default function CallOrders({
             <div className="grid grid-cols-1 gap-2 mt-2">
               <a
                 href={dexHref}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-accent/20 hover:bg-accent/40 transition-colors p-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent hover:border-[hsl(var(--accent-1)/0.5)] transition-colors p-3"
               >
                 <div className="flex items-center gap-3 min-w-0 text-left">
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
@@ -702,7 +775,7 @@ export default function CallOrders({
 
               <a
                 href={instantTradeHref}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-accent/20 hover:bg-accent/40 transition-colors p-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-[hsl(var(--accent-2)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-2)/0.06)] to-transparent hover:border-[hsl(var(--accent-2)/0.5)] transition-colors p-3"
               >
                 <div className="flex items-center gap-3 min-w-0 text-left">
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-2)/0.15)] flex-shrink-0">
@@ -722,7 +795,7 @@ export default function CallOrders({
 
               <a
                 href={smartcoinHref}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-accent/20 hover:bg-accent/40 transition-colors p-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent hover:border-[hsl(var(--accent-1)/0.5)] transition-colors p-3"
               >
                 <div className="flex items-center gap-3 min-w-0 text-left">
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">

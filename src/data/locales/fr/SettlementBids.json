@@ -1,0 +1,19 @@
+{
+    "title": "Enchérir sur les fonds de règlement",
+    "description": "Tous les smartcoins dont le fonds de règlement détient des garanties. Enchérissez pour en réclamer une part.",
+    "searchPlaceholder": "Rechercher un symbole...",
+    "searchLabel": "Rechercher les actifs par symbole",
+    "clearSearch": "Effacer la recherche",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fonds",
+    "listingFunds": "Inscription {{count}} actifs avec fonds de règlement",
+    "noFunds": "Aucun fonds de règlement trouvé",
+    "noFundsDescription": "Aucun smartcoin ne détient actuellement de garanties dans son fonds de règlement.",
+    "fund": "Fonds",
+    "collateral": "Garantie",
+    "bidButton": "Enchérir",
+    "showingOf": "Affichage de {{filtered}} sur {{total}}",
+    "noFilterResults": "Aucun actif ne correspond à la recherche actuelle",
+    "clearFilters": "Effacer la recherche"
+}

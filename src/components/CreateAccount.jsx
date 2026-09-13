@@ -54,8 +54,25 @@ import {
 import { $currentNode } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { debounce, copyToClipboard } from "@/lib/common";
+import { cn } from "@/lib/utils";
 
-import { UserPlus } from "lucide-react";
+import { UserPlus, CheckCircle2, XCircle } from "lucide-react";
+
+// Validation idiom copied from ChangePassword.jsx (keep in sync): idle →
+// neutral, match → success, mismatch → danger. Status icon inside the input.
+const validationBorder = (value, expected) => {
+  if (!value) return null;
+  if (value === expected)
+    return "border-[hsl(var(--accent-success)/0.6)] focus-visible:ring-[hsl(var(--accent-success)/0.3)]";
+  return "border-[hsl(var(--accent-danger)/0.6)] focus-visible:ring-[hsl(var(--accent-danger)/0.3)]";
+};
+
+const MatchIcon = ({ value, expected }) => {
+  if (!value) return null;
+  if (value === expected)
+    return <CheckCircle2 className="h-4 w-4 text-[hsl(var(--accent-success-fg))]" />;
+  return <XCircle className="h-4 w-4 text-[hsl(var(--accent-danger-fg))]" />;
+};
 
 const CreateAccount = () => {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -253,23 +270,54 @@ const CreateAccount = () => {
     noRecoveryChecked &&
     writtenDownChecked;
 
+  const usernameInvalid =
+    username &&
+    username.length &&
+    (username.length > 63 ||
+      (method === "faucet" && isNaN(username[username.length - 1])) ||
+      username[username.length - 1] === "." ||
+      username.includes("--") ||
+      username.split(".").length > 2 ||
+      /[^a-zA-Z0-9-.]/.test(username));
+
   return (
     <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4 text-foreground">
       <div className="grid grid-cols-1 gap-3">
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-1))]" />
-          <CardHeader className="pb-5">
-            <CardTitle className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                <UserPlus className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
+        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl"
+          />
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+                <UserPlus className="h-4.5 w-4.5" strokeWidth={2.25} />
               </span>
-              {t("CreateAccount:createAccount")}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground ml-11">
-              {t("CreateAccount:description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+              <div>
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                  {t("CreateAccount:createAccount")}
+                </h2>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">
+                  {t("CreateAccount:description")}
+                </p>
+              </div>
+              <span className="ml-auto inline-flex items-center rounded-full border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-2 py-0.5 text-[11px] font-medium text-[hsl(var(--accent-2-fg))]">
+                {method === "faucet" ? t("CreateAccount:faucetMethod") : t("CreateAccount:ltmMethod")}
+              </span>
+            </div>
+          </div>
+        </Card>
+        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
+          <CardContent className="pt-5">
             <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block text-sm font-medium text-foreground/70 mb-1.5">
@@ -280,26 +328,25 @@ const CreateAccount = () => {
                   onChange={(e) => {
                     setUsername(e.target.value);
                   }}
-                  className="bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60"
+                  className={cn(
+                    "bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60",
+                    usernameInvalid
+                      ? "border-[hsl(var(--accent-danger)/0.6)] focus-visible:ring-[hsl(var(--accent-danger)/0.3)]"
+                      : null
+                  )}
                 />
                 {username &&
                 username.length &&
                 searched &&
                 (usernameAvailable === null || usernameAvailable === false) ? (
-                  <p className="mt-2 text-sm text-[hsl(var(--accent-danger-fg))]">
+                  <p className="mt-2 text-sm text-[hsl(var(--accent-danger-fg))] flex items-center gap-1.5">
+                    <XCircle className="h-3.5 w-3.5 shrink-0" />
                     {t("CreateAccount:usernameUnavailable")}
                   </p>
                 ) : null}
-                {username &&
-                username.length &&
-                (username.length > 63 ||
-                  (method === "faucet" &&
-                    isNaN(username[username.length - 1])) ||
-                  username[username.length - 1] === "." ||
-                  username.includes("--") ||
-                  username.split(".").length > 2 ||
-                  /[^a-zA-Z0-9-.]/.test(username)) ? (
-                  <p className="mt-2 text-sm text-[hsl(var(--accent-danger-fg))]">
+                {usernameInvalid ? (
+                  <p className="mt-2 text-sm text-[hsl(var(--accent-danger-fg))] flex items-center gap-1.5">
+                    <XCircle className="h-3.5 w-3.5 shrink-0" />
                     {t("CreateAccount:invalidUsername")}
                   </p>
                 ) : null}
@@ -367,12 +414,20 @@ const CreateAccount = () => {
                 <label className="block text-sm font-medium text-foreground/70 mb-1.5">
                   {t("CreateAccount:confirmPasswordTitle")}
                 </label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60"
-                />
+                <div className="relative">
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={cn(
+                      "bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60 pr-9",
+                      validationBorder(password, generatedPassword)
+                    )}
+                  />
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <MatchIcon value={password} expected={generatedPassword} />
+                  </span>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground/70 mb-1.5">
@@ -382,7 +437,7 @@ const CreateAccount = () => {
                   value={method}
                   onValueChange={(value) => setMethod(value)}
                 >
-                  <SelectTrigger className="bg-accent/30 dark:bg-white/[0.05] border-border text-foreground/70">
+                  <SelectTrigger className="bg-accent/30 dark:bg-white/[0.05] border-[hsl(var(--accent-2)/0.35)] text-foreground/70 focus:ring-[hsl(var(--accent-2)/0.3)]">
                     <SelectValue className="text-foreground/70" />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border shadow-2xl dark:shadow-black/40 shadow-black/15">
@@ -453,21 +508,30 @@ const CreateAccount = () => {
                     {method === "ltm" && !deeplinkDialog ? (
                       <Button
                         onClick={() => setDeeplinkDialog(true)}
-                        className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-foreground"
+                        className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_28px_-12px_hsl(var(--accent-1)/0.7)]"
                       >
                         {t("CreateAccount:generateDeeplink")}
                       </Button>
                     ) : null}
                     {method === "faucet" ? (
-                      <Button onClick={faucetConfirm} className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-foreground">
+                      <Button onClick={faucetConfirm} className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_28px_-12px_hsl(var(--accent-1)/0.7)]">
                         {t("CreateAccount:submit")}
                       </Button>
                     ) : null}
                   </>
                 ) : (
-                  <Button className="bg-accent/40 text-muted-foreground" disabled>
-                    {t("CreateAccount:submit")}
-                  </Button>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Button className="bg-accent/40 text-muted-foreground" disabled>
+                      {t("CreateAccount:submit")}
+                    </Button>
+                    <span className="text-xs text-muted-foreground">
+                      {!username || usernameInvalid
+                        ? t("CreateAccount:invalidUsername")
+                        : !password || password !== generatedPassword
+                        ? t("CreateAccount:confirmPasswordTitle")
+                        : t("CreateAccount:writtenDown")}
+                    </span>
+                  </div>
                 )}
               </div>
             </div>

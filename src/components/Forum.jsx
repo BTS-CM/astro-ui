@@ -9,6 +9,7 @@ import { useStore } from "@nanostores/react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import { humanReadableFloat } from "@/lib/common.js";
 import { List } from "react-window";
 
 import {
@@ -63,13 +64,17 @@ import {
   Paperclip,
   RefreshCw,
   Send,
+  Trash2,
   TriangleAlert,
   X,
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
+import { $userBlockList, $blockList, addBlockedUser } from "@/stores/blocklist.ts";
+
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import {
   $hiddenForumTopics,
   $viewedForumTopics,
@@ -113,6 +118,7 @@ import {
 } from "@/lib/trollboxAttach.js";
 import {
   FORUM_OP_ID,
+  CUSTOM_OPERATION_ID,
   buildForumTopicData,
   buildMessageKey,
   maxMessageBytes,
@@ -261,7 +267,7 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
                 {typeof unreadCount === "number" && unreadCount > 0 ? (
                   <span
                     title={(unreadLabel || "").replace("{{count}}", String(unreadCount))}
-                    className="inline-flex shrink-0 items-center rounded border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-px text-[10px] font-medium text-emerald-700 dark:text-emerald-400"
+                    className="inline-flex shrink-0 items-center rounded border border-[hsl(var(--accent-success)/0.4)] bg-[hsl(var(--accent-success)/0.1)] px-1.5 py-px text-[10px] font-medium text-[hsl(var(--accent-success-fg))]"
                   >
                     {unreadCount}
                   </span>
@@ -369,6 +375,8 @@ export default function Forum(properties) {
     _marketSearchTEST = [],
     _poolsBTS = [],
     _poolsTEST = [],
+    _feeScheduleBTS = [],
+    _feeScheduleTEST = [],
   } = properties || {};
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
@@ -638,6 +646,72 @@ export default function Forum(properties) {
     pruneWatchedForumTopics(chain, activeChannel, fetchedKeys);
   }, [topics, topicsError, activeChannel, chain]);
 
+  // Custom-operation fee schedule for this chain: base fee plus a
+  // per-kbyte charge on the packed data size (same convention as the
+  // trollbox estimator: fee + price_per_kbyte * ceil(bytes / 1000)).
+  const customFeeSchedule = useMemo(() => {
+    const list = chain === "bitshares" ? _feeScheduleBTS : _feeScheduleTEST;
+    const found = (list || []).find((x) => x && x.id === CUSTOM_OPERATION_ID);
+    return {
+      fee: found?.data?.fee ?? 0,
+      pricePerKbyte: found?.data?.price_per_kbyte ?? 0,
+    };
+  }, [chain, _feeScheduleBTS, _feeScheduleTEST]);
+
+  // Estimated packed-data size (bytes) for the current title/body draft,
+  // built with the exact packing path handlePost uses. Null when there's
+  // nothing postable (logged out, empty title/body, bad attachment).
+  const estimatedPostBytes = useMemo(() => {
+    const trimmedTitle = (title || "").trim();
+    const text = (draft || "").trim();
+    if (!currentUser || !currentUser.id || !catalog || !trimmedTitle || !text) {
+      return null;
+    }
+    let attach = null;
+    if (pendingAttach) {
+      try {
+        attach = validateAttachmentShape(pendingAttach.attach);
+      } catch {
+        attach = null;
+      }
+      if (!attach) {
+        return null;
+      }
+    }
+    try {
+      const data = buildForumTopicData({
+        catalog,
+        key: buildMessageKey(),
+        title: trimmedTitle,
+        text,
+        attach,
+        maxBytes,
+      });
+      return data.length / 2; // packed hex string -> bytes
+    } catch {
+      return null;
+    }
+  }, [
+    title,
+    draft,
+    pendingAttach,
+    catalog,
+    currentUser,
+    maxBytes,
+  ]);
+
+  // Estimated network fee in BTS (core asset, precision 5). The signing
+  // flow (DeepLinkDialog) computes the exact fee; this is a live preview.
+  const estimatedPostFee = useMemo(() => {
+    if (estimatedPostBytes == null) {
+      return null;
+    }
+    const sats =
+      customFeeSchedule.fee +
+      customFeeSchedule.pricePerKbyte * Math.ceil(estimatedPostBytes / 1000);
+    return humanReadableFloat(sats, 5);
+  }, [estimatedPostBytes, customFeeSchedule]);
+
   const handlePost = async () => {
     setComposeError(null);
     const trimmedTitle = title.trim();
@@ -734,6 +808,7 @@ export default function Forum(properties) {
   const currentUserId = (currentUser && currentUser.id) || null;
 
   const userBlockList = useStore($userBlockList);
+  const blocklist = useStore($blockList);
   const hiddenForumTopics = useStore($hiddenForumTopics);
   const viewedForumTopics = useStore($viewedForumTopics);
   const viewedKeys = useMemo(() => {
@@ -765,13 +840,33 @@ export default function Forum(properties) {
     const hiddenKeys = new Set(
       hidden.map((h) => `${h.key} ${h.account}`)
     );
+    // Committee blocklist stores sha256 hex of 1.2.x ids (bitshares only).
+    const committeeBlocked =
+      chain === "bitshares" &&
+      blocklist &&
+      blocklist.users &&
+      blocklist.users.length
+        ? new Set(blocklist.users)
+        : null;
+    const isCommitteeBlocked = (account) => {
+      if (!committeeBlocked || !account) {
+        return false;
+      }
+      try {
+        return committeeBlocked.has(toHex(sha256(utf8ToBytes(account))));
+      } catch {
+        // Hashing failure must never hide a topic.
+        return false;
+      }
+    };
     return topics.filter(
       (topic) =>
         !blockedIds.has(topic.account) &&
         !blockedNames.has((topic.displayAuthor || "").toLowerCase()) &&
+        !isCommitteeBlocked(topic.account) &&
         !hiddenKeys.has(`${topic.key} ${topic.account}`)
     );
-  }, [topics, blockedIds, blockedNames, hiddenForumTopics, activeChannel, chain]);
+  }, [topics, blockedIds, blockedNames, hiddenForumTopics, activeChannel, chain, blocklist]);
   const favouriteUsers = useStore($favouriteUsers);
   const favouriteIds = useMemo(
     () =>
@@ -1512,6 +1607,22 @@ export default function Forum(properties) {
                   </Button>
                 )}
                 <Button
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  disabled={!title.trim() && !draft.trim()}
+                  onClick={() => {
+                    setTitle("");
+                    setDraft("");
+                    setPendingAttach(null);
+                    setComposeError(null);
+                  }}
+                  title={t("Forum:clearComposer", "Clear draft")}
+                  aria-label={t("Forum:clearComposer", "Clear draft")}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                <Button
                   onClick={handlePost}
                   disabled={!loggedIn || !title.trim() || !draft.trim() || verifyingAttach}
                   size="sm"
@@ -1543,18 +1654,27 @@ export default function Forum(properties) {
                 <p className="mt-1 text-xs text-destructive">{composeError}</p>
               ) : null}
               {catalog ? (
-                <p className="text-xs text-muted-foreground">
-                  {t(
-                    loggedIn ? "Forum:composerHint" : "Forum:composerHintLoggedOut",
-                    loggedIn
-                      ? "Posting as {{user}} to {{catalog}}."
-                      : "Posting as {{user}} to {{catalog}} would cost a small network fee.",
-                    {
-                      user: (currentUser && currentUser.username) || "not-logged-in",
-                      catalog,
-                    }
-                  )}
-                </p>
+                <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                  <p>
+                    {t(
+                      loggedIn ? "Forum:composerHint" : "Forum:composerHintLoggedOut",
+                      loggedIn
+                        ? "Posting as {{user}} to {{catalog}}."
+                        : "Posting as {{user}} to {{catalog}} would cost a small network fee.",
+                      {
+                        user: (currentUser && currentUser.username) || "not-logged-in",
+                        catalog,
+                      }
+                    )}
+                  </p>
+                  {estimatedPostFee != null ? (
+                    <p className="text-right tabular-nums whitespace-nowrap">
+                      {t("Forum:composerFee", "Fee: {{fee}} BTS", {
+                        fee: estimatedPostFee,
+                      })}
+                    </p>
+                  ) : null}
+                </div>
               ) : null}
             </div>
 
@@ -1566,9 +1686,6 @@ export default function Forum(properties) {
                 userID={currentUser.id}
                 dismissCallback={() => {
                   setShowDialog(false);
-                  setTitle("");
-                  setDraft("");
-                  setPendingAttach(null);
                   setRefreshNonce((n) => n + 1);
                 }}
                 key={`forum-${activeChannel}-${pendingOp[0].data.slice(0, 32)}`}

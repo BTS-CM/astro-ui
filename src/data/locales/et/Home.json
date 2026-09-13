@@ -155,6 +155,13 @@
         "hover3": "Välised arveldushinnad tuletatakse konfigureeritud söödatootjatelt.",
         "hover4": "Kokkupuude välishindadega võib ohustada tagatisega võlapositsioone."
     },
+    "settlement_bids": {
+        "title": "Paku arveldusele",
+        "subtitle": "Paku nutimüntide arveldusfondidele",
+        "hover1": "Positiivse arveldusfondiga nutimündid hoiavad tagatist, mis ootab nõudmist.",
+        "hover2": "Tee pakkumine, et nõuda osa arveldusfondist.",
+        "hover3": "Sirvi kõiki ahela fonde ühelt lehelt."
+    },
     "tfunds": {
         "title": "Sama-T fondid",
         "subtitle": "Vaadake, looge, värskendage ja kustutage Same-T fonde!",

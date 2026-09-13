@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - 価格フィードを公開",
         "/recent-activity": "最近のアクティビティ",
         "/settlement": "Bitsharesスマートコイン発行フォーム",
+        "/settlement_bids": "Bitshares - 決済ファンドに入札する",
         "/smartcoin": "Bitsharesスマートコイン発行フォーム",
         "/smartcoins": "Bitsharesスマートコイン - 借り入れ可能なスマートコインを探す",
         "/stake": "Bitsharesプールステーキングフォーム",

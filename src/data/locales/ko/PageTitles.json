@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - 가격 피드 게시",
         "/recent-activity": "최근 활동",
         "/settlement": "Bitshares 스마트코인 발행 양식",
+        "/settlement_bids": "Bitshares - 정산 펀드에 입찰하기",
         "/smartcoin": "Bitshares 스마트코인 발행 양식",
         "/smartcoins": "Bitshares 스마트코인 - 빌릴 스마트코인 찾기",
         "/stake": "Bitshares 풀 스테이킹 양식",

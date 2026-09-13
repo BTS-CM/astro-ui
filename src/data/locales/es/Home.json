@@ -155,6 +155,13 @@
         "hover3": "Los precios de liquidación externos se derivan de los productores de piensos configurados.",
         "hover4": "La exposición a los precios externos puede suponer un riesgo para las posiciones de deuda colateralizada."
     },
+    "settlement_bids": {
+        "title": "Pujar por la liquidación",
+        "subtitle": "Pujar por los fondos de liquidación de smartcoins",
+        "hover1": "Las smartcoins con un fondo de liquidación positivo tienen garantías pendientes de reclamación.",
+        "hover2": "Haz una oferta para reclamar una parte del fondo de liquidación.",
+        "hover3": "Explora todos los fondos de la cadena desde una sola página."
+    },
     "tfunds": {
         "title": "Fondos Same-T",
         "subtitle": "¡Vea, cree, actualice y elimine fondos Same-T!",

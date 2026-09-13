@@ -1,0 +1,19 @@
+{
+    "title": "Dar lance em fundos de liquidação",
+    "description": "Todas as smartcoins cujo fundo de liquidação detém garantias. Dê um lance para reivindicar uma parte.",
+    "searchPlaceholder": "Pesquisar símbolo...",
+    "searchLabel": "Pesquisar ativos por símbolo",
+    "clearSearch": "Limpar pesquisa",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fundo",
+    "listingFunds": "Listagem {{count}} ativos com fundos de liquidação",
+    "noFunds": "Nenhum fundo de liquidação encontrado",
+    "noFundsDescription": "Nenhuma smartcoin detém garantias em seu fundo de liquidação no momento.",
+    "fund": "Fundo",
+    "collateral": "Garantia",
+    "bidButton": "Lance",
+    "showingOf": "Mostrando {{filtered}} de {{total}}",
+    "noFilterResults": "Nenhum ativo corresponde à pesquisa atual",
+    "clearFilters": "Limpar pesquisa"
+}

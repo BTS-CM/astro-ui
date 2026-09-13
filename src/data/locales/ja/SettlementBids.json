@@ -1,0 +1,19 @@
+{
+    "title": "決済ファンドに入札する",
+    "description": "決済ファンドに担保を保有するすべてのスマートコイン。一部を請求するために入札しましょう。",
+    "searchPlaceholder": "シンボルを検索...",
+    "searchLabel": "資産をシンボルで検索",
+    "clearSearch": "検索をクリア",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "ファンド",
+    "listingFunds": "決済ファンドのある資産{{count}}件を表示",
+    "noFunds": "決済ファンドが見つかりません",
+    "noFundsDescription": "現在、決済ファンドに担保を保有するスマートコインはありません。",
+    "fund": "ファンド",
+    "collateral": "担保",
+    "bidButton": "入札",
+    "showingOf": "{{total}}件中{{filtered}}件を表示",
+    "noFilterResults": "現在の検索に一致する資産がありません",
+    "clearFilters": "検索をクリア"
+}

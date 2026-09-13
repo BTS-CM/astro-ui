@@ -28,6 +28,13 @@ import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
 import { $searchHistory, addSearchHistory, clearSearchHistory } from "@/stores/searchHistory.ts";
+import { readableForeground } from "@/lib/tailwindPalette.js";
+import {
+  $customTheme,
+  $currentPage,
+  getThemeForPage,
+  resolvePageAccent,
+} from "@/stores/customTheme.ts";
 
 function StepIndicator({ currentStep, accentColor, step1Label, step2Label }) {
   const steps = [
@@ -44,7 +51,7 @@ function StepIndicator({ currentStep, accentColor, step1Label, step2Label }) {
               className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300",
                 currentStep === step.key
-                  ? "text-white shadow-lg"
+                  ? "shadow-lg"
                   : currentStep > step.key
                   ? "text-foreground"
                   : "bg-accent/60 text-muted-foreground border border-border/80"
@@ -54,6 +61,9 @@ function StepIndicator({ currentStep, accentColor, step1Label, step2Label }) {
                   ? {
                       background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`,
                       boxShadow: `0 4px 14px -3px ${accentColor}66`,
+                      // Max-contrast text on the saturated step fill (same
+                      // role as -gradFg; computed from the live accent hex).
+                      color: readableForeground(accentColor),
                     }
                   : currentStep > step.key
                   ? { background: `${accentColor}33`, borderColor: `${accentColor}44` }
@@ -239,7 +249,14 @@ export default function AccountSearch(properties) {
   );
   const currentNode = useStore($currentNode);
 
-  const accentColor = propsAccentColor || "#8B5CF6";
+  // Re-render on theme/page switches so the fallback below stays current.
+  useStore($customTheme);
+  const currentPage = useStore($currentPage);
+  // Explicit prop wins; otherwise follow the hosting page's accent triple
+  // (theme-aware) instead of a fixed violet.
+  const pageTheme = getThemeForPage(currentPage || "index");
+  const accentColor =
+    propsAccentColor || resolvePageAccent(pageTheme, currentPage || "index").primary;
 
   const [mode, setMode] = useState(null);
   const [accountInput, setAccountInput] = useState("");
@@ -467,12 +484,13 @@ export default function AccountSearch(properties) {
                   lookupAccount();
                 }}
                 className={cn(
-                  "px-6 py-2 text-white font-medium",
+                  "px-6 py-2 font-medium",
                   "shadow-lg transition-all duration-200"
                 )}
                 style={{
                   background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`,
                   boxShadow: `0 4px 14px -3px ${accentColor}55`,
+                  color: readableForeground(accentColor),
                 }}
               >
                 {t("AccountSearch:search.continue")}
@@ -528,11 +546,12 @@ export default function AccountSearch(properties) {
                 })
               }
               className={cn(
-                "px-6 py-2 text-white font-medium shadow-lg transition-all duration-200"
+                "px-6 py-2 font-medium shadow-lg transition-all duration-200"
               )}
               style={{
                 background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`,
                 boxShadow: `0 4px 14px -3px ${accentColor}55`,
+                color: readableForeground(accentColor),
               }}
             >
               {t("AccountSearch:searchResponse.proceed")}

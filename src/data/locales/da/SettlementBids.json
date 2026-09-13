@@ -1,0 +1,19 @@
+{
+    "title": "Byd på afregningsfonde",
+    "description": "Alle smartcoins, hvis afregningsfond indeholder sikkerhed. Byd for at kræve en andel.",
+    "searchPlaceholder": "Søg symbol...",
+    "searchLabel": "Søg aktiver efter symbol",
+    "clearSearch": "Ryd søgning",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fond",
+    "listingFunds": "Fortegnelse {{count}} aktiver med afregningsfonde",
+    "noFunds": "Ingen afregningsfonde fundet",
+    "noFundsDescription": "Ingen smartcoin indeholder i øjeblikket sikkerhed i sin afregningsfond.",
+    "fund": "Fond",
+    "collateral": "Sikkerhed",
+    "bidButton": "Byd",
+    "showingOf": "Viser {{filtered}} af {{total}}",
+    "noFilterResults": "Ingen aktiver matcher den aktuelle søgning",
+    "clearFilters": "Ryd søgning"
+}

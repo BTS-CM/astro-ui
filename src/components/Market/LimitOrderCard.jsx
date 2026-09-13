@@ -456,6 +456,10 @@ export default function LimitOrderCard(properties) {
   );
 
   const isBuy = orderType === "buy";
+  // Intentionally on status roles, NOT page accents (theming carve-out):
+  // buy/sell greens/reds are market convention and stay fixed across themes.
+  // statusAccents success/danger are constant across presets, so these read
+  // identically everywhere while still following custom status colours.
   const accent = isBuy
     ? {
         text: "text-[hsl(var(--accent-success-fg))]",
@@ -469,7 +473,7 @@ export default function LimitOrderCard(properties) {
         gradient: "from-[hsl(var(--accent-success)/0.95)] via-[hsl(var(--accent-1)/0.95)] to-[hsl(var(--accent-1)/0.95)]",
         ring: "ring-[hsl(var(--accent-success)/0.3)]",
         focusBorder: "focus-within:border-[hsl(var(--accent-success)/0.6)]",
-        focusShadow: "focus-within:shadow-[0_0_0_3px_rgba(16,185,129,0.18)]",
+        focusShadow: "focus-within:shadow-[0_0_0_3px_hsl(var(--accent-success)/0.18)]",
       }
     : {
         text: "text-[hsl(var(--accent-danger-fg))]",
@@ -483,7 +487,7 @@ export default function LimitOrderCard(properties) {
         gradient: "from-[hsl(var(--accent-danger)/0.95)] via-[hsl(var(--accent-warning)/0.95)] to-[hsl(var(--accent-warning)/0.95)]",
         ring: "ring-[hsl(var(--accent-danger)/0.3)]",
         focusBorder: "focus-within:border-[hsl(var(--accent-danger)/0.6)]",
-        focusShadow: "focus-within:shadow-[0_0_0_3px_rgba(244,63,94,0.18)]",
+        focusShadow: "focus-within:shadow-[0_0_0_3px_hsl(var(--accent-danger)/0.18)]",
       };
 
   return (
@@ -1514,7 +1518,7 @@ export default function LimitOrderCard(properties) {
                     </span>
                   </div>
                   <Button
-                    className="h-12 text-muted-foreground dark:text-slate-100 font-semibold bg-gradient-to-r dark:from-slate-700 dark:to-slate-800 from-slate-200 to-slate-100 cursor-not-allowed disabled:opacity-80"
+                    className="h-12 text-muted-foreground font-semibold bg-muted disabled:opacity-70 dark:bg-white/[0.06] cursor-not-allowed"
                     disabled
                     type="submit"
                   >
@@ -1655,7 +1659,7 @@ export default function LimitOrderCard(properties) {
 
               <Button
                 disabled
-                className="mt-6 mb-1 w-full h-12 dark:text-white text-muted-foreground font-semibold bg-gradient-to-r dark:from-white/10 dark:to-white/5 from-slate-200 to-slate-100 cursor-not-allowed opacity-60"
+                  className="mt-6 mb-1 w-full h-12 dark:text-white text-muted-foreground font-semibold bg-muted dark:bg-white/[0.06] cursor-not-allowed opacity-60"
                 type="submit"
               >
                 <Zap className="h-4 w-4 mr-2" />

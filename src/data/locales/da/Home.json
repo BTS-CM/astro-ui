@@ -155,6 +155,13 @@
         "hover3": "Eksterne afregningspriser er afledt fra konfigurerede foderproducenter.",
         "hover4": "Eksponering for eksterne prisfeeds kan udgøre en risiko for sikkerhedsstillede gældspositioner."
     },
+    "settlement_bids": {
+        "title": "Byd på afregning",
+        "subtitle": "Byd på smartcoins afregningsfonde",
+        "hover1": "Smartcoins med en positiv afregningsfond holder sikkerhed, der afventer krav.",
+        "hover2": "Afgiv et bud for at kræve en andel af afregningsfonden.",
+        "hover3": "Gennemse alle kædens fonde fra en enkelt side."
+    },
     "tfunds": {
         "title": "Same-T Fonde",
         "subtitle": "Se, opret, opdater, slet Same-T Funds!",

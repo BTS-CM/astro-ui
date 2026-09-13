@@ -1,0 +1,19 @@
+{
+    "title": "Offri sui fondi di regolamento",
+    "description": "Tutti gli smartcoin il cui fondo di regolamento detiene garanzie. Fai un'offerta per reclamarne una quota.",
+    "searchPlaceholder": "Cerca simbolo...",
+    "searchLabel": "Cerca asset per simbolo",
+    "clearSearch": "Cancella ricerca",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fondo",
+    "listingFunds": "Elenco {{count}} asset con fondi di regolamento",
+    "noFunds": "Nessun fondo di regolamento trovato",
+    "noFundsDescription": "Al momento nessuno smartcoin detiene garanzie nel suo fondo di regolamento.",
+    "fund": "Fondo",
+    "collateral": "Garanzia",
+    "bidButton": "Offri",
+    "showingOf": "Visualizzati {{filtered}} di {{total}}",
+    "noFilterResults": "Nessun asset corrisponde alla ricerca corrente",
+    "clearFilters": "Cancella ricerca"
+}

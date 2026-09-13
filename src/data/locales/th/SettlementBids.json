@@ -1,0 +1,19 @@
+{
+    "title": "ประมูลกองทุนชำระ",
+    "description": "Smartcoin ทั้งหมดที่มีหลักประกันในกองทุนชำระ ประมูลเพื่อเรียกร้องส่วนแบ่ง",
+    "searchPlaceholder": "ค้นหาสัญลักษณ์...",
+    "searchLabel": "ค้นหาสินทรัพย์ตามสัญลักษณ์",
+    "clearSearch": "ล้างการค้นหา",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "กองทุน",
+    "listingFunds": "แสดง {{count}} สินทรัพย์ที่มีกองทุนชำระ",
+    "noFunds": "ไม่พบกองทุนชำระ",
+    "noFundsDescription": "ขณะนี้ไม่มี smartcoin ใดมีหลักประกันในกองทุนชำระ",
+    "fund": "กองทุน",
+    "collateral": "หลักประกัน",
+    "bidButton": "ประมูล",
+    "showingOf": "แสดง {{filtered}} จาก {{total}}",
+    "noFilterResults": "ไม่มีสินทรัพย์ที่ตรงกับการค้นหาปัจจุบัน",
+    "clearFilters": "ล้างการค้นหา"
+}

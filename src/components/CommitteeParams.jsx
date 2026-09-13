@@ -9,7 +9,23 @@ import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { cn } from "@/lib/utils";
-import { SlidersHorizontal, Layers, FileSignature } from "lucide-react";
+import {
+  SlidersHorizontal,
+  Layers,
+  FileSignature,
+  Clock,
+  Database,
+  Users,
+  Split,
+  Coins,
+  Wallet,
+  ShieldCheck,
+  Vote,
+  Hash,
+  KeyRound,
+  Percent,
+  Receipt,
+} from "lucide-react";
 
 import {
   Card,
@@ -374,15 +390,110 @@ function buildInitialState(chainParams) {
   };
 }
 
-function SectionCard({ title, children }) {  return (
+// Top accent bar per section: A1→A2, A2→A3, A3→A1 rotation. Full literal
+// class strings — Tailwind cannot build them dynamically.
+const SECTION_BAR = {
+  1: "bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]",
+  2: "bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]",
+  3: "bg-gradient-to-r from-[hsl(var(--accent-3))] to-[hsl(var(--accent-1))]",
+};
+
+function SectionCard({ title, accent = 1, Icon, children }) {  return (
     <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
+      <div className={cn("h-1 w-full", SECTION_BAR[accent] ?? SECTION_BAR[1])} />
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">{title}</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          {Icon ? (
+            <span
+              className={cn(
+                "flex items-center justify-center w-7 h-7 rounded-lg shrink-0",
+                SECTION_TINT[accent]?.chip ?? SECTION_TINT[1].chip
+              )}
+            >
+              <Icon
+                className={cn(
+                  "h-4 w-4",
+                  SECTION_TINT[accent]?.icon ?? SECTION_TINT[1].icon
+                )}
+              />
+            </span>
+          ) : null}
+          <span className={SECTION_TINT[accent]?.title ?? SECTION_TINT[1].title}>
+            {title}
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="p-5 sm:p-6 pt-0 flex flex-col gap-4">
         {children}
       </CardContent>
     </Card>
+  );
+}
+
+// Section identity: icon + accent rotation (A1/A2/A3 cycling). Full literal
+// class strings — Tailwind cannot build them dynamically.
+const SECTION_TINT = {
+  1: {
+    chip: "bg-[hsl(var(--accent-1)/0.15)]",
+    icon: "text-[hsl(var(--accent-1-fg))]",
+    title: "text-[hsl(var(--accent-1-fg))]",
+  },
+  2: {
+    chip: "bg-[hsl(var(--accent-2)/0.15)]",
+    icon: "text-[hsl(var(--accent-2-fg))]",
+    title: "text-[hsl(var(--accent-2-fg))]",
+  },
+  3: {
+    chip: "bg-[hsl(var(--accent-3)/0.15)]",
+    icon: "text-[hsl(var(--accent-3-fg))]",
+    title: "text-[hsl(var(--accent-3-fg))]",
+  },
+};
+
+const SECTION_STYLE = {
+  timing: { accent: 1, Icon: Clock },
+  sizes: { accent: 2, Icon: Database },
+  witness: { accent: 3, Icon: Users },
+  feeSplit: { accent: 2, Icon: Split },
+  cashback: { accent: 3, Icon: Coins },
+  pay: { accent: 1, Icon: Wallet },
+  authority: { accent: 2, Icon: ShieldCheck },
+  voting: { accent: 3, Icon: Vote },
+  htlc: { accent: 1, Icon: Hash },
+  customAuth: { accent: 2, Icon: KeyRound },
+  market: { accent: 3, Icon: Percent },
+  fees: { accent: 1, Icon: Receipt },
+};
+
+// Field type chips: ints → info outline, bool → warning outline,
+// percent/BTS → success outline. Technical labels, no i18n needed.
+const TYPE_BADGE_TINT = {
+  uint8:
+    "border-[hsl(var(--accent-info)/0.3)] bg-[hsl(var(--accent-info)/0.08)] text-[hsl(var(--accent-info-fg))]",
+  uint16:
+    "border-[hsl(var(--accent-info)/0.3)] bg-[hsl(var(--accent-info)/0.08)] text-[hsl(var(--accent-info-fg))]",
+  uint32:
+    "border-[hsl(var(--accent-info)/0.3)] bg-[hsl(var(--accent-info)/0.08)] text-[hsl(var(--accent-info-fg))]",
+  int64:
+    "border-[hsl(var(--accent-info)/0.3)] bg-[hsl(var(--accent-info)/0.08)] text-[hsl(var(--accent-info-fg))]",
+  bool: "border-[hsl(var(--accent-warning)/0.3)] bg-[hsl(var(--accent-warning)/0.08)] text-[hsl(var(--accent-warning-fg))]",
+  percent:
+    "border-[hsl(var(--accent-success)/0.3)] bg-[hsl(var(--accent-success)/0.08)] text-[hsl(var(--accent-success-fg))]",
+  bts: "border-[hsl(var(--accent-success)/0.3)] bg-[hsl(var(--accent-success)/0.08)] text-[hsl(var(--accent-success-fg))]",
+};
+
+function TypeBadge({ type }) {
+  if (!type || !TYPE_BADGE_TINT[type]) return null;
+  return (
+    <Badge
+      variant="outline"
+      className={cn(
+        "text-[10px] px-1.5 py-0 font-mono shrink-0",
+        TYPE_BADGE_TINT[type]
+      )}
+    >
+      {type}
+    </Badge>
   );
 }
 
@@ -394,13 +505,19 @@ const ParamField = memo(function ParamField({
   error,
   disabled,
   readOnlyCurrent,
+  fieldType,
+  isDirty,
   onChange,
   t,
 }) {
+  const hasError = error && (!Array.isArray(error) || error.length);
   return (
     <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-sm font-medium">{label}</span>
+        <span className="text-sm font-medium flex items-center gap-1.5 min-w-0">
+          <span className="truncate">{label}</span>
+          <TypeBadge type={fieldType} />
+        </span>
         {readOnlyCurrent !== null && readOnlyCurrent !== undefined ? (
           <span className="font-mono text-xs tabular-nums text-muted-foreground truncate">
             {t("CommitteeParams:currentValue", {
@@ -416,7 +533,14 @@ const ParamField = memo(function ParamField({
         inputMode="decimal"
         disabled={disabled}
         onChange={(e) => onChange(fieldKey, e.target.value)}
-        className="mt-1 !bg-card/40 border-border focus-visible:!ring-[hsl(var(--accent-1)/0.4)] focus-visible:border-[hsl(var(--accent-1)/0.5)]"
+        className={cn(
+          "mt-1 !bg-card/40 border-border focus-visible:!ring-[hsl(var(--accent-1)/0.4)] focus-visible:border-[hsl(var(--accent-1)/0.5)]",
+          hasError
+            ? "!border-[hsl(var(--accent-danger)/0.6)] focus-visible:!ring-[hsl(var(--accent-danger)/0.4)]"
+            : isDirty
+            ? "!border-[hsl(var(--accent-success)/0.5)] focus-visible:!ring-[hsl(var(--accent-success)/0.3)]"
+            : null
+        )}
       />
       {hint ? (
         <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
@@ -1099,14 +1223,31 @@ export default function CommitteeParams() {
       locked || originalParams[f.key] === undefined
         ? null
         : fmtHuman(f.type, originalParams[f.key]);
+    // Chain-domain dirty check (mirrors the diff logic): parsed chain value
+    // vs chain original. Invalid input parses to undefined → never dirty,
+    // error styling takes over via the error prop.
+    const parsedValue =
+      f.type === "bool" ? !!inputs[f.key] : validation.parsed[f.key];
+    const isDirty =
+      !locked &&
+      parsedValue !== undefined &&
+      parsedValue !== originalParams[f.key];
     if (f.type === "bool") {
       return (
         <div
           key={f.key}
-          className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4 flex items-center justify-between gap-3"
+          className={cn(
+            "rounded-xl border bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4 flex items-center justify-between gap-3",
+            isDirty
+              ? "border-[hsl(var(--accent-success)/0.4)]"
+              : "border-[hsl(var(--accent-1)/0.2)]"
+          )}
         >
           <div>
-            <div className="text-sm font-medium">{label}</div>
+            <div className="text-sm font-medium flex items-center gap-1.5">
+              {label}
+              <TypeBadge type="bool" />
+            </div>
             {hint ? (
               <div className="text-xs text-muted-foreground mt-0.5">{hint}</div>
             ) : null}
@@ -1129,6 +1270,8 @@ export default function CommitteeParams() {
         error={errMsg(f.key)}
         disabled={readOnly || !initialized || locked}
         readOnlyCurrent={currentCaption}
+        fieldType={f.type}
+        isDirty={isDirty}
         onChange={setInput}
         t={t}
       />
@@ -1143,8 +1286,16 @@ export default function CommitteeParams() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
           />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl"
+          />
           <div className="relative flex items-center gap-4">
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
               <SlidersHorizontal className="h-6 w-6" strokeWidth={2.25} />
             </span>
             <div className="flex-1 min-w-0">
@@ -1269,6 +1420,8 @@ export default function CommitteeParams() {
                   title={t(`CommitteeParams:sec_${section}`, {
                     defaultValue: section,
                   })}
+                  accent={SECTION_STYLE[section]?.accent ?? 1}
+                  Icon={SECTION_STYLE[section]?.Icon}
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {SCALAR_FIELDS.filter((f) => f.section === section).map(
@@ -1284,6 +1437,8 @@ export default function CommitteeParams() {
               title={t("CommitteeParams:sec_htlc", {
                 defaultValue: "HTLC options",
               })}
+              accent={SECTION_STYLE.htlc.accent}
+              Icon={SECTION_STYLE.htlc.Icon}
             >
               <label className="flex items-center gap-2 text-sm">
                 <Switch
@@ -1327,6 +1482,15 @@ export default function CommitteeParams() {
                           originalParams.extensions?.updatable_htlc_options;
                         return o ? String(o[f.key] ?? "—") : "—";
                       })()}
+                      fieldType={f.type}
+                      isDirty={(() => {
+                        const nv = validation.extParsed?.[f.key];
+                        const ov =
+                          originalParams.extensions?.updatable_htlc_options?.[
+                            f.key
+                          ];
+                        return nv !== undefined && nv !== ov;
+                      })()}
                       onChange={setInput}
                       t={t}
                     />
@@ -1341,6 +1505,8 @@ export default function CommitteeParams() {
               title={t("CommitteeParams:sec_customAuth", {
                 defaultValue: "Custom authority options",
               })}
+              accent={SECTION_STYLE.customAuth.accent}
+              Icon={SECTION_STYLE.customAuth.Icon}
             >
               <label className="flex items-center gap-2 text-sm">
                 <Switch
@@ -1382,6 +1548,15 @@ export default function CommitteeParams() {
                           originalParams.extensions?.custom_authority_options;
                         return o ? String(o[f.key] ?? "—") : "—";
                       })()}
+                      fieldType={f.type}
+                      isDirty={(() => {
+                        const nv = validation.extParsed?.[f.key];
+                        const ov =
+                          originalParams.extensions?.custom_authority_options?.[
+                            f.key
+                          ];
+                        return nv !== undefined && nv !== ov;
+                      })()}
                       onChange={setInput}
                       t={t}
                     />
@@ -1396,6 +1571,8 @@ export default function CommitteeParams() {
               title={t("CommitteeParams:sec_market", {
                 defaultValue: "Market extensions",
               })}
+              accent={SECTION_STYLE.market.accent}
+              Icon={SECTION_STYLE.market.Icon}
             >
               <label className="flex items-center gap-2 text-sm">
                 <Switch
@@ -1440,6 +1617,13 @@ export default function CommitteeParams() {
                     return o !== undefined && o !== null
                       ? `${o / 100}%`
                       : "—";
+                  })()}
+                  fieldType="percent"
+                  isDirty={(() => {
+                    const nv = validation.extParsed?.market_fee_network_percent;
+                    const ov =
+                      originalParams.extensions?.market_fee_network_percent;
+                    return nv !== undefined && nv !== ov;
                   })()}
                   onChange={setInput}
                   t={t}
@@ -1489,6 +1673,13 @@ export default function CommitteeParams() {
                       ? `${o / 100}%`
                       : "—";
                   })()}
+                  fieldType="percent"
+                  isDirty={(() => {
+                    const nv = validation.extParsed?.maker_fee_discount_percent;
+                    const ov =
+                      originalParams.extensions?.maker_fee_discount_percent;
+                    return nv !== undefined && nv !== ov;
+                  })()}
                   onChange={setInput}
                   t={t}
                 />
@@ -1501,6 +1692,8 @@ export default function CommitteeParams() {
               title={t("CommitteeParams:sec_fees", {
                 defaultValue: "Fee schedule",
               })}
+              accent={SECTION_STYLE.fees.accent}
+              Icon={SECTION_STYLE.fees.Icon}
             >
               <p className="text-xs text-muted-foreground leading-relaxed">
                 {t("CommitteeParams:feesDesc", {
@@ -1532,15 +1725,27 @@ export default function CommitteeParams() {
                         return (
                           <tr
                             key={opId}
-                            className="border-t border-border/40"
+                            className={cn(
+                              "border-t border-border/40",
+                              isVirtual &&
+                                "bg-[hsl(var(--accent-info)/0.04)]"
+                            )}
                           >
                             <td className="p-2 font-mono text-xs align-top">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span>{opTypes[opId] ?? `op ${opId}`}</span>
+                                <span
+                                  className={
+                                    isVirtual
+                                      ? "italic text-muted-foreground"
+                                      : undefined
+                                  }
+                                >
+                                  {opTypes[opId] ?? `op ${opId}`}
+                                </span>
                                 {isVirtual ? (
                                   <Badge
-                                    variant="secondary"
-                                    className="shrink-0"
+                                    variant="outline"
+                                    className="shrink-0 border-[hsl(var(--accent-info)/0.35)] bg-[hsl(var(--accent-info)/0.1)] text-[hsl(var(--accent-info-fg))] text-[10px] px-1.5 py-0"
                                   >
                                     {t("CommitteeParams:feeVirtualBadge", {
                                       defaultValue: "Virtual",
@@ -1569,8 +1774,8 @@ export default function CommitteeParams() {
                         );
                       }
                       return (
-                      <tr key={opId} className="border-t border-border/40">
-                        <td className="p-2 font-mono text-xs align-top">
+                      <tr key={opId} className="border-t border-border/40 hover:bg-[hsl(var(--accent-1)/0.04)] transition-colors">
+                        <td className="p-2 font-mono text-xs align-top text-[hsl(var(--accent-1-fg))]">
                           {opTypes[opId] ?? `op ${opId}`}
                         </td>
                         <td className="p-2">
@@ -1578,9 +1783,15 @@ export default function CommitteeParams() {
                             {fields.map((field) => {
                               const errKey = `${opId}:${field}`;
                               const orig = params ? params[field] : undefined;
+                              const feeNv =
+                                validation.feeParsed?.[opId]?.[field];
+                              const feeDirty =
+                                feeNv !== undefined &&
+                                orig !== undefined &&
+                                feeNv !== orig;
                               return (
                                 <div key={field}>
-                                  <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                                  <div className="text-[10px] font-medium uppercase tracking-wider text-[hsl(var(--accent-2-fg))]/80 mb-1">
                                     {t(`CommitteeParams:ff_${field}`, {
                                       defaultValue: field,
                                     })}
@@ -1596,6 +1807,8 @@ export default function CommitteeParams() {
                                     className={`!bg-card/40 border-border max-w-[140px] ${
                                       validation.feeErrors[errKey]
                                         ? "!border-[hsl(var(--accent-danger)/0.6)]"
+                                        : feeDirty
+                                        ? "!border-[hsl(var(--accent-success)/0.5)]"
                                         : ""
                                     }`}
                                   />
@@ -1688,7 +1901,7 @@ export default function CommitteeParams() {
                 className={cn(
                   "w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] flex items-center justify-center gap-2 text-base transition-all group",
                   formValid
-                    ? "bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] shadow-[0_8px_32px_-12px_rgba(6,182,212,0.7)] hover:shadow-[0_12px_40px_-12px_rgba(20,184,166,0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))]"
+                    ? "bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] shadow-[0_8px_32px_-12px_hsl(var(--accent-1)/0.7)] hover:shadow-[0_12px_40px_-12px_hsl(var(--accent-2)/0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))]"
                     : "bg-card/60 border border-border/40 dark:border-white/5 text-muted-foreground cursor-not-allowed"
                 )}
               >

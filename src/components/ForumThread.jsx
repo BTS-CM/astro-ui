@@ -8,6 +8,7 @@ import { useStore } from "@nanostores/react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import { humanReadableFloat } from "@/lib/common.js";
 
 import {
   Card,
@@ -68,7 +69,10 @@ import {
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { $userBlockList, addBlockedUser } from "@/stores/blocklist.ts";
+import { $userBlockList, $blockList, addBlockedUser } from "@/stores/blocklist.ts";
+
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import {
   $customTheme,
   getThemeForPage,
@@ -102,6 +106,7 @@ import {
 } from "@/lib/trollboxAttach.js";
 import {
   FORUM_OP_ID,
+  CUSTOM_OPERATION_ID,
   buildForumReplyData,
   buildMessageKey,
   maxMessageBytes,
@@ -229,6 +234,8 @@ export default function ForumThread(properties) {
     _marketSearchTEST = [],
     _poolsBTS = [],
     _poolsTEST = [],
+    _feeScheduleBTS = [],
+    _feeScheduleTEST = [],
   } = properties || {};
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
@@ -490,6 +497,7 @@ export default function ForumThread(properties) {
   }, [topic, loggedIn, isWatched, chain, channel]);
 
   const userBlockList = useStore($userBlockList);
+  const blocklist = useStore($blockList);
   const blockedIds = useMemo(
     () =>
       new Set(
@@ -507,10 +515,33 @@ export default function ForumThread(properties) {
     [userBlockList, chain]
   );
   const isBlocked = useCallback(
-    (account, name) =>
-      blockedIds.has(account) ||
-      blockedNames.has((name || "").toLowerCase()),
-    [blockedIds, blockedNames]
+    (account, name) => {
+      if (blockedIds.has(account)) {
+        return true;
+      }
+      if (blockedNames.has((name || "").toLowerCase())) {
+        return true;
+      }
+      // Committee blocklist stores sha256 hex of 1.2.x ids (bitshares only).
+      if (
+        chain === "bitshares" &&
+        blocklist &&
+        blocklist.users &&
+        blocklist.users.length &&
+        account
+      ) {
+        try {
+          return blocklist.users.includes(
+            toHex(sha256(utf8ToBytes(account)))
+          );
+        } catch {
+          // Hashing failure must never hide a reply.
+          return false;
+        }
+      }
+      return false;
+    },
+    [blockedIds, blockedNames, chain, blocklist]
   );
   const visibleReplies = useMemo(
     () =>
@@ -853,6 +884,70 @@ export default function ForumThread(properties) {
       </DropdownMenu>
     );
   };
+
+  // Custom-operation fee schedule for this chain: base fee plus a
+  // per-kbyte charge on the packed data size (same convention as the
+  // trollbox/forum estimators: fee + price_per_kbyte * ceil(bytes / 1000)).
+  const customFeeSchedule = useMemo(() => {
+    const list = chain === "bitshares" ? _feeScheduleBTS : _feeScheduleTEST;
+    const found = (list || []).find((x) => x && x.id === CUSTOM_OPERATION_ID);
+    return {
+      fee: found?.data?.fee ?? 0,
+      pricePerKbyte: found?.data?.price_per_kbyte ?? 0,
+    };
+  }, [chain, _feeScheduleBTS, _feeScheduleTEST]);
+
+  // Estimated packed-data size (bytes) for the current reply draft,
+  // built with the exact packing path handleReply uses. Null when there's
+  // nothing postable (logged out, empty text, bad attachment).
+  const estimatedPostBytes = useMemo(() => {
+    const text = (draft || "").trim();
+    if (!loggedIn || !currentUser?.id || !threadCatalog || !text) {
+      return null;
+    }
+    let attach = null;
+    if (pendingAttach) {
+      try {
+        attach = validateAttachmentShape(pendingAttach.attach);
+      } catch {
+        attach = null;
+      }
+      if (!attach) {
+        return null;
+      }
+    }
+    try {
+      const data = buildForumReplyData({
+        catalog: threadCatalog,
+        key: buildMessageKey(),
+        text,
+        attach,
+        maxBytes,
+      });
+      return data.length / 2; // packed hex string -> bytes
+    } catch {
+      return null;
+    }
+  }, [
+    draft,
+    pendingAttach,
+    threadCatalog,
+    currentUser,
+    loggedIn,
+    maxBytes,
+  ]);
+
+  // Estimated network fee in BTS (core asset, precision 5). The signing
+  // flow (DeepLinkDialog) computes the exact fee; this is a live preview.
+  const estimatedPostFee = useMemo(() => {
+    if (estimatedPostBytes == null) {
+      return null;
+    }
+    const sats =
+      customFeeSchedule.fee +
+      customFeeSchedule.pricePerKbyte * Math.ceil(estimatedPostBytes / 1000);
+    return humanReadableFloat(sats, 5);
+  }, [estimatedPostBytes, customFeeSchedule]);
 
   const handleReply = async () => {
     setComposeError(null);
@@ -1547,6 +1642,21 @@ export default function ForumThread(properties) {
                   </Button>
                 )}
                 <Button
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  disabled={!draft.trim()}
+                  onClick={() => {
+                    setDraft("");
+                    setPendingAttach(null);
+                    setComposeError(null);
+                  }}
+                  title={t("Forum:clearComposer", "Clear draft")}
+                  aria-label={t("Forum:clearComposer", "Clear draft")}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                <Button
                   onClick={handleReply}
                   disabled={!loggedIn || !draft.trim() || verifyingAttach}
                   size="sm"
@@ -1561,6 +1671,13 @@ export default function ForumThread(properties) {
                     max: maxBytes,
                   })}
                 </span>
+                {estimatedPostFee != null ? (
+                  <span className="ml-auto text-right text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">
+                    {t("Forum:composerFee", "Fee: {{fee}} BTS", {
+                      fee: estimatedPostFee,
+                    })}
+                  </span>
+                ) : null}
               </div>
               {textBytes > maxBytes ? (
                 <p className="mt-1 text-xs text-destructive">
@@ -1591,8 +1708,6 @@ export default function ForumThread(properties) {
           userID={currentUser.id}
           dismissCallback={() => {
             setShowDialog(false);
-            setDraft("");
-            setPendingAttach(null);
             setRefreshNonce((n) => n + 1);
           }}
           key={`forum-thread-${pendingOp[0].data.slice(0, 32)}`}

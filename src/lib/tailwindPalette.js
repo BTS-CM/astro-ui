@@ -121,6 +121,31 @@ export function readableForeground(hex) {
   return darkContrast >= lightContrast ? "#0a0a0a" : "#fafafa";
 }
 
+// Background/foreground pair with a WCAG AA (≥4.5:1) guarantee, mirroring the
+// lightness-march in accentVars.js `pageReadableAccent`. readableForeground()
+// picks the better of near-black/near-white, but for mid-lightness fills (e.g.
+// indigo #6366f1: white 4.43, black ~3.4) neither endpoint passes. In that case
+// the background lightness is marched minimally toward the nearer-passing
+// endpoint until AA holds. Returns { bg, fg } hex strings; passing pairs are
+// returned untouched so existing themes are unaffected.
+export function aaButtonPair(bgHex) {
+  if (!hexToRgb(bgHex)) return { bg: "#808080", fg: "#ffffff" };
+  let fg = readableForeground(bgHex);
+  if (contrastRatio(bgHex, fg) >= 4.5) return { bg: bgHex, fg };
+  const toWhite = contrastRatio(bgHex, "#fafafa") >= contrastRatio(bgHex, "#0a0a0a");
+  const base = new TinyColor(bgHex).toHsl();
+  const step = toWhite ? -0.01 : 0.01;
+  let l = base.l;
+  for (let i = 0; i < 100; i++) {
+    l = Math.min(1, Math.max(0, l + step));
+    if (l === 0 || l === 1) break;
+    const cand = new TinyColor({ h: base.h, s: base.s, l }).toHexString();
+    const candFg = readableForeground(cand);
+    if (contrastRatio(cand, candFg) >= 4.5) return { bg: cand, fg: candFg };
+  }
+  return toWhite ? { bg: "#0a0a0a", fg: "#fafafa" } : { bg: "#fafafa", fg: "#0a0a0a" };
+}
+
 // Accepts EITHER a PaletteRef { hex } or legacy (color, shade) lookup.
 export function paletteHex(colorOrRef, shade) {
   if (colorOrRef && typeof colorOrRef === "object" && colorOrRef.hex) return colorOrRef.hex;
@@ -269,15 +294,50 @@ export function buildThemeVars(theme) {
     const ring = pick("ring", ringHex, ringDarkHex);
     const sidebar = pick("sidebar", sidebarHex, sidebarDarkHex);
     const sidebarAccent = pick("sidebarAccent", sidebarAccentHex, sidebarAccentDarkHex);
-    // Destructive follows the themeable "danger" status role (single source).
-    const destructiveHex = theme.statusAccents?.danger || "#ef4444";
-    const destructiveDarkHex = theme.statusAccents?.danger || "#ef4444";
+    // Destructive honours an explicit token override when set (e.g. pastel
+    // themes); otherwise it follows the themeable "danger" status role.
+    const destructiveHex = overrides.destructive?.hex || theme.statusAccents?.danger || "#ef4444";
+    const destructiveDarkHex = overrides.destructive?.hex || theme.statusAccents?.danger || "#ef4444";
     const destructive = dark ? destructiveDarkHex : destructiveHex;
 
     const toHsl = (hex) => hexToHslString(hex);
     const fg = (hex) => hexToHslString(readableForeground(hex));
 
+    // Filled controls get AA-guaranteed pairs (background marched only when
+    // neither endpoint passes, so passing themes are byte-identical).
+    const primaryPair = aaButtonPair(primary);
+    const destructivePair = aaButtonPair(destructive);
+    const accentPair = aaButtonPair(accent);
+    const sidebarAccentPair = aaButtonPair(sidebarAccent);
+
     const mutedFgHex = paletteHex(n, dark ? 400 : 700);
+    // Nudge muted text a touch toward the seed hue so it feels part of the
+    // theme rather than floating neutral gray; the AA guard below keeps the
+    // guarantee (falls back to the neutral on any failure).
+    let mutedFg = mutedFgHex;
+    try {
+      const tinted = new TinyColor(mutedFgHex).mix(seedHex, 15).toHexString();
+      if (contrastRatio(muted, tinted) >= 4.5) mutedFg = tinted;
+    } catch {
+      /* keep neutral */
+    }
+
+    // Raw hex pairs for the whole-theme contrast audit (see auditTokenContrast).
+    // These audit the AUTHORED values (pre-march) so the customizer panel shows
+    // the author's real choice; `fixed` marks pairs the AA marcher corrected in
+    // the emitted CSS. Order is stable and shared between modes so light/dark
+    // rows zip by index.
+    const audit = [
+      { key: "background", label: "Background", bg, fg: readableForeground(bg), fixed: false },
+      { key: "card", label: "Card / Popover", bg: card, fg: readableForeground(card), fixed: false },
+      { key: "primary", label: "Primary", bg: primary, fg: readableForeground(primary), fixed: primaryPair.bg.toLowerCase() !== primary.toLowerCase() },
+      { key: "secondary", label: "Secondary", bg: secondary, fg: readableForeground(secondary), fixed: false },
+      { key: "muted", label: "Muted text", bg: muted, fg: mutedFg, fixed: false },
+      { key: "accent", label: "Accent", bg: accent, fg: readableForeground(accent), fixed: accentPair.bg.toLowerCase() !== accent.toLowerCase() },
+      { key: "destructive", label: "Destructive", bg: destructive, fg: readableForeground(destructive), fixed: destructivePair.bg.toLowerCase() !== destructive.toLowerCase() },
+      { key: "sidebar", label: "Sidebar", bg: sidebar, fg: readableForeground(sidebar), fixed: false },
+      { key: "sidebarAccent", label: "Sidebar accent", bg: sidebarAccent, fg: readableForeground(sidebarAccent), fixed: sidebarAccentPair.bg.toLowerCase() !== sidebarAccent.toLowerCase() },
+    ];
 
     const vars = {
       "--background": toHsl(bg),
@@ -286,30 +346,34 @@ export function buildThemeVars(theme) {
       "--card-foreground": fg(card),
       "--popover": toHsl(card),
       "--popover-foreground": fg(card),
-      "--primary": toHsl(primary),
-      "--primary-foreground": fg(primary),
+      "--primary": toHsl(primaryPair.bg),
+      "--primary-foreground": toHsl(primaryPair.fg),
       "--secondary": toHsl(secondary),
       "--secondary-foreground": fg(secondary),
       "--muted": toHsl(muted),
-      "--muted-foreground": hexToHslString(mutedFgHex),
-      "--accent": toHsl(accent),
-      "--accent-foreground": fg(accent),
-      "--destructive": toHsl(destructive),
-      "--destructive-foreground": fg(destructive),
+      "--muted-foreground": hexToHslString(mutedFg),
+      "--accent": toHsl(accentPair.bg),
+      "--accent-foreground": toHsl(accentPair.fg),
+      "--destructive": toHsl(destructivePair.bg),
+      "--destructive-foreground": toHsl(destructivePair.fg),
       "--border": toHsl(border),
       "--input": toHsl(border),
       "--ring": toHsl(ring),
       "--sidebar-background": toHsl(sidebar),
       "--sidebar-foreground": fg(sidebar),
-      "--sidebar-primary": toHsl(primary),
-      "--sidebar-primary-foreground": fg(primary),
-      "--sidebar-accent": toHsl(sidebarAccent),
-      "--sidebar-accent-foreground": fg(sidebarAccent),
+      "--sidebar-primary": toHsl(primaryPair.bg),
+      "--sidebar-primary-foreground": toHsl(primaryPair.fg),
+      "--sidebar-accent": toHsl(sidebarAccentPair.bg),
+      "--sidebar-accent-foreground": toHsl(sidebarAccentPair.fg),
       "--sidebar-border": toHsl(border),
       "--sidebar-ring": toHsl(ring),
     };
 
-    // Chart palette: cohesive hues rotated around the seed color.
+    // Chart palette: cohesive hues rotated around the seed color. Deliberate
+    // design decision (not an oversight): charts re-tint per theme so data
+    // stays in-family with the UI, at the cost of cross-theme categorical
+    // stability (the same asset changes color between themes; legends must be
+    // re-read). A "stable categories" toggle would invert this tradeoff.
     const seedHsl = hexToHsl(seedHex) || { h: 220 };
     const offsets = [0, 40, -40, 80, -80];
     const cs = dark ? 70 : 65;
@@ -318,14 +382,35 @@ export function buildThemeVars(theme) {
       vars[`--chart-${i + 1}`] = `${((seedHsl.h + o) % 360 + 360) % 360} ${cs}% ${cl}%`;
     });
 
-    return vars;
+    return { vars, audit };
   };
 
   // Also return the raw background hex values for use by accent var builders
   // (so -foreground can contrast with the actual page background).
-  const lightVars = build("light");
-  const darkVars = build("dark");
-  return { light: lightVars, dark: darkVars, bgLightHex, bgDarkHex };
+  const lightBuilt = build("light");
+  const darkBuilt = build("dark");
+  return {
+    light: lightBuilt.vars,
+    dark: darkBuilt.vars,
+    bgLightHex,
+    bgDarkHex,
+    auditLight: lightBuilt.audit,
+    auditDark: darkBuilt.audit,
+  };
+}
+
+// Whole-theme AA audit rows for ThemeCustomizer: raw bg/fg hex pairs for every
+// text-bearing token in both modes (light/dark zipped by index). Rows audit the
+// authored values; `fixed`/`fixedDark` mark pairs the AA marcher corrected in
+// the emitted CSS.
+export function auditTokenContrast(theme) {
+  const { auditLight, auditDark } = buildThemeVars(theme);
+  return auditLight.map((row, i) => ({
+    ...row,
+    bgDark: auditDark[i].bg,
+    fgDark: auditDark[i].fg,
+    fixedDark: auditDark[i].fixed,
+  }));
 }
 
 function varsToCss(vars) {

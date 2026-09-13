@@ -1,6 +1,10 @@
 // Canonical list of themable pages. `slug` must match the `page` prop passed
 // to <PageHeader /> on each Astro page (that value is what PageHeader publishes
 // to $currentPage and what per-page theme overrides are keyed by).
+// Slug spelling convention: use the exact `page` prop value. Most slugs use
+// underscores (e.g. `change_password`), but account/portfolio routes and a few
+// others use hyphens (e.g. `portfolio-balances`, `blocked-users`, `call-orders`,
+// `top-operations`). Hyphen vs underscore matters — keep them exact.
 export const THEMABLE_PAGES = [
   { slug: "index", label: "Home" },
   { slug: "dex", label: "DEX" },
@@ -62,6 +66,15 @@ export const THEMABLE_PAGES = [
   { slug: "theme_customizer", label: "Theme Customization" },
   { slug: "airdrop_calculate", label: "Airdrop" },
   { slug: "top-operations", label: "Top Operations" },
+  { slug: "top-markets", label: "Top Markets" },
+  { slug: "top-pools", label: "Top Pools" },
+  { slug: "call-orders", label: "Call Orders" },
+  { slug: "network_fees", label: "Network Fees" },
+  { slug: "page_themes", label: "Per-Page Themes" },
+  { slug: "explorer", label: "Explorer" },
+  { slug: "monthly_referrer", label: "Monthly Referrer" },
+  { slug: "blind_transfers", label: "Blind Transfers" },
+  { slug: "custom_authorities", label: "Custom Authorities" },
   { slug: "trollbox", label: "Trollbox" },
   { slug: "forum", label: "Forum" },
 ];

@@ -70,7 +70,8 @@ function gradientForeground(...hexes) {
 
 // Accent-derived TEXT color that is legible ON the page/card background in the
 // given mode, while preserving the accent's hue so it still reads as the brand
-// color. This is the original `text-amber-700 dark:text-amber-200` behavior:
+// color. This mirrors the pre-system convention of dark text in light mode and
+// light text in dark mode (previously hard-coded amber utilities).
 // dark text in light mode, light text in dark mode. If the raw accent already
 // meets WCAG AA against the background we keep it (closest to the original
 // shade); otherwise we march its lightness toward the needed extreme (darker in

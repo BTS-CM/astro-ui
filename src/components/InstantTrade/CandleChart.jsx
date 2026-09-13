@@ -381,6 +381,9 @@ export default function CandleChart({
   const indicatorRowData = useMemo(() => ({ indicators: ALL_INDICATORS, enabledSet, toggle: toggleIndicator }), [enabledSet, toggleIndicator]);
 
   const { resolvedTheme } = useTheme();
+  // Candlestick up/down colours are market convention and stay fixed across
+  // themes (theming carve-out, same as the order-book SIDE_STYLES). Grid/axis
+  // read live CSS vars with static pre-hydration fallbacks below.
   const [chartTheme, setChartTheme] = useState(() => ({
     background: "transparent",
     grid: "rgba(0,0,0,0.06)",
@@ -633,7 +636,7 @@ export default function CandleChart({
                   className="h-8 gap-1.5 border-border bg-card/40 hover:bg-card/60 text-xs"
                 >
                   {t("Charts:indicators")}
-                  {indicators.length > 0 ? <span className="bg-[hsl(var(--accent-1))] text-white rounded-full px-1.5 py-0.5 text-[10px]">{indicators.length}</span> : null}
+                  {indicators.length > 0 ? <span className="bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))] rounded-full px-1.5 py-0.5 text-[10px]">{indicators.length}</span> : null}
                 </Button>
                 <DialogContent
                   className="sm:max-w-[520px] max-h-[70vh] p-0 gap-0 bg-card border border-border overflow-hidden flex flex-col"

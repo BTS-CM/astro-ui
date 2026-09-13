@@ -277,8 +277,10 @@ export default function DeepLinkDialog(properties) {
 
   const [deeplinkJSON, setDeeplinkJSON] = useState(null);
 
-  // QR code customization state
-  const [qrECL, setQRECL] = useState("M");
+// QR code customization state
+// NOTE: qrBGC/qrFGC stay dark-on-light by design (theming carve-out):
+// QR payloads must remain scannable in every theme and mode.
+const [qrECL, setQRECL] = useState("M");
   const [qrSize, setQRSize] = useState("250");
   const [qrQZ, setQRQZ] = useState("25");
   const [qrStyle, setQRStyle] = useState("squares");
@@ -1064,7 +1066,7 @@ export default function DeepLinkDialog(properties) {
                       </Button>
                     </div>
                     {totpError ? (
-                      <p className="text-sm text-red-500">{totpError}</p>
+                      <p className="text-sm text-[hsl(var(--accent-danger-fg))]">{totpError}</p>
                     ) : null}
                     {totpDeeplink ? (
                       <>

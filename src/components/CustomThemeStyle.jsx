@@ -3,12 +3,13 @@ import React, { useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import {
   $customTheme,
-  $draftTheme,
   $currentPage,
   getThemeForPage,
   compileThemeCss,
   resolvePageAccent,
   resolveStatusAll,
+  resolveDarkPageAccent,
+  resolveDarkStatusAll,
 } from "@/stores/customTheme.ts";
 import { buildAccentCss } from "@/lib/accentVars.js";
 import { buildThemeVars } from "@/lib/tailwindPalette.js";
@@ -36,13 +37,13 @@ function applyCss(css) {
 
 export default function CustomThemeStyle() {
   const state = useStore($customTheme);
-  const draftTheme = useStore($draftTheme);
   const page = useStore($currentPage);
 
   useEffect(() => {
-    // On the theme customizer page, use the draft for live preview when active
-    const isCustomizer = page === "theme_customizer";
-    const theme = isCustomizer && draftTheme ? draftTheme : getThemeForPage(page);
+    // The editor is a sandbox: selecting or editing a theme never changes the
+    // app. Always resolve the page's assigned (active) theme here; explicit
+    // Save actions adopt a theme via setActiveTheme instead.
+    const theme = getThemeForPage(page);
     const tokenCss = compileThemeCss(theme);
     // Get background hex values for accent foreground contrast calculation
     let bgLightHex = "#f8fafc";
@@ -54,12 +55,36 @@ export default function CustomThemeStyle() {
     } catch {}
     let accentCss = "";
     try {
-      accentCss = buildAccentCss(resolvePageAccent(theme, page), resolveStatusAll(theme), null, null, bgLightHex, bgDarkHex);
+      accentCss = buildAccentCss(
+        resolvePageAccent(theme, page),
+        resolveStatusAll(theme),
+        resolveDarkPageAccent(theme, page),
+        resolveDarkStatusAll(theme),
+        bgLightHex,
+        bgDarkHex
+      );
     } catch (e) {
       console.warn("Failed to build accent css", e);
     }
     applyCss(`${tokenCss}\n${accentCss}`);
-  }, [state, draftTheme, page]);
+    // SYS-09 W3: persist this page's accent CSS (with its theme id) so the
+    // blocking head script can apply it before first paint on reload. Stale
+    // entries (other theme) are ignored by matching themeId; quota errors
+    // fall back to keeping just the current page.
+    try {
+      const raw = localStorage.getItem("btsThemePageCss");
+      const stored = raw ? JSON.parse(raw) : null;
+      const acc = stored && stored.themeId === theme.id && stored.accents ? stored.accents : {};
+      acc[page] = accentCss;
+      localStorage.setItem("btsThemePageCss", JSON.stringify({ themeId: theme.id, accents: acc }));
+    } catch {
+      try {
+        const single = {};
+        single[page] = accentCss;
+        localStorage.setItem("btsThemePageCss", JSON.stringify({ themeId: theme.id, accents: single }));
+      } catch {}
+    }
+  }, [state, page]);
 
   return null;
 }

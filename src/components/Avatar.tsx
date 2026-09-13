@@ -12,6 +12,9 @@ import { getContrast, hashCode, RNG } from "@/lib/utilities";
 
 const SIZE = 36;
 
+// Intentionally static (theming carve-out): identicon identity colours. The
+// same account must render the same avatar in every theme and mode, or users
+// lose visual recognition. Do NOT derive these from the active theme.
 const DEFAULT_COLORS = ["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"];
 
 const eyesRendererFactory = (

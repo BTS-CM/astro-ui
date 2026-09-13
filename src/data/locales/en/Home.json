@@ -170,6 +170,13 @@
         "hover3": "External settlement prices are derived from configured feed producers.",
         "hover4": "Exposure to external price feeds can pose a risk to collateralized debt positions."
     },
+    "settlement_bids": {
+        "title": "Bid on settlement",
+        "subtitle": "Bid on smartcoin settlement funds",
+        "hover1": "Smartcoins with a positive settlement fund hold collateral awaiting claims.",
+        "hover2": "Place a bid to claim a share of the settlement fund.",
+        "hover3": "Browse every fund on the chain from a single page."
+    },
     "tfunds": {
         "title": "Same-T Funds",
         "subtitle": "View, create, update, delete Same-T Funds!",

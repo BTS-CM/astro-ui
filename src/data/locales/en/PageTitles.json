@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - Publish price feed",
         "/recent-activity": "Recent Activity",
         "/settlement": "Bitshares smartcoin issuance form",
+        "/settlement_bids": "Bitshares - Bid on settlement funds",
         "/smartcoin": "Bitshares smartcoin issuance form",
         "/smartcoins": "Bitshares smartcoins - Find a smartcoin to borrow",
         "/stake": "Bitshares pool staking form",

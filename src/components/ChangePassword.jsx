@@ -35,12 +35,29 @@ import { Avatar } from "./Avatar.tsx";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { copyToClipboard } from "@/lib/common";
-import { KeyRound, AlertTriangle, Info, ShieldAlert } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { KeyRound, AlertTriangle, Info, ShieldAlert, CheckCircle2, XCircle } from "lucide-react";
 import { getObjects } from "@/nanoeffects/src/common";
 import { getFullAccountDetails } from "@/nanoeffects/FullAccountDetails";
 
-const ChangePassword = () => {
-  const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
+// Validation border idiom (shared with CreateAccount): idle → neutral,
+// match/valid → success, mismatch/invalid → danger, too-short → warning.
+// Status icons render inside the input — no new locale strings needed.
+const validationBorder = (value, expected) => {
+  if (!value) return null;
+  if (value === expected)
+    return "border-[hsl(var(--accent-success)/0.6)] focus-visible:ring-[hsl(var(--accent-success)/0.3)]";
+  return "border-[hsl(var(--accent-danger)/0.6)] focus-visible:ring-[hsl(var(--accent-danger)/0.3)]";
+};
+
+const MatchIcon = ({ value, expected }) => {
+  if (!value) return null;
+  if (value === expected)
+    return <CheckCircle2 className="h-4 w-4 text-[hsl(var(--accent-success-fg))]" />;
+  return <XCircle className="h-4 w-4 text-[hsl(var(--accent-danger-fg))]" />;
+};
+
+const ChangePassword = () => {  const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useStore($currentUser);
   const currentNode = useStore($currentNode);
 
@@ -236,20 +253,41 @@ const ChangePassword = () => {
   return (
     <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4 text-foreground">
       <div className="grid grid-cols-1 gap-3">
+        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-3)/0.1)] blur-3xl"
+          />
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-3)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+                <KeyRound className="h-4.5 w-4.5" strokeWidth={2.25} />
+              </span>
+              <div>
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                  {t("ChangePassword:title")}
+                </h2>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">
+                  {t("ChangePassword:description")}
+                </p>
+              </div>
+              <span className="ml-auto inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
+                {t("ChangePassword:passwordMode")}: {step}/2
+              </span>
+            </div>
+          </div>
+        </Card>
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
           <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-3))]" />
-          <CardHeader className="pb-5">
-            <CardTitle className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                <KeyRound className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
-              </span>
-              {t("ChangePassword:title")}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground ml-11">
-              {t("ChangePassword:description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-5">
             {step === 1 ? (
               <div className="grid grid-cols-1 gap-4">
                 {/* Warnings / Notices - step 1 only */}
@@ -261,9 +299,9 @@ const ChangePassword = () => {
                   </AlertDescription>
                 </Alert>
 
-                <Alert className="border-amber-500/30 bg-amber-500/10">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
-                  <AlertTitle className="text-amber-700 dark:text-amber-400">{t("ChangePassword:beetWarningTitle")}</AlertTitle>
+                <Alert className="border-[hsl(var(--accent-warning)/0.3)] bg-[hsl(var(--accent-warning)/0.1)]">
+                  <AlertTriangle className="h-4 w-4 text-[hsl(var(--accent-warning-fg))]" />
+                  <AlertTitle className="text-[hsl(var(--accent-warning-fg))]">{t("ChangePassword:beetWarningTitle")}</AlertTitle>
                   <AlertDescription className="text-foreground/70 text-sm mt-1">
                     {t("ChangePassword:beetWarningDesc")}
                   </AlertDescription>
@@ -311,7 +349,7 @@ const ChangePassword = () => {
                   {isProceedEnabled ? (
                     <Button
                       onClick={() => setStep(2)}
-                      className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-white"
+                      className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]"
                     >
                       {t("ChangePassword:proceed", "Proceed to next step")}
                     </Button>
@@ -419,15 +457,26 @@ const ChangePassword = () => {
                         <label className="block text-sm font-medium text-foreground/70 mb-1.5">
                           {t("ChangePassword:confirmGeneratedTitle")}
                         </label>
-                        <Input
-                          type="password"
-                          value={confirmGenerated}
-                          onChange={(e) => setConfirmGenerated(e.target.value)}
-                          placeholder={t("ChangePassword:confirmGeneratedPlaceholder")}
-                          className="bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60"
-                        />
+                        <div className="relative">
+                          <Input
+                            type="password"
+                            value={confirmGenerated}
+                            onChange={(e) => setConfirmGenerated(e.target.value)}
+                            placeholder={t("ChangePassword:confirmGeneratedPlaceholder")}
+                            className={cn(
+                              "bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60 pr-9",
+                              validationBorder(confirmGenerated, generatedPassword)
+                            )}
+                          />
+                          <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <MatchIcon value={confirmGenerated} expected={generatedPassword} />
+                          </span>
+                        </div>
                         {confirmGenerated && confirmGenerated !== generatedPassword ? (
-                          <p className="mt-1 text-sm text-[hsl(var(--accent-danger-fg))]">{t("ChangePassword:passwordMismatch")}</p>
+                          <p className="mt-1 text-sm text-[hsl(var(--accent-danger-fg))] flex items-center gap-1.5">
+                            <XCircle className="h-3.5 w-3.5 shrink-0" />
+                            {t("ChangePassword:passwordMismatch")}
+                          </p>
                         ) : null}
                       </div>
                     </TabsContent>
@@ -437,30 +486,53 @@ const ChangePassword = () => {
                         <label className="block text-sm font-medium text-foreground/70 mb-1.5">
                           {t("ChangePassword:customPassword")}
                         </label>
-                        <Input
-                          type="password"
-                          value={customPassword}
-                          onChange={(e) => setCustomPassword(e.target.value)}
-                          placeholder={t("ChangePassword:customPasswordPlaceholder")}
-                          className="bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60"
-                        />
+                        <div className="relative">
+                          <Input
+                            type="password"
+                            value={customPassword}
+                            onChange={(e) => setCustomPassword(e.target.value)}
+                            placeholder={t("ChangePassword:customPasswordPlaceholder")}
+                            className={cn(
+                              "bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60",
+                              customTooShort
+                                ? "border-[hsl(var(--accent-warning)/0.6)] focus-visible:ring-[hsl(var(--accent-warning)/0.3)]"
+                                : customPassword && customPassword.length >= 12
+                                ? "border-[hsl(var(--accent-success)/0.6)] focus-visible:ring-[hsl(var(--accent-success)/0.3)]"
+                                : null
+                            )}
+                          />
+                        </div>
                         {customTooShort ? (
-                          <p className="mt-1 text-sm text-amber-600">{t("ChangePassword:passwordTooShort")}</p>
+                          <p className="mt-1 text-sm text-[hsl(var(--accent-warning-fg))] flex items-center gap-1.5">
+                            <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                            {t("ChangePassword:passwordTooShort")}
+                          </p>
                         ) : null}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-foreground/70 mb-1.5">
                           {t("ChangePassword:confirmCustomPassword")}
                         </label>
-                        <Input
-                          type="password"
-                          value={confirmCustom}
-                          onChange={(e) => setConfirmCustom(e.target.value)}
-                          placeholder={t("ChangePassword:confirmCustomPasswordPlaceholder")}
-                          className="bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60"
-                        />
+                        <div className="relative">
+                          <Input
+                            type="password"
+                            value={confirmCustom}
+                            onChange={(e) => setConfirmCustom(e.target.value)}
+                            placeholder={t("ChangePassword:confirmCustomPasswordPlaceholder")}
+                            className={cn(
+                              "bg-accent/30 dark:bg-white/[0.05] border-border text-foreground placeholder:text-muted-foreground/60 pr-9",
+                              validationBorder(confirmCustom, customPassword)
+                            )}
+                          />
+                          <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <MatchIcon value={confirmCustom} expected={customPassword} />
+                          </span>
+                        </div>
                         {confirmCustom && confirmCustom !== customPassword ? (
-                          <p className="mt-1 text-sm text-[hsl(var(--accent-danger-fg))]">{t("ChangePassword:passwordMismatch")}</p>
+                          <p className="mt-1 text-sm text-[hsl(var(--accent-danger-fg))] flex items-center gap-1.5">
+                            <XCircle className="h-3.5 w-3.5 shrink-0" />
+                            {t("ChangePassword:passwordMismatch")}
+                          </p>
                         ) : null}
                       </div>
                     </TabsContent>
@@ -468,8 +540,18 @@ const ChangePassword = () => {
                 </div>
 
                 {/* Derived keys preview */}
-                <div className="rounded-xl border border-border bg-accent/10 dark:bg-white/[0.03] p-3">
-                  <div className="text-sm font-medium text-foreground/80 mb-1">{t("ChangePassword:derivedKeysTitle")}</div>
+                <div className={cn(
+                  "rounded-xl border p-3",
+                  derivedKeys
+                    ? "border-[hsl(var(--accent-success)/0.35)] bg-[hsl(var(--accent-success)/0.05)]"
+                    : "border-border bg-accent/10 dark:bg-white/[0.03]"
+                )}>
+                  <div className="text-sm font-medium text-foreground/80 mb-1 flex items-center gap-1.5">
+                    {derivedKeys ? (
+                      <CheckCircle2 className="h-4 w-4 text-[hsl(var(--accent-success-fg))]" />
+                    ) : null}
+                    {t("ChangePassword:derivedKeysTitle")}
+                  </div>
                   <p className="text-xs text-muted-foreground mb-2">{t("ChangePassword:derivedKeysDesc")}</p>
                   {derivedKeys ? (
                     <div className="grid grid-cols-1 gap-2 text-xs font-mono break-all">
@@ -492,8 +574,8 @@ const ChangePassword = () => {
                 </div>
 
                 {/* Backup confirmations */}
-                <div className="grid grid-cols-1 gap-3">
-                  <Label className="text-sm font-medium text-foreground/70">{t("ChangePassword:backupCheckTitle")}</Label>
+                <div className="grid grid-cols-1 gap-3 rounded-xl border border-[hsl(var(--accent-2)/0.25)] bg-[hsl(var(--accent-2)/0.04)] p-3">
+                  <Label className="text-sm font-medium text-[hsl(var(--accent-2-fg))]">{t("ChangePassword:backupCheckTitle")}</Label>
                   {[
                     { id: "loseAccess", checked: loseAccessChecked, set: setLoseAccessChecked, label: t("ChangePassword:loseAccess") },
                     { id: "noRecovery", checked: noRecoveryChecked, set: setNoRecoveryChecked, label: t("ChangePassword:noRecovery") },
@@ -521,7 +603,7 @@ const ChangePassword = () => {
                   {isFormValid && !deeplinkDialog ? (
                     <Button
                       onClick={() => setDeeplinkDialog(true)}
-                      className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-white"
+                      className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]"
                     >
                       {t("ChangePassword:submit")}
                     </Button>

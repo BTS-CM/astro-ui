@@ -1356,7 +1356,7 @@ export default function SimpleSwap(properties) {
                       "hover:shadow-[0_12px_40px_-8px_hsl(var(--accent-3)/0.9)]",
                       "transition-all duration-200",
                       "active:scale-[0.99]",
-                      "disabled:from-slate-200 disabled:via-slate-200 disabled:to-slate-200 dark:disabled:from-slate-800 dark:disabled:via-slate-800 dark:disabled:to-slate-800",
+                      "disabled:from-muted disabled:via-muted disabled:to-muted dark:disabled:from-white/[0.06] dark:disabled:via-white/[0.06] dark:disabled:to-white/[0.06]",
                       "disabled:text-muted-foreground/60 disabled:shadow-none",
                       "disabled:cursor-not-allowed"
                     )}

@@ -8,7 +8,11 @@ const SEGMENTS = 32;
 const KEYFRAME_COUNT = 16;
 const PHASE_STEP = (2 * Math.PI) / KEYFRAME_COUNT;
 
-const PRESET_PALETTES = {
+// Intentionally static (theming carve-out): these are user-selected visual
+// settings (rainbow/ocean/sunset/mono/custom), independent of the colour theme.
+// A wave palette must not shift when the user switches themes.
+// Exported so ConfigureVisuals can render faithful palette preview swatches.
+export const PRESET_PALETTES = {
   rainbow: [
     ["#4f46e5", "#06b6d4"],
     ["#06b6d4", "#38bdf8"],

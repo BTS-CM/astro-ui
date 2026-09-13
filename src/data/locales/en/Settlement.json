@@ -1,5 +1,6 @@
 {
   "smartcoinSettlementFormTitle": "🏦 Smartcoin settlement form",
+  "pageTitle": "Bid on settlement funds",
   "bidOnGlobalSettlementFundsDescription": "Bid on global settlement funds with the following form",
   "forceSettleAssetsDescription": "Force settle assets for individual settlement funds",
   "biddingAccount": "Bidding account",
@@ -9,6 +10,7 @@
   "finalSettlementPrice": "Final settlement price",
   "settlementFundsAvailable": "Settlement funds available",
   "fundingRatio": "Funding ratio",
+  "autoRevivePrice": "Auto Revive Price (without/with bids)",
   "additionalCollateral": "Additional collateral",
   "additionalCollateralDescription": "The amount of additional collateral you're willing to provide in return for global settled {{asset}}",
   "changeAmount": "Change amount",
@@ -31,7 +33,7 @@
   "operation": "Operation: {{operation}}",
   "additionalForceSettlementFee": "Additional force settlement fee: {{fee}} %",
   "submit": "Submit",
-  "collateralBiddingDisabled": "Collateral bidding has been disabled for this asset, this operation will be rejected.",
+  "collateralBiddingDisabled": "Collateral bidding has been disabled for this asset.",
   "existingCollateralBids": "Existing collateral bids",
   "existingCollateralBidsDescription": "These collateral bids have been created by other users who are interested in the global settled funds",
   "bidder": "Bidder",
@@ -40,5 +42,18 @@
   "bidPrice": "Bid price",
   "ratio": "Ratio",
   "biddingOnDebt": "Bidding on {{asset}} debt with {{collateral}} collateral",
-  "settlingFor": "Settling {{forceSettleAmount}} {{asset}} for {{totalReceiving}} {{collateral}}"
+  "settlingFor": "Settling {{forceSettleAmount}} {{asset}} for {{totalReceiving}} {{collateral}}",
+  "yourBid": "Your bid",
+  "removeBid": "Remove bid",
+  "removingCollateralBid": "Removing collateral bid on {{asset}}",
+  "globalSettlementBiddingInfo": "Unfortunately, {{symbol}} is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.\n\nBids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.\n\nA bid can be removed by placing a zero collateral bid.",
+  "globalSettlementReviveInfo": "Asset will be revived automatically if feed price is greater than auto revive price (bids included) or all debt is force settled.",
+  "holderForceSettleTitle": "Force settle {{asset}}",
+  "holderForceSettleDescription": "During Global Settlement there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+  "holderSettleAmount": "Settlement amount",
+  "holderReceiving": "Estimated collateral received",
+  "holderAmountExceedsBalance": "Amount exceeds your available balance",
+  "maxButton": "Max",
+  "marketBuyTitle": "Buy {{asset}} with {{collateral}}",
+  "marketBuyDescription": "Short on {{asset}}? Buy it on the open market and force settle it — every settled debt brings the asset closer to automatic revival."
 }

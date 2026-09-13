@@ -70,6 +70,8 @@ export default function DepthChart({ bids, asks, baseSymbol, quoteSymbol, loadin
     grid: chartTheme.grid,
     axisText: chartTheme.axisText,
     axisBackground: chartTheme.axisBackground,
+    // Bid/ask greens/reds are market convention and stay fixed across themes
+    // (theming carve-out, same as the order-book SIDE_STYLES).
     bid: { stroke: "#22c55e", fillTop: "rgba(34,197,94,0.22)", fillBottom: "rgba(34,197,94,0.06)" },
     ask: { stroke: "#ef4444", fillTop: "rgba(239,68,68,0.22)", fillBottom: "rgba(239,68,68,0.06)" },
   }), [chartTheme]);

@@ -2,7 +2,14 @@ import React, { useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
 import { useTheme } from "next-themes";
+import { useStore } from "@nanostores/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  $customTheme,
+  $currentPage,
+  getThemeForPage,
+  resolveStatus,
+} from "@/stores/customTheme.ts";
 
 const CUBE = 1023;
 const CENTER = CUBE / 2;
@@ -23,7 +30,19 @@ const GROUP_LABELS = {
 // legible instead of being a faint hint on a hard-coded dark canvas.
 function useThemePalette() {
   const { resolvedTheme } = useTheme();
+  // Re-render on theme switches so the hover marker below stays current.
+  useStore($customTheme);
+  const currentPage = useStore($currentPage);
   const isDark = resolvedTheme !== "light";
+  // Hover marker follows the theme's warning role (amber in every preset,
+  // customisable); the resting marker keeps its per-mode legibility choices.
+  let warnHex = "#fbbf24";
+  try {
+    warnHex =
+      resolveStatus(getThemeForPage(currentPage || "airdrop_calculate"), "warning") || warnHex;
+  } catch {
+    /* keep fallback */
+  }
   return {
     isDark,
     bg: isDark ? "#0b1120" : "#eef2f7",
@@ -33,6 +52,7 @@ function useThemePalette() {
     labelBg: isDark ? "rgba(2,6,23,0.85)" : "rgba(255,255,255,0.9)",
     labelText: isDark ? "#e2e8f0" : "#0f172a",
     marker: isDark ? "#fde047" : "#d97706",
+    markerHover: warnHex,
   };
 }
 
@@ -106,7 +126,7 @@ function AxisLabels({ palette }) {
 function HitMarker({ coord, ticket, palette }) {
   const [hovered, setHovered] = React.useState(false);
   const r = hovered ? 30 : 22;
-  const markerColor = hovered ? "#fbbf24" : palette.marker;
+  const markerColor = hovered ? palette.markerHover : palette.marker;
   return (
     <group position={coord}>
       <mesh
@@ -117,7 +137,10 @@ function HitMarker({ coord, ticket, palette }) {
         <meshBasicMaterial color={markerColor} />
       </mesh>
       <Html center distanceFactor={900} style={{ pointerEvents: "none" }}>
-        <div className="whitespace-nowrap rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-mono text-yellow-300 shadow">
+        {/* Tooltip chip keeps a constant near-black fill in both modes, so the
+            text uses the raw warning role (amber-on-black reads ~7:1) rather
+            than -fg, which is marched for light page backgrounds. */}
+        <div className="whitespace-nowrap rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-mono text-[hsl(var(--accent-warning))] shadow">
           #{ticket}
           <br />
           ({coord[0]}, {coord[1]}, {coord[2]})

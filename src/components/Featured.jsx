@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button.jsx";
+import { TrendingUp } from "lucide-react";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createTopMarketsStore } from "@/nanoeffects/TopMarkets.ts";
@@ -160,9 +161,15 @@ export default function Featured(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
-          <Card>
+          <Card className="relative overflow-hidden">
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent" />
             <CardHeader>
-              <CardTitle>{t("Featured:cardTitle")}</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] border border-[hsl(var(--accent-1)/0.4)]">
+                  <TrendingUp className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+                </span>
+                {t("Featured:cardTitle")}
+              </CardTitle>
               <CardDescription>{t("Featured:cardDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
@@ -170,7 +177,7 @@ export default function Featured(properties) {
                 <>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
-                      <div className="grid grid-cols-4 gap-1 text-center border-b-2">
+                      <div className="grid grid-cols-4 gap-1 text-center border-b-2 border-[hsl(var(--accent-1)/0.3)]">
                         <div className="col-span-2 md:col-span-1">
                           <b>{t("Featured:marketTradingPair")}</b>
                         </div>

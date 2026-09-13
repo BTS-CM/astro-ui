@@ -68,6 +68,11 @@ function parseDescription(description) {
   if (!description) return { raw: "", parsed: null };
 
   if (typeof description === "string") {
+    // Plain text descriptions (e.g. "1 Singapore dollar") are not JSON;
+    // skip parsing unless it looks like a JSON object.
+    if (!description.includes("{")) {
+      return { raw: description, parsed: null };
+    }
     try {
       const parsed = JSON.parse(description);
       return { raw: description, parsed };

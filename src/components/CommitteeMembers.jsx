@@ -142,7 +142,7 @@ const CommitteeRow = React.memo(function CommitteeRow({
                   </span>
                   <span className="ml-2">{member.name}</span>
                 </div>
-                <div>
+                <div className="text-muted-foreground">
                   {member.id}
                   {" ("}
                   {member.account_id}
@@ -182,7 +182,7 @@ const CommitteeRow = React.memo(function CommitteeRow({
               />
             </div>
           ) : (
-            <div className="text-[hsl(var(--accent-danger-fg))] dark:text-[hsl(var(--accent-danger-fg))] text-center">N/A</div>
+            <div className="text-[hsl(var(--accent-danger-fg))] text-center">N/A</div>
           )}
         </DialogContent>
       </Dialog>
@@ -394,7 +394,7 @@ export default function CommitteeMembers(properties) {
         {/* content */}
         <CardHeader className="pb-0">
           <CardTitle className="text-lg bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] bg-clip-text text-transparent flex items-center gap-2">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--accent-2)/0.3)] to-[hsl(var(--accent-3)/0.3)] border border-[hsl(var(--accent-2)/0.4)] shadow-[0_0_18px_-2px_hsl(var(--accent-2)/0.4)] dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))]">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--accent-2)/0.3)] to-[hsl(var(--accent-3)/0.3)] border border-[hsl(var(--accent-2)/0.4)] shadow-[0_0_18px_-2px_hsl(var(--accent-2)/0.4)] text-[hsl(var(--accent-2-fg))]">
               <Users className="h-4.5 w-4.5" />
             </span>
             {t("CommitteeMembers:title")}

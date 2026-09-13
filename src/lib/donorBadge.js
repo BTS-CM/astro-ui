@@ -48,28 +48,28 @@ function donorBadgeClassName(rank) {
   const base =
     "inline-flex shrink-0 items-center rounded border px-1.5 py-px text-[10px] font-medium";
   if (rank === 1) {
-    return `${base} border-yellow-500/60 bg-yellow-500/15 text-yellow-700 dark:text-yellow-300`;
+    return `${base} border-[hsl(var(--accent-warning)/0.6)] bg-[hsl(var(--accent-warning)/0.15)] text-[hsl(var(--accent-warning-fg))]`;
   }
   if (rank === 2) {
-    return `${base} border-slate-400/60 bg-slate-400/15 text-slate-600 dark:text-slate-300`;
+    return `${base} border-border bg-muted text-muted-foreground`;
   }
   if (rank === 3) {
-    return `${base} border-amber-700/60 bg-amber-700/15 text-amber-700 dark:text-amber-400`;
+    return `${base} border-[hsl(var(--accent-warning)/0.5)] bg-[hsl(var(--accent-warning)/0.08)] text-[hsl(var(--accent-warning-fg))]`;
   }
-  return `${base} border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400`;
+  return `${base} border-[hsl(var(--accent-success)/0.4)] bg-[hsl(var(--accent-success)/0.1)] text-[hsl(var(--accent-success-fg))]`;
 }
 
 function donorBadgeDialogClassName(rank) {
   if (rank === 1) {
-    return "shrink-0 border-yellow-500/60 bg-yellow-500/15 text-[11px] text-yellow-700 dark:text-yellow-300";
+    return "shrink-0 border-[hsl(var(--accent-warning)/0.6)] bg-[hsl(var(--accent-warning)/0.15)] text-[11px] text-[hsl(var(--accent-warning-fg))]";
   }
   if (rank === 2) {
-    return "shrink-0 border-slate-400/60 bg-slate-400/15 text-[11px] text-slate-600 dark:text-slate-300";
+    return "shrink-0 border-border bg-muted text-[11px] text-muted-foreground";
   }
   if (rank === 3) {
-    return "shrink-0 border-amber-700/60 bg-amber-700/15 text-[11px] text-amber-700 dark:text-amber-400";
+    return "shrink-0 border-[hsl(var(--accent-warning)/0.5)] bg-[hsl(var(--accent-warning)/0.08)] text-[11px] text-[hsl(var(--accent-warning-fg))]";
   }
-  return "shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[11px] text-emerald-700 dark:text-emerald-400";
+  return "shrink-0 border-[hsl(var(--accent-success)/0.4)] bg-[hsl(var(--accent-success)/0.1)] text-[11px] text-[hsl(var(--accent-success-fg))]";
 }
 
 /**

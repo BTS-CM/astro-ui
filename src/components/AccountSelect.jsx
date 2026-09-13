@@ -39,6 +39,7 @@ import {
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
+import { readableForeground } from "@/lib/tailwindPalette.js";
 
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
@@ -58,7 +59,7 @@ function StepIndicator({ currentStep, totalSteps, accentColor, step1Label, step2
               className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300",
                 currentStep === step.key
-                  ? "text-white shadow-lg"
+                  ? "shadow-lg"
                   : currentStep > step.key
                   ? "text-foreground"
                   : "bg-accent/60 text-muted-foreground border border-border/80"
@@ -68,6 +69,9 @@ function StepIndicator({ currentStep, totalSteps, accentColor, step1Label, step2
                   ? {
                       background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`,
                       boxShadow: `0 4px 14px -3px ${accentColor}66`,
+                      // Max-contrast text on the saturated step fill (same
+                      // role as -gradFg; computed from the live accent hex).
+                      color: readableForeground(accentColor),
                     }
                   : currentStep > step.key
                   ? { background: `${accentColor}33`, borderColor: `${accentColor}44` }

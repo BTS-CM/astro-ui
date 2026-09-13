@@ -75,6 +75,7 @@
     "portfolio-open-orders": "このページを使用して、オープン指値注文を確認し、すぐに取引、更新、またはキャンセルします。",
     "portfolio-recent-activity": "このページを使用して、最新のオンチェーン操作を参照し、基礎となる JSON を検査します。",
     "settlement": "スマートコインの決済資金に入札するには、以下のフォームを使用してください",
+    "settlement_bids": "決済資金に担保を保有しているすべてのスマートコインを閲覧し、その一部を請求するため入札してください",
     "smartcoin": "担保付き債務を発行するには、以下のフォームを使用してください",
     "smartcoins": "以下のインターフェースを使用して、借用する資産を見つけます。",
     "stake": "このフォームを使用して流動性プールに資産を賭けます",
@@ -122,7 +123,9 @@
     "explorer": "このページで任意のアカウント、資産、オブジェクト、トランザクションハッシュ、ブロック番号を検索し、コピーとお気に入り付きの生JSONを表示します。",
     "top-operations": "このページを使用して、過去30日間で最も頻繁に実行されたブロックチェーン操作を発生回数順に表示します。",
     "change_password": "下のフォームを使用して、account_update操作でクラウドウォレットのパスワードを変更します。",
-    "trollbox": "BitSharesブロックチェーン上に存在するチャンネルでコミュニティとチャット。"
+    "trollbox": "BitSharesブロックチェーン上に存在するチャンネルでコミュニティとチャット。",
+    "committee_parameters": "Propose new global blockchain parameters. Changes apply at maintenance after committee approval.",
+    "page_themes": "Assign a different saved theme to each page, or keep every page on the active theme."
   },
   "back": "戻る",
   "usage": "で使用するように設計されています ",

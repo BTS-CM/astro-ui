@@ -54,6 +54,7 @@
         "/publish_feed": "Bitshares - Publicér prisfeed",
         "/recent-activity": "Seneste aktivitet",
         "/settlement": "Bitshares smartcoin-udstedelsesformular",
+        "/settlement_bids": "Bitshares - Byd på afregningsfonde",
         "/smartcoin": "Bitshares smartcoin-udstedelsesformular",
         "/smartcoins": "Bitshares smartcoins - Find en smartcoin at låne imod",
         "/stake": "Bitshares formular til puljestaking",

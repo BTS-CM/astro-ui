@@ -15,12 +15,17 @@ const testMarketData = await getCollection('testMarketData');
 const btsPools = await getCollection('btsPools');
 const testPools = await getCollection('testPools');
 
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
 const btsAssets = btsAllAssets.map(collection => collection.data);
 const testAssets = testAllAssets.map(collection => collection.data);
 const btsMarkets = btsMarketData.map(collection => collection.data);
 const testMarkets = testMarketData.map(collection => collection.data);
 const btsPoolsList = btsPools.map(collection => collection.data);
 const testPoolsList = testPools.map(collection => collection.data);
+const btsFees = btsFeeSchedule.map(collection => collection.data);
+const testFees = testFeeSchedule.map(collection => collection.data);
 ---
 
 <Layout title="Trollbox">
@@ -34,6 +39,8 @@ const testPoolsList = testPools.map(collection => collection.data);
 			_marketSearchTEST={testMarkets}
 			_poolsBTS={btsPoolsList}
 			_poolsTEST={testPoolsList}
+			_feeScheduleBTS={btsFees}
+			_feeScheduleTEST={testFees}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/trollbox.astro" />
 	</main>

@@ -1,0 +1,19 @@
+{
+    "title": "Paku arveldusfondidele",
+    "description": "Kõik nutimündid, mille arveldusfondis on tagatis. Paku, et osa endale nõuda.",
+    "searchPlaceholder": "Otsi sümbolit...",
+    "searchLabel": "Otsi varasid sümboli järgi",
+    "clearSearch": "Tühjenda otsing",
+    "sortDefault": "ID",
+    "sortAlphabetical": "A-Z",
+    "sortFund": "Fond",
+    "listingFunds": "Nimekiri {{count}} arveldusfondiga vara",
+    "noFunds": "Arveldusfonde ei leitud",
+    "noFundsDescription": "Ühelgi nutimündil pole praegu arveldusfondis tagatist.",
+    "fund": "Fond",
+    "collateral": "Tagatis",
+    "bidButton": "Paku",
+    "showingOf": "Kuvatakse {{filtered}} / {{total}}",
+    "noFilterResults": "Ükski vara ei vasta praegusele otsingule",
+    "clearFilters": "Tühjenda otsing"
+}

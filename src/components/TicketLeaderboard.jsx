@@ -182,7 +182,7 @@ export default function TicketLeaderboard() {
                 <div className="grid grid-cols-3">
                   <div className="text-xs lg:text-lg mt-5">{name}</div>
 
-                  <div className="text-xs lg:text-lg mt-5">
+                  <div className="text-xs lg:text-lg mt-5 text-muted-foreground">
                     {r.amount.toLocaleString(locale.get() || undefined, {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
@@ -190,7 +190,7 @@ export default function TicketLeaderboard() {
                     {assetSymbol}
                   </div>
 
-                  <div className="text-xs lg:text-lg mt-5">
+                  <div className="text-xs lg:text-lg mt-5 text-muted-foreground">
                     {r.percent.toFixed(2)}%
                   </div>
                 </div>

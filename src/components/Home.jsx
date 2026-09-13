@@ -126,6 +126,7 @@ const ITEM_ICONS = {
   borrow: HandCoins,
   lend: Coins,
   smartcoins: CircleDollarSign,
+  settlement_bids: Gavel,
   tfunds: Landmark,
   portfolio_balances: Wallet,
   portfolio_open_orders: ListOrdered,
@@ -349,6 +350,7 @@ export default function Home(properties) {
     { key: "borrow", href: "/borrow.html", titleKey: "Home:borrow.title", subtitleKey: "Home:borrow.subtitle", hoverKeys: ["Home:borrow.hover1", "Home:borrow.hover2", "Home:borrow.hover3"] },
     { key: "lend", href: "/lend.html", titleKey: "Home:lend.title", subtitleKey: "Home:lend.subtitle", hoverKeys: ["Home:lend.hover1", "Home:lend.hover2", "Home:lend.hover3"] },
     { key: "smartcoins", href: "/smartcoins.html", titleKey: "Home:smartcoins.title", subtitleKey: "Home:smartcoins.subtitle", hoverKeys: ["Home:smartcoins.hover1", "Home:smartcoins.hover2", "Home:smartcoins.hover3", "Home:smartcoins.hover4"] },
+    { key: "settlement_bids", href: "/settlement_bids.html", titleKey: "Home:settlement_bids.title", subtitleKey: "Home:settlement_bids.subtitle", hoverKeys: ["Home:settlement_bids.hover1", "Home:settlement_bids.hover2", "Home:settlement_bids.hover3"] },
     { key: "tfunds", href: "/tfunds.html", titleKey: "Home:tfunds.title", subtitleKey: "Home:tfunds.subtitle", hoverKeys: ["Home:tfunds.hover1", "Home:tfunds.hover2", "Home:tfunds.hover3", "Home:tfunds.hover4"] },
   ];
 

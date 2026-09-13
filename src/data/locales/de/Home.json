@@ -155,6 +155,13 @@
         "hover3": "Externe Abrechnungspreise werden von konfigurierten Futtermittelherstellern abgeleitet.",
         "hover4": "Das Risiko externer Preisströme kann ein Risiko für besicherte Schuldenpositionen darstellen."
     },
+    "settlement_bids": {
+        "title": "Auf Abrechnung bieten",
+        "subtitle": "Auf Smartcoin-Abrechnungsfonds bieten",
+        "hover1": "Smartcoins mit positivem Abrechnungsfonds halten Sicherheiten, die auf Ansprüche warten.",
+        "hover2": "Geben Sie ein Gebot ab, um einen Anteil am Abrechnungsfonds zu beanspruchen.",
+        "hover3": "Durchsuchen Sie alle Fonds der Chain auf einer einzigen Seite."
+    },
     "tfunds": {
         "title": "Same-T-Fonds",
         "subtitle": "Same-T Funds ansehen, erstellen, aktualisieren, löschen!",

@@ -31,6 +31,15 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
@@ -38,7 +47,7 @@ import {
   StarFilledIcon,
 } from "@radix-ui/react-icons";
 
-import { Wallet, ArrowLeftRight } from "lucide-react";
+import { Wallet, ArrowLeftRight, Droplets } from "lucide-react";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -119,6 +128,8 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
       pool.asset_b_symbol === currentAsset.symbol
   );
 
+  const isZeroBalance = Number(rowBalance.amount) === 0;
+
   const rightContents = (
     <>
       <a
@@ -141,6 +152,9 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
           <div className="col-span-4 md:col-span-2 text-left">
             <CardHeader className="pt-3 pb-3">
               <CardTitle className="flex items-center gap-2" title={`${t("PoolStake:id")}: ${currentAsset.id}`}>
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.15)] text-xs font-bold text-[hsl(var(--accent-1-fg))]">
+                  {(currentAsset.symbol || "?").charAt(0)}
+                </span>
                 <span className="font-semibold">{currentAsset.symbol}</span>
                 <span className="text-xs font-mono font-normal text-muted-foreground/50">{currentAsset.id}</span>
               </CardTitle>
@@ -163,32 +177,30 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
                     title={t("PortfolioTabs:liquidAmount", {
                       amount: readableBalance,
                     })}
-                    className="text-sm text-foreground/70"
+                    className={
+                      isZeroBalance
+                        ? "text-sm text-muted-foreground"
+                        : "text-sm font-semibold text-[hsl(var(--accent-1-fg))]"
+                    }
                   >
                     {readableBalance}
                   </span>
+                  {relevantPools.length ? (
+                    <Badge
+                      variant="outline"
+                      title={`${relevantPools.length}`}
+                      className="border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))] text-[10px] px-1.5 py-0"
+                    >
+                      <Droplets className="h-3 w-3 mr-0.5" />
+                      {relevantPools.length}
+                    </Badge>
+                  ) : null}
                 </div>
               </CardDescription>
             </CardHeader>
           </div>
           <div className="block md:hidden text-right col-span-2 mt-4 mr-4">
-            <Dialog>
-              <DialogTrigger>
-                <Button>{t("HTLC:actionsColumn")}</Button>
-              </DialogTrigger>
-              <DialogContent className="bg-card">
-                <DialogHeader>
-                  <DialogTitle>
-                    {t("HTLC:actionsColumn")} - {currentAsset.symbol}
-                  </DialogTitle>
-                  <DialogDescription>
-                    <div className="grid grid-cols-5 gap-2">
-                      {rightContents}
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            {rightContents}
           </div>
           <div className="hidden md:block col-span-4 text-right mt-4">
             {rightContents}
@@ -354,24 +366,49 @@ export default function PortfolioBalances({
 
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
-      <div className="grid grid-cols-1 mt-5">
+      <div className="grid grid-cols-1 mt-5 gap-3">
+        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl"
+          />
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+                <Wallet className="h-4.5 w-4.5" strokeWidth={2.25} />
+              </span>
+              <div>
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                  {t("PortfolioTabs:accountBalances", { username: usr?.username })}
+                </h2>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">
+                  {t("PortfolioTabs:accountBalancesDescription")}
+                </p>
+              </div>
+              {sortedUserBalances && sortedUserBalances.length ? (
+                <span className="ml-auto inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
+                  {sortedUserBalances.length}
+                </span>
+              ) : null}
+            </div>
+          </div>
+        </Card>
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20">
           <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-1)/0.15)]">
-                <Wallet className="w-4 h-4 text-[hsl(var(--accent-1-fg))]" />
-              </span>
-              {t("PortfolioTabs:accountBalances", { username: usr?.username })}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">
-              {t("PortfolioTabs:accountBalancesDescription")}
-            </CardDescription>
             <div className="grid grid-cols-3 gap-3 mt-2">
                 <Button
                   onClick={() => handleSortClick("default")}
                   variant={sortType === "default" ? "" : "outline"}
-                  className={sortType === "default" ? "bg-accent/40 dark:bg-white/10 text-foreground hover:bg-accent/50 dark:hover:bg-white/15" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
+                  className={sortType === "default" ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
                 >
                   {t("PortfolioTabs:default")}
                   {" (ID) "}
@@ -386,7 +423,7 @@ export default function PortfolioBalances({
                 <Button
                   onClick={() => handleSortClick("alphabetical")}
                   variant={sortType === "alphabetical" ? "" : "outline"}
-                  className={sortType === "alphabetical" ? "bg-accent/40 dark:bg-white/10 text-foreground hover:bg-accent/50 dark:hover:bg-white/15" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
+                  className={sortType === "alphabetical" ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
                 >
                   {t("PortfolioTabs:alphabetical")}
                   {sortType === "alphabetical" ? (
@@ -400,7 +437,7 @@ export default function PortfolioBalances({
                 <Button
                   onClick={() => handleSortClick("amount")}
                   variant={sortType === "amount" ? "" : "outline"}
-                  className={sortType === "amount" ? "bg-accent/40 dark:bg-white/10 text-foreground hover:bg-accent/50 dark:hover:bg-white/15" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
+                  className={sortType === "amount" ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
                 >
                   {t("PortfolioTabs:amount")}
                   {sortType === "amount" ? (
@@ -431,12 +468,24 @@ export default function PortfolioBalances({
                 />
               </div>
             ) : (
-              <div className="text-center py-8">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(var(--accent-1)/0.15)] mb-3">
-                  <Wallet className="w-6 h-6 text-[hsl(var(--accent-1-fg))]" />
-                </div>
-                <p className="text-muted-foreground text-sm">{t("PortfolioTabs:noBalancesFound")}</p>
-              </div>
+              <Empty className="mt-2 border border-border/60 rounded-xl bg-[hsl(var(--accent-1)/0.04)]">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]">
+                    <Wallet className="w-6 h-6" />
+                  </EmptyMedia>
+                  <EmptyTitle className="text-foreground/80">{t("PortfolioTabs:noBalancesFound")}</EmptyTitle>
+                  <EmptyDescription className="text-muted-foreground">
+                    {t("PortfolioTabs:accountBalancesDescription")}
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  <Button asChild className="bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]">
+                    <a href="/dex.html">
+                      {t("PortfolioTabs:tradeButton")}
+                    </a>
+                  </Button>
+                </EmptyContent>
+              </Empty>
             )}
           </CardContent>
           <div className="px-6 pb-6">
@@ -447,6 +496,7 @@ export default function PortfolioBalances({
               }}
               disabled={balancesLoading}
               aria-busy={balancesLoading}
+              className="gap-2 bg-[hsl(var(--accent-1))] hover:bg-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))]"
             >
               {t("PortfolioTabs:refreshBalancesButton")}
             </Button>

@@ -134,6 +134,7 @@ const ITEM_ICONS = {
   borrow: HandCoins,
   lend: Coins,
   smartcoins: CircleDollarSign,
+  settlement_bids: Gavel,
   tfunds: Landmark,
   portfolio_balances: Wallet,
   portfolio_open_orders: ListOrdered,
@@ -226,6 +227,7 @@ export default function AppSidebar() {
     { slug: "borrow", title: "Home:borrow.title", href: "/borrow.html" },
     { slug: "lend", title: "Home:lend.title", href: "/lend.html" },
     { slug: "smartcoins", title: "Home:smartcoins.title", href: "/smartcoins.html" },
+    { slug: "settlement_bids", title: "Home:settlement_bids.title", href: "/settlement_bids.html" },
     { slug: "tfunds", title: "Home:tfunds.title", href: "/tfunds.html" },
   ];
 
@@ -421,8 +423,8 @@ export default function AppSidebar() {
   }, [isMobile, openMobile]);
 
   return (
-    <Sidebar className="dark:!bg-slate-950/80 !bg-card dark:!border-r-white/[0.06] !border-r-border">
-      <SidebarContent className="dark:!bg-slate-950/80 !bg-card">
+    <Sidebar className="dark:!bg-sidebar/80 !bg-card dark:!border-r-white/[0.06] !border-r-border">
+      <SidebarContent className="dark:!bg-sidebar/80 !bg-card">
         <Accordion
           type="single"
           collapsible

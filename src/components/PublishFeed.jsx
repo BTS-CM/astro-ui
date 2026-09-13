@@ -428,7 +428,7 @@ export default function PublishFeed(properties) {
 
           <div className="space-y-4">
           {!isSmartcoin && fullAsset ? (
-            <p className="text-sm text-red-500">{t("PublishFeed:notSmartcoin")}</p>
+            <p className="text-sm text-[hsl(var(--accent-danger-fg))]">{t("PublishFeed:notSmartcoin")}</p>
           ) : null}
 
           {fullBitasset ? (
@@ -502,7 +502,7 @@ export default function PublishFeed(properties) {
           </div>
 
           {usr?.id ? (
-            <p className={`text-sm ${authorized ? "text-green-600" : "text-amber-600"}`}>
+            <p className={`text-sm ${authorized ? "text-[hsl(var(--accent-success-fg))]" : "text-[hsl(var(--accent-warning-fg))]"}`}>
               {authorized ? t("PublishFeed:isAuthorized") : t("PublishFeed:notAuthorized")}
             </p>
           ) : null}
@@ -585,7 +585,7 @@ export default function PublishFeed(properties) {
 
           {!valid ? <p className="text-sm text-muted-foreground">{t("PublishFeed:missingAmounts")}</p> : null}
           {valid && Math.abs(deviationPct) > 5 ? (
-            <p className="text-sm text-amber-600">
+            <p className="text-sm text-[hsl(var(--accent-warning-fg))]">
               {t("PublishFeed:priceDeviation", { pct: deviationPct.toFixed(2) })}
             </p>
           ) : null}
