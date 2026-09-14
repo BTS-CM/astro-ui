@@ -1171,15 +1171,18 @@ export default function Settlement(properties) {
   // Global settlement bid form: price-first tri-field model (DEX limit order
   // pattern — price × debt = collateral). `bidPrice` is collateral-per-debt
   // (e.g. BTS/USD). Each field carries a lock (toggle left of the field, as
-  // in the limit order card): a locked field is never auto-overwritten.
+  // in the CDP form): exactly one field is locked at a time — a locked field
+  // is never auto-overwritten, locking one field unlocks the other two.
   // Price starts locked so amount edits hold the price and resize the
-  // counterpart; unlock it to let amount edits re-derive the price instead.
+  // counterpart; lock collateral or debt instead to let amount edits
+  // re-derive the price.
   const [additionalCollateral, setAdditionalCollateral] = useState("");
   const [debtCovered, setDebtCovered] = useState("");
   const [bidPrice, setBidPrice] = useState("");
-  const [bidPriceLocked, setBidPriceLocked] = useState(true);
-  const [bidCollateralLocked, setBidCollateralLocked] = useState(false);
-  const [bidDebtLocked, setBidDebtLocked] = useState(false);
+  const [bidLockedField, setBidLockedField] = useState("price"); // 'price' | 'collateral' | 'debt'
+  const bidPriceLocked = bidLockedField === "price";
+  const bidCollateralLocked = bidLockedField === "collateral";
+  const bidDebtLocked = bidLockedField === "debt";
   // True once the user has typed into any of the three bid popovers, or a
   // removal was staged — blocks the auto-revive default from overwriting.
   const bidTouchedRef = useRef(false);
@@ -1192,12 +1195,13 @@ export default function Settlement(properties) {
   };
 
   // Linked-field appliers: set the edited field, recalculate exactly one
-  // counterpart so locked anchors never move. Empty/invalid input sets
+  // counterpart so the locked anchor never moves. Empty/invalid input sets
   // the field without cascading (clearing one box must not wipe the others).
-  // Priority keeps the edited intent stable: price edits hold collateral and
-  // resize debt; amount edits hold the locked side and move the free one —
-  // when price is unlocked they re-derive it, otherwise they resize the
-  // counterpart through the locked price.
+  // Single-active lock (like the CDP form): price edits hold collateral and
+  // resize debt, or hold debt and resize collateral when debt is locked;
+  // amount edits hold the locked price and resize the counterpart, unless
+  // price itself is unlocked (collateral/debt locked) in which case they
+  // re-derive the price.
   const applyBidPrice = useCallback(
     (raw) => {
       const price = parseFloat(raw);
@@ -1206,9 +1210,24 @@ export default function Settlement(properties) {
       if (!(price > 0)) return;
       const col = parseFloat(additionalCollateral);
       const debt = parseFloat(debtCovered);
-      if (!bidDebtLocked && col > 0 && parsedAsset) {
+      if (bidLockedField === "debt" && debt > 0 && parsedCollateralAsset) {
+        // Debt locked: hold debt, resize collateral.
+        setAdditionalCollateral(
+          trimToPrecision(debt * price, parsedCollateralAsset.p)
+        );
+      } else if (bidLockedField !== "debt" && col > 0 && parsedAsset) {
+        // Price locked (default) or collateral locked: hold collateral,
+        // resize debt.
         setDebtCovered(trimToPrecision(col / price, parsedAsset.p));
-      } else if (!bidCollateralLocked && debt > 0 && parsedCollateralAsset) {
+      } else if (bidLockedField === "debt" && col > 0 && parsedAsset) {
+        // Fallback when debt is blank but collateral exists.
+        setDebtCovered(trimToPrecision(col / price, parsedAsset.p));
+      } else if (
+        bidLockedField !== "debt" &&
+        debt > 0 &&
+        parsedCollateralAsset
+      ) {
+        // Fallback when collateral is blank but debt exists.
         setAdditionalCollateral(
           trimToPrecision(debt * price, parsedCollateralAsset.p)
         );
@@ -1217,8 +1236,7 @@ export default function Settlement(properties) {
     [
       additionalCollateral,
       debtCovered,
-      bidDebtLocked,
-      bidCollateralLocked,
+      bidLockedField,
       parsedAsset,
       parsedCollateralAsset,
     ]
@@ -1232,14 +1250,14 @@ export default function Settlement(properties) {
       if (!(col > 0)) return;
       const price = parseFloat(bidPrice);
       const debt = parseFloat(debtCovered);
-      if (!bidPriceLocked && debt > 0) {
-        // Unlocked price absorbs the edit; debt holding stays stable.
+      if (bidLockedField !== "price" && debt > 0) {
+        // Price unlocked (collateral or debt locked): re-derive the price.
         setBidPrice(trimToPrecision(col / debt, 8));
-      } else if (!bidDebtLocked && price > 0 && parsedAsset) {
+      } else if (bidLockedField === "price" && price > 0 && parsedAsset) {
         setDebtCovered(trimToPrecision(col / price, parsedAsset.p));
       }
     },
-    [bidPrice, debtCovered, bidPriceLocked, bidDebtLocked, parsedAsset]
+    [bidPrice, debtCovered, bidLockedField, parsedAsset]
   );
 
   const applyBidDebt = useCallback(
@@ -1250,10 +1268,14 @@ export default function Settlement(properties) {
       if (!(debt > 0)) return;
       const price = parseFloat(bidPrice);
       const col = parseFloat(additionalCollateral);
-      if (!bidPriceLocked && col > 0) {
-        // Unlocked price absorbs the edit; collateral holding stays stable.
+      if (bidLockedField !== "price" && col > 0) {
+        // Price unlocked (collateral or debt locked): re-derive the price.
         setBidPrice(trimToPrecision(col / debt, 8));
-      } else if (!bidCollateralLocked && price > 0 && parsedCollateralAsset) {
+      } else if (
+        bidLockedField === "price" &&
+        price > 0 &&
+        parsedCollateralAsset
+      ) {
         setAdditionalCollateral(
           trimToPrecision(debt * price, parsedCollateralAsset.p)
         );
@@ -1262,8 +1284,7 @@ export default function Settlement(properties) {
     [
       bidPrice,
       additionalCollateral,
-      bidPriceLocked,
-      bidCollateralLocked,
+      bidLockedField,
       parsedCollateralAsset,
     ]
   );
@@ -1310,6 +1331,22 @@ export default function Settlement(properties) {
       bestBidPrice > 0 ? trimToPrecision(bestBidPrice, 8) : null;
     return { autoRevive, withBids, settlementRate, bestBid };
   }, [autoRevivePrice, settlementFund, bestBidPrice]);
+
+  // Implied collateral ratio of the entered bid price: bidPrice and the feed
+  // share the collateral-per-debt orientation, so CR = bidPrice / feedPrice
+  // (e.g. 1.82x). Same ICR-else-MCR source as the revive simulation, so the
+  // label names the governing ratio. Null when price/feed is missing.
+  const bidCollateralRatio = useMemo(() => {
+    const price = parseFloat(bidPrice);
+    if (!(price > 0) || !(currentFeedSettlementPrice > 0)) return null;
+    const ratioInfo = getReviveRatioRaw(finalBitasset);
+    if (!ratioInfo) return null;
+    const required = Number(ratioInfo.ratioRaw) / 1000;
+    if (!Number.isFinite(required) || !(required > 0)) return null;
+    const ratio = price / currentFeedSettlementPrice;
+    if (!Number.isFinite(ratio) || !(ratio > 0)) return null;
+    return { ratio, required, kind: ratioInfo.kind };
+  }, [bidPrice, currentFeedSettlementPrice, finalBitasset]);
 
   // Default a blank bid form's price to the auto-revive (without bids) price:
   // stable chain anchor, always available when settlement price + ratio
@@ -1902,7 +1939,7 @@ export default function Settlement(properties) {
                             <FieldDescription>
                               {t("Settlement:bidPriceDescription", {
                                 defaultValue:
-                                  "Your bid price in {{collateral}} per {{asset}} — editing it adjusts the amounts below while the price is locked",
+                                  "Your bid price in {{collateral}} per {{asset}} — lock the price to hold it while editing amounts, or lock an amount to re-derive the price",
                                 collateral: parsedCollateralAsset.s,
                                 asset: parsedAsset.s,
                               })}
@@ -1916,9 +1953,11 @@ export default function Settlement(properties) {
                                 <HoverCardTrigger asChild>
                                   <Toggle
                                     variant="outline"
-                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    pressed={bidPriceLocked}
+                                    aria-pressed={bidPriceLocked}
+                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)] data-[state=on]:!bg-[hsl(var(--accent-1)/0.15)]"
                                     onClick={() => {
-                                      setBidPriceLocked((v) => !v);
+                                      setBidLockedField("price");
                                     }}
                                   >
                                     {bidPriceLocked ? (
@@ -1940,7 +1979,7 @@ export default function Settlement(properties) {
                                       })
                                     : t("Settlement:bidPriceUnlocked", {
                                         defaultValue:
-                                          "Price unlocked — editing amounts recalculates the price",
+                                          "Price unlocked — click to lock the price",
                                       })}
                                 </HoverCardContent>
                               </HoverCard>
@@ -1964,6 +2003,46 @@ export default function Settlement(properties) {
                                 readOnly
                                 className="bg-accent/40 border-border text-foreground/85 placeholder:text-muted-foreground font-mono tabular-nums disabled:opacity-100"
                               />
+                              {parseFloat(bidPrice) > 0 &&
+                              bidCollateralRatio ? (
+                                <div className="mt-1 text-[11px] tabular-nums text-muted-foreground">
+                                    <span
+                                      className={
+                                        bidCollateralRatio.ratio >=
+                                        bidCollateralRatio.required
+                                          ? "text-[hsl(var(--accent-success-fg))]"
+                                          : "text-[hsl(var(--accent-warning-fg))]"
+                                      }
+                                    >
+                                      {t("Settlement:bidCollateralRatio", {
+                                        defaultValue:
+                                          "≈ {{ratio}}x collateral ({{kind}} {{required}}x)",
+                                        ratio: bidCollateralRatio.ratio.toFixed(
+                                          2
+                                        ),
+                                        kind:
+                                          bidCollateralRatio.kind ?? "ICR",
+                                        required:
+                                          bidCollateralRatio.required.toFixed(
+                                            2
+                                          ),
+                                      })}
+                                      {bidCollateralRatio.ratio <
+                                      bidCollateralRatio.required ? (
+                                        <span>
+                                          {" — "}
+                                          {t(
+                                            "Settlement:bidBelowReviveRatio",
+                                            {
+                                              defaultValue:
+                                                "below required collateral",
+                                            }
+                                          )}
+                                        </span>
+                                      ) : null}
+                                    </span>
+                                </div>
+                              ) : null}
                             </span>
                             <span className="col-span-3 ml-3 text-center">
                               <Popover>
@@ -2114,9 +2193,11 @@ export default function Settlement(properties) {
                                 <HoverCardTrigger asChild>
                                   <Toggle
                                     variant="outline"
-                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    pressed={bidCollateralLocked}
+                                    aria-pressed={bidCollateralLocked}
+                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)] data-[state=on]:!bg-[hsl(var(--accent-1)/0.15)]"
                                     onClick={() => {
-                                      setBidCollateralLocked((v) => !v);
+                                      setBidLockedField("collateral");
                                     }}
                                   >
                                     {bidCollateralLocked ? (
@@ -2134,11 +2215,11 @@ export default function Settlement(properties) {
                                   {bidCollateralLocked
                                     ? t("Settlement:bidCollateralLocked", {
                                         defaultValue:
-                                          "Collateral locked — it won't be auto-adjusted",
+                                          "Collateral locked — editing debt recalculates the price",
                                       })
                                     : t("Settlement:bidCollateralUnlocked", {
                                         defaultValue:
-                                          "Collateral unlocked — it auto-adjusts to hold the locked values",
+                                          "Collateral unlocked — click to lock collateral",
                                       })}
                                 </HoverCardContent>
                               </HoverCard>
@@ -2296,9 +2377,11 @@ export default function Settlement(properties) {
                                 <HoverCardTrigger asChild>
                                   <Toggle
                                     variant="outline"
-                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    pressed={bidDebtLocked}
+                                    aria-pressed={bidDebtLocked}
+                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)] data-[state=on]:!bg-[hsl(var(--accent-1)/0.15)]"
                                     onClick={() => {
-                                      setBidDebtLocked((v) => !v);
+                                      setBidLockedField("debt");
                                     }}
                                   >
                                     {bidDebtLocked ? (
@@ -2316,11 +2399,11 @@ export default function Settlement(properties) {
                                   {bidDebtLocked
                                     ? t("Settlement:bidDebtLocked", {
                                         defaultValue:
-                                          "Debt locked — it won't be auto-adjusted",
+                                          "Debt locked — editing collateral recalculates the price",
                                       })
                                     : t("Settlement:bidDebtUnlocked", {
                                         defaultValue:
-                                          "Debt unlocked — it auto-adjusts to hold the locked values",
+                                          "Debt unlocked — click to lock debt",
                                       })}
                                 </HoverCardContent>
                               </HoverCard>

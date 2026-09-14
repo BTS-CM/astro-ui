@@ -1179,6 +1179,426 @@ export const PRESET_THEMES: Record<string, CustomTheme> = {
       featured: { primary: "#ec4899", secondary: "#0ea5e9", tertiary: "#f59e0b" },
     },
   }),
+
+  // ── Ultraviolet Archive ────────────────────────────────────────────
+  // Vivid-violet flagship (262°): analogous-vivid dyad + amber spark.
+  // Dual-mode: same triple both modes; per-mode -fg marching keeps AA.
+  ultraviolet: makeTheme("ultraviolet", "Ultraviolet Archive", "dark", { hex: "#5b21b6" }, {
+    brand: { primary: "#7c3aed", secondary: "#db2777" },
+    tokenOverrides: {
+      primary: { hex: "#7c3aed" },
+      secondary: { hex: "#e879f9" },
+      accent: { hex: "#c084fc" },
+      ring: { hex: "#8b5cf6" },
+      destructive: { hex: "#ef4444" },
+      sidebarAccent: { hex: "#4c1d95" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#7c3aed", secondary: "#a855f7" },
+      transfer: { primary: "#db2777", secondary: "#f43f5e" },
+      debt: { primary: "#10b981", secondary: "#34d399" },
+      assetCreation: { primary: "#a855f7", secondary: "#d946ef" },
+      account: { primary: "#6366f1", secondary: "#8b5cf6" },
+      blockchain: { primary: "#4f46e5", secondary: "#6366f1" },
+      governance: { primary: "#7c3aed", secondary: "#6d28d9" },
+      invoicing: { primary: "#f59e0b", secondary: "#fbbf24" },
+      settings: { primary: "#8b5cf6", secondary: "#6366f1" },
+      liquidityPools: { primary: "#8b5cf6", secondary: "#d946ef" },
+      community: { primary: "#ec4899", secondary: "#db2777" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#7c3aed", secondary: "#db2777", tertiary: "#f59e0b" },
+      pool: { primary: "#8b5cf6", secondary: "#7c3aed", tertiary: "#6366f1" },
+      stake: { primary: "#a855f7", secondary: "#7c3aed", tertiary: "#d946ef" },
+      transfer: { primary: "#db2777", secondary: "#7c3aed", tertiary: "#f43f5e" },
+      dex: { primary: "#7c3aed", secondary: "#6366f1", tertiary: "#0ea5e9" },
+      proposals: { primary: "#7c3aed", secondary: "#6d28d9", tertiary: "#a855f7" },
+      vote: { primary: "#7c3aed", secondary: "#a855f7", tertiary: "#db2777" },
+      account: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#7c3aed" },
+      settings: { primary: "#8b5cf6", secondary: "#6366f1", tertiary: "#a855f7" },
+      featured: { primary: "#7c3aed", secondary: "#db2777", tertiary: "#a855f7" },
+    },
+  }),
+
+  // ── Acid Grove ─────────────────────────────────────────────────────
+  // Vivid-lime flagship (84°): square harmony lime/teal + amber cross.
+  acidGrove: makeTheme("acidGrove", "Acid Grove", "dark", { hex: "#3f6212" }, {
+    brand: { primary: "#84cc16", secondary: "#0f766e" },
+    tokenOverrides: {
+      primary: { hex: "#a3e635" },
+      secondary: { hex: "#14b8a6" },
+      accent: { hex: "#bef264" },
+      ring: { hex: "#a3e635" },
+      destructive: { hex: "#ef4444" },
+      sidebarAccent: { hex: "#365314" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#84cc16", secondary: "#65a30d" },
+      transfer: { primary: "#14b8a6", secondary: "#06b6d4" },
+      debt: { primary: "#22c55e", secondary: "#4ade80" },
+      assetCreation: { primary: "#a3e635", secondary: "#84cc16" },
+      account: { primary: "#10b981", secondary: "#14b8a6" },
+      blockchain: { primary: "#0ea5e9", secondary: "#06b6d4" },
+      governance: { primary: "#65a30d", secondary: "#4d7c0f" },
+      invoicing: { primary: "#f59e0b", secondary: "#fbbf24" },
+      settings: { primary: "#4d7c0f", secondary: "#65a30d" },
+      liquidityPools: { primary: "#14b8a6", secondary: "#22c55e" },
+      community: { primary: "#84cc16", secondary: "#eab308" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#84cc16", secondary: "#14b8a6", tertiary: "#f59e0b" },
+      pool: { primary: "#14b8a6", secondary: "#84cc16", tertiary: "#06b6d4" },
+      stake: { primary: "#22c55e", secondary: "#84cc16", tertiary: "#14b8a6" },
+      transfer: { primary: "#14b8a6", secondary: "#84cc16", tertiary: "#06b6d4" },
+      dex: { primary: "#84cc16", secondary: "#22c55e", tertiary: "#14b8a6" },
+      proposals: { primary: "#65a30d", secondary: "#84cc16", tertiary: "#14b8a6" },
+      vote: { primary: "#84cc16", secondary: "#65a30d", tertiary: "#0ea5e9" },
+      account: { primary: "#10b981", secondary: "#14b8a6", tertiary: "#84cc16" },
+      settings: { primary: "#4d7c0f", secondary: "#65a30d", tertiary: "#14b8a6" },
+      featured: { primary: "#84cc16", secondary: "#14b8a6", tertiary: "#eab308" },
+    },
+  }),
+
+  // ── Fuchsia Protocol ───────────────────────────────────────────────
+  // Magenta flagship (293°): hot analogous magenta/rose.
+  fuchsiaProtocol: makeTheme("fuchsiaProtocol", "Fuchsia Protocol", "dark", { hex: "#86198f" }, {
+    brand: { primary: "#c026d3", secondary: "#f43f5e" },
+    tokenOverrides: {
+      primary: { hex: "#e879f9" },
+      secondary: { hex: "#f43f5e" },
+      accent: { hex: "#f0abfc" },
+      ring: { hex: "#e879f9" },
+      destructive: { hex: "#dc2626" },
+      sidebarAccent: { hex: "#701a75" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#c026d3", secondary: "#e879f9" },
+      transfer: { primary: "#f43f5e", secondary: "#fb7185" },
+      debt: { primary: "#a855f7", secondary: "#c026d3" },
+      assetCreation: { primary: "#d946ef", secondary: "#c026d3" },
+      account: { primary: "#a855f7", secondary: "#ec4899" },
+      blockchain: { primary: "#8b5cf6", secondary: "#a855f7" },
+      governance: { primary: "#c026d3", secondary: "#a21caf" },
+      invoicing: { primary: "#f59e0b", secondary: "#f97316" },
+      settings: { primary: "#a855f7", secondary: "#6366f1" },
+      liquidityPools: { primary: "#ec4899", secondary: "#d946ef" },
+      community: { primary: "#f43f5e", secondary: "#ec4899" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#c026d3", secondary: "#f43f5e", tertiary: "#f59e0b" },
+      pool: { primary: "#d946ef", secondary: "#c026d3", tertiary: "#a855f7" },
+      stake: { primary: "#a855f7", secondary: "#c026d3", tertiary: "#d946ef" },
+      transfer: { primary: "#f43f5e", secondary: "#c026d3", tertiary: "#ec4899" },
+      dex: { primary: "#c026d3", secondary: "#a855f7", tertiary: "#0ea5e9" },
+      proposals: { primary: "#c026d3", secondary: "#a21caf", tertiary: "#a855f7" },
+      vote: { primary: "#c026d3", secondary: "#a855f7", tertiary: "#f43f5e" },
+      account: { primary: "#a855f7", secondary: "#ec4899", tertiary: "#c026d3" },
+      settings: { primary: "#a855f7", secondary: "#6366f1", tertiary: "#c026d3" },
+      featured: { primary: "#c026d3", secondary: "#f43f5e", tertiary: "#e879f9" },
+    },
+  }),
+
+  // ── Azure Meridian ─────────────────────────────────────────────────
+  // Azure/coral split-complement (200°/351°): depth-twin of ocean/deepOcean,
+  // differentiated by coral landmarks + porcelain light surfaces.
+  azureMeridian: makeTheme("azureMeridian", "Azure Meridian", "dark", { hex: "#0c4a6e" }, {
+    brand: { primary: "#0284c7", secondary: "#fb7185" },
+    tokenOverrides: {
+      primary: { hex: "#38bdf8" },
+      secondary: { hex: "#fb7185" },
+      accent: { hex: "#7dd3fc" },
+      ring: { hex: "#38bdf8" },
+      destructive: { hex: "#ef4444" },
+      sidebarAccent: { hex: "#0c4a6e" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#0284c7", secondary: "#38bdf8" },
+      transfer: { primary: "#fb7185", secondary: "#f43f5e" },
+      debt: { primary: "#0ea5e9", secondary: "#06b6d4" },
+      assetCreation: { primary: "#38bdf8", secondary: "#6366f1" },
+      account: { primary: "#0369a1", secondary: "#0ea5e9" },
+      blockchain: { primary: "#0c4a6e", secondary: "#0369a1" },
+      governance: { primary: "#6366f1", secondary: "#8b5cf6" },
+      invoicing: { primary: "#f59e0b", secondary: "#fb7185" },
+      settings: { primary: "#7dd3fc", secondary: "#38bdf8" },
+      liquidityPools: { primary: "#06b6d4", secondary: "#0ea5e9" },
+      community: { primary: "#f43f5e", secondary: "#fb7185" },
+    },
+    // Info moved to indigo so it stands 39° off the azure primary
+    // (avoids the ocean-class info≡brand collision).
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#6366f1" },
+    pageAccents: {
+      instant_trade: { primary: "#0284c7", secondary: "#fb7185", tertiary: "#38bdf8" },
+      pool: { primary: "#0ea5e9", secondary: "#0284c7", tertiary: "#6366f1" },
+      stake: { primary: "#6366f1", secondary: "#0284c7", tertiary: "#8b5cf6" },
+      transfer: { primary: "#fb7185", secondary: "#0284c7", tertiary: "#f43f5e" },
+      dex: { primary: "#0284c7", secondary: "#6366f1", tertiary: "#0ea5e9" },
+      proposals: { primary: "#6366f1", secondary: "#8b5cf6", tertiary: "#0284c7" },
+      vote: { primary: "#0284c7", secondary: "#6366f1", tertiary: "#fb7185" },
+      account: { primary: "#0369a1", secondary: "#0ea5e9", tertiary: "#0284c7" },
+      settings: { primary: "#7dd3fc", secondary: "#38bdf8", tertiary: "#6366f1" },
+      featured: { primary: "#0284c7", secondary: "#fb7185", tertiary: "#0ea5e9" },
+    },
+  }),
+
+  // ── Redwood Triad ──────────────────────────────────────────────────
+  // Forest/ember/indigo triadic (142°/0°/243°), forest-dominant.
+  // Success reassigned to lime so it stands off the forest brand
+  // (emerald-class camouflage fix); danger≡ember accepted with icon+text.
+  redwoodTriad: makeTheme("redwoodTriad", "Redwood Triad", "light", { hex: "#15803d" }, {
+    brand: { primary: "#15803d", secondary: "#b91c1c" },
+    tokenOverrides: {
+      primary: { hex: "#15803d" },
+      secondary: { hex: "#dc2626" },
+      accent: { hex: "#4ade80" },
+      ring: { hex: "#22c55e" },
+      destructive: { hex: "#b91c1c" },
+      sidebarAccent: { hex: "#14532d" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#15803d", secondary: "#22c55e" },
+      transfer: { primary: "#b91c1c", secondary: "#ef4444" },
+      debt: { primary: "#166534", secondary: "#15803d" },
+      assetCreation: { primary: "#65a30d", secondary: "#84cc16" },
+      account: { primary: "#15803d", secondary: "#14b8a6" },
+      blockchain: { primary: "#4338ca", secondary: "#6366f1" },
+      governance: { primary: "#4338ca", secondary: "#3730a3" },
+      invoicing: { primary: "#b45309", secondary: "#d97706" },
+      settings: { primary: "#166534", secondary: "#4d7c0f" },
+      liquidityPools: { primary: "#14b8a6", secondary: "#06b6d4" },
+      community: { primary: "#b91c1c", secondary: "#f59e0b" },
+    },
+    statusAccents: { success: "#65a30d", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#15803d", secondary: "#b91c1c", tertiary: "#65a30d" },
+      pool: { primary: "#14b8a6", secondary: "#15803d", tertiary: "#06b6d4" },
+      stake: { primary: "#15803d", secondary: "#22c55e", tertiary: "#14b8a6" },
+      transfer: { primary: "#b91c1c", secondary: "#15803d", tertiary: "#f59e0b" },
+      dex: { primary: "#15803d", secondary: "#4338ca", tertiary: "#14b8a6" },
+      proposals: { primary: "#4338ca", secondary: "#15803d", tertiary: "#6366f1" },
+      vote: { primary: "#15803d", secondary: "#4338ca", tertiary: "#65a30d" },
+      account: { primary: "#15803d", secondary: "#14b8a6", tertiary: "#65a30d" },
+      settings: { primary: "#166534", secondary: "#4d7c0f", tertiary: "#15803d" },
+      featured: { primary: "#15803d", secondary: "#b91c1c", tertiary: "#4338ca" },
+    },
+  }),
+
+  // ── Lilac Haze ─────────────────────────────────────────────────────
+  // Pastel-violet flagship (271°): soft analogous lilac/orchid + sky coolant.
+  // Info moved to sky so it stands off the violet secondary.
+  lilacHaze: makeTheme("lilacHaze", "Lilac Haze", "light", { hex: "#9333ea" }, {
+    brand: { primary: "#a855f7", secondary: "#e879f9" },
+    tokenOverrides: {
+      primary: { hex: "#9333ea" },
+      secondary: { hex: "#d8b4fe" },
+      accent: { hex: "#e9d5ff" },
+      ring: { hex: "#a855f7" },
+      destructive: { hex: "#ef4444" },
+      sidebarAccent: { hex: "#7e22ce" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#a855f7", secondary: "#c084fc" },
+      transfer: { primary: "#ec4899", secondary: "#f472b6" },
+      debt: { primary: "#8b5cf6", secondary: "#a855f7" },
+      assetCreation: { primary: "#c084fc", secondary: "#e879f9" },
+      account: { primary: "#818cf8", secondary: "#6366f1" },
+      blockchain: { primary: "#6366f1", secondary: "#8b5cf6" },
+      governance: { primary: "#9333ea", secondary: "#a855f7" },
+      invoicing: { primary: "#f59e0b", secondary: "#fbbf24" },
+      settings: { primary: "#d8b4fe", secondary: "#a855f7" },
+      liquidityPools: { primary: "#0ea5e9", secondary: "#38bdf8" },
+      community: { primary: "#e879f9", secondary: "#ec4899" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#a855f7", secondary: "#e879f9", tertiary: "#f59e0b" },
+      pool: { primary: "#0ea5e9", secondary: "#a855f7", tertiary: "#38bdf8" },
+      stake: { primary: "#a855f7", secondary: "#9333ea", tertiary: "#d946ef" },
+      transfer: { primary: "#ec4899", secondary: "#a855f7", tertiary: "#f472b6" },
+      dex: { primary: "#a855f7", secondary: "#6366f1", tertiary: "#0ea5e9" },
+      proposals: { primary: "#9333ea", secondary: "#a855f7", tertiary: "#6366f1" },
+      vote: { primary: "#a855f7", secondary: "#9333ea", tertiary: "#e879f9" },
+      account: { primary: "#818cf8", secondary: "#a855f7", tertiary: "#0ea5e9" },
+      settings: { primary: "#d8b4fe", secondary: "#a855f7", tertiary: "#6366f1" },
+      featured: { primary: "#a855f7", secondary: "#e879f9", tertiary: "#6366f1" },
+    },
+  }),
+
+  // ── Foundry Copper ─────────────────────────────────────────────────
+  // Copper-led near-complement (12°/176°): leadership-flip twin of
+  // terracottaTeal (teal-led), differentiated by dominance + umber surfaces.
+  foundryCopper: makeTheme("foundryCopper", "Foundry Copper", "dark", { hex: "#78350f" }, {
+    brand: { primary: "#e76f51", secondary: "#134e4a" },
+    tokenOverrides: {
+      primary: { hex: "#ea580c" },
+      secondary: { hex: "#5eead4" },
+      accent: { hex: "#fdba74" },
+      ring: { hex: "#fb923c" },
+      destructive: { hex: "#dc2626" },
+      sidebarAccent: { hex: "#431407" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#e76f51", secondary: "#ea580c" },
+      transfer: { primary: "#ea580c", secondary: "#f97316" },
+      debt: { primary: "#14b8a6", secondary: "#2dd4bf" },
+      assetCreation: { primary: "#d97706", secondary: "#f59e0b" },
+      account: { primary: "#0f766e", secondary: "#14b8a6" },
+      blockchain: { primary: "#134e4a", secondary: "#0f766e" },
+      governance: { primary: "#c2410c", secondary: "#e76f51" },
+      invoicing: { primary: "#f59e0b", secondary: "#eab308" },
+      settings: { primary: "#fdba74", secondary: "#fb923c" },
+      liquidityPools: { primary: "#0f766e", secondary: "#06b6d4" },
+      community: { primary: "#e76f51", secondary: "#f43f5e" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#e76f51", secondary: "#f59e0b", tertiary: "#ea580c" },
+      pool: { primary: "#0f766e", secondary: "#14b8a6", tertiary: "#06b6d4" },
+      stake: { primary: "#d97706", secondary: "#e76f51", tertiary: "#f59e0b" },
+      transfer: { primary: "#ea580c", secondary: "#e76f51", tertiary: "#f59e0b" },
+      dex: { primary: "#e76f51", secondary: "#0f766e", tertiary: "#14b8a6" },
+      proposals: { primary: "#c2410c", secondary: "#e76f51", tertiary: "#0f766e" },
+      vote: { primary: "#e76f51", secondary: "#134e4a", tertiary: "#a855f7" },
+      account: { primary: "#0f766e", secondary: "#14b8a6", tertiary: "#e76f51" },
+      settings: { primary: "#fdba74", secondary: "#fb923c", tertiary: "#0f766e" },
+      featured: { primary: "#e76f51", secondary: "#ea580c", tertiary: "#0f766e" },
+    },
+  }),
+
+  // ── Porcelain Glacier ──────────────────────────────────────────────
+  // Ice analogous (187–200°): light-first twin of deepOcean (abyss dark),
+  // differentiated by depth + frost-white settings anchor.
+  porcelainGlacier: makeTheme("porcelainGlacier", "Porcelain Glacier", "light", { hex: "#164e63" }, {
+    brand: { primary: "#0284c7", secondary: "#67e8f9" },
+    tokenOverrides: {
+      primary: { hex: "#0369a1" },
+      secondary: { hex: "#7dd3fc" },
+      accent: { hex: "#bae6fd" },
+      ring: { hex: "#38bdf8" },
+      destructive: { hex: "#ef4444" },
+      sidebarAccent: { hex: "#0c4a6e" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#0284c7", secondary: "#38bdf8" },
+      transfer: { primary: "#0ea5e9", secondary: "#7dd3fc" },
+      debt: { primary: "#06b6d4", secondary: "#2dd4bf" },
+      assetCreation: { primary: "#38bdf8", secondary: "#818cf8" },
+      account: { primary: "#0369a1", secondary: "#0284c7" },
+      blockchain: { primary: "#0c4a6e", secondary: "#075985" },
+      governance: { primary: "#6366f1", secondary: "#818cf8" },
+      invoicing: { primary: "#f59e0b", secondary: "#fbbf24" },
+      // Near-white frost anchor: deliberately achromatic, exempt from gray guard.
+      settings: { primary: "#f8fafc", secondary: "#bae6fd" },
+      liquidityPools: { primary: "#06b6d4", secondary: "#38bdf8" },
+      community: { primary: "#38bdf8", secondary: "#818cf8" },
+    },
+    // Info sits in-family (accepted same-class like ocean); icon+text carries it.
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#0284c7", secondary: "#38bdf8", tertiary: "#0ea5e9" },
+      pool: { primary: "#06b6d4", secondary: "#0284c7", tertiary: "#38bdf8" },
+      stake: { primary: "#6366f1", secondary: "#0284c7", tertiary: "#8b5cf6" },
+      transfer: { primary: "#0ea5e9", secondary: "#0284c7", tertiary: "#38bdf8" },
+      dex: { primary: "#0284c7", secondary: "#6366f1", tertiary: "#0ea5e9" },
+      proposals: { primary: "#6366f1", secondary: "#818cf8", tertiary: "#0284c7" },
+      vote: { primary: "#0284c7", secondary: "#6366f1", tertiary: "#38bdf8" },
+      account: { primary: "#0369a1", secondary: "#0284c7", tertiary: "#0ea5e9" },
+      settings: { primary: "#7dd3fc", secondary: "#38bdf8", tertiary: "#0284c7" },
+      featured: { primary: "#0284c7", secondary: "#0ea5e9", tertiary: "#38bdf8" },
+    },
+  }),
+
+  // ── Oxblood Library ────────────────────────────────────────────────
+  // Oxblood/brass dark academia (343°/26°): depth-twin of dustyRose
+  // (pastel light), differentiated by depth + finish. Danger nearness
+  // accepted with icon+text mitigation (vintage/nordic pattern).
+  oxbloodLibrary: makeTheme("oxbloodLibrary", "Oxblood Library", "dark", { hex: "#450a0a" }, {
+    brand: { primary: "#9f1239", secondary: "#b45309" },
+    tokenOverrides: {
+      primary: { hex: "#e11d48" },
+      secondary: { hex: "#d97706" },
+      accent: { hex: "#fda4af" },
+      ring: { hex: "#fb7185" },
+      destructive: { hex: "#b91c1c" },
+      sidebarAccent: { hex: "#4c0519" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#9f1239", secondary: "#e11d48" },
+      transfer: { primary: "#e11d48", secondary: "#f43f5e" },
+      debt: { primary: "#15803d", secondary: "#166534" },
+      assetCreation: { primary: "#b45309", secondary: "#d97706" },
+      account: { primary: "#9f1239", secondary: "#881337" },
+      blockchain: { primary: "#78350f", secondary: "#92400e" },
+      governance: { primary: "#9f1239", secondary: "#7e22ce" },
+      invoicing: { primary: "#d97706", secondary: "#b45309" },
+      // Parchment anchor: near-white pair, exempt from gray guard.
+      settings: { primary: "#fafaf9", secondary: "#f5f5f4" },
+      liquidityPools: { primary: "#15803d", secondary: "#14b8a6" },
+      community: { primary: "#e11d48", secondary: "#b45309" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#0ea5e9" },
+    pageAccents: {
+      instant_trade: { primary: "#9f1239", secondary: "#d97706", tertiary: "#e11d48" },
+      pool: { primary: "#15803d", secondary: "#9f1239", tertiary: "#14b8a6" },
+      stake: { primary: "#9f1239", secondary: "#881337", tertiary: "#d97706" },
+      transfer: { primary: "#e11d48", secondary: "#9f1239", tertiary: "#d97706" },
+      dex: { primary: "#9f1239", secondary: "#15803d", tertiary: "#d97706" },
+      proposals: { primary: "#9f1239", secondary: "#7e22ce", tertiary: "#881337" },
+      vote: { primary: "#9f1239", secondary: "#e11d48", tertiary: "#d97706" },
+      account: { primary: "#881337", secondary: "#9f1239", tertiary: "#15803d" },
+      settings: { primary: "#d97706", secondary: "#9f1239", tertiary: "#78716c" },
+      featured: { primary: "#9f1239", secondary: "#e11d48", tertiary: "#d97706" },
+    },
+  }),
+
+  // ── Graphite Signal ────────────────────────────────────────────────
+  // Intentional monochrome: zinc-graphite field + single safety-orange
+  // signal + paper anchors + one sky landmark. Restraint is the point
+  // (corporate/nordic pattern). Warning nearness handled with dark-text
+  // + double-border treatment (contrast pattern).
+  // NOTE: seed is zinc-700, not near-black — a #27272a-class seed hits the
+  // s=1 TinyColor boundary and tints surfaces blue; S5% keeps them neutral
+  // in both modes. Section grays are near-white (guard-exempt), never mid-gray.
+  graphiteSignal: makeTheme("graphiteSignal", "Graphite Signal", "dark", { hex: "#3f3f46" }, {
+    brand: { primary: "#f97316", secondary: "#ea580c" },
+    tokenOverrides: {
+      primary: { hex: "#fb923c" },
+      secondary: { hex: "#a1a1aa" },
+      accent: { hex: "#fdba74" },
+      ring: { hex: "#f97316" },
+      destructive: { hex: "#ef4444" },
+      sidebarAccent: { hex: "#3f3f46" },
+    },
+    sectionAccents: {
+      exchanging: { primary: "#f97316", secondary: "#ea580c" },
+      transfer: { primary: "#fb923c", secondary: "#f97316" },
+      debt: { primary: "#0ea5e9", secondary: "#38bdf8" },
+      assetCreation: { primary: "#f97316", secondary: "#fbbf24" },
+      account: { primary: "#fafafa", secondary: "#f4f4f5" },
+      blockchain: { primary: "#f4f4f5", secondary: "#fafafa" },
+      governance: { primary: "#fb923c", secondary: "#ea580c" },
+      invoicing: { primary: "#fbbf24", secondary: "#f59e0b" },
+      settings: { primary: "#fafafa", secondary: "#f4f4f5" },
+      liquidityPools: { primary: "#ea580c", secondary: "#f97316" },
+      community: { primary: "#f97316", secondary: "#fb7185" },
+    },
+    statusAccents: { success: "#10b981", danger: "#ef4444", warning: "#f59e0b", info: "#38bdf8" },
+    pageAccents: {
+      instant_trade: { primary: "#f97316", secondary: "#a1a1aa", tertiary: "#ea580c" },
+      pool: { primary: "#0ea5e9", secondary: "#f97316", tertiary: "#38bdf8" },
+      stake: { primary: "#a1a1aa", secondary: "#71717a", tertiary: "#f97316" },
+      transfer: { primary: "#f97316", secondary: "#fb923c", tertiary: "#a1a1aa" },
+      dex: { primary: "#f97316", secondary: "#0ea5e9", tertiary: "#ea580c" },
+      proposals: { primary: "#f97316", secondary: "#fb923c", tertiary: "#a1a1aa" },
+      vote: { primary: "#f97316", secondary: "#a1a1aa", tertiary: "#8b5cf6" },
+      account: { primary: "#a1a1aa", secondary: "#71717a", tertiary: "#f97316" },
+      settings: { primary: "#a1a1aa", secondary: "#d4d4d8", tertiary: "#f97316" },
+      featured: { primary: "#f97316", secondary: "#fb923c", tertiary: "#0ea5e9" },
+    },
+  }),
 };
 
 // --- Accent resolvers (fall back to defaults so partial themes are safe) ----
@@ -1803,7 +2223,79 @@ function persistActiveCss() {
   }
 }
 
+// One-time forward migration, run on app load (client only).
+// persistentMap rehydrates `themes` from localStorage wholesale, so newly
+// shipped presets would otherwise stay invisible until the user clears app
+// storage. This adds missing preset ids only — user-created themes are never
+// touched, and in-place edits (including edits to presets, which updateTheme
+// allows) are never overwritten. Preset fixes that must reach edited copies
+// need a versioned migration, not a silent overwrite.
+//
+// NOTE: the persisted value is read from localStorage directly, NOT via
+// $customTheme.get(). persistentMap loads storage on first subscribe
+// (restore-on-mount), so during module evaluation the live store is still
+// empty and merging against it would clobber the user's saved themes.
+const PRESET_STORE_PREFIX = "customTheme:";
+
+function readPersistedKey<T>(key: string): T | undefined {
+  try {
+    if (typeof localStorage === "undefined") return undefined;
+    const raw = localStorage.getItem(PRESET_STORE_PREFIX + key);
+    if (raw == null) return undefined;
+    return JSON.parse(raw) as T;
+  } catch {
+    return undefined;
+  }
+}
+
+export function ensurePresetThemes(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const stored = readPersistedKey<Record<string, CustomTheme>>("themes");
+    if (!stored || typeof stored !== "object") {
+      // Nothing usable persisted: seed defaults only when the live store is
+      // also empty (fresh boot pre-mount) — never overwrite a populated store.
+      const live = $customTheme.get().themes;
+      if (!live || typeof live !== "object" || Object.keys(live).length === 0) {
+        $customTheme.setKey("themes", { ...PRESET_THEMES });
+      }
+      return;
+    }
+    let missing: Record<string, CustomTheme> | null = null;
+    for (const [id, preset] of Object.entries(PRESET_THEMES)) {
+      if (!stored[id]) {
+        if (!missing) missing = {};
+        missing[id] = preset;
+      }
+    }
+    const themes = missing ? { ...stored, ...missing } : stored;
+    if (missing) $customTheme.setKey("themes", themes);
+    // Drop page→theme mappings pointing at themes that no longer exist
+    // (e.g. a deleted custom theme) — dead weight, and never a user theme.
+    const map = readPersistedKey<Record<string, string>>("pageThemeMap");
+    if (map && typeof map === "object") {
+      let stale = false;
+      const next = { ...map };
+      for (const k of Object.keys(next)) {
+        if (!themes[next[k]]) {
+          delete next[k];
+          stale = true;
+        }
+      }
+      if (stale) $customTheme.setKey("pageThemeMap", next);
+    }
+    // The read paths already fall back, but keep the stored id valid too.
+    const active = readPersistedKey<string>("activeThemeId");
+    if (typeof active === "string" && active && !themes[active]) {
+      $customTheme.setKey("activeThemeId", "default");
+    }
+  } catch {
+    // Never break boot on storage errors (private mode, quota, corruption).
+  }
+}
+
 if (typeof window !== "undefined") {
+  ensurePresetThemes();
   persistActiveCss();
   $customTheme.listen(() => persistActiveCss());
 }
