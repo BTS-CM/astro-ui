@@ -160,7 +160,7 @@ function SettlementBidRow({ index, style, rows, t }) {
   const inner = (
     <div className="p-4">
       <div className="flex items-center gap-3 min-w-0">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border flex-shrink-0 border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.25)] to-[hsl(var(--accent-1)/0.08)]">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border flex-shrink-0 border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.12)] to-[hsl(var(--accent-1)/0.04)]">
                 <Gavel className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" strokeWidth={2.25} />
               </span>
         <div className="min-w-0">
@@ -175,7 +175,7 @@ function SettlementBidRow({ index, style, rows, t }) {
           <div className="flex items-center gap-1.5 flex-wrap mt-1">
             <Badge
               variant="outline"
-              className="border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] text-xs font-mono tabular-nums"
+              className="border-[hsl(var(--accent-1)/0.15)] bg-[hsl(var(--accent-1)/0.04)] text-xs font-mono tabular-nums"
             >
               {t("SettlementBids:fund")}: {fund} {collateral?.symbol ?? ""}
               {collateral?.id ? ` (${collateral.id})` : ""}
@@ -205,7 +205,7 @@ function SettlementBidRow({ index, style, rows, t }) {
 
   return (
     <div style={{ ...style }} key={`sfund-${bitasset.asset_id}`}>
-      <Card className="mx-2 mb-1.5 rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.35)] hover:bg-[hsl(var(--accent-1)/0.06)] transition-all cursor-pointer">
+      <Card className="mx-2 mb-1.5 rounded-xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.03)] to-transparent hover:border-[hsl(var(--accent-1)/0.25)] hover:bg-[hsl(var(--accent-1)/0.05)] transition-all cursor-pointer">
         <a
           href={`/settlement.html?id=${bitasset.asset_id}`}
           className="block"
@@ -485,16 +485,16 @@ export default function SettlementBids() {
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-[hsl(var(--accent-1)/0.2)] blur-3xl"
+          className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-[hsl(var(--accent-2)/0.2)] blur-3xl"
+          className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl"
         />
 
         <div className="relative p-5 sm:p-6">
           <div className="flex items-start gap-3 mb-5">
-            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(var(--accent-1)/0.25)] to-[hsl(var(--accent-3)/0.25)] border border-[hsl(var(--accent-1)/0.25)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.15)]">
               <Gavel className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" strokeWidth={2.25} />
             </span>
             <div className="min-w-0">
@@ -507,7 +507,7 @@ export default function SettlementBids() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.07)] to-[hsl(var(--accent-1)/0.02)] p-4 mb-5 space-y-3">
+          <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-[hsl(var(--accent-1)/0.01)] p-4 mb-5 space-y-3">
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative w-full sm:w-1/2">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
@@ -550,7 +550,7 @@ export default function SettlementBids() {
                       className={cn(
                         "h-9 text-xs",
                         isActive
-                          ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]"
+                          ? "border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)]"
                           : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
                       )}
                     >
@@ -665,11 +665,11 @@ export default function SettlementBids() {
               )}
               {!rows.length ? (
                 hasActiveFilters && smartcoins.length > 0 ? (
-                  <Empty className="mt-2 border border-[hsl(var(--accent-1)/0.25)] rounded-2xl bg-[hsl(var(--accent-1)/0.05)]">
+                  <Empty className="mt-2 border border-[hsl(var(--accent-1)/0.12)] rounded-2xl bg-[hsl(var(--accent-1)/0.03)]">
                     <EmptyHeader>
                       <EmptyMedia
                         variant="icon"
-                        className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]"
+                        className="bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))]"
                       >
                         <Gavel className="w-6 h-6" />
                       </EmptyMedia>
@@ -684,11 +684,11 @@ export default function SettlementBids() {
                     </EmptyContent>
                   </Empty>
                 ) : (
-                  <Empty className="mt-2 border border-[hsl(var(--accent-1)/0.25)] rounded-2xl bg-[hsl(var(--accent-1)/0.05)]">
+                  <Empty className="mt-2 border border-[hsl(var(--accent-1)/0.12)] rounded-2xl bg-[hsl(var(--accent-1)/0.03)]">
                     <EmptyHeader>
                       <EmptyMedia
                         variant="icon"
-                        className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]"
+                        className="bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))]"
                       >
                         <Gavel className="w-6 h-6" />
                       </EmptyMedia>
