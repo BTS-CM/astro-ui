@@ -15,5 +15,20 @@
     "bidButton": "입찰",
     "showingOf": "{{total}}개 중 {{filtered}}개 표시",
     "noFilterResults": "현재 검색과 일치하는 자산이 없습니다",
-    "clearFilters": "검색 지우기"
+    "clearFilters": "검색 지우기",
+    "issuer": "발행자",
+    "fee": "수수료",
+    "bidOnTitle": "{{symbol}}의 결산 자금에 입찰",
+    "issuerFilter": "발행자별 필터",
+    "allIssuers": "모든 발행자",
+    "bsrmFilter": "복구 방법별 필터",
+    "bsrmAll": "모든 복구 방법",
+    "bsrm_0": "글로벌 청산",
+    "bsrm_1": "청산 없음",
+    "bsrm_2": "펀드로 개별 청산",
+    "bsrm_3": "주문으로 개별 청산",
+    "biddingFilter": "담보 입찰별 필터",
+    "biddingAll": "전체",
+    "biddingDisabled": "비활성화된 담보 입찰",
+    "biddingEnabled": "활성화된 담보 입찰"
 }

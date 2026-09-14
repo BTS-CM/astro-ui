@@ -15,5 +15,20 @@
     "bidButton": "Enchérir",
     "showingOf": "Affichage de {{filtered}} sur {{total}}",
     "noFilterResults": "Aucun actif ne correspond à la recherche actuelle",
-    "clearFilters": "Effacer la recherche"
+    "clearFilters": "Effacer la recherche",
+    "issuer": "Émetteur",
+    "fee": "Frais",
+    "bidOnTitle": "Enchérir sur les fonds de règlement {{symbol}}",
+    "issuerFilter": "Filtrer par émetteur",
+    "allIssuers": "Tous les émetteurs",
+    "bsrmFilter": "Filtrer par méthode de récupération",
+    "bsrmAll": "Toutes les méthodes de récupération",
+    "bsrm_0": "Règlement global",
+    "bsrm_1": "Aucun règlement",
+    "bsrm_2": "Règlement individuel vers le fonds",
+    "bsrm_3": "Règlement individuel vers l'ordre",
+    "biddingFilter": "Filtrer par offres de garantie",
+    "biddingAll": "Toutes",
+    "biddingDisabled": "Offres de garantie désactivées",
+    "biddingEnabled": "Offres de garantie activées"
 }

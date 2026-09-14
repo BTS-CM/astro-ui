@@ -15,5 +15,20 @@
     "bidButton": "Byd",
     "showingOf": "Viser {{filtered}} af {{total}}",
     "noFilterResults": "Ingen aktiver matcher den aktuelle søgning",
-    "clearFilters": "Ryd søgning"
+    "clearFilters": "Ryd søgning",
+    "issuer": "Udsteder",
+    "fee": "Gebyr",
+    "bidOnTitle": "Byd på {{symbol}}s afviklingsfonde",
+    "issuerFilter": "Filtrer efter udsteder",
+    "allIssuers": "Alle udstedere",
+    "bsrmFilter": "Filtrer efter gendannelsesmetode",
+    "bsrmAll": "Alle gendannelsesmetoder",
+    "bsrm_0": "Global afvikling",
+    "bsrm_1": "Ingen afvikling",
+    "bsrm_2": "Individuel afvikling til fond",
+    "bsrm_3": "Individuel afvikling til ordre",
+    "biddingFilter": "Filtrer efter sikkerhedsbudgivning",
+    "biddingAll": "Alle",
+    "biddingDisabled": "Deaktiveret sikkerhedsbudgivning",
+    "biddingEnabled": "Aktiveret sikkerhedsbudgivning"
 }

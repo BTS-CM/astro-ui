@@ -15,5 +15,20 @@
     "bidButton": "Lance",
     "showingOf": "Mostrando {{filtered}} de {{total}}",
     "noFilterResults": "Nenhum ativo corresponde à pesquisa atual",
-    "clearFilters": "Limpar pesquisa"
+    "clearFilters": "Limpar pesquisa",
+    "issuer": "Emitente",
+    "fee": "Taxa",
+    "bidOnTitle": "Licitar fundos de liquidação de {{symbol}}",
+    "issuerFilter": "Filtrar por emitente",
+    "allIssuers": "Todos os emitentes",
+    "bsrmFilter": "Filtrar por método de recuperação",
+    "bsrmAll": "Todos os métodos de recuperação",
+    "bsrm_0": "Liquidação global",
+    "bsrm_1": "Sem liquidação",
+    "bsrm_2": "Liquidação individual para o fundo",
+    "bsrm_3": "Liquidação individual para a ordem",
+    "biddingFilter": "Filtrar por ofertas de garantia",
+    "biddingAll": "Todas",
+    "biddingDisabled": "Ofertas de garantia desativadas",
+    "biddingEnabled": "Ofertas de garantia ativadas"
 }

@@ -15,5 +15,20 @@
     "bidButton": "Pujar",
     "showingOf": "Mostrando {{filtered}} de {{total}}",
     "noFilterResults": "Ningún activo coincide con la búsqueda actual",
-    "clearFilters": "Borrar búsqueda"
+    "clearFilters": "Borrar búsqueda",
+    "issuer": "Emisor",
+    "fee": "Comisión",
+    "bidOnTitle": "Ofertar fondos de liquidación de {{symbol}}",
+    "issuerFilter": "Filtrar por emisor",
+    "allIssuers": "Todos los emisores",
+    "bsrmFilter": "Filtrar por método de recuperación",
+    "bsrmAll": "Todos los métodos de recuperación",
+    "bsrm_0": "Liquidación global",
+    "bsrm_1": "Sin liquidación",
+    "bsrm_2": "Liquidación individual al fondo",
+    "bsrm_3": "Liquidación individual a la orden",
+    "biddingFilter": "Filtrar por ofertas de garantía",
+    "biddingAll": "Todas",
+    "biddingDisabled": "Ofertas de garantía deshabilitadas",
+    "biddingEnabled": "Ofertas de garantía habilitadas"
 }

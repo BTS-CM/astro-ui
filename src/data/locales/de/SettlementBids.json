@@ -15,5 +15,20 @@
     "bidButton": "Bieten",
     "showingOf": "{{filtered}} von {{total}} werden angezeigt",
     "noFilterResults": "Keine Assets entsprechen der aktuellen Suche",
-    "clearFilters": "Suche zurücksetzen"
+    "clearFilters": "Suche zurücksetzen",
+    "issuer": "Herausgeber",
+    "fee": "Gebühr",
+    "bidOnTitle": "Auf {{symbol}}-Abwicklungsfonds bieten",
+    "issuerFilter": "Nach Herausgeber filtern",
+    "allIssuers": "Alle Herausgeber",
+    "bsrmFilter": "Nach Wiederherstellungsmethode filtern",
+    "bsrmAll": "Alle Wiederherstellungsmethoden",
+    "bsrm_0": "Globale Abwicklung",
+    "bsrm_1": "Keine Abwicklung",
+    "bsrm_2": "Individuelle Abwicklung an Fonds",
+    "bsrm_3": "Individuelle Abwicklung an Order",
+    "biddingFilter": "Nach Sicherheitengeboten filtern",
+    "biddingAll": "Alle",
+    "biddingDisabled": "Deaktivierte Sicherheitengebote",
+    "biddingEnabled": "Aktivierte Sicherheitengebote"
 }

@@ -15,5 +15,20 @@
     "bidButton": "Paku",
     "showingOf": "Kuvatakse {{filtered}} / {{total}}",
     "noFilterResults": "Ükski vara ei vasta praegusele otsingule",
-    "clearFilters": "Tühjenda otsing"
+    "clearFilters": "Tühjenda otsing",
+    "issuer": "Emitent",
+    "fee": "Tasu",
+    "bidOnTitle": "Pakkuge {{symbol}} arveldusfonde",
+    "issuerFilter": "Filtreeri emitendi järgi",
+    "allIssuers": "Kõik emitendid",
+    "bsrmFilter": "Filtreeri taastamismeetodi järgi",
+    "bsrmAll": "Kõik taastamismeetodid",
+    "bsrm_0": "Globaalne arveldus",
+    "bsrm_1": "Arveldus puudub",
+    "bsrm_2": "Individuaalne arveldus fondi",
+    "bsrm_3": "Individuaalne arveldus orderile",
+    "biddingFilter": "Filtreeri tagatispakkumiste järgi",
+    "biddingAll": "Kõik",
+    "biddingDisabled": "Keelatud tagatispakkumised",
+    "biddingEnabled": "Lubatud tagatispakkumised"
 }

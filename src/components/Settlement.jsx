@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useSyncExternalStore } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { List } from "react-window";
@@ -27,6 +27,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+import { Toggle } from "@/components/ui/toggle";
+
+import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,6 +85,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   RefreshCw,
+  Tag,
 } from "lucide-react";
 
 
@@ -239,6 +250,10 @@ function getBidRawAmounts(bid, collateralId, debtId) {
 // Reference-wallet _analyzeBids: best-priced bids first, accumulate debt
 // until the outstanding supply is covered, pro-rating the marginal bid's
 // collateral. Returns raw totals { collateral, debt }.
+// NOTE: kept only for the "with bids" auto-revive *price estimate*.
+// The actual revive verdict does NOT use this — see simulateRevival() which
+// replicates bitshares-core `process_bids` including the per-bid
+// collateral-adequacy (ICR) check.
 function analyzeBidsForRevive(pricedBids, supplyRaw) {
   let accCollateral = 0;
   let accDebt = 0;
@@ -257,6 +272,304 @@ function analyzeBidsForRevive(pricedBids, supplyRaw) {
     }
   }
   return { collateral: accCollateral, debt: accDebt };
+}
+
+// --- Revival simulation (bitshares-core `process_bids`, db_maint.cpp) ---
+// Chain rule: at maintenance, bids sorted best-first (highest
+// additional_collateral / debt_covered) are walked in order. Each bid's
+// resulting position gets `total = floor(debt * settlement_price) +
+// additional` and must satisfy CR > revive_ratio against the *current feed*:
+//   total * feed_base * 1000 > debt * feed_quote * revive_ratio
+// (precisions cancel, pure integer math). First failing bid stops the walk;
+// remaining bids are ignored. Revive iff accumulated debt covers supply.
+// revive_ratio is ICR post HF-2290 (PR #2505), else MCR.
+const REVIVE_RATIO_DENOM = 1000n;
+
+function parseHumanToRawBigInt(value, precision) {
+  if (value === null || value === undefined || value === "") return null;
+  const str = String(value).trim();
+  if (!str || str === "." || str === "-") return null;
+  if (!/^\d*\.?\d*$/.test(str)) return null;
+  const [intPart = "0", fracPart = ""] = str.split(".");
+  if (fracPart.length > precision) return null;
+  const paddedFrac = (fracPart + "0".repeat(precision)).slice(0, precision);
+  const combined = `${intPart === "" ? "0" : intPart}${paddedFrac}`;
+  const stripped = combined.replace(/^0+(?=\d)/, "");
+  try {
+    return BigInt(stripped === "" ? "0" : stripped);
+  } catch {
+    return null;
+  }
+}
+
+function toBigIntAmount(amount) {
+  if (amount === undefined || amount === null) return null;
+  try {
+    const s = String(amount).trim();
+    if (s === "") return null;
+    // Chain amounts are integers; tolerate "123.0" by truncating.
+    const intStr = s.includes(".") ? s.split(".")[0] : s;
+    if (!/^-?\d+$/.test(intStr)) return null;
+    return BigInt(intStr);
+  } catch {
+    return null;
+  }
+}
+
+// BigInt variant of getBidRawAmounts: { collateral: BigInt, debt: BigInt }.
+function getBidRawAmountsBigInt(bid, collateralId, debtId) {
+  const priceObj = bid?.inv_swan_price ?? bid?.bid ?? null;
+  const baseLeg = priceObj?.base ?? null;
+  const quoteLeg = priceObj?.quote ?? null;
+  if (!baseLeg || !quoteLeg) return null;
+  if (baseLeg.amount === undefined || quoteLeg.amount === undefined)
+    return null;
+  const legs = [baseLeg, quoteLeg];
+  let colLeg = legs.find((l) => l.asset_id === collateralId) ?? baseLeg;
+  let debtLeg = legs.find((l) => l.asset_id === debtId) ?? quoteLeg;
+  if (debtLeg === colLeg) {
+    colLeg = baseLeg;
+    debtLeg = quoteLeg;
+  }
+  const collateral = toBigIntAmount(colLeg.amount);
+  const debt = toBigIntAmount(debtLeg.amount);
+  if (collateral === null || debt === null) return null;
+  if (collateral < 0n || debt < 0n) return null;
+  return { collateral, debt };
+}
+
+// Revive collateral ratio: prefer current_feed ICR (HF-2290), fall back to
+// MCR. Returns { ratioRaw: BigInt, kind: "ICR"|"MCR" } or null.
+function getReviveRatioRaw(finalBitasset) {
+  const feed = finalBitasset?.current_feed;
+  if (!feed) return null;
+  const icr = Number(feed.initial_collateral_ratio);
+  if (Number.isFinite(icr) && icr > 0) {
+    return { ratioRaw: BigInt(Math.round(icr)), kind: "ICR" };
+  }
+  const mcr = Number(feed.maintenance_collateral_ratio);
+  if (Number.isFinite(mcr) && mcr > 0) {
+    return { ratioRaw: BigInt(Math.round(mcr)), kind: "MCR" };
+  }
+  return null;
+}
+
+// Extract debt/collateral raw legs by asset id (robust to leg order).
+// Returns { baseRaw, quoteRaw } with baseRaw=debt, quoteRaw=collateral.
+function getDebtCollateralLegs(priceObj, debtId, collateralId) {
+  const base = priceObj?.base ?? null;
+  const quote = priceObj?.quote ?? null;
+  if (!base || !quote) return null;
+  if (base.amount === undefined || quote.amount === undefined) return null;
+  const baseRaw = toBigIntAmount(base.amount);
+  const quoteRaw = toBigIntAmount(quote.amount);
+  if (baseRaw === null || quoteRaw === null) return null;
+  if (base?.asset_id === debtId && quote?.asset_id === collateralId) {
+    return { baseRaw, quoteRaw };
+  }
+  if (base?.asset_id === collateralId && quote?.asset_id === debtId) {
+    return { baseRaw: quoteRaw, quoteRaw: baseRaw };
+  }
+  // Unknown ids — fall back to positional convention (base=debt).
+  return { baseRaw, quoteRaw };
+}
+
+function compareBidPriceDesc(a, b) {
+  // Compare a.collateral/a.debt vs b.collateral/b.debt via cross product.
+  // Zero-debt bids sort last (they cover nothing).
+  const aZero = a.debt <= 0n;
+  const bZero = b.debt <= 0n;
+  if (aZero && bZero) return 0;
+  if (aZero) return 1;
+  if (bZero) return -1;
+  const left = a.collateral * b.debt;
+  const right = b.collateral * a.debt;
+  if (left > right) return -1;
+  if (left < right) return 1;
+  return 0;
+}
+
+// Faithful port of `database::process_bids` coverage loop (read-only).
+// bidsRaw: [{ collateral: BigInt, debt: BigInt, bidder?, isEntered? }]
+// Returns { willRevive, coveredDebt, sorted, includedCount, failingBid,
+//           failingIndex, reason } where reason is one of:
+//   'no-feed' | 'prediction-market' | 'no-supply' | 'bad-settlement' |
+//   'bad-ratio' | 'insufficient-collateral' | 'insufficient-debt' | 'ok' |
+//   'zero-supply' | 'no-bids'
+function simulateRevival({
+  supplyRaw,
+  settlementBaseRaw,
+  settlementQuoteRaw,
+  feedBaseRaw,
+  feedQuoteRaw,
+  reviveRatioRaw,
+  bidsRaw,
+  isPredictionMarket,
+}) {
+  if (isPredictionMarket) {
+    return {
+      willRevive: false,
+      coveredDebt: 0n,
+      sorted: [],
+      includedCount: 0,
+      failingBid: null,
+      failingIndex: -1,
+      reason: "prediction-market",
+    };
+  }
+  if (!(feedBaseRaw > 0n) || !(feedQuoteRaw > 0n)) {
+    return {
+      willRevive: false,
+      coveredDebt: 0n,
+      sorted: [],
+      includedCount: 0,
+      failingBid: null,
+      failingIndex: -1,
+      reason: "no-feed",
+    };
+  }
+  if (!(supplyRaw > 0n)) {
+    return {
+      willRevive: supplyRaw === 0n,
+      coveredDebt: 0n,
+      sorted: [],
+      includedCount: 0,
+      failingBid: null,
+      failingIndex: -1,
+      reason: supplyRaw === 0n ? "zero-supply" : "no-supply",
+    };
+  }
+  if (!(settlementBaseRaw > 0n) || !(settlementQuoteRaw > 0n)) {
+    return {
+      willRevive: false,
+      coveredDebt: 0n,
+      sorted: [],
+      includedCount: 0,
+      failingBid: null,
+      failingIndex: -1,
+      reason: "bad-settlement",
+    };
+  }
+  if (!(reviveRatioRaw > 0n)) {
+    return {
+      willRevive: false,
+      coveredDebt: 0n,
+      sorted: [],
+      includedCount: 0,
+      failingBid: null,
+      failingIndex: -1,
+      reason: "bad-ratio",
+    };
+  }
+  const sorted = [...(bidsRaw ?? [])]
+    .filter((b) => b && b.debt > 0n && b.collateral >= 0n)
+    .sort(compareBidPriceDesc);
+  if (!sorted.length) {
+    return {
+      willRevive: false,
+      coveredDebt: 0n,
+      sorted,
+      includedCount: 0,
+      failingBid: null,
+      failingIndex: -1,
+      reason: "no-bids",
+    };
+  }
+  let covered = 0n;
+  let includedCount = 0;
+  let failingBid = null;
+  let failingIndex = -1;
+  for (let i = 0; i < sorted.length; i += 1) {
+    if (!(covered < supplyRaw)) break;
+    const bid = sorted[i];
+    // Core caps each bid's debt to total supply (not to remaining).
+    const debtInBid = bid.debt > supplyRaw ? supplyRaw : bid.debt;
+    if (!(debtInBid > 0n)) continue;
+    // asset * price rounds down on-chain: floor(debt * quote / base).
+    const fundPortion =
+      (debtInBid * settlementQuoteRaw) / settlementBaseRaw;
+    const total = fundPortion + bid.collateral;
+    // CR > ratio  <=>  total * feedBase * 1000 > debt * feedQuote * ratio
+    const lhs = total * feedBaseRaw * REVIVE_RATIO_DENOM;
+    const rhs = debtInBid * feedQuoteRaw * reviveRatioRaw;
+    if (!(lhs > rhs)) {
+      failingBid = { ...bid, fundPortion, total, debtInBid, sortedIndex: i };
+      failingIndex = i;
+      break;
+    }
+    covered += debtInBid;
+    includedCount = i + 1;
+  }
+  if (covered >= supplyRaw) {
+    return {
+      willRevive: true,
+      coveredDebt: covered,
+      sorted,
+      includedCount,
+      failingBid: null,
+      failingIndex: -1,
+      reason: "ok",
+    };
+  }
+  // Debt shortfall vs first collateral failure determines the message.
+  if (failingBid) {
+    return {
+      willRevive: false,
+      coveredDebt: covered,
+      sorted,
+      includedCount,
+      failingBid,
+      failingIndex,
+      reason: "insufficient-collateral",
+    };
+  }
+  return {
+    willRevive: false,
+    coveredDebt: covered,
+    sorted,
+    includedCount,
+    failingBid: null,
+    failingIndex: sorted.length,
+    reason: "insufficient-debt",
+  };
+}
+
+// Additional collateral shortfall for a failing bid to reach CR > ratio:
+//   required = floor? ceil(debt*feedQuote*ratio / (feedBase*1000) - fundPortion) + 1 - additional
+// Core uses strict >, so add 1 satoshi on exact equality.
+function collateralShortfallRaw(failingBid, feedBaseRaw, feedQuoteRaw, reviveRatioRaw) {
+  if (!failingBid) return null;
+  const { debtInBid, fundPortion, collateral } = failingBid;
+  if (!(debtInBid > 0n) || !(feedBaseRaw > 0n)) return null;
+  const denom = feedBaseRaw * REVIVE_RATIO_DENOM;
+  const numer = debtInBid * feedQuoteRaw * reviveRatioRaw;
+  // ceil(numer / denom) - fundPortion + (exact? 1 : 0) - collateral
+  const ceilNeed = (numer + denom - 1n) / denom;
+  const exact = numer % denom === 0n;
+  const needTotal = ceilNeed + (exact ? 1n : 0n);
+  const shortfall = needTotal - fundPortion - collateral;
+  return shortfall > 0n ? shortfall : 0n;
+}
+
+// Feed-independent debt coverage (best-first, no collateral check).
+// Used for encouraging "helps revive / positions for revival" messaging when
+// no valid feed exists yet: covering the outstanding debt now cures the
+// black-swan overhang, and full revival follows once fresh feeds are
+// published and the ICR check can pass at maintenance.
+function debtCoveredRaw(bidsRaw, supplyRaw) {
+  if (!(supplyRaw > 0n)) return 0n;
+  const sorted = [...(bidsRaw ?? [])]
+    .filter((b) => b && b.debt > 0n)
+    .sort(compareBidPriceDesc);
+  let covered = 0n;
+  for (const bid of sorted) {
+    if (!(covered < supplyRaw)) break;
+    const debtInBid = bid.debt > supplyRaw ? supplyRaw : bid.debt;
+    if (!(debtInBid > 0n)) continue;
+    covered += debtInBid;
+    if (covered >= supplyRaw) break;
+  }
+  return covered;
 }
 
 export default function Settlement(properties) {
@@ -529,19 +842,26 @@ export default function Settlement(properties) {
 
   // Auto revive price (bitshares-ui reference wallet definition, shown in
   // this page's debt-per-collateral orientation, e.g. USD/BTS):
-  // - without bids: frozen settlement rate scaled by MCR
-  //   (MCR / R, with R = settlement collateral per debt).
+  // - without bids: frozen settlement rate scaled by the revive ratio
+  //   (ratio / R, with R = settlement collateral per debt).
+  //   Revive ratio is ICR post HF-2290 (PR #2505), else MCR.
   // - with bids: live collateral bids sorted best-first and filled until the
   //   outstanding supply is covered (marginal bid pro-rated), then
-  //   MCR * coveredDebt / (settlementFund + bidCollateral).
+  //   ratio * coveredDebt / (settlementFund + bidCollateral).
+  //   This is a price *estimate* only — actual revival additionally requires
+  //   every included bid to clear the ratio check (see simulateRevival).
   // Null (rendered as "—") whenever an input is missing; withBids is null
   // when no bid debt exists, mirroring the reference "--" display.
   const autoRevivePrice = useMemo(() => {
     if (!finalBitasset || !parsedAsset || !parsedCollateralAsset) {
       return null;
     }
-    const mcr = Number(finalBitasset.current_feed?.maintenance_collateral_ratio) / 1000;
-    if (!Number.isFinite(mcr) || mcr <= 0) {
+    const ratioEntry = getReviveRatioRaw(finalBitasset);
+    if (!ratioEntry) {
+      return null;
+    }
+    const reviveRatio = Number(ratioEntry.ratioRaw) / 1000;
+    if (!Number.isFinite(reviveRatio) || reviveRatio <= 0) {
       return null;
     }
     const sq = Number(finalBitasset.settlement_price?.quote?.amount);
@@ -554,7 +874,7 @@ export default function Settlement(properties) {
     if (!(q > 0) || !(b > 0)) {
       return null;
     }
-    const without = mcr / (q / b);
+    const without = reviveRatio / (q / b);
 
     let withBids = null;
     const supplyRaw = Number(finalDynamicData?.current_supply);
@@ -579,12 +899,12 @@ export default function Settlement(properties) {
             (fundRaw + covered.collateral) / 10 ** parsedCollateralAsset.p;
           const debtReal = covered.debt / 10 ** parsedAsset.p;
           if (totalCol > 0 && debtReal > 0) {
-            withBids = (mcr * debtReal) / totalCol;
+            withBids = (reviveRatio * debtReal) / totalCol;
           }
         }
       }
     }
-    return { without, withBids };
+    return { without, withBids, reviveKind: ratioEntry.kind };
   }, [
     finalBitasset,
     parsedAsset,
@@ -738,6 +1058,10 @@ export default function Settlement(properties) {
     ) {
       return;
     }
+    // Never clobber in-progress user input if the bid list resolves late.
+    if (bidTouchedRef.current) {
+      return;
+    }
     const own = collateralBids.find((b) => b?.bidder === usr.id);
     if (!own) {
       return;
@@ -754,6 +1078,11 @@ export default function Settlement(properties) {
     const debtHuman = humanReadableFloat(legs.debt, parsedAsset.p);
     setAdditionalCollateral(String(colHuman));
     setDebtCovered(String(debtHuman));
+    // Existing bid takes precedence over any price default: restore its
+    // implied price (collateral per debt) alongside the amounts.
+    if (debtHuman > 0) {
+      setBidPrice(String(parseFloat((colHuman / debtHuman).toFixed(8))));
+    }
   }, [collateralBids, usr, parsedAsset, parsedCollateralAsset]);
 
   const collateralBiddingDisabled = useMemo(() => {
@@ -839,59 +1168,272 @@ export default function Settlement(properties) {
   const [forceSettleAmount, setForceSettleAmount] = useState(0);
   const [totalReceiving, setTotalReceiving] = useState(0);
 
-  // Global settlement
+  // Global settlement bid form: price-first tri-field model (DEX limit order
+  // pattern — price × debt = collateral). `bidPrice` is collateral-per-debt
+  // (e.g. BTS/USD). Each field carries a lock (toggle left of the field, as
+  // in the limit order card): a locked field is never auto-overwritten.
+  // Price starts locked so amount edits hold the price and resize the
+  // counterpart; unlock it to let amount edits re-derive the price instead.
   const [additionalCollateral, setAdditionalCollateral] = useState("");
   const [debtCovered, setDebtCovered] = useState("");
+  const [bidPrice, setBidPrice] = useState("");
+  const [bidPriceLocked, setBidPriceLocked] = useState(true);
+  const [bidCollateralLocked, setBidCollateralLocked] = useState(false);
+  const [bidDebtLocked, setBidDebtLocked] = useState(false);
+  // True once the user has typed into any of the three bid popovers, or a
+  // removal was staged — blocks the auto-revive default from overwriting.
+  const bidTouchedRef = useRef(false);
 
-  const [showDialog, setShowDialog] = useState(false);
+  // Trim a positive number to `precision` decimals, stripping trailing zeros
+  // so recalculated fields stay typeable and chain-precise.
+  const trimToPrecision = (value, precision) => {
+    if (!Number.isFinite(value) || !(value > 0)) return "";
+    return String(parseFloat(value.toFixed(precision)));
+  };
 
-  // True when the currently entered bid would complete debt coverage and
-  // trigger automatic revival: existing bids alone cover less than the
-  // outstanding supply, but including the entered bid covers it fully.
-  // Same fill semantics as the reference _analyzeBids (best-first, marginal
-  // bid pro-rated), compared in raw satoshis.
-  const enteredWillRevive = useMemo(() => {
-    if (!finalBitasset || !parsedAsset || !parsedCollateralAsset) {
-      return false;
+  // Linked-field appliers: set the edited field, recalculate exactly one
+  // counterpart so locked anchors never move. Empty/invalid input sets
+  // the field without cascading (clearing one box must not wipe the others).
+  // Priority keeps the edited intent stable: price edits hold collateral and
+  // resize debt; amount edits hold the locked side and move the free one —
+  // when price is unlocked they re-derive it, otherwise they resize the
+  // counterpart through the locked price.
+  const applyBidPrice = useCallback(
+    (raw) => {
+      const price = parseFloat(raw);
+      setBidPrice(raw);
+      bidTouchedRef.current = true;
+      if (!(price > 0)) return;
+      const col = parseFloat(additionalCollateral);
+      const debt = parseFloat(debtCovered);
+      if (!bidDebtLocked && col > 0 && parsedAsset) {
+        setDebtCovered(trimToPrecision(col / price, parsedAsset.p));
+      } else if (!bidCollateralLocked && debt > 0 && parsedCollateralAsset) {
+        setAdditionalCollateral(
+          trimToPrecision(debt * price, parsedCollateralAsset.p)
+        );
+      }
+    },
+    [
+      additionalCollateral,
+      debtCovered,
+      bidDebtLocked,
+      bidCollateralLocked,
+      parsedAsset,
+      parsedCollateralAsset,
+    ]
+  );
+
+  const applyBidCollateral = useCallback(
+    (raw) => {
+      const col = parseFloat(raw);
+      setAdditionalCollateral(raw);
+      bidTouchedRef.current = true;
+      if (!(col > 0)) return;
+      const price = parseFloat(bidPrice);
+      const debt = parseFloat(debtCovered);
+      if (!bidPriceLocked && debt > 0) {
+        // Unlocked price absorbs the edit; debt holding stays stable.
+        setBidPrice(trimToPrecision(col / debt, 8));
+      } else if (!bidDebtLocked && price > 0 && parsedAsset) {
+        setDebtCovered(trimToPrecision(col / price, parsedAsset.p));
+      }
+    },
+    [bidPrice, debtCovered, bidPriceLocked, bidDebtLocked, parsedAsset]
+  );
+
+  const applyBidDebt = useCallback(
+    (raw) => {
+      const debt = parseFloat(raw);
+      setDebtCovered(raw);
+      bidTouchedRef.current = true;
+      if (!(debt > 0)) return;
+      const price = parseFloat(bidPrice);
+      const col = parseFloat(additionalCollateral);
+      if (!bidPriceLocked && col > 0) {
+        // Unlocked price absorbs the edit; collateral holding stays stable.
+        setBidPrice(trimToPrecision(col / debt, 8));
+      } else if (!bidCollateralLocked && price > 0 && parsedCollateralAsset) {
+        setAdditionalCollateral(
+          trimToPrecision(debt * price, parsedCollateralAsset.p)
+        );
+      }
+    },
+    [
+      bidPrice,
+      additionalCollateral,
+      bidPriceLocked,
+      bidCollateralLocked,
+      parsedCollateralAsset,
+    ]
+  );
+
+  // Best existing bid price (collateral per debt), for the price shortcut.
+  const bestBidPrice = useMemo(() => {
+    if (!collateralBids?.length || !parsedAsset || !parsedCollateralAsset) {
+      return null;
     }
-    if (!(additionalCollateral > 0) || !(debtCovered > 0)) {
-      return false;
-    }
-    const supplyRaw = Number(finalDynamicData?.current_supply);
-    if (!Number.isFinite(supplyRaw) || supplyRaw <= 0) {
-      return false;
-    }
-    const existing = [];
-    for (const bid of collateralBids ?? []) {
+    let best = null;
+    for (const bid of collateralBids) {
       const legs = getBidRawAmounts(
         bid,
         parsedCollateralAsset.id,
         parsedAsset.id
       );
-      if (!legs || legs.debt <= 0) {
-        continue;
-      }
-      existing.push({ ...legs, price: legs.collateral / legs.debt });
+      if (!legs || !(legs.debt > 0)) continue;
+      const col = humanReadableFloat(legs.collateral, parsedCollateralAsset.p);
+      const debt = humanReadableFloat(legs.debt, parsedAsset.p);
+      if (!(debt > 0)) continue;
+      const price = col / debt;
+      if (best === null || price > best) best = price;
     }
-    const enteredCollateral = Math.round(
-      additionalCollateral * 10 ** parsedCollateralAsset.p
+    return best;
+  }, [collateralBids, parsedAsset, parsedCollateralAsset]);
+
+  // Price shortcuts, all in bid-price orientation (collateral per debt).
+  // Note: autoRevivePrice legs are debt-per-collateral, so they are inverted
+  // here; settlementRate and bestBidPrice are already collateral-per-debt.
+  const bidPriceChips = useMemo(() => {
+    const autoRevive =
+      autoRevivePrice?.without > 0
+        ? trimToPrecision(1 / autoRevivePrice.without, 8)
+        : null;
+    const withBids =
+      autoRevivePrice?.withBids > 0
+        ? trimToPrecision(1 / autoRevivePrice.withBids, 8)
+        : null;
+    const settlementRate =
+      settlementFund?.settlementRate > 0
+        ? trimToPrecision(settlementFund.settlementRate, 8)
+        : null;
+    const bestBid =
+      bestBidPrice > 0 ? trimToPrecision(bestBidPrice, 8) : null;
+    return { autoRevive, withBids, settlementRate, bestBid };
+  }, [autoRevivePrice, settlementFund, bestBidPrice]);
+
+  // Default a blank bid form's price to the auto-revive (without bids) price:
+  // stable chain anchor, always available when settlement price + ratio
+  // exist. Never overwrites an existing-bid prefill or user input.
+  const hasOwnBid = useMemo(() => {
+    if (!collateralBids?.length || !usr?.id) return false;
+    return collateralBids.some((b) => b?.bidder === usr.id);
+  }, [collateralBids, usr]);
+  useEffect(() => {
+    if (hasOwnBid || bidTouchedRef.current) return;
+    if (bidPrice !== "" || additionalCollateral !== "" || debtCovered !== "") {
+      return;
+    }
+    if (bidPriceChips.autoRevive) {
+      setBidPrice(bidPriceChips.autoRevive);
+    }
+  }, [hasOwnBid, bidPriceChips.autoRevive, bidPrice, additionalCollateral, debtCovered]);
+
+  const [showDialog, setShowDialog] = useState(false);
+
+  // Revival verdict replicating bitshares-core `process_bids` (db_maint.cpp):
+  // debt coverage alone is NOT enough — every included bid's resulting
+  // position (fund slice + additional) must clear the revive ratio (ICR
+  // post HF-2290, else MCR) against the current feed, checked best-first.
+  // Own existing bid is excluded before inserting the entered one because
+  // `bid_collateral` cancels-replaces one bid per account per asset.
+  const reviveSimulation = useMemo(() => {
+    if (!finalBitasset || !parsedAsset || !parsedCollateralAsset) {
+      return null;
+    }
+    const debtId = parsedAsset.id;
+    const collateralId = parsedCollateralAsset.id;
+    const supplyRaw = toBigIntAmount(finalDynamicData?.current_supply);
+    if (supplyRaw === null) return null;
+    const settlementLegs = getDebtCollateralLegs(
+      finalBitasset.settlement_price,
+      debtId,
+      collateralId
     );
-    const enteredDebt = Math.round(debtCovered * 10 ** parsedAsset.p);
-    if (!(enteredDebt > 0) || !(enteredCollateral >= 0)) {
-      return false;
-    }
-    const entered = {
-      collateral: enteredCollateral,
-      debt: enteredDebt,
-      price: enteredCollateral / enteredDebt,
+    const feedLegs = getDebtCollateralLegs(
+      finalBitasset.current_feed?.settlement_price,
+      debtId,
+      collateralId
+    );
+    const ratioInfo = getReviveRatioRaw(finalBitasset);
+    const isPredictionMarket = !!finalBitasset.is_prediction_market;
+    const baseParams = {
+      supplyRaw,
+      settlementBaseRaw: settlementLegs?.baseRaw ?? null,
+      settlementQuoteRaw: settlementLegs?.quoteRaw ?? null,
+      feedBaseRaw: feedLegs?.baseRaw ?? null,
+      feedQuoteRaw: feedLegs?.quoteRaw ?? null,
+      reviveRatioRaw: ratioInfo?.ratioRaw ?? null,
+      isPredictionMarket,
     };
-    const coveredWithout =
-      analyzeBidsForRevive(existing, supplyRaw).debt;
-    const coveredWith = analyzeBidsForRevive(
-      [...existing, entered],
-      supplyRaw
-    ).debt;
-    return coveredWithout < supplyRaw && coveredWith >= supplyRaw;
+    const existingRaw = [];
+    for (const bid of collateralBids ?? []) {
+      if (usr?.id && bid?.bidder && bid.bidder === usr.id) continue;
+      const legs = getBidRawAmountsBigInt(bid, collateralId, debtId);
+      if (!legs || !(legs.debt > 0n)) continue;
+      existingRaw.push({
+        collateral: legs.collateral,
+        debt: legs.debt,
+        bidder: bid?.bidder ?? null,
+        isEntered: false,
+      });
+    }
+    const without = simulateRevival({ ...baseParams, bidsRaw: existingRaw });
+    const enteredCollateralRaw = parseHumanToRawBigInt(
+      additionalCollateral,
+      parsedCollateralAsset.p
+    );
+    const enteredDebtRaw = parseHumanToRawBigInt(
+      debtCovered,
+      parsedAsset.p
+    );
+    const hasEntered =
+      enteredCollateralRaw !== null &&
+      enteredDebtRaw !== null &&
+      enteredDebtRaw > 0n &&
+      enteredCollateralRaw >= 0n &&
+      // Chain validity: debt>0 requires collateral>0 (removal is debt==0).
+      (enteredDebtRaw === 0n || enteredCollateralRaw > 0n);
+    const hasValidFeed =
+      (feedLegs?.baseRaw ?? null) !== null &&
+      (feedLegs?.quoteRaw ?? null) !== null &&
+      feedLegs.baseRaw > 0n &&
+      feedLegs.quoteRaw > 0n;
+    if (!hasEntered) {
+      return {
+        ...baseParams,
+        reviveKind: ratioInfo?.kind ?? null,
+        hasValidFeed,
+        existingRaw,
+        enteredRaw: null,
+        without,
+        with: null,
+        hasEntered: false,
+        debtWithoutRaw: debtCoveredRaw(existingRaw, supplyRaw),
+        debtWithRaw: null,
+      };
+    }
+    const enteredRaw = {
+      collateral: enteredCollateralRaw,
+      debt: enteredDebtRaw,
+      bidder: usr?.id ?? "entered",
+      isEntered: true,
+    };
+    const withResult = simulateRevival({
+      ...baseParams,
+      bidsRaw: [...existingRaw, enteredRaw],
+    });
+    return {
+      ...baseParams,
+      reviveKind: ratioInfo?.kind ?? null,
+      hasValidFeed,
+      existingRaw,
+      enteredRaw,
+      without,
+      with: withResult,
+      hasEntered: true,
+      debtWithoutRaw: debtCoveredRaw(existingRaw, supplyRaw),
+      debtWithRaw: debtCoveredRaw([...existingRaw, enteredRaw], supplyRaw),
+    };
   }, [
     finalBitasset,
     parsedAsset,
@@ -900,7 +1442,117 @@ export default function Settlement(properties) {
     collateralBids,
     additionalCollateral,
     debtCovered,
+    usr,
   ]);
+
+  const enteredWillRevive = !!(
+    reviveSimulation?.hasEntered &&
+    reviveSimulation?.with?.willRevive &&
+    !reviveSimulation?.without?.willRevive
+  );
+
+  // Encouraging tier: bid completes *debt* coverage (feed-independent) but
+  // full revival can't be confirmed yet — typically because no valid feed
+  // exists. Covering the debt now still cures the black-swan overhang: full
+  // revival follows once fresh feeds let the ICR check pass at maintenance.
+  // Deliberately NOT shown when a valid feed exists but collateral is
+  // insufficient — that stays a precise shortfall hint, not encouragement.
+  const enteredWillHelpRevive = !!(
+    reviveSimulation?.hasEntered &&
+    !enteredWillRevive &&
+    reviveSimulation?.supplyRaw > 0n &&
+    (reviveSimulation?.debtWithRaw ?? 0n) >= reviveSimulation.supplyRaw &&
+    (reviveSimulation?.debtWithoutRaw ?? 0n) < reviveSimulation.supplyRaw &&
+    !reviveSimulation?.hasValidFeed &&
+    !reviveSimulation?.without?.willRevive &&
+    !reviveSimulation?.isPredictionMarket
+  );
+
+  // Position/shortfall hint for the entered bid (even when it will NOT
+  // fully revive): rank among sorted bids, whether it is included before
+  // the first failure, and what is missing (debt vs collateral vs feed).
+  // When no valid feed exists, the full simulation has no sortable bids,
+  // so fall back to a feed-independent debt-coverage ranking.
+  const enteredReviveInfo = useMemo(() => {
+    const sim = reviveSimulation;
+    if (!sim?.hasEntered) return null;
+    const { with: withResult, without, enteredRaw } = sim;
+    if (!withResult) return null;
+    const sorted = withResult.sorted ?? [];
+    let rank = -1;
+    for (let i = 0; i < sorted.length; i += 1) {
+      if (sorted[i]?.isEntered) {
+        rank = i;
+        break;
+      }
+    }
+    let totalBids = sorted.length;
+    // No-feed fallback: rank by debt-price order (feed-independent).
+    if (rank === -1 && !sim.hasValidFeed && sim.enteredRaw) {
+      const debtSorted = [...(sim.existingRaw ?? []), sim.enteredRaw]
+        .filter((b) => b && b.debt > 0n)
+        .sort(compareBidPriceDesc);
+      totalBids = debtSorted.length;
+      for (let i = 0; i < debtSorted.length; i += 1) {
+        if (debtSorted[i]?.isEntered) {
+          rank = i;
+          break;
+        }
+      }
+    }
+    const included = rank !== -1 && rank < withResult.includedCount;
+    let shortfallCollateralRaw = null;
+    if (withResult.reason === "insufficient-collateral" && withResult.failingBid) {
+      if (withResult.failingBid.isEntered) {
+        shortfallCollateralRaw = collateralShortfallRaw(
+          withResult.failingBid,
+          sim.feedBaseRaw,
+          sim.feedQuoteRaw,
+          sim.reviveRatioRaw
+        );
+      }
+    }
+    let debtShortfallRaw = null;
+    if (withResult.reason === "insufficient-debt") {
+      try {
+        debtShortfallRaw = sim.supplyRaw - withResult.coveredDebt;
+        if (!(debtShortfallRaw > 0n)) debtShortfallRaw = null;
+      } catch {
+        debtShortfallRaw = null;
+      }
+    }
+    const toHuman = (raw, precision) => {
+      if (raw === null || raw === undefined) return null;
+      try {
+        return humanReadableFloat(Number(raw), precision);
+      } catch {
+        return null;
+      }
+    };
+    return {
+      rank: rank !== -1 ? rank + 1 : null,
+      totalBids,
+      included,
+      includedCount: withResult.includedCount,
+      reason: withResult.reason,
+      alreadyReviving: !!without?.willRevive,
+      hasValidFeed: !!sim.hasValidFeed,
+      debtWithRaw: sim.debtWithRaw ?? null,
+      debtWithoutRaw: sim.debtWithoutRaw ?? null,
+      supplyRaw: sim.supplyRaw ?? null,
+      failingIsEntered: !!withResult.failingBid?.isEntered,
+      failingRank:
+        withResult.failingIndex >= 0 ? withResult.failingIndex + 1 : null,
+      shortfallCollateral: toHuman(
+        shortfallCollateralRaw,
+        parsedCollateralAsset.p
+      ),
+      shortfallCollateralRaw,
+      debtShortfall: toHuman(debtShortfallRaw, parsedAsset.p),
+      debtShortfallRaw,
+      reviveKind: sim.reviveKind ?? null,
+    };
+  }, [reviveSimulation, parsedAsset, parsedCollateralAsset]);
   const isBidPath = !!(
     settlementFund && settlementFund.finalSettlementFund
   );
@@ -931,6 +1583,7 @@ export default function Settlement(properties) {
   const handleRemoveBid = useCallback(() => {
     setAdditionalCollateral("0");
     setDebtCovered("0");
+    bidTouchedRef.current = true;
     setIsRemovingBid(true);
     setShowDialog(true);
   }, []);
@@ -963,12 +1616,11 @@ export default function Settlement(properties) {
                   <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
                     {parsedAsset?.s
                       ? t("Settlement:pageTitle", {
-                          defaultValue:
-                            "Bidding on {{symbol}}'s settlement funds",
+                          defaultValue: "Bidding on {{symbol}}'s debt",
                           symbol: parsedAsset.s,
                         })
                       : t("Settlement:pageTitleNoAsset", {
-                          defaultValue: "Bid on settlement funds",
+                          defaultValue: "Bid on settlement debt",
                         })}
                   </h2>
                   {parsedAsset?.s && parsedCollateralAsset?.s ? (
@@ -999,7 +1651,7 @@ export default function Settlement(properties) {
                   <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
                     {t("Settlement:globalSettlementBiddingInfo", {
                       defaultValue:
-                        "{{symbol}} is in global settlement — and that's an opportunity. Pledge additional {{collateral}} to cover its outstanding debt: once all debt is covered and bids clear the maintenance collateral requirement, {{symbol}} revives automatically and each winning bid opens as a margin position.\n\nBids are ranked by price with the best prices included first (the final bid may be filled partially). Bids that aren't included are reimbursed, and you can withdraw yours at any time with a zero-collateral bid. {{symbol}} also revives on its own if the feed price rises above the auto revive price, or once all debt is force settled.",
+                        "{{symbol}} is in global settlement. Its outstanding debt can be covered by collateral bids, each pairing additional {{collateral}} with an amount of debt covered. If all debt is covered and every included bid meets the initial collateral requirement (ICR) at maintenance, {{symbol}} revives and each winning bid opens as a margin position.\n\nBids are ranked by price, best first; the first bid with insufficient collateral stops inclusion and the rest are reimbursed. Bids count toward coverage even before fresh feeds arrive, and can be withdrawn at any time with a zero-collateral bid. {{symbol}} can also revive if the feed price rises above the auto revive price, or once all debt is force settled.",
                       symbol: parsedAsset.s,
                       collateral: parsedCollateralAsset.s,
                     })}
@@ -1234,75 +1886,358 @@ export default function Settlement(properties) {
                   {settlementFund && settlementFund.finalSettlementFund ? (
                     <>
                     <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-[hsl(var(--accent-1)/0.01)] p-4 space-y-4">
-                      <div className="flex items-center gap-2">
-                        <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-1)/0.1)] shrink-0">
-                          <HandCoins className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
-                        </span>
-                        <span className="text-sm font-semibold text-[hsl(var(--accent-1-fg))] truncate">
-                          {t("Settlement:totalDebtCoveredByBid")}
-                        </span>
-                      </div>
                       <Field>
-                        <div className="flex items-center justify-between gap-2">
-                          <FieldLabel>
-                            {t("Settlement:additionalCollateral")}
-                          </FieldLabel>
-                          {collateralBalance !== null &&
-                          parsedCollateralAsset ? (
-                            <span className="flex items-center gap-1.5 shrink-0 font-normal">
-                              <span className="text-[11px] tabular-nums text-muted-foreground">
-                                {collateralBalance.toLocaleString(undefined, {
-                                  maximumFractionDigits:
-                                    parsedCollateralAsset.p,
-                                })}{" "}
-                                {parsedCollateralAsset.s}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setAdditionalCollateral(
-                                    String(collateralBalance)
-                                  );
-                                }}
-                                className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
-                              >
-                                {t("Settlement:maxButton", {
-                                  defaultValue: "Max",
-                                })}
-                              </button>
-                            </span>
-                          ) : null}
-                        </div>
-                        <FieldDescription>
-                          {t("Settlement:additionalCollateralDescription", {
-                            asset: parsedAsset.s,
-                          })}
-                        </FieldDescription>
                         <FieldContent>
-                          <Input
-                            value={additionalCollateral}
-                            placeholder={`0 ${parsedCollateralAsset.s}`}
-                            className="mb-1 w-1/2"
-                            inputMode="decimal"
-                            autoComplete="off"
-                            spellCheck={false}
-                            onChange={(event) => {
-                              const input = event.target.value;
-                              const precision = Number.isFinite(
-                                parsedCollateralAsset?.p
-                              )
-                                ? parsedCollateralAsset.p
-                                : 5;
-                              const regex = assetAmountRegex({ precision });
-                              // Held as a string so intermediate states like
-                              // "12." survive (parseFloat would eat the dot
-                              // and make decimals untypeable); parsed at use.
-                              // The regex caps decimals at the asset precision.
-                              if (regex.test(input)) {
-                                setAdditionalCollateral(input);
-                              }
-                            }}
-                          />
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-1)/0.1)] shrink-0">
+                                <Tag className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+                              </span>
+                              <span className="text-sm font-semibold text-[hsl(var(--accent-1-fg))] truncate">
+                                {t("Settlement:bidPrice", {
+                                  defaultValue: "Bid price",
+                                })}
+                              </span>
+                            </div>
+                            <FieldDescription>
+                              {t("Settlement:bidPriceDescription", {
+                                defaultValue:
+                                  "Your bid price in {{collateral}} per {{asset}} — editing it adjusts the amounts below while the price is locked",
+                                collateral: parsedCollateralAsset.s,
+                                asset: parsedAsset.s,
+                              })}
+                            </FieldDescription>
+                          </div>
+                        </FieldContent>
+                        <FieldContent>
+                          <span className="grid grid-cols-12 items-center">
+                            <span className="col-span-1 flex justify-start">
+                              <HoverCard>
+                                <HoverCardTrigger asChild>
+                                  <Toggle
+                                    variant="outline"
+                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    onClick={() => {
+                                      setBidPriceLocked((v) => !v);
+                                    }}
+                                  >
+                                    {bidPriceLocked ? (
+                                      <LockClosedIcon className="h-4 w-4" />
+                                    ) : (
+                                      <LockOpen2Icon className="h-4 w-4" />
+                                    )}
+                                  </Toggle>
+                                </HoverCardTrigger>
+                                <HoverCardContent
+                                  side="right"
+                                  align="start"
+                                  className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground"
+                                >
+                                  {bidPriceLocked
+                                    ? t("Settlement:bidPriceLocked", {
+                                        defaultValue:
+                                          "Price locked — editing amounts keeps this price",
+                                      })
+                                    : t("Settlement:bidPriceUnlocked", {
+                                        defaultValue:
+                                          "Price unlocked — editing amounts recalculates the price",
+                                      })}
+                                </HoverCardContent>
+                              </HoverCard>
+                            </span>
+                            <span className="col-span-8">
+                              <Input
+                                value={
+                                  parseFloat(bidPrice) > 0
+                                    ? `${bidPrice} ${
+                                        parsedCollateralAsset.s
+                                      }/${parsedAsset.s} (${trimToPrecision(
+                                        1 / parseFloat(bidPrice),
+                                        parsedAsset.p
+                                      )} ${parsedAsset.s}/${
+                                        parsedCollateralAsset.s
+                                      })`
+                                    : ""
+                                }
+                                placeholder={`0 ${parsedCollateralAsset.s}/${parsedAsset.s}`}
+                                disabled
+                                readOnly
+                                className="bg-accent/40 border-border text-foreground/85 placeholder:text-muted-foreground font-mono tabular-nums disabled:opacity-100"
+                              />
+                            </span>
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger disabled={bidPriceLocked}>
+                                  <span
+                                    className={`inline-block border border-border rounded pl-4 pb-1 pr-4 ${
+                                      bidPriceLocked ? "opacity-40" : ""
+                                    }`}
+                                  >
+                                    <Label>
+                                      {t("Settlement:changePrice", {
+                                        defaultValue: "Change price",
+                                      })}
+                                    </Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t("Settlement:provideNewBidPrice", {
+                                      defaultValue: "Provide a new bid price",
+                                    })}
+                                  </Label>
+                                  <Input
+                                    placeholder={bidPrice}
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      // Price is a ratio, not an asset amount:
+                                      // allow up to 8 decimals so small but
+                                      // real prices survive (mirrors
+                                      // fmtSettlementPrice). Held upstream as
+                                      // a string so "12." stays typeable.
+                                      const regex = assetAmountRegex({
+                                        precision: 8,
+                                      });
+                                      if (regex.test(input)) {
+                                        applyBidPrice(input);
+                                      }
+                                    }}
+                                  />
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {bidPriceChips.autoRevive ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          applyBidPrice(
+                                            bidPriceChips.autoRevive
+                                          );
+                                        }}
+                                        className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                                      >
+                                        {t("Settlement:useAutoRevivePrice", {
+                                          defaultValue: "Use auto-revive",
+                                        })}
+                                      </button>
+                                    ) : null}
+                                    {bidPriceChips.withBids ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          applyBidPrice(bidPriceChips.withBids);
+                                        }}
+                                        className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                                      >
+                                        {t("Settlement:useWithBidsPrice", {
+                                          defaultValue: "Use with-bids",
+                                        })}
+                                      </button>
+                                    ) : null}
+                                    {bidPriceChips.settlementRate ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          applyBidPrice(
+                                            bidPriceChips.settlementRate
+                                          );
+                                        }}
+                                        className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                                      >
+                                        {t("Settlement:useSettlementRate", {
+                                          defaultValue: "Use settlement rate",
+                                        })}
+                                      </button>
+                                    ) : null}
+                                    {bidPriceChips.bestBid ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          applyBidPrice(bidPriceChips.bestBid);
+                                        }}
+                                        className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                                      >
+                                        {t("Settlement:useBestBidPrice", {
+                                          defaultValue: "Use best bid",
+                                        })}
+                                      </button>
+                                    ) : null}
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldContent>
+                          <div>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-1)/0.1)] shrink-0">
+                                  <HandCoins className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+                                </span>
+                                <span className="text-sm font-semibold text-[hsl(var(--accent-1-fg))] truncate">
+                                  {t("Settlement:additionalCollateral")}
+                                </span>
+                              </div>
+                                {collateralBalance !== null &&
+                                parsedCollateralAsset ? (
+                                  <span className="flex items-center gap-1.5 shrink-0 font-normal">
+                                    <span className="text-[11px] tabular-nums text-muted-foreground">
+                                      {t("Settlement:balanceLabel", {
+                                        defaultValue: "Balance",
+                                      })}
+                                      :{" "}
+                                      {collateralBalance.toLocaleString(
+                                        undefined,
+                                        {
+                                          maximumFractionDigits:
+                                            parsedCollateralAsset.p,
+                                        }
+                                      )}{" "}
+                                      {parsedCollateralAsset.s}
+                                    </span>
+                                  </span>
+                                ) : null}
+                            </div>
+                            <FieldDescription>
+                              {t("Settlement:additionalCollateralDescription", {
+                                asset: parsedAsset.s,
+                              })}
+                            </FieldDescription>
+                          </div>
+                        </FieldContent>
+                        <FieldContent>
+                          <span className="grid grid-cols-12 items-center">
+                            <span className="col-span-1 flex justify-start">
+                              <HoverCard>
+                                <HoverCardTrigger asChild>
+                                  <Toggle
+                                    variant="outline"
+                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    onClick={() => {
+                                      setBidCollateralLocked((v) => !v);
+                                    }}
+                                  >
+                                    {bidCollateralLocked ? (
+                                      <LockClosedIcon className="h-4 w-4" />
+                                    ) : (
+                                      <LockOpen2Icon className="h-4 w-4" />
+                                    )}
+                                  </Toggle>
+                                </HoverCardTrigger>
+                                <HoverCardContent
+                                  side="right"
+                                  align="start"
+                                  className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground"
+                                >
+                                  {bidCollateralLocked
+                                    ? t("Settlement:bidCollateralLocked", {
+                                        defaultValue:
+                                          "Collateral locked — it won't be auto-adjusted",
+                                      })
+                                    : t("Settlement:bidCollateralUnlocked", {
+                                        defaultValue:
+                                          "Collateral unlocked — it auto-adjusts to hold the locked values",
+                                      })}
+                                </HoverCardContent>
+                              </HoverCard>
+                            </span>
+                            <span className="col-span-8">
+                              <Input
+                                value={
+                                  additionalCollateral !== ""
+                                    ? `${additionalCollateral} ${parsedCollateralAsset.s}`
+                                    : ""
+                                }
+                                placeholder={`0 ${parsedCollateralAsset.s}`}
+                                disabled
+                                readOnly
+                                className="bg-accent/40 border-border text-foreground/85 placeholder:text-muted-foreground font-mono tabular-nums disabled:opacity-100"
+                              />
+                            </span>
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger disabled={bidCollateralLocked}>
+                                  <span
+                                    className={`inline-block border border-border rounded pl-4 pb-1 pr-4 ${
+                                      bidCollateralLocked ? "opacity-40" : ""
+                                    }`}
+                                  >
+                                    <Label>
+                                      {t("Settlement:changeAmount")}
+                                    </Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t("Settlement:provideNewAmount")}
+                                  </Label>
+                                  <Input
+                                    placeholder={additionalCollateral}
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const precision = Number.isFinite(
+                                        parsedCollateralAsset?.p
+                                      )
+                                        ? parsedCollateralAsset.p
+                                        : 5;
+                                      const regex = assetAmountRegex({
+                                        precision,
+                                      });
+                                      // Held upstream as a string so
+                                      // intermediate states like "12." survive;
+                                      // the regex caps decimals at the asset
+                                      // precision. The counterpart amount
+                                      // auto-adjusts (price-locked) or the
+                                      // price recalculates (unlocked).
+                                      if (regex.test(input)) {
+                                        applyBidCollateral(input);
+                                      }
+                                    }}
+                                  />
+                                  {collateralBalance !== null ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        // Max useful collateral at the current
+                                        // price: covering more debt than the
+                                        // outstanding supply is unfillable, so
+                                        // cap by supply × price. Falls back to
+                                        // the plain balance without a price.
+                                        let max = collateralBalance;
+                                        const price = parseFloat(bidPrice);
+                                        if (
+                                          price > 0 &&
+                                          debtSupply !== null &&
+                                          Number.isFinite(debtSupply) &&
+                                          parsedCollateralAsset
+                                        ) {
+                                          max = Math.min(
+                                            max,
+                                            parseFloat(
+                                              (
+                                                debtSupply * price
+                                              ).toFixed(
+                                                parsedCollateralAsset.p
+                                              )
+                                            )
+                                          );
+                                        }
+                                        applyBidCollateral(String(max));
+                                      }}
+                                      className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                                    >
+                                      {t("Settlement:maxButton", {
+                                        defaultValue: "Max",
+                                      })}
+                                    </button>
+                                  ) : null}
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
                         </FieldContent>
                         {collateralBalance !== null &&
                         additionalCollateral !== "" &&
@@ -1323,57 +2258,141 @@ export default function Settlement(properties) {
                         ) : null}
                       </Field>
                       <Field>
-                        <div className="flex items-center justify-between gap-2">
-                          <FieldLabel>
-                            {t("Settlement:totalDebtCoveredByBid")}
-                          </FieldLabel>
-                          {debtSupply !== null && parsedAsset ? (
-                            <span className="flex items-center gap-1.5 shrink-0 font-normal">
-                              <span className="text-[11px] tabular-nums text-muted-foreground">
-                                {debtSupply.toLocaleString(undefined, {
-                                  maximumFractionDigits: parsedAsset.p,
-                                })}{" "}
-                                {parsedAsset.s}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setDebtCovered(String(debtSupply));
-                                }}
-                                className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
-                              >
-                                {t("Settlement:maxButton", {
-                                  defaultValue: "Max",
-                                })}
-                              </button>
-                            </span>
-                          ) : null}
-                        </div>
-                        <FieldDescription>
-                          {t("Settlement:totalDebtCoveredByBidDescription")}
-                        </FieldDescription>
                         <FieldContent>
-                          <Input
-                            value={debtCovered}
-                            placeholder={`0 ${parsedAsset.s}`}
-                            className="mb-1 w-1/2"
-                            inputMode="decimal"
-                            autoComplete="off"
-                            spellCheck={false}
-                            onChange={(event) => {
-                              const input = event.target.value;
-                              const precision = Number.isFinite(parsedAsset?.p)
-                                ? parsedAsset.p
-                                : 5;
-                              const regex = assetAmountRegex({ precision });
-                              // Held as a string so intermediate states like
-                              // "12." survive; parsed at use. The regex caps
-                              // decimals at the asset precision.
-                              if (regex.test(input)) {
-                                setDebtCovered(input);
-                              }
-                            }}
-                          />
+                          <div>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-1)/0.1)] shrink-0">
+                                  <Coins className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+                                </span>
+                                <span className="text-sm font-semibold text-[hsl(var(--accent-1-fg))] truncate">
+                                  {t("Settlement:totalDebtCoveredByBid")}
+                                </span>
+                              </div>
+                                {debtSupply !== null && parsedAsset ? (
+                                  <span className="flex items-center gap-1.5 shrink-0 font-normal">
+                                    <span className="text-[11px] tabular-nums text-muted-foreground">
+                                      {t("Settlement:totalSupplyLabel", {
+                                        defaultValue: "Total supply",
+                                      })}
+                                      :{" "}
+                                      {debtSupply.toLocaleString(undefined, {
+                                        maximumFractionDigits: parsedAsset.p,
+                                      })}{" "}
+                                      {parsedAsset.s}
+                                    </span>
+                                  </span>
+                                ) : null}
+                            </div>
+                            <FieldDescription>
+                              {t("Settlement:totalDebtCoveredByBidDescription")}
+                            </FieldDescription>
+                          </div>
+                        </FieldContent>
+                        <FieldContent>
+                          <span className="grid grid-cols-12 items-center">
+                            <span className="col-span-1 flex justify-start">
+                              <HoverCard>
+                                <HoverCardTrigger asChild>
+                                  <Toggle
+                                    variant="outline"
+                                    className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    onClick={() => {
+                                      setBidDebtLocked((v) => !v);
+                                    }}
+                                  >
+                                    {bidDebtLocked ? (
+                                      <LockClosedIcon className="h-4 w-4" />
+                                    ) : (
+                                      <LockOpen2Icon className="h-4 w-4" />
+                                    )}
+                                  </Toggle>
+                                </HoverCardTrigger>
+                                <HoverCardContent
+                                  side="right"
+                                  align="start"
+                                  className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground"
+                                >
+                                  {bidDebtLocked
+                                    ? t("Settlement:bidDebtLocked", {
+                                        defaultValue:
+                                          "Debt locked — it won't be auto-adjusted",
+                                      })
+                                    : t("Settlement:bidDebtUnlocked", {
+                                        defaultValue:
+                                          "Debt unlocked — it auto-adjusts to hold the locked values",
+                                      })}
+                                </HoverCardContent>
+                              </HoverCard>
+                            </span>
+                            <span className="col-span-8">
+                              <Input
+                                value={
+                                  debtCovered !== ""
+                                    ? `${debtCovered} ${parsedAsset.s}`
+                                    : ""
+                                }
+                                placeholder={`0 ${parsedAsset.s}`}
+                                disabled
+                                readOnly
+                                className="bg-accent/40 border-border text-foreground/85 placeholder:text-muted-foreground font-mono tabular-nums disabled:opacity-100"
+                              />
+                            </span>
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger disabled={bidDebtLocked}>
+                                  <span
+                                    className={`inline-block border border-border rounded pl-4 pb-1 pr-4 ${
+                                      bidDebtLocked ? "opacity-40" : ""
+                                    }`}
+                                  >
+                                    <Label>{t("Settlement:changeTotal")}</Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t("Settlement:provideNewTotal")}
+                                  </Label>
+                                  <Input
+                                    placeholder={debtCovered}
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const precision = Number.isFinite(
+                                        parsedAsset?.p
+                                      )
+                                        ? parsedAsset.p
+                                        : 5;
+                                      const regex = assetAmountRegex({
+                                        precision,
+                                      });
+                                      // Held upstream as a string so
+                                      // intermediate states like "12." survive.
+                                      // The counterpart amount auto-adjusts
+                                      // (price-locked) or the price
+                                      // recalculates (unlocked).
+                                      if (regex.test(input)) {
+                                        applyBidDebt(input);
+                                      }
+                                    }}
+                                  />
+                                  {debtSupply !== null ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        applyBidDebt(String(debtSupply));
+                                      }}
+                                      className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                                    >
+                                      {t("Settlement:maxButton", {
+                                        defaultValue: "Max",
+                                      })}
+                                    </button>
+                                  ) : null}
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
                         </FieldContent>
                         {debtSupply !== null &&
                         debtCovered !== "" &&
@@ -1393,38 +2412,13 @@ export default function Settlement(properties) {
                           </div>
                         ) : null}
                       </Field>
-                      <div className="mt-1 flex items-center justify-between gap-2 text-xs tabular-nums text-muted-foreground">
-                        <span className="min-w-0">
-                          {t("Settlement:bidPrice")}:{" "}
-                          {additionalCollateral > 0 && debtCovered > 0 ? (
-                            <span className="font-semibold text-foreground">
-                              {(additionalCollateral / debtCovered).toLocaleString(
-                                undefined,
-                                {
-                                  maximumFractionDigits:
-                                    parsedCollateralAsset.p,
-                                }
-                              )}{" "}
-                              {parsedCollateralAsset.s}/{parsedAsset.s}
-                              {" · "}
-                              {(debtCovered / additionalCollateral).toLocaleString(
-                                undefined,
-                                {
-                                  maximumFractionDigits: parsedAsset.p,
-                                }
-                              )}{" "}
-                              {parsedAsset.s}/{parsedCollateralAsset.s}
-                            </span>
-                          ) : (
-                            "—"
-                          )}
-                        </span>
-                        {enteredWillRevive ? (
+                      {enteredWillRevive ? (
+                        <div className="mt-1 flex items-center justify-end gap-2">
                           <span
                             className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[hsl(var(--accent-success)/0.4)] bg-[hsl(var(--accent-success)/0.1)] px-2 py-0.5 text-[10px] font-semibold text-[hsl(var(--accent-success-fg))]"
                             title={t("Settlement:bidWillRevive", {
                               defaultValue:
-                                "This bid would cover the remaining outstanding debt and revive {{asset}} out of Global Settlement.",
+                                "This bid would cover the remaining outstanding debt with sufficient collateral and revive {{asset}} out of Global Settlement at the next maintenance.",
                               asset: parsedAsset.s,
                             })}
                           >
@@ -1434,8 +2428,178 @@ export default function Settlement(properties) {
                               asset: parsedAsset.s,
                             })}
                           </span>
-                        ) : null}
-                      </div>
+                        </div>
+                      ) : null}
+                      {reviveSimulation?.hasEntered &&
+                      !enteredWillRevive &&
+                      !enteredWillHelpRevive &&
+                      enteredReviveInfo ? (
+                        <div className="mt-1.5 flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground">
+                          <Info className="h-3.5 w-3.5 mt-px shrink-0" />
+                          <span>
+                            {(() => {
+                              const info = enteredReviveInfo;
+                              if (info.alreadyReviving) {
+                                return t("Settlement:alreadyReviving", {
+                                  defaultValue:
+                                    "Existing bids already cover the debt with sufficient collateral — this asset should revive at the next maintenance.",
+                                });
+                              }
+                              if (!info.hasValidFeed) {
+                                // Feed-independent fallback: encourage progress
+                                // toward curing the overhang rather than
+                                // blocking on feeds that can follow.
+                                const rankStr =
+                                  info.rank !== null && info.totalBids
+                                    ? t("Settlement:bidRank", {
+                                        defaultValue:
+                                          "Bid {{rank}} of {{total}} by price",
+                                        rank: info.rank,
+                                        total: info.totalBids,
+                                      }) + " · "
+                                    : "";
+                                if (
+                                  info.debtWithRaw !== null &&
+                                  info.supplyRaw !== null &&
+                                  info.debtWithRaw < info.supplyRaw
+                                ) {
+                                  let remaining = null;
+                                  try {
+                                    const rem =
+                                      info.supplyRaw - info.debtWithRaw;
+                                    if (rem > 0n) {
+                                      remaining = humanReadableFloat(
+                                        Number(rem),
+                                        parsedAsset.p
+                                      );
+                                    }
+                                  } catch {
+                                    remaining = null;
+                                  }
+                                  if (remaining !== null) {
+                                    return (
+                                      rankStr +
+                                      t("Settlement:reviveHelpsNoFeed", {
+                                        defaultValue:
+                                          "every bid helps cure the black-swan overhang — ~{{amount}} {{asset}} still to cover, then full revival follows once fresh feeds are published.",
+                                        amount: remaining,
+                                        asset: parsedAsset.s,
+                                      })
+                                    );
+                                  }
+                                }
+                                return (
+                                  rankStr +
+                                  t("Settlement:revivePendingFeed", {
+                                    defaultValue:
+                                      "no fresh feeds yet — your bid still helps cure the black-swan overhang, and full revival follows once feed producers publish.",
+                                  })
+                                );
+                              }
+                              if (info.reason === "prediction-market") {
+                                return t("Settlement:reviveBlockedPM", {
+                                  defaultValue:
+                                    "Prediction-market assets cannot be revived by collateral bids.",
+                                });
+                              }
+                              const rankStr =
+                                info.rank !== null && info.totalBids
+                                  ? t("Settlement:bidRank", {
+                                      defaultValue:
+                                        "Bid {{rank}} of {{total}} by price",
+                                      rank: info.rank,
+                                      total: info.totalBids,
+                                    }) + " · "
+                                  : "";
+                              if (
+                                info.reason === "insufficient-collateral" &&
+                                info.failingIsEntered &&
+                                info.shortfallCollateral !== null
+                              ) {
+                                return (
+                                  rankStr +
+                                  t("Settlement:reviveNeedsCollateral", {
+                                    defaultValue:
+                                      "insufficient collateral for {{kind}} — add ~{{amount}} {{collateral}} more (or cover less debt) to revive.",
+                                    kind: info.reviveKind ?? "ICR",
+                                    amount: info.shortfallCollateral,
+                                    collateral: parsedCollateralAsset.s,
+                                  })
+                                );
+                              }
+                              if (
+                                info.reason === "insufficient-collateral" &&
+                                !info.failingIsEntered &&
+                                info.failingRank !== null
+                              ) {
+                                return (
+                                  rankStr +
+                                  t("Settlement:reviveBlockedByBid", {
+                                    defaultValue:
+                                      "bid #{{failing}} ahead of you lacks sufficient collateral ({{kind}}), so later bids would not be included.",
+                                    failing: info.failingRank,
+                                    kind: info.reviveKind ?? "ICR",
+                                  })
+                                );
+                              }
+                              if (
+                                info.reason === "insufficient-debt" &&
+                                info.debtShortfall !== null
+                              ) {
+                                return (
+                                  rankStr +
+                                  t("Settlement:reviveNeedsDebt", {
+                                    defaultValue:
+                                      "covers debt but ~{{amount}} {{asset}} still uncovered — increase debt covered to revive.",
+                                    amount: info.debtShortfall,
+                                    asset: parsedAsset.s,
+                                  })
+                                );
+                              }
+                              if (info.rank !== null) {
+                                return (
+                                  rankStr +
+                                  t("Settlement:reviveNotEnough", {
+                                    defaultValue:
+                                      "this bid alone would not revive {{asset}}.",
+                                    asset: parsedAsset.s,
+                                  })
+                                );
+                              }
+                              return null;
+                            })()}
+                          </span>
+                        </div>
+                      ) : null}
+                      {reviveSimulation?.hasEntered &&
+                      enteredWillHelpRevive &&
+                      enteredReviveInfo ? (
+                        <div className="mt-1.5 flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground">
+                          <Info className="h-3.5 w-3.5 mt-px shrink-0" />
+                          <span>
+                            {(() => {
+                              const info = enteredReviveInfo;
+                              const rankStr =
+                                info.rank !== null && info.totalBids
+                                  ? t("Settlement:bidRank", {
+                                      defaultValue:
+                                        "Bid {{rank}} of {{total}} by price",
+                                      rank: info.rank,
+                                      total: info.totalBids,
+                                    }) + " · "
+                                  : "";
+                              return (
+                                rankStr +
+                                t("Settlement:reviveHelpPendingFeed", {
+                                  defaultValue:
+                                    "debt covered — full revival follows once fresh feeds let the {{kind}} check pass at maintenance.",
+                                  kind: info.reviveKind ?? "ICR",
+                                })
+                              );
+                            })()}
+                          </span>
+                        </div>
+                      ) : null}
                     </div>
                     </>
                   ) : null}
@@ -1971,7 +3135,7 @@ export default function Settlement(properties) {
                   <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
                     {t("Settlement:marketBuyDescription", {
                       defaultValue:
-                        "Short on {{asset}}? Buy it on the open market and force settle it — every settled debt brings the asset closer to automatic revival.",
+                        "Buy it on the open market and force settle it — every settled debt brings the asset closer to automatic revival.",
                       asset: parsedAsset.s,
                     })}
                   </p>

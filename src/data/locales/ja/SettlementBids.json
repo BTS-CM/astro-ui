@@ -15,5 +15,20 @@
     "bidButton": "入札",
     "showingOf": "{{total}}件中{{filtered}}件を表示",
     "noFilterResults": "現在の検索に一致する資産がありません",
-    "clearFilters": "検索をクリア"
+    "clearFilters": "検索をクリア",
+    "issuer": "発行者",
+    "fee": "手数料",
+    "bidOnTitle": "{{symbol}}の決済ファンドに入札",
+    "issuerFilter": "発行者で絞り込む",
+    "allIssuers": "すべての発行者",
+    "bsrmFilter": "回復方法で絞り込む",
+    "bsrmAll": "すべての回復方法",
+    "bsrm_0": "グローバル決済",
+    "bsrm_1": "決済なし",
+    "bsrm_2": "ファンドへの個別決済",
+    "bsrm_3": "注文への個別決済",
+    "biddingFilter": "担保入札で絞り込む",
+    "biddingAll": "すべて",
+    "biddingDisabled": "無効な担保入札",
+    "biddingEnabled": "有効な担保入札"
 }
