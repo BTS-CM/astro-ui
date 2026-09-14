@@ -1,6 +1,6 @@
 {
-    "title": "決済ファンドに入札する",
-    "description": "決済ファンドに担保を保有するすべてのスマートコイン。一部を請求するために入札しましょう。",
+    "title": "決済負債への入札",
+    "description": "グローバル決済中のすべてのスマートコイン。未返済負債をカバーするために担保に入札しましょう。",
     "searchPlaceholder": "シンボルを検索...",
     "searchLabel": "資産をシンボルで検索",
     "clearSearch": "検索をクリア",
@@ -18,7 +18,7 @@
     "clearFilters": "検索をクリア",
     "issuer": "発行者",
     "fee": "手数料",
-    "bidOnTitle": "{{symbol}}の決済ファンドに入札",
+    "bidOnTitle": "{{symbol}}の負債に入札",
     "issuerFilter": "発行者で絞り込む",
     "allIssuers": "すべての発行者",
     "bsrmFilter": "回復方法で絞り込む",

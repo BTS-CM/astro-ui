@@ -1,21 +1,21 @@
 ---
 title: Bid on settlement
-description: Browse smartcoin settlement funds and bid collateral with bid_collateral, or force-settle with asset_settle.
+description: Browse smartcoins in global settlement and bid collateral to cover their outstanding debt with bid_collateral, or force-settle with asset_settle.
 sidebar:
   order: 5
 ---
 
 import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
-**Bid on settlement** lets you claim a share of a globally settled smartcoin's **settlement fund** by pledging collateral. Browsing the funds is read-only; placing a bid broadcasts `bid_collateral`, and holders of the settled asset can instead force-settle via `asset_settle`. Winning bids convert into margin positions if the asset revives.
+**Bid on settlement** lets you cover a globally settled smartcoin's outstanding **settlement debt** by pledging collateral. Browsing the assets is read-only; placing a bid broadcasts `bid_collateral`, and holders of the settled asset can instead force-settle via `asset_settle`. Winning bids convert into margin positions if the asset revives.
 
 **Open in the app:** [Bid on settlement](/settlement_bids.html). Bidding on a single asset happens at [Settlement](/settlement.html?id=1.3.x).
 
 ## What it does
 
 <CardGrid>
-  <Card title="Find funds" icon="document">
-    List every smartcoin with a positive `settlement_fund`, with fund size, issuer and settle fee.
+  <Card title="Find debt" icon="document">
+    List every smartcoin in global settlement, with fund size, issuer and settle fee.
   </Card>
   <Card title="Pledge collateral" icon="coins">
     Pair additional collateral with debt covered via `bid_collateral` (operation `45`).
@@ -31,9 +31,9 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
 
 1. Open **Bid on settlement** from the homepage under *Forms of Debt*.
 
-2. Search or filter the fund list (by issuer, black-swan response method, or bidding enabled/disabled) and sort by id, symbol or fund size.
+2. Search or filter the debt list (by issuer, black-swan response method, or bidding enabled/disabled) and sort by id, symbol or fund size.
 
-3. Click a fund to open its **Settlement** page (`/settlement.html?id=1.3.x`). Review the settlement fund, settlement price, current feed, auto-revive price and the existing bid table.
+3. Click an asset to open its **Settlement** page (`/settlement.html?id=1.3.x`). Review the outstanding debt, settlement fund, settlement price, current feed, auto-revive price and the existing bid table.
 
 4. Enter additional collateral and debt covered (the price field links them: price × debt = collateral). Authorize. The app broadcasts `bid_collateral`.
 
@@ -46,7 +46,7 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
 </Aside>
 
 <Aside type="note" title="Bidding disabled">
-  If the asset has the `disable_collateral_bidding` flag (`0x8000`), `bid_collateral` is rejected. The list shows these funds with a warning — use force-settlement instead.
+  If the asset has the `disable_collateral_bidding` flag (`0x8000`), `bid_collateral` is rejected. The list shows this debt with a warning — use force-settlement instead.
 </Aside>
 
 ## Operations used

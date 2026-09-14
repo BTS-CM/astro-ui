@@ -1,6 +1,6 @@
 {
-    "title": "Dar lance em fundos de liquidação",
-    "description": "Todas as smartcoins cujo fundo de liquidação detém garantias. Dê um lance para reivindicar uma parte.",
+    "title": "Ofertar dívida de liquidação",
+    "description": "Todas as smartcoins em liquidação global. Dê um lance com garantia para cobrir sua dívida pendente.",
     "searchPlaceholder": "Pesquisar símbolo...",
     "searchLabel": "Pesquisar ativos por símbolo",
     "clearSearch": "Limpar pesquisa",
@@ -18,7 +18,7 @@
     "clearFilters": "Limpar pesquisa",
     "issuer": "Emitente",
     "fee": "Taxa",
-    "bidOnTitle": "Licitar fundos de liquidação de {{symbol}}",
+    "bidOnTitle": "Licitar dívida de {{symbol}}",
     "issuerFilter": "Filtrar por emitente",
     "allIssuers": "Todos os emitentes",
     "bsrmFilter": "Filtrar por método de recuperação",

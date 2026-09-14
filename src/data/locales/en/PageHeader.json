@@ -87,7 +87,7 @@
     "portfolio-recent-activity": "Use this page to browse your latest on-chain operations and inspect the underlying JSON.",
     "favourites": "Manage and view your favourite assets and accounts.",
     "settlement": "Use the form below to bid on a smartcoin's settlement funds",
-    "settlement_bids": "Browse all smartcoins holding collateral in their settlement fund, and bid to claim a share of it",
+    "settlement_bids": "Browse all smartcoins in global settlement, and bid collateral to cover their debt",
     "smartcoin": "Use the form below to issue collateralized debt into existence",
     "smartcoins": "Use the interface below to locate an asset to borrow into existence",
     "stake": "Use this form to stake your assets in liquidity pools",

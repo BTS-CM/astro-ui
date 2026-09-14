@@ -1,6 +1,6 @@
 {
-    "title": "Paku arveldusfondidele",
-    "description": "Kõik nutimündid, mille arveldusfondis on tagatis. Paku, et osa endale nõuda.",
+    "title": "Pakkuge arveldusvõlga",
+    "description": "Kõik nutimündid globaalses arvelduses. Paku tagatist nende tasumata võla katmiseks.",
     "searchPlaceholder": "Otsi sümbolit...",
     "searchLabel": "Otsi varasid sümboli järgi",
     "clearSearch": "Tühjenda otsing",
@@ -18,7 +18,7 @@
     "clearFilters": "Tühjenda otsing",
     "issuer": "Emitent",
     "fee": "Tasu",
-    "bidOnTitle": "Pakkuge {{symbol}} arveldusfonde",
+    "bidOnTitle": "Pakkuge {{symbol}} võlga",
     "issuerFilter": "Filtreeri emitendi järgi",
     "allIssuers": "Kõik emitendid",
     "bsrmFilter": "Filtreeri taastamismeetodi järgi",

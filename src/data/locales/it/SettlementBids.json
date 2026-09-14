@@ -1,6 +1,6 @@
 {
-    "title": "Offri sui fondi di regolamento",
-    "description": "Tutti gli smartcoin il cui fondo di regolamento detiene garanzie. Fai un'offerta per reclamarne una quota.",
+    "title": "Offri sul debito di liquidazione",
+    "description": "Tutti gli smartcoin in liquidazione globale. Offri garanzie per coprire il loro debito residuo.",
     "searchPlaceholder": "Cerca simbolo...",
     "searchLabel": "Cerca asset per simbolo",
     "clearSearch": "Cancella ricerca",
@@ -18,7 +18,7 @@
     "clearFilters": "Cancella ricerca",
     "issuer": "Emittente",
     "fee": "Commissione",
-    "bidOnTitle": "Fai un'offerta sui fondi di liquidazione {{symbol}}",
+    "bidOnTitle": "Fai un'offerta sul debito {{symbol}}",
     "issuerFilter": "Filtra per emittente",
     "allIssuers": "Tutti gli emittenti",
     "bsrmFilter": "Filtra per metodo di recupero",

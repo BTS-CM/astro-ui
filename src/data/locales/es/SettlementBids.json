@@ -1,6 +1,6 @@
 {
-    "title": "Pujar por fondos de liquidación",
-    "description": "Todas las smartcoins cuyo fondo de liquidación tiene garantías. Puja para reclamar una parte.",
+    "title": "Ofertar deuda de liquidación",
+    "description": "Todas las smartcoins en liquidación global. Puja garantía para cubrir su deuda pendiente.",
     "searchPlaceholder": "Buscar símbolo...",
     "searchLabel": "Buscar activos por símbolo",
     "clearSearch": "Borrar búsqueda",
@@ -18,7 +18,7 @@
     "clearFilters": "Borrar búsqueda",
     "issuer": "Emisor",
     "fee": "Comisión",
-    "bidOnTitle": "Ofertar fondos de liquidación de {{symbol}}",
+    "bidOnTitle": "Ofertar deuda de {{symbol}}",
     "issuerFilter": "Filtrar por emisor",
     "allIssuers": "Todos los emisores",
     "bsrmFilter": "Filtrar por método de recuperación",

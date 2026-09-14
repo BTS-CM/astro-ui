@@ -1,6 +1,6 @@
 {
-    "title": "Byd på afregningsfonde",
-    "description": "Alle smartcoins, hvis afregningsfond indeholder sikkerhed. Byd for at kræve en andel.",
+    "title": "Byd på afviklingsgæld",
+    "description": "Alle smartcoins i global afvikling. Byd sikkerhed for at dække deres udestående gæld.",
     "searchPlaceholder": "Søg symbol...",
     "searchLabel": "Søg aktiver efter symbol",
     "clearSearch": "Ryd søgning",
@@ -18,7 +18,7 @@
     "clearFilters": "Ryd søgning",
     "issuer": "Udsteder",
     "fee": "Gebyr",
-    "bidOnTitle": "Byd på {{symbol}}s afviklingsfonde",
+    "bidOnTitle": "Byd på {{symbol}}s gæld",
     "issuerFilter": "Filtrer efter udsteder",
     "allIssuers": "Alle udstedere",
     "bsrmFilter": "Filtrer efter gendannelsesmetode",

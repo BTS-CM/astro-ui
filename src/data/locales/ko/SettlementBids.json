@@ -1,6 +1,6 @@
 {
-    "title": "정산 펀드에 입찰하기",
-    "description": "정산 펀드에 담보를 보유한 모든 스마트코인. 입찰하여 지분을 청구하세요.",
+    "title": "결제 부채에 입찰",
+    "description": "글로벌 청산 중인 모든 스마트코인. 미상환 부채를 충당하기 위해 담보로 입찰하세요.",
     "searchPlaceholder": "심볼 검색...",
     "searchLabel": "심볼로 자산 검색",
     "clearSearch": "검색 지우기",
@@ -18,7 +18,7 @@
     "clearFilters": "검색 지우기",
     "issuer": "발행자",
     "fee": "수수료",
-    "bidOnTitle": "{{symbol}}의 결산 자금에 입찰",
+    "bidOnTitle": "{{symbol}} 부채에 입찰",
     "issuerFilter": "발행자별 필터",
     "allIssuers": "모든 발행자",
     "bsrmFilter": "복구 방법별 필터",

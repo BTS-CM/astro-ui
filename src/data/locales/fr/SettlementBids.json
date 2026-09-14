@@ -1,6 +1,6 @@
 {
-    "title": "Enchérir sur les fonds de règlement",
-    "description": "Tous les smartcoins dont le fonds de règlement détient des garanties. Enchérissez pour en réclamer une part.",
+    "title": "Enchérir sur la dette de règlement",
+    "description": "Tous les smartcoins en règlement global. Enchérissez avec des garanties pour couvrir leur dette en cours.",
     "searchPlaceholder": "Rechercher un symbole...",
     "searchLabel": "Rechercher les actifs par symbole",
     "clearSearch": "Effacer la recherche",
@@ -18,7 +18,7 @@
     "clearFilters": "Effacer la recherche",
     "issuer": "Émetteur",
     "fee": "Frais",
-    "bidOnTitle": "Enchérir sur les fonds de règlement {{symbol}}",
+    "bidOnTitle": "Enchérir sur la dette {{symbol}}",
     "issuerFilter": "Filtrer par émetteur",
     "allIssuers": "Tous les émetteurs",
     "bsrmFilter": "Filtrer par méthode de récupération",

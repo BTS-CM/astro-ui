@@ -1,6 +1,6 @@
 {
-  "title": "Bid on settlement funds",
-  "description": "All smartcoins holding collateral in their settlement fund. Bid to claim a share of it.",
+  "title": "Bid on settlement debt",
+  "description": "All smartcoins in global settlement. Bid collateral to cover their outstanding debt.",
   "searchPlaceholder": "Search symbol...",
   "searchLabel": "Search assets by symbol",
   "clearSearch": "Clear search",
@@ -15,7 +15,7 @@
   "issuer": "Issuer",
   "fee": "Fee",
   "bidButton": "Bid",
-  "bidOnTitle": "Bid on {{symbol}}'s settlement funds",
+  "bidOnTitle": "Bid on {{symbol}}'s debt",
   "showingOf": "Showing {{filtered}} of {{total}}",
   "noFilterResults": "No assets match the current search",
   "clearFilters": "Clear search",

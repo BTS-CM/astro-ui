@@ -171,11 +171,11 @@
         "hover4": "Exposure to external price feeds can pose a risk to collateralized debt positions."
     },
     "settlement_bids": {
-        "title": "Bid on settlement",
-        "subtitle": "Bid on smartcoin settlement funds",
-        "hover1": "Smartcoins with a positive settlement fund hold collateral awaiting claims.",
-        "hover2": "Place a bid to claim a share of the settlement fund.",
-        "hover3": "Browse every fund on the chain from a single page."
+        "title": "Bid on debt",
+        "subtitle": "Bid on globally settled smartcoin debt",
+        "hover1": "Smartcoins in global settlement hold outstanding debt awaiting collateral bids.",
+        "hover2": "Pledge collateral to cover debt — winning bids convert into margin positions.",
+        "hover3": "Browse every globally settled asset from a single page."
     },
     "tfunds": {
         "title": "Same-T Funds",
