@@ -197,6 +197,9 @@ export default function DeepLinkDialog(properties) {
   const [deeplink, setDeeplink] = useState();
   useEffect(() => {
     async function fetchDeeplink() {
+      if (disableDeeplink) {
+        return;
+      }
       if (!window || !window.electron) {
         console.log("No electron window found, cannot fetch deeplink");
         return;
@@ -220,7 +223,7 @@ export default function DeepLinkDialog(properties) {
     if (usrChain && operationNames && trxJSON) {
       fetchDeeplink();
     }
-  }, [usrChain, operationNames, trxJSON]);
+  }, [usrChain, operationNames, trxJSON, disableDeeplink]);
 
   const [downloadClicked, setDownloadClicked] = useState(false);
   const handleDownloadClick = () => {
@@ -331,6 +334,7 @@ const [qrECL, setQRECL] = useState("M");
   // Build transaction object in main process for QR encoding
   useEffect(() => {
     async function fetchQRContents() {
+      if (disableQR) return;
       if (!window || !window.electron) return;
       if (!usrChain || !operationNames || !trxJSON) return;
 
@@ -348,7 +352,7 @@ const [qrECL, setQRECL] = useState("M");
       }
     }
     fetchQRContents();
-  }, [usrChain, currentNode, operationNames, trxJSON]);
+  }, [usrChain, currentNode, operationNames, trxJSON, disableQR]);
 
   useEffect(() => {
     async function calculateDeeplinkJSON() {

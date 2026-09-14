@@ -29,6 +29,7 @@
     "sendTitle": "Forbered beskeden til signering i Beet",
     "errorEmpty": "Beskedteksten er tom.",
     "errorTooLong": "Beskeden overskrider størrelsesgrænsen med {{over}} bytes ({{max}} bytes).",
+    "errorTooManyChars": "Beskeden er {{over}} tegn over grænsen på 1024 tegn.",
     "composerHint": "Poster som {{user}} til {{catalog}}.",
     "composerHintLoggedOut": "At poste som {{user}} til {{catalog}} ville koste et lille netværksgebyr.",
     "dialogHeader": "Poster til {{channel}} som {{user}}",

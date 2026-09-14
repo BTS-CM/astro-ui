@@ -29,6 +29,7 @@
     "sendTitle": "Nachricht zum Signieren in Beet vorbereiten",
     "errorEmpty": "Nachrichtentext ist leer.",
     "errorTooLong": "Nachricht ist {{over}} Bytes über dem Größenlimit ({{max}} Bytes).",
+    "errorTooManyChars": "Die Nachricht ist {{over}} Zeichen über dem Limit von 1024 Zeichen.",
     "composerHint": "Poste als {{user}} an {{catalog}}.",
     "composerHintLoggedOut": "Posten als {{user}} an {{catalog}} würde eine kleine Netzwerkgebühr kosten.",
     "dialogHeader": "Poste an {{channel}} als {{user}}",

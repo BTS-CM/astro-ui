@@ -29,6 +29,7 @@
     "sendTitle": "Preparar a mensagem para assinatura no Beet",
     "errorEmpty": "O texto da mensagem está vazio.",
     "errorTooLong": "A mensagem excede o limite de tamanho em {{over}} bytes ({{max}} bytes).",
+    "errorTooManyChars": "A mensagem excede o limite de 1024 caracteres em {{over}} caracteres.",
     "composerHint": "A publicar como {{user}} em {{catalog}}.",
     "composerHintLoggedOut": "Publicar como {{user}} em {{catalog}} custaria uma pequena taxa de rede.",
     "dialogHeader": "A publicar em {{channel}} como {{user}}",

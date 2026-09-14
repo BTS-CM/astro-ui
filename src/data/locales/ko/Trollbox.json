@@ -29,6 +29,7 @@
     "sendTitle": "Beet 서명용 메시지 준비",
     "errorEmpty": "메시지 내용이 비어 있습니다.",
     "errorTooLong": "메시지가 크기 제한을 {{over}}바이트 초과했습니다({{max}}바이트).",
+    "errorTooManyChars": "메시지가 1024자 제한을 {{over}}자 초과했습니다.",
     "composerHint": "{{user}}(으)로 {{catalog}}에 게시.",
     "composerHintLoggedOut": "{{user}}(으)로 {{catalog}}에 게시하면 소액의 네트워크 수수료가 듭니다.",
     "dialogHeader": "{{user}}(으)로 {{channel}}에 게시",

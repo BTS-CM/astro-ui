@@ -53,6 +53,10 @@ export const TROLLBOX_OP_ID = 9199;
 // trollbox id so the two apps stay separately filterable on-chain.
 export const FORUM_OP_ID = 9198;
 
+// Max trollbox message length in trimmed characters. The chain byte budget
+// (maxBytes) still applies on top of this.
+export const TROLLBOX_TEXT_MAX_CHARS = 1024;
+
 // BitShares operation id for custom_operation (protocol/operations.hpp).
 export const CUSTOM_OPERATION_ID = 35;
 
@@ -185,6 +189,9 @@ export function buildTrollboxData({ channel, catalog, key, username, text, lang 
   if (!text || !text.trim()) {
     throw new Error("message text is empty");
   }
+  if (text.trim().length > TROLLBOX_TEXT_MAX_CHARS) {
+    throw new Error(`message is ${text.trim().length - TROLLBOX_TEXT_MAX_CHARS} chars over the 1024-character limit`);
+  }
   let valueObj = {
     v: 1,
     ch: channel,
@@ -258,7 +265,7 @@ export function buildForumTopicData({ catalog, key, title, text, attach = null, 
   }
   const valid = validateTopicShape({ title, text }, validateAttachmentShape);
   if (!valid) {
-    throw new Error("invalid forum topic (title 3-120 chars, text 1-1500 chars)");
+    throw new Error("invalid forum topic (title 3-120 chars, text 1 byte - 256KB)");
   }
   if (attach !== null && attach !== undefined) {
     const shape = validateAttachmentShape(attach);
@@ -288,7 +295,7 @@ export function buildForumReplyData({ catalog, key, text, attach = null, maxByte
   }
   const valid = validateReplyShape({ text }, validateAttachmentShape);
   if (!valid) {
-    throw new Error("invalid forum reply (text 1-1500 chars)");
+    throw new Error("invalid forum reply (text 1 byte - 256KB)");
   }
   if (attach !== null && attach !== undefined) {
     const shape = validateAttachmentShape(attach);

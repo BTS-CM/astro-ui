@@ -139,9 +139,11 @@ import {
 import {
   TROLLBOX_OP_ID,
   CUSTOM_OPERATION_ID,
+  TROLLBOX_TEXT_MAX_CHARS,
   buildMessageKey,
   buildTrollboxData,
   maxMessageBytes,
+  packAccountStorageMap,
   utf8Length,
 } from "@/bts/serializer/customOperations.js";
 import {
@@ -741,8 +743,14 @@ export default function Trollbox(properties) {
   }, [chain, _feeScheduleBTS, _feeScheduleTEST]);
 
   // Estimated packed-data size (bytes) for the current draft, built with
-  // the exact packing path handleSend uses. Null when there's nothing
-  // sendable (logged out, empty/oversize text, bad attachment).
+  // the same packing path handleSend uses but WITHOUT enforcing the char
+  // or byte limits — the preview must stay visible (with its kbyte
+  // surcharge) even when the draft is over the limit, so the warning can
+  // sit to the left of the fee. Null only when there's nothing sendable
+  // (logged out, empty text, bad attachment).
+  const trimmedDraft = (draft || "").trim();
+  const isOverCharLimit =
+    trimmedDraft.length > TROLLBOX_TEXT_MAX_CHARS;
   const estimatedPostBytes = useMemo(() => {
     const text = (draft || "").trim();
     if (!currentUser || !currentUser.id || !channelInfo || !text) {
@@ -759,16 +767,26 @@ export default function Trollbox(properties) {
         return null;
       }
     }
+    const lang =
+      typeof activeLang === "string" && /^[a-z]{2}$/.test(activeLang)
+        ? activeLang
+        : "en";
     try {
-      const data = buildTrollboxData({
-        channel: activeChannel,
-        catalog: activeCatalog,
-        key: buildMessageKey(),
-        username: currentUser.username,
+      // Pack without size enforcement so over-limit drafts still get a
+      // fee preview (same JSON shape + packing as buildTrollboxData).
+      const valueObj = {
+        v: attach ? 2 : 1,
+        ch: activeChannel,
+        u: currentUser.username,
+        ln: lang,
         text,
-        lang: activeLang,
-        attach,
-        maxBytes,
+        ...(attach ? { attach } : {}),
+      };
+      const value = JSON.stringify(valueObj);
+      const data = packAccountStorageMap({
+        remove: false,
+        catalog: activeCatalog,
+        entries: [[buildMessageKey(), value]],
       });
       return data.length / 2; // packed hex string -> bytes
     } catch {
@@ -782,7 +800,6 @@ export default function Trollbox(properties) {
     currentUser,
     channelInfo,
     activeLang,
-    maxBytes,
   ]);
 
   // Estimated network fee in BTS (core asset, precision 5). The signing
@@ -806,6 +823,16 @@ export default function Trollbox(properties) {
     }
     if (!text) {
       setComposeError(t("Trollbox:errorEmpty", "Message text is empty."));
+      return;
+    }
+    if (text.length > TROLLBOX_TEXT_MAX_CHARS) {
+      setComposeError(
+        t(
+          "Trollbox:errorTooManyChars",
+          "Message is {{over}} characters over the 1024-character limit.",
+          { over: text.length - TROLLBOX_TEXT_MAX_CHARS }
+        )
+      );
       return;
     }
     const textBytes = utf8Length(text);
@@ -1706,7 +1733,6 @@ export default function Trollbox(properties) {
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              maxLength={maxBytes}
               className="focus-visible:border-[hsl(var(--accent-1)/0.5)] focus-visible:ring-[hsl(var(--accent-1)/0.3)]"
               placeholder={
                 loggedIn
@@ -1724,7 +1750,9 @@ export default function Trollbox(properties) {
               }}
             />
             <Button
-              disabled={!loggedIn || !draft.trim() || verifyingAttach}
+              disabled={
+                !loggedIn || !draft.trim() || isOverCharLimit || verifyingAttach
+              }
               onClick={handleSend}
               className="shadow-[0_0_14px_-4px_hsl(var(--accent-1)/0.6)]"
               title={t("Trollbox:sendTitle", "Prepare a custom operation for signing in Beet")}
@@ -1768,7 +1796,7 @@ export default function Trollbox(properties) {
           ) : null}
           {channelInfo ? (
             <div className="mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
-              <p>
+              <p className="min-w-0 flex-1">
                 {t(
                   loggedIn ? "Trollbox:composerHint" : "Trollbox:composerHintLoggedOut",
                   loggedIn
@@ -1780,13 +1808,27 @@ export default function Trollbox(properties) {
                   }
                 )}
               </p>
-              {estimatedPostFee != null ? (
-                <p className="text-right tabular-nums whitespace-nowrap">
-                  {t("Trollbox:composerFee", "Fee: {{fee}} BTS", {
-                    fee: estimatedPostFee,
-                  })}
-                </p>
-              ) : null}
+              <div className="flex shrink-0 items-center gap-2">
+                {isOverCharLimit ? (
+                  <span className="text-right text-destructive whitespace-nowrap">
+                    {t(
+                      "Trollbox:errorTooManyChars",
+                      "Message is {{over}} characters over the 1024-character limit.",
+                      {
+                        over:
+                          trimmedDraft.length - TROLLBOX_TEXT_MAX_CHARS,
+                      }
+                    )}
+                  </span>
+                ) : null}
+                {estimatedPostFee != null ? (
+                  <p className="text-right tabular-nums whitespace-nowrap">
+                    {t("Trollbox:composerFee", "Fee: {{fee}} BTS", {
+                      fee: estimatedPostFee,
+                    })}
+                  </p>
+                ) : null}
+              </div>
             </div>
           ) : null}
           {showDialog && pendingOp && loggedIn ? (

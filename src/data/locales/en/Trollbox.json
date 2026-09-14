@@ -28,6 +28,7 @@
     "sendTitle": "Prepare the message for signing in Beet",
     "errorEmpty": "Message text is empty.",
     "errorTooLong": "Message is {{over}} bytes over the size limit ({{max}} bytes).",
+    "errorTooManyChars": "Message is {{over}} characters over the 1024-character limit.",
     "composerHint": "Posting as {{user}} to {{catalog}}.",
     "composerHintLoggedOut": "Posting as {{user}} to {{catalog}} would cost a small network fee.",
     "composerFee": "Fee: {{fee}} BTS",

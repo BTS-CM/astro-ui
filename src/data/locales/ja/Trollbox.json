@@ -29,6 +29,7 @@
     "sendTitle": "Beetでの署名用にメッセージを準備",
     "errorEmpty": "メッセージ本文が空です。",
     "errorTooLong": "メッセージがサイズ制限を{{over}}バイト超過しています（{{max}}バイト）。",
+    "errorTooManyChars": "メッセージが1024文字の上限を{{over}}文字超過しています。",
     "composerHint": "{{user}}として{{catalog}}に投稿。",
     "composerHintLoggedOut": "{{user}}として{{catalog}}に投稿すると少額のネットワーク手数料がかかります。",
     "dialogHeader": "{{user}}として{{channel}}に投稿",

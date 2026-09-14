@@ -93,6 +93,7 @@ import {
 } from "@/nanoeffects/Forum.ts";
 import {
   attachmentNoun,
+  FORUM_TEXT_MAX_BYTES,
   forumChannelCatalog,
   forumTopicCatalog,
   isThreadKey,
@@ -960,6 +961,16 @@ export default function ForumThread(properties) {
       setComposeError(t("Forum:errorEmpty", "Reply text is empty."));
       return;
     }
+    if (utf8Length(text) > FORUM_TEXT_MAX_BYTES) {
+      setComposeError(
+        t(
+          "Forum:errorTooManyBytes",
+          "Body is {{over}} bytes over the 256KB limit.",
+          { over: utf8Length(text) - FORUM_TEXT_MAX_BYTES }
+        )
+      );
+      return;
+    }
     if (!threadCatalog) {
       return;
     }
@@ -1668,7 +1679,7 @@ export default function ForumThread(properties) {
                 <span className="text-[11px] text-muted-foreground">
                   {t("Forum:byteCount", "{{bytes}} / {{max}} bytes", {
                     bytes: textBytes,
-                    max: maxBytes,
+                    max: FORUM_TEXT_MAX_BYTES,
                   })}
                 </span>
                 {estimatedPostFee != null ? (
@@ -1679,12 +1690,12 @@ export default function ForumThread(properties) {
                   </span>
                 ) : null}
               </div>
-              {textBytes > maxBytes ? (
+              {textBytes > FORUM_TEXT_MAX_BYTES ? (
                 <p className="mt-1 text-xs text-destructive">
                   {t(
-                    "Forum:errorTooLong",
-                    "Reply is {{over}} bytes over the size limit ({{max}} bytes).",
-                    { over: textBytes - maxBytes, max: maxBytes }
+                    "Forum:errorTooManyBytes",
+                    "Body is {{over}} bytes over the 256KB limit.",
+                    { over: textBytes - FORUM_TEXT_MAX_BYTES }
                   )}
                 </p>
               ) : null}
@@ -1701,6 +1712,13 @@ export default function ForumThread(properties) {
       ) : null}
 
       {showDialog && pendingOp && loggedIn ? (
+        (() => {
+          // Deeplink URLs / QR payloads cap out around 2K chars; large
+          // replies must go through the object view + local JSON file
+          // instead (same convention as AirdropCalculate).
+          const trxSize = JSON.stringify(pendingOp).length;
+          const skipLinks = trxSize >= 2000;
+          return (
         <DeepLinkDialog
           operationNames={["custom"]}
           username={currentUser.username}
@@ -1717,7 +1735,12 @@ export default function ForumThread(properties) {
             { user: currentUser.username }
           )}
           trxJSON={pendingOp}
+          disableDeeplink={skipLinks}
+          disableQR={skipLinks}
+          disableTotp={skipLinks}
         />
+          );
+        })()
       ) : null}
 
       <TrollboxRisks page="forum" />

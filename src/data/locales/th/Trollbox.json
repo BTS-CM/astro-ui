@@ -29,6 +29,7 @@
     "sendTitle": "เตรียมข้อความสำหรับเซ็นใน Beet",
     "errorEmpty": "ข้อความว่างเปล่า",
     "errorTooLong": "ข้อความเกินขีดจำกัดขนาด {{over}} ไบต์ ({{max}} ไบต์)",
+    "errorTooManyChars": "ข้อความเกินขีดจำกัด 1024 ตัวอักษรอยู่ {{over}} ตัวอักษร",
     "composerHint": "โพสต์ในฐานะ {{user}} ไปยัง {{catalog}}",
     "composerHintLoggedOut": "การโพสต์ในฐานะ {{user}} ไปยัง {{catalog}} จะมีค่าธรรมเนียมเครือข่ายเล็กน้อย",
     "dialogHeader": "โพสต์ไปยัง {{channel}} ในฐานะ {{user}}",

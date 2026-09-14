@@ -123,7 +123,23 @@ export function isThreadKey(v) {
 
 export const FORUM_TITLE_MIN = 3;
 export const FORUM_TITLE_MAX = 120;
+/** Max forum post/reply body size in UTF-8 bytes of the trimmed text field.
+ *  Chain `maxBytes` (maximum_transaction_size - reserve) still hard-caps the
+ *  packed value on top of this. */
+export const FORUM_TEXT_MAX_BYTES = 256 * 1024;
+// Legacy char cap, kept for reference only (no longer enforced).
 export const FORUM_TEXT_MAX_CHARS = 1500;
+
+function utf8ByteLength(str) {
+  if (typeof TextEncoder !== "undefined") {
+    return new TextEncoder().encode(str).length;
+  }
+  if (typeof Buffer !== "undefined") {
+    return Buffer.byteLength(str, "utf8");
+  }
+  // Fallback: approximate (ASCII-heavy paths only).
+  return unescape(encodeURIComponent(str)).length;
+}
 
 function isPlainObject(v) {
   return !!v && typeof v === "object" && !Array.isArray(v);
@@ -151,7 +167,10 @@ function isTextString(v) {
     return false;
   }
   const t = v.trim();
-  return t.length > 0 && t.length <= FORUM_TEXT_MAX_CHARS;
+  if (t.length === 0) {
+    return false;
+  }
+  return utf8ByteLength(t) <= FORUM_TEXT_MAX_BYTES;
 }
 
 /**

@@ -29,6 +29,7 @@
     "sendTitle": "Préparer le message pour signature dans Beet",
     "errorEmpty": "Le texte du message est vide.",
     "errorTooLong": "Le message dépasse la limite de taille de {{over}} octets ({{max}} octets).",
+    "errorTooManyChars": "Le message dépasse la limite de 1024 caractères de {{over}} caractères.",
     "composerHint": "Publication en tant que {{user}} vers {{catalog}}.",
     "composerHintLoggedOut": "Publier en tant que {{user}} vers {{catalog}} coûterait des frais de réseau modestes.",
     "dialogHeader": "Publier vers {{channel}} en tant que {{user}}",

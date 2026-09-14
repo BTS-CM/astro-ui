@@ -108,6 +108,7 @@ import {
 } from "@/nanoeffects/Forum.ts";
 import {
   FORUM_TITLE_MAX,
+  FORUM_TEXT_MAX_BYTES,
   attachmentNoun,
   forumChannelCatalog,
 } from "@/lib/forumPost.js";
@@ -724,6 +725,16 @@ export default function Forum(properties) {
       setComposeError(t("Forum:errorEmpty", "Title and body are both required."));
       return;
     }
+    if (utf8Length(text) > FORUM_TEXT_MAX_BYTES) {
+      setComposeError(
+        t(
+          "Forum:errorTooManyBytes",
+          "Body is {{over}} bytes over the 256KB limit.",
+          { over: utf8Length(text) - FORUM_TEXT_MAX_BYTES }
+        )
+      );
+      return;
+    }
     if (!catalog) {
       return;
     }
@@ -1140,7 +1151,6 @@ export default function Forum(properties) {
     ]
   );
 
-  const titleBytes = utf8Length(title);
   const textBytes = utf8Length(draft);
 
   return (
@@ -1547,7 +1557,7 @@ export default function Forum(properties) {
               </div>
               <div>
                 <div className="mb-1 text-xs font-medium">
-                  {t("Forum:bodyLabel", "Body — the language you write in sets the topic language (max ~1500 characters)")}
+                  {t("Forum:bodyLabel", "Body — the language you write in sets the topic language (max 256KB)")}
                 </div>
                 <ForumEditor
                   value={draft}
@@ -1633,19 +1643,18 @@ export default function Forum(properties) {
                 </Button>
                 <span className="text-[11px] text-muted-foreground">
                   {t("Forum:byteCount", "{{bytes}} / {{max}} bytes", {
-                    bytes: textBytes + titleBytes,
-                    max: maxBytes,
+                    bytes: textBytes,
+                    max: FORUM_TEXT_MAX_BYTES,
                   })}
                 </span>
               </div>
-              {textBytes + titleBytes > maxBytes ? (
+              {textBytes > FORUM_TEXT_MAX_BYTES ? (
                 <p className="text-xs text-destructive">
                   {t(
-                    "Forum:errorTooLong",
-                    "Topic is {{over}} bytes over the size limit ({{max}} bytes).",
+                    "Forum:errorTooManyBytes",
+                    "Body is {{over}} bytes over the 256KB limit.",
                     {
-                      over: textBytes + titleBytes - maxBytes,
-                      max: maxBytes,
+                      over: textBytes - FORUM_TEXT_MAX_BYTES,
                     }
                   )}
                 </p>
@@ -1679,6 +1688,13 @@ export default function Forum(properties) {
             </div>
 
             {showDialog && pendingOp && loggedIn ? (
+              (() => {
+                // Deeplink URLs / QR payloads cap out around 2K chars; large
+                // forum posts must go through the object view + local JSON
+                // file instead (same convention as AirdropCalculate).
+                const trxSize = JSON.stringify(pendingOp).length;
+                const skipLinks = trxSize >= 2000;
+                return (
               <DeepLinkDialog
                 operationNames={["custom"]}
                 username={currentUser.username}
@@ -1698,7 +1714,12 @@ export default function Forum(properties) {
                   }
                 )}
                 trxJSON={pendingOp}
+                disableDeeplink={skipLinks}
+                disableQR={skipLinks}
+                disableTotp={skipLinks}
               />
+                );
+              })()
             ) : null}
             <TrollboxAttachDialog
               open={attachOpen}

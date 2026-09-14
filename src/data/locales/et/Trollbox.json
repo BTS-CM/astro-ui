@@ -29,6 +29,7 @@
     "sendTitle": "Valmista sõnum Beetis allkirjastamiseks ette",
     "errorEmpty": "Sõnumi tekst on tühi.",
     "errorTooLong": "Sõnum ületab suurusepiiri {{over}} baidi võrra ({{max}} baiti).",
+    "errorTooManyChars": "Sõnum ületab 1024 tähemärgi limiiti {{over}} tähemärgi võrra.",
     "composerHint": "Postitad kui {{user}} kanalisse {{catalog}}.",
     "composerHintLoggedOut": "Kui {{user}} postitamine kanalisse {{catalog}} maksaks väikest võrgutasu.",
     "dialogHeader": "Postitad kanalisse {{channel}} kui {{user}}",
