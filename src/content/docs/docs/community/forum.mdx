@@ -1,0 +1,81 @@
+---
+title: Forum
+description: Start on-chain discussion topics and replies with custom_operation (forum catalogs).
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
+
+**Forum** is on-chain discussion on the BitShares blockchain. Topics live in per-channel catalogs (`forum-<channel>`); opening a topic reveals its replies, which live in a per-thread catalog. Every post is signed by your account and you pay a small network fee per post, which keeps spam out.
+
+**Open in the app:** [Forum](/forum.html). A single thread opens at [Forum Thread](/forum_thread.html?channel=general&thread=1.2.x|key).
+
+## What it does
+
+<CardGrid>
+  <Card title="Topic channels" icon="document">
+    Browse `general`, `announcements`, `trading`, `governance` and `dev` — newest first.
+  </Card>
+  <Card title="Post on-chain" icon="pencil">
+    Titles (3–120 chars) plus a body up to 256KB, with one optional attachment.
+  </Card>
+  <Card title="Follow threads" icon="eye">
+    Search, watch threads for unread replies, and filter friends / hidden / blocked users.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Forum** from the homepage under *Community*.
+
+2. Pick a channel (`#general`, `#announcements`, `#trading`, `#governance`, `#dev`). Each channel is its own topic list.
+
+3. Search the loaded topics, toggle newest/oldest, or narrow to **Friends** (favourited users) and **Watching** (threads you started or explicitly watch).
+
+4. Open a topic to read its replies and post a reply. Attach at most one item (asset, trading pair, pool, credit offer or barter) — every attachment kind is allowed in every forum channel.
+
+5. To start a thread, enter a title and body, optionally attach an item, and authorize. The app broadcasts a `custom_operation` carrying the packed topic.
+
+</Steps>
+
+<Aside type="note" title="Node plugin required">
+  Reading history needs a node with the `custom_operations` plugin enabled. If the page shows *Plugin unavailable*, switch nodes in [Nodes](/docs/settings/nodes.html) — broadcasting still works from any node.
+</Aside>
+
+<Aside type="note" title="Authorship is chain-stamped">
+  The author shown is always the `custom_operation.payer` account. Payloads carry no username field; display names resolve live and malformed payloads are hidden, never rendered raw.
+</Aside>
+
+## Operation used
+
+Posting a topic or reply broadcasts `custom_operation` (operation `35`) with an `account_storage_map` payload. The `id` field is a filterable convention only — the plugin ignores it (`9198` for forum, `9199` for trollbox).
+
+```json
+{
+  "fee": { "amount": 0, "asset_id": "1.3.0" },
+  "payer": "1.2.x",
+  "required_auths": ["1.2.x"],
+  "id": 9198,
+  "data": "<packed account_storage_map hex>"
+}
+```
+
+The packed `data` holds one entry (`remove: false`) in catalog `forum-<channel>` for topics, or `forum-topic-<hash16>` for replies, mapping a unique `key` to a JSON value of `{title, text}` (topics) or `{text}` (replies), plus an optional single `attach`.
+
+| Field | Meaning |
+| --- | --- |
+| `payer` / `required_auths` | Your account (`1.2.x`); pays the fee and owns the post. |
+| `id` | `9198` for forum posts (convention; ignored by the plugin). |
+| `data` | Packed `account_storage_map`: `catalog`, `key`, and the JSON `{title?, text, attach?}` value. |
+| Fee | Base `custom_operation` fee plus `price_per_kbyte × ceil(bytes / 1000)` on the packed size. |
+
+Deleting your own post packs the same catalog/key with `remove: true`.
+
+## Related pages
+
+- [Trollbox](/docs/community/trollbox.html)
+- [Nodes](/docs/settings/nodes.html)
+- [Blocked Users](/docs/settings/blocked-users.html)

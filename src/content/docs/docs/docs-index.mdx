@@ -13,7 +13,7 @@ This is the **documentation** for that application. It explains what each screen
 
 ## How to use these docs
 
-The navigation on the **left side** (the sidebar) lists every page, grouped by the same sections you see on the app's home screen: Exchanging Funds, Transferring Funds, Forms of Debt, Asset Creation, Account Overviews, Blockchain Overviews, Governance, Invoicing, and Settings.
+The navigation on the **left side** (the sidebar) lists every page, grouped by the same sections you see on the app's home screen: Exchanging Funds, Liquidity Pools, Transferring Funds, Forms of Debt, Asset Creation, Account Overviews, Blockchain Overviews, Community, Governance, Invoicing, and Settings — plus a **BitShares Blockchain** section that explains how the chain itself works (concepts, not app screens).
 
 <Aside type="tip" title="Start from the sidebar">
   Pick the section that matches what you want to do, then open the specific page. Each page follows the same layout: what it does, how to use it, and (where relevant) the operation it broadcasts.
@@ -25,7 +25,7 @@ Most pages also link back to the live application, and cross-link to related pag
 
 BitShares actions are expressed as **operations** — typed objects that your wallet serializes, signs and broadcasts. Throughout these docs, the action pages show the real operation name(s) and a representative JSON object using placeholder object ids:
 
-<Badge text="1.2.x" variant="note" /> account &nbsp; <Badge text="1.3.x" variant="note" /> asset &nbsp; <Badge text="1.7.x" variant="note" /> limit order &nbsp; <Badge text="1.6.x" variant="note" /> witness
+<Badge text="1.2.x" variant="note" /> account &nbsp; <Badge text="1.3.x" variant="note" /> asset &nbsp; <Badge text="1.5.x" variant="note" /> committee &nbsp; <Badge text="1.6.x" variant="note" /> witness &nbsp; <Badge text="1.7.x" variant="note" /> limit order &nbsp; <Badge text="1.14.x" variant="note" /> worker
 
 The `x` stands for the numeric id of that object on the chain. Read-only pages (like the blockchain explorers) don't broadcast anything, so they simply describe what you can view.
 
@@ -33,30 +33,39 @@ The `x` stands for the numeric id of that object on the chain. Read-only pages (
 
 <CardGrid>
   <Card title="Exchanging Funds">
-    Trade on the DEX, swap through pools, stake liquidity, and barter. Covers limit orders, instant trades, pool exchanges and Samet Funds.
+    Trade on the DEX, barter peer-to-peer, use Same-T Funds, and discover the busiest markets. Covers limit orders, instant trades and barter.
+  </Card>
+  <Card title="Liquidity Pools">
+    Swap through pools, stake liquidity for fee rewards, and explore pools — the directory, single-pool tracker and volume leaderboard.
   </Card>
   <Card title="Transferring Funds">
-    Send, schedule, delegate and confidentially move assets — transfers, timed transfers, withdraw permissions, HTLCs, vesting and blind transfers.
+    Send, schedule, delegate and confidentially move assets — transfers, timed transfers, withdraw permissions, HTLCs, vesting, blind transfers, and the donor leaderboard.
   </Card>
   <Card title="Forms of Debt">
-    Borrow against collateral, lend via credit offers, and operate Samet Funds (market-pegged debt positions).
+    Borrow against collateral, lend via credit offers, and operate owner-run Samet Funds for fund-based leverage.
   </Card>
   <Card title="Asset Creation">
-    Issue user assets (UIAs), market-pegged smartcoins, and deploy liquidity pools.
+    Issue user assets (UIAs), market-pegged smartcoins, deploy liquidity pools, and inspect what any account has issued.
   </Card>
   <Card title="Account Overviews">
-    Inspect balances, orders, debt, authorities, proposals and on-chain history for any account.
+    Inspect balances, orders, debt, authorities, proposals and on-chain history for any account — plus on-chain whitelist/blacklist management.
   </Card>
   <Card title="Blockchain Overviews">
-    Read-only explorers for blocks, liquidity pools and the most active markets.
+    Read-only explorers for blocks, accounts and objects, top operations, and the live fee schedule.
+  </Card>
+  <Card title="Community">
+    Chat in the Trollbox and discuss in the Forum — on-chain posts via custom_operation.
   </Card>
   <Card title="Governance">
-    Vote, register as a witness or committee member, propose workers, and lock governance tickets.
+    Vote, register as a witness or committee member, review and propose chain parameters, propose workers, and lock governance tickets.
   </Card>
   <Card title="Invoicing">
     Create, store and pay shareable invoices (payment broadcasts a transfer per asset).
   </Card>
   <Card title="Settings">
-    Upgrade to Lifetime Member, create accounts, manage nodes and lists, and customize the interface.
+    Upgrade to Lifetime Member, create accounts, rotate keys, manage nodes and mute lists, and customize the interface.
+  </Card>
+  <Card title="BitShares Blockchain">
+    Learn how the chain itself works — DPOS consensus, assets, the DEX, margin mechanics, governance roles, worker funding, accounts, history, fees, multisig, and wallets.
   </Card>
 </CardGrid>

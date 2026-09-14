@@ -1,0 +1,60 @@
+---
+title: Wallets, Accounts & Keys
+description: How custody works in Astro UI — Beet wallets, named accounts, owner/active/memo keys, and registration.
+sidebar:
+  order: 12
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+Older BitShares guides describe "cloud wallets" and "local wallets" with browser backups. **None of that applies here.** Astro UI keeps no keys itself — custody lives in your Beet wallet, and this app only builds transactions for Beet to sign. This page explains what that means for you in practice.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Create Account" description="Register a new on-chain account." href="/create_account.html" />
+  <LinkCard title="Change Password" description="Rotate your account's keys." href="/change_password.html" />
+  <LinkCard title="Nodes" description="Choose which API node the app talks to." href="/nodes.html" />
+</CardGrid>
+
+## Your keys live in Beet — not in this app
+
+- There is no username/password login, no wallet backup file, and no brainkey to write down. Your owner, active, and memo private keys are held by **Beet/BeetVault** (including its multiwallet mode).
+- Every action in this app ends the same way: the app assembles the transaction, shows you its contents, and Beet asks you to sign and broadcast. Review that prompt — it's your last checkpoint.
+- **Back up your Beet vault**, not the app. If you lose Beet's backup you lose access, exactly as with any self-custody wallet; nobody — no support desk, no faucet — can recover keys for you.
+
+<Aside type="caution" title="After changing your password">
+  Rotating keys on-chain is only half the job: Beet will still hold the *old* password-derived keys and fail to sign. Remove the account from Beet/BeetVault afterwards and re-add it with the new password. Use the [Change Password page](/change_password.html) and follow its reminders.
+</Aside>
+
+## Accounts and names
+
+To do anything on-chain you need a registered **account**: a human-readable name (think email address, not hex) plus an incrementing account id (`1.2.x`) assigned at registration. You never need the id day-to-day — sending, trading, and voting all use names — but you'll see it across explorers and operation previews.
+
+Two ways to register, both on the [Create Account page](/create_account.html) ([guide](/docs/settings/create_account.html)):
+
+- **Faucet** — a faucet service pays the registration fee (the usual route for a first account).
+- **LTM registrar** — a lifetime-member account of yours registers and pays for the new one, recording itself as registrar/referrer (which is also how referral rewards attach).
+
+Pick a pseudonym if you want privacy: most activity (transfers, trades, debt) is public and tied to your name.
+
+## The three keys
+
+Each account has three separate key pairs, each with a public half (visible on-chain) and a private half (in Beet):
+
+- **Owner** — full administrative control: it can replace every key including itself. Treat it as your backup of last resort and keep it offline where possible.
+- **Active** — the everyday key: spends funds and manages most settings, but cannot touch the owner authority. This is what signs your daily transactions.
+- **Memo** — decrypts transfer memos only; it cannot spend. Because it's spend-incapable, you can share memo access (e.g. with deposit-monitoring tooling) without risking funds.
+
+Key rotation (new password → new keys) is done on the [Change Password page](/change_password.html) — and remember the Beet re-import above.
+
+## Nodes: your window to the chain
+
+The app itself holds no blockchain data; it queries **API nodes** and can point at any of them. If the app feels slow or out of sync, switching nodes on the [Nodes page](/nodes.html) ([guide](/docs/settings/nodes.html)) usually fixes it. Your keys never travel to the node — signing stays in Beet regardless of which node you use.
+
+## Related pages
+
+- [Create Account](/docs/settings/create_account.html) — register ([open in app](/create_account.html)).
+- [Accounts, Permissions & Memos](/docs/learn/accounts.html) — identity vs authority, multisig.
+- [Multi-Signature](/docs/learn/multisig.html) — weights, thresholds, corporate schemes.
+- [Fees, Membership & Rewards](/docs/learn/fees.html) — registration costs and LTM benefits.

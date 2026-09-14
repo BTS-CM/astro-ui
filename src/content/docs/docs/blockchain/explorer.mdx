@@ -1,0 +1,46 @@
+---
+title: Explorer
+description: Look up accounts, assets, objects, transactions and blocks with the chain explorer (read-only).
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+**Explorer** is the chain's search engine: look up an account, asset, object id, transaction or block and inspect the raw object JSON. It's fully read-only — nothing here broadcasts.
+
+**Open in the app:** [Explorer](/explorer.html).
+
+## What it does
+
+<CardGrid>
+  <Card title="Account lookup" icon="user">
+    Find any account by name or id, with favourite toggle.
+  </Card>
+  <Card title="Asset & object lookup" icon="coins">
+    Resolve assets and raw object ids (`1.x.y`).
+  </Card>
+  <Card title="Tx & block lookup" icon="database">
+    Open a transaction or block and read its JSON.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Explorer** from the homepage under *Blockchain Overviews*.
+
+2. Pick a section (account, asset, object, transaction, block) and enter your query.
+
+3. Read the result card, expand the raw JSON, or copy it to the clipboard.
+
+4. Star accounts you check often to add them to favourites.
+
+</Steps>
+
+## Related pages
+
+- [Blocks](/docs/blockchain/blocks.html)
+- [Top Operations](/docs/blockchain/top-operations.html)
+- [Favourites](/docs/account/favourites.html)

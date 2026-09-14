@@ -1,0 +1,102 @@
+---
+title: Multi-Signature & Corporate Accounts
+description: How BitShares authorities work — weights, thresholds, flat and hierarchical multi-signature schemes with worked examples.
+sidebar:
+  order: 11
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+BitShares designs permissions around people rather than cryptography: every account is controlled by weighted combinations of other accounts and keys, forming structures that mirror real organizations. Multi-user control is the single biggest contributor to security — properly used, it virtually eliminates theft by hacking. This page explains the model with concrete examples.
+
+<Aside type="caution" title="Not yet usable with Beet">
+  Everything below describes what the **chain** supports — but **Beet/BeetVault wallets do not support multi-signature accounts yet**. In practice that means you cannot currently hold or spend from a multisig account through Astro UI: Beet can't collect the multiple required signatures. Treat this page as a concept reference for now; the Proposals and Custom Authorities screens linked above remain fully usable for single-signature accounts and workflows.
+</Aside>
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Proposals" description="Coordinate multi-party approvals on-chain." href="/proposals.html" />
+  <LinkCard title="Custom Authorities" description="Restrict what an account may do, operation by operation." href="/custom_authorities.html" />
+  <LinkCard title="Change Password" description="Rotate your account's keys." href="/change_password.html" />
+</CardGrid>
+
+<Aside type="tip" title="Docs for those pages">
+  Screen guides: [Proposals](/docs/account/proposals.html) and [Custom Authorities](/docs/account/custom_authorities.html). Key roles (owner/active/memo) are covered in [Accounts](/docs/learn/accounts.html) and [Wallets](/docs/learn/wallets.html).
+</Aside>
+
+## Authorities, weights, thresholds
+
+An **authority** is a set of entities (account names and/or public keys), each carrying a **weight**. A transaction is valid when the weights of its signers meet the authority's **threshold**. The same scheme secures both owner permission (full administrative control — treat it as your backup) and active permission (day-to-day spending, the "online" key). Either can use any of the patterns below.
+
+## Example 1: flat multi-signature (2-of-4)
+
+Alice, Bob, Charlie, and Dennis share funds; any two together may spend. Give each weight 1 and set the threshold to 2:
+
+| Account | Weight |
+| ------- | ------ |
+| Alice   | 1      |
+| Bob     | 1      |
+| Charlie | 1      |
+| Dennis  | 1      |
+| **Threshold** | **2** |
+
+Any pair reaches 2 — no single party can move funds alone. Raising the threshold to 3 turns it into 3-of-4 with no other change.
+
+## Example 2: flexible weights (owner keeps control)
+
+Alice wants theft protection without handing friends equal power. Weight herself near half, friends below it, threshold just above her:
+
+| Account | Weight |
+| ------- | ------ |
+| Alice   | 49     |
+| Bob     | 25     |
+| Charlie | 25     |
+| Dennis  | 10     |
+| **Threshold** | **51** |
+
+Now funds move with Alice plus any one friend — or with all three friends together (25 + 25 + 10 = 60). Alice alone (49) is never enough, so a stolen key of hers alone buys an attacker nothing.
+
+## Example 3: hierarchical corporate account
+
+A company gives spending power to its CEO and CFO as sub-accounts, each sufficient alone:
+
+| Account | Weight |
+| ------- | ------ |
+| CEO.COMPANY | 51 |
+| CFO.COMPANY | 51 |
+| **Threshold** | **51** |
+
+Each sub-account has its *own* authority spelling out who speaks for it. The CFO's desk, say:
+
+| CFO.COMPANY account | Weight |
+| ------------------- | ------ |
+| Chief.COMPANY       | 51     |
+| Treasurer.COMPANY   | 33     |
+| Controller.COMPANY  | 33     |
+| Tax-Manager.COMPANY | 10     |
+| Accounting.COMPANY  | 10     |
+| **Threshold**       | **51** |
+
+This one structure allows: the Chief alone (51 ✓); Treasurer + Controller together (66 ✓); or either officer together with *both* juniors (33 + 10 + 10 = 53 ✓). Nesting composes to arbitrary depth, so essentially any real-world signing policy can be encoded.
+
+## Coordinating signatures with proposals
+
+Collecting signatures needn't happen over side channels. **Propose** the transaction on-chain and each required party approves it there — signers are notified by the chain itself, approvals accumulate in the open, and the operation executes once the threshold is met (or at expiry, evaluated one final time). Nested authorities can be satisfied by chaining proposals: a second proposal that, once approved, lends the nested authority's approval to the first.
+
+That said, the Beet limitation above applies here too: proposals *between* single-signature accounts work end to end in this app, but approvals that themselves require a multi-signature authority cannot be signed with Beet yet.
+
+**Coordinate:** [Proposals in the app](/proposals.html) ([guide](/docs/account/proposals.html)).
+
+## Operation-scoped rules
+
+Where authorities answer *"who may sign"*, **custom authorities** answer *"who may do what, and when"* — reusable rules gating a single operation type with validity windows and restrictions (e.g. "account Y may issue transfers, only in December"). Layer them over multisig for fine-grained control.
+
+**Define them:** [Custom Authorities in the app](/custom_authorities.html) ([guide](/docs/account/custom_authorities.html)).
+
+## Related pages
+
+- [Accounts, Permissions & Memos](/docs/learn/accounts.html) — identity vs authority, memo keys.
+- [Wallets, Accounts & Keys](/docs/learn/wallets.html) — key roles and rotation.
+- [Proposals](/docs/account/proposals.html) — on-chain approval workflow ([open in app](/proposals.html)).
+- [Custom Authorities](/docs/account/custom_authorities.html) — granular rules ([open in app](/custom_authorities.html)).

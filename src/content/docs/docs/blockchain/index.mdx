@@ -1,6 +1,6 @@
 ---
 title: Blockchain Overviews
-description: Explore blocks, pools and the most active markets on the BitShares chain.
+description: Explore blocks on the BitShares chain (read-only).
 sidebar:
   order: 6
 ---
@@ -10,11 +10,10 @@ import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 The **Blockchain Overviews** section is a set of read-only explorers for chain-wide data.
 
 <CardGrid>
+  <LinkCard title="Explorer" description="Look up accounts, assets, objects, transactions, blocks." href="/docs/blockchain/explorer/" />
   <LinkCard title="Blocks" description="Recent blocks and their operations." href="/docs/blockchain/blocks/" />
-  <LinkCard title="Custom Pool Tracker" description="Track one liquidity pool in detail." href="/docs/blockchain/custom_pool_overview/" />
-  <LinkCard title="Pools" description="Browse all liquidity pools." href="/docs/blockchain/pools/" />
-  <LinkCard title="Top Markets" description="Busiest DEX markets." href="/docs/blockchain/top-markets/" />
-  <LinkCard title="Top Pools" description="Highest-volume liquidity pools." href="/docs/blockchain/top-pools/" />
+  <LinkCard title="Top Operations" description="Most-used operation types and their shares." href="/docs/blockchain/top-operations/" />
+  <LinkCard title="Network Fees" description="Live fee schedule per operation." href="/docs/blockchain/network_fees/" />
 </CardGrid>
 
-All pages in this section are **read-only viewers** — they never broadcast transactions. Interaction with pools and markets happens on the Exchanging and Asset Creation pages.
+All pages in this section are **read-only viewers** — they never broadcast transactions. Pool explorers now live under [Liquidity Pools](/docs/pools/pools.html) and the busiest-markets leaderboard under [Exchanging Funds](/docs/exchanging/top-markets.html).

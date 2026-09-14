@@ -1,0 +1,69 @@
+---
+title: DEX Concepts
+description: How the BitShares decentralized exchange works — order books, pairs, matching, and what makes it different.
+sidebar:
+  order: 4
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+The decentralized exchange (the DEX) allows direct exchange of anything traded in the BitShares ecosystem. Unlike centralized exchanges, there is no company holding your funds, running the matching engine behind closed doors, or able to freeze your account. Your keys, the protocol's matching rules, and one global order book do the work.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="DEX" description="Trade on the decentralized exchange." href="/dex.html" />
+  <LinkCard title="Top Markets" description="Find the busiest markets right now." href="/top-markets.html" />
+  <LinkCard title="Pools" description="Browse liquidity pools as an alternative to order books." href="/pools.html" />
+  <LinkCard title="Open Orders" description="Manage your own resting orders." href="/open-orders.html" />
+</CardGrid>
+
+<Aside type="tip" title="Docs for those pages">
+  Screen guides: [DEX](/docs/exchanging/dex.html), [Top Markets](/docs/exchanging/top-markets.html), [Pools](/docs/pools/pools.html), [Open Orders](/docs/account/open-orders.html).
+</Aside>
+
+## Why a decentralized exchange
+
+- **Separation of powers.** The entity issuing an IOU need not be the entity processing the order book. In BitShares, order matching is performed by the protocol itself, which treats every asset identically.
+- **One global order book.** Anyone with internet access trades in the same book, concentrating the world's liquidity instead of fragmenting it across venues.
+- **Trade almost anything.** The DEX is asset-agnostic: any pair can trade. Some books (SILVER:GOLD) will be thin; others (USD:EUR) can carry real volume.
+- **No limits, no downtime.** The protocol cannot throttle your trading, and with producers spread across the globe it is always daytime somewhere — trading runs 24/7 with no single point of failure.
+- **Secure.** Funds are guarded by industry-grade elliptic-curve cryptography, with escrow and multi-signature schemes defined at chain level on top (see [Accounts](/docs/learn/accounts.html); note Beet cannot sign for multisig accounts yet).
+- **Fast.** Confirmation in seconds means real-time trading, limited by physics rather than by batch auctions.
+- **Provable matching.** Given a set of orders, anyone can verify they were matched correctly — the algorithm is deterministic and on-chain.
+- **Collateralized SmartCoins built in.** Price-stable assets like USD and EUR trade side by side with everything else (see [Assets](/docs/learn/assets.html)).
+
+## Pairs, base, and quote
+
+Almost any asset can trade against any other. Once two assets are picked, they form a **market pair**, written as:
+
+```text
+quote : base
+```
+
+So with base USD and quote EUR, the pair is EUR:USD. Pairs have no preferred orientation — they can be flipped freely — and prices are stored internally as fractions, so both orientations describe the identical market.
+
+## Reading the order book
+
+Each market shows an order book with two sides. Because pairs flip, "buy" and "sell" depend on which side you're looking at:
+
+| Side | You sell | You buy |
+| ---- | -------- | ------- |
+| Ask  | *quote*  | *base*  |
+| Bid  | *base*   | *quote* |
+
+What sits on the bid side of USD:EUR sits on the ask side of EUR:USD. To trade, fill in the form on the side you want — a price and an amount — and the cost is computed for you. A small flat fee applies to placing the order. Unfilled orders can be cancelled at any time from [Open Orders](/open-orders.html).
+
+## How orders match
+
+Orders match **first-come, first-served**, and takers always get the best price available up to their limit ("walking the book"). Rather than unpredictable value leakage from overlapping orders, the network charges a defined fee based on the matched size and the assets involved — and each asset issuer can configure the fees touching their asset.
+
+Borrowed (short) positions and margin calls interact with the same book: a margin call is simply a forced bid that executes within a protected price range. How that range works is covered in [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html).
+
+## Related pages
+
+- [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html) — margin interaction with the book ([open in app](/borrow.html)).
+- [Assets & Tokens](/docs/learn/assets.html) — what trades here.
+- [DEX](/docs/exchanging/dex.html) — the trading screen ([open in app](/dex.html)).
+- [Top Markets](/docs/exchanging/top-markets.html) — where the volume is ([open in app](/top-markets.html)).
+- [Open Orders](/docs/account/open-orders.html) — manage resting orders ([open in app](/open-orders.html)).

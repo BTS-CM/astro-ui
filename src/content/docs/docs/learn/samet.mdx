@@ -1,0 +1,37 @@
+---
+title: Samet Funds Concepts
+description: Owner-operated lending pools and the atomic borrow-swap-repay user flow.
+sidebar:
+  order: 16
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+**Samet Funds** are owner-operated, single-asset lending pools: the owner funds a pool and sets a fee; borrowers draw from it and repay with that fee attached. A companion user flow lets borrowers take the loan, swap it into the asset they actually want on the DEX, and repay — atomically, in one transaction.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Same-T Funds" description="Create and manage funds as an owner." href="/tfunds.html" />
+  <LinkCard title="Same-T Fund (User)" description="Borrow, swap, and repay atomically." href="/tfund_user.html" />
+</CardGrid>
+
+<Aside type="tip" title="Screen guides">
+  [Same-T Funds](/docs/debt/tfunds.html) (owner) and [Same-T Fund (User)](/docs/exchanging/tfund_user.html) (borrower).
+</Aside>
+
+## Two sides of one pool
+
+- **Owner** — funds the pool with a backing asset, sets the fee rate, tops up or changes the fee later, and can delete the fund. Earnings are the accumulated fees; the dashboard shows available balance net of unpaid amounts and warns on unusually high fees.
+- **Borrower** — draws a reference asset, immediately swaps it into the target asset via a limit order, and repays the fund. All three legs (`samet_fund_borrow` + `limit_order_create` + `samet_fund_repay`) bundle atomically: everything succeeds or nothing does.
+
+## Samet Funds vs credit offers
+
+Both are peer-to-peer lending, but shaped differently: a Samet Fund is one standing pool with one fee that anyone may draw from, while [credit offers](/docs/learn/credit.html) are discrete proposals with per-offer collateral terms, durations, and borrower whitelists. Use a fund for simple always-on liquidity; use credit offers for negotiated, collateralized loans.
+
+## Related pages
+
+- [Same-T Funds](/docs/debt/tfunds.html) ([open in app](/tfunds.html)).
+- [Same-T Fund (User)](/docs/exchanging/tfund_user.html) ([open in app](/tfund_user.html)).
+- [Credit Lending](/docs/learn/credit.html) ([open in app](/lend.html)).
+- [DEX Concepts](/docs/learn/dex.html) ([open in app](/dex.html)).

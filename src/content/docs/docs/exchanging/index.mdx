@@ -1,21 +1,20 @@
 ---
 title: Exchanging Funds
-description: Documentation for trading, swapping and providing liquidity on the BitShares DEX.
+description: Documentation for trading and discovering markets on the BitShares DEX.
 sidebar:
   order: 1
 ---
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-The **Exchanging Funds** section covers everything related to moving value through the decentralized exchange and liquidity pools.
+The **Exchanging Funds** section covers trading on the decentralized exchange and discovering its busiest markets.
 
 <CardGrid>
   <LinkCard title="DEX" description="Place, edit and cancel limit orders on the order book." href="/docs/exchanging/dex/" />
   <LinkCard title="Instant Trade" description="Swap one asset for another at the best available price." href="/docs/exchanging/instant_trade/" />
-  <LinkCard title="Swap" description="Exchange assets through a liquidity pool." href="/docs/exchanging/swap/" />
-  <LinkCard title="Stake" description="Deposit to and withdraw from liquidity pools." href="/docs/exchanging/stake/" />
   <LinkCard title="Barter" description="Propose private peer-to-peer asset trades." href="/docs/exchanging/barter/" />
   <LinkCard title="Same-T Fund (User)" description="Borrow from a Samet Fund, swap and repay atomically." href="/docs/exchanging/tfund_user/" />
+  <LinkCard title="Top Markets" description="Busiest DEX markets (read-only)." href="/docs/exchanging/top-markets/" />
 </CardGrid>
 
 ## Common operations
@@ -23,8 +22,7 @@ The **Exchanging Funds** section covers everything related to moving value throu
 Most pages in this section build on a small set of BitShares operations:
 
 - `limit_order_create` / `limit_order_update` / `limit_order_cancel` — the order book.
-- `liquidity_pool_exchange` / `liquidity_pool_deposit` / `liquidity_pool_withdraw` — pools.
 - `proposal_create` (wrapping `transfer`) — barter.
 - `samet_fund_borrow` / `samet_fund_repay` — TFunds.
 
-Each page documents its exact operation shapes with example JSON.
+Pool-based trading and staking live in [Liquidity Pools](/docs/pools/swap.html). Each page documents its exact operation shapes with example JSON.

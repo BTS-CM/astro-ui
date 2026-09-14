@@ -1,0 +1,48 @@
+---
+title: Broadcasting with Beet
+description: How every transaction leaves Astro UI — the review dialog, Beet vs BeetVault, and broadcast methods.
+sidebar:
+  order: 11
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+Every action in this app that touches the chain ends the same way: the app builds the transaction, shows you exactly what it contains, and your **Beet** (or **BeetVault**) wallet signs and broadcasts it. There is no other path to the chain — understanding this dialog means understanding every screen in these docs.
+
+## No connect handshake
+
+Picking an account in this app does **not** connect a wallet. The account picker only selects *which on-chain account you're acting as* (stored locally in your browser) — it proves nothing about custody and never talks to Beet. If the name you picked isn't imported into Beet, you'll only find out at signing time, when Beet can't sign. Import the same account into Beet first, then act as it here.
+
+## Beet vs BeetVault
+
+At broadcast time you choose between two buttons:
+
+- **BEET** — sends a `rawbeet://` deeplink to the Beet wallet.
+- **BeetVault** — sends a `rawbeetvault://` deeplink to BeetVault instead.
+
+"Multiwallet" simply means Beet can hold several accounts and you pick the signing account inside Beet at signing time — independent of the account you picked in this app. The two selections must match, or signing fails. TOTP-encrypted links (below) only work with BeetVault.
+
+## The review dialog
+
+Before anything broadcasts, a review dialog opens with up to six methods (some actions hide ones that don't apply):
+
+- **View TRX Object** — the raw operation names and transaction JSON, with copy buttons. Read this when you want to verify exactly what you're signing.
+- **Raw Deeplink** — one-click `rawbeet://` / `rawbeetvault://` links that hand the transaction to your wallet.
+- **Local JSON** — downloads the transaction as a file for air-gapped or manual handling.
+- **QR Code** — encodes the transaction as a scannable code, with size and style controls. Disabled for oversized transactions.
+- **Propose** — wraps any operation in a `proposal_create` so it executes only after on-chain approval (same mechanism as [Proposals](/docs/account/proposals.html)).
+- **TOTP** — BeetVault-only encrypted link flow for extra confirmation.
+
+<Aside type="tip" title="Always review">
+  The View tab shows the exact operations and JSON Beet will sign. For unfamiliar or high-value actions, read it before hitting a broadcast button — the wallet prompt afterward shows the same payload.
+</Aside>
+
+## If broadcasting fails
+
+Honest limitations: outside the TOTP flow, most failure paths (no wallet bridge available, node unreachable, oversized transaction) surface only as a stuck "generating" state with details in the browser console. If a broadcast hangs, check that Beet/BeetVault is open and unlocked, that your node is reachable on the [Nodes page](/nodes.html), and that the selected account matches the one imported in Beet.
+
+## Related pages
+
+- [Wallets, Accounts & Keys](/docs/learn/wallets.html) — custody model and key rotation.
+- [Proposals](/docs/account/proposals.html) — on-chain multi-party approval ([open in app](/proposals.html)).
+- [Nodes](/docs/settings/nodes.html) — switch API nodes ([open in app](/nodes.html)).

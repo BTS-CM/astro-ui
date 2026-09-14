@@ -1,0 +1,74 @@
+---
+title: Fees, Membership & Rewards
+description: How BitShares fees work — fee types, the schedule viewer, paying in any asset, lifetime membership, referrals, and vesting.
+sidebar:
+  order: 10
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+Every on-chain action pays a small fee. Those fees fund the network, reward the members who grow it, and rebate back to you if you hold lifetime membership. This page explains the whole economy in one place.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Network Fees" description="Browse the live fee schedule for every operation." href="/network_fees.html" />
+  <LinkCard title="Lifetime Membership" description="Upgrade to LTM for rebates and referral income." href="/ltm.html" />
+  <LinkCard title="Vesting Balances" description="Claim rebates and referral earnings once vested." href="/vesting.html" />
+</CardGrid>
+
+## Fee types
+
+Each operation carries its own fee, set through on-chain governance. The schedule distinguishes several fee shapes:
+
+- **Regular transaction fee** — the base price of an operation (e.g. a transfer).
+- **Price per KByte** — extra charge scaled by transaction size. A transfer's memo is encrypted by default and readable only by sender and receiver — handy for messages — but a long memo makes the transaction bigger and the fee higher. Exchange-required memo details (deposit references and the like) go here too, so double-check them before signing.
+- **Asset symbol fees** — creating an asset costs more the shorter its symbol: 3-character symbols are the priciest, 4-character less so, longer symbols cheapest.
+- **Account fees** — a basic fee for plain names, a premium fee for short/desirable names.
+- **Membership fees** — the one-time lifetime upgrade price.
+
+**See them live:** the [Network Fees page](/network_fees.html) lists the current schedule operation by operation, with each parameter broken out ([screen guide](/docs/blockchain/network_fees.html)).
+
+## Paying fees in any asset
+
+Fees don't have to leave your wallet in BTS. Any asset whose issuer maintains a **fee pool** — a BTS balance plus an exchange rate (core exchange rate) at which the asset converts into BTS — can pay your way: the pool swaps your asset for BTS behind the scenes when you transact. Issuers fund the pool and set the rate, optionally charging a small premium for the convenience. If a pool runs dry, fall back to BTS.
+
+Related mechanics: issuers earn market fees they configure (rate plus min/max bounds), and half of every asset-creation fee pre-fills the new asset's fee pool.
+
+## Membership tiers
+
+Every account starts as a **Basic member** (free, no rebates). A one-time upgrade makes it a **Lifetime Member (LTM)**, which unlocks:
+
+- **Fee cashback** — LTMs get most of every fee they pay refunded (the classic split returns 80% of your own fees; a slice of every fee also goes to the network). Cashback doesn't arrive as spendable balance — it accrues as a **vesting balance** (see below).
+- **Referral income** — only LTMs earn from users they bring in (see next section).
+- **Registration rights** — only LTMs can register new accounts directly and create assets.
+
+<Aside type="note" title="Figures follow governance">
+  Exact percentages and the LTM price are committee-set parameters — check the [Network Fees page](/network_fees.html) and the [upgrade screen](/ltm.html) for today's values rather than treating any number here as fixed.
+</Aside>
+
+**Upgrade:** [Lifetime Membership in the app](/ltm.html) ([guide](/docs/settings/ltm.html)).
+
+## The referral program
+
+The referral program pays members to grow the network — single-level, opt-out by upgrading: once your referral becomes LTM themselves, they keep their own fee share instead of paying it upward.
+
+- **How the split works:** of each fee paid by a referred Basic account, a slice goes to the network and the rest to the referral program, divided between the **registrar** (the account that paid to register them) and the **affiliate referrer** (who brought them in) according to the percentage set at registration.
+- **Pending vs vesting:** fee shares are divided once per maintenance interval (*pending* until then). Ordinary cashback vests quickly, but large one-off sums — membership upgrades, premium-name registrations — must **vest** over a committee-defined period before they can be claimed.
+- **Claiming:** everything lands in [Vesting Balances](/vesting.html) ([guide](/docs/account/vesting.html)) — referral earnings, cashback, worker and witness pay alike.
+
+Vesting itself comes in two policies: **linear-with-cliff** (nothing until the cliff passes, then steady release) and **coin-days-destroyed** (withdrawals consume accrued holding-time, so the remainder must season longer). Cashback and referral earnings use these rails; large one-off sums get the longer schedules.
+
+A concrete pattern from the early days: when a Basic account paid $100 to go LTM, roughly $50 went to its referrer, $30 to the nearest lifetime member above it, and $20 to the network — after which the new LTM became its own referrer. Proportions today follow the live parameters, but the shape is unchanged.
+
+## Order cancellation refunds
+
+Cancelling a limit order that never (fully or partially) filled refunds most of its fee — classically 90% — paid back in BTS regardless of which asset you paid with. Manage resting orders on the [Open Orders page](/open-orders.html) ([guide](/docs/account/open-orders.html)).
+
+## Related pages
+
+- [Vesting Balances](/docs/account/vesting.html) — claim vested earnings ([open in app](/vesting.html)).
+- [Lifetime Membership](/docs/settings/ltm.html) — upgrade ([open in app](/ltm.html)).
+- [Create Account](/docs/settings/create_account.html) — registrar/referrer mechanics ([open in app](/create_account.html)).
+- [Accounts, Permissions & Memos](/docs/learn/accounts.html) — encrypted memos and keys.
+- [Workers & Funding](/docs/learn/workers.html) — where fee income ultimately flows.

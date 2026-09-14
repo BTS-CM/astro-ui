@@ -31,9 +31,9 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
 1. Open **Vesting Balances** from the homepage under *Account Overviews*.
 
-2. Select the account. Each `1.13.x` vesting balance shows its policy and vested amount.
+2. Your own balances load automatically — this page shows the current account only, split into cashback and market-fee-sharing rows (policy details render on cashback rows).
 
-3. When funds are available, click **Claim**.
+3. When funds are available, click **Claim**. Claiming withdraws the full balance amount.
 
 4. Authorize → `vesting_balance_withdraw`.
 
@@ -45,7 +45,7 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
 ## Operation used
 
-Claiming broadcasts `vesting_balance_withdraw` (operation `21`):
+Claiming broadcasts `vesting_balance_withdraw` (operation `33`):
 
 ```json
 {

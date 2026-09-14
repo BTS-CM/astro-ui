@@ -1,0 +1,26 @@
+---
+title: Liquidity Pools
+description: Swap through pools, stake liquidity, and explore the busiest pools on BitShares.
+sidebar:
+  order: 2
+---
+
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+The **Liquidity Pools** section covers everything pool-based: swapping through pools, staking liquidity for a cut of fees, and discovering pools.
+
+<CardGrid>
+  <LinkCard title="Swap" description="Exchange assets through a liquidity pool." href="/docs/pools/swap/" />
+  <LinkCard title="Stake" description="Deposit to and withdraw from liquidity pools." href="/docs/pools/stake/" />
+  <LinkCard title="Pools" description="Browse all liquidity pools (read-only)." href="/docs/pools/pools/" />
+  <LinkCard title="Custom Pool Tracker" description="Track one liquidity pool in detail (read-only)." href="/docs/pools/custom_pool_overview/" />
+  <LinkCard title="Top Pools" description="Highest-volume liquidity pools (read-only)." href="/docs/pools/top-pools/" />
+</CardGrid>
+
+## Common operations
+
+- `liquidity_pool_exchange` — swap through a pool.
+- `liquidity_pool_deposit` / `liquidity_pool_withdraw` — stake and unstake.
+- `liquidity_pool_create` — deploy a pool (see [Create Liquidity Pool](/docs/asset-creation/create_liquidity_pool.html)).
+
+Pools, Custom Pool Tracker and Top Pools are **read-only viewers** — they never broadcast transactions.

@@ -31,16 +31,18 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
 
 1. Open **Lend** from the homepage under *Forms of Debt* (or open an existing offer to edit it).
 
-2. As a lender: choose the asset, balance, fee rate (basis points), max duration, minimum deal size, acceptable collateral and borrowers, and an auto-disable time.
+2. As a lender: choose the asset, balance, fee rate, max duration, minimum deal size, acceptable collateral and borrowers, and an auto-disable time.
 
 3. Create the offer → `credit_offer_create`.
 
-4. As a borrower: open an offer, set the borrow amount and collateral, choose auto-repay mode, and accept → `credit_offer_accept`.
+4. As a borrower: open an offer, set the borrow amount and collateral, choose auto-repay mode, and accept → `credit_offer_accept`. The page auto-computes the required collateral from the offer price and blocks acceptance when your balance can't cover it.
+
+5. As a lender: delete an offer you no longer want listed → `credit_offer_delete`.
 
 </Steps>
 
 <Aside type="note" title="Fee rate units">
-  `fee_rate` is in **basis points** (1/100th of a percent). A value of `500` means a 5.00% fee. `auto_repay` on accept is `0` (none), `1` (full only) or `2` (allow partial).
+  `fee_rate` is in chain units where `10000` = 1% — so `50000` means a 5.00% fee (a value of `500` is only 0.05%). `auto_repay` on accept is `0` (none), `1` (full only) or `2` (allow partial).
 </Aside>
 
 ## Operations used
@@ -53,7 +55,7 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
   "owner_account": "1.2.x",
   "asset_type": "1.3.x",
   "balance": 5000000,
-  "fee_rate": 500,
+  "fee_rate": 50000,
   "max_duration_seconds": 2592000,
   "min_deal_amount": 10000,
   "enabled": true,
@@ -75,7 +77,7 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
   "offer_id": "1.21.x",
   "borrow_amount": { "amount": 10000, "asset_id": "1.3.x" },
   "collateral": { "amount": 20000, "asset_id": "1.3.x" },
-  "max_fee_rate": 500,
+  "max_fee_rate": 50000,
   "min_duration_seconds": 2592000,
   "extensions": { "auto_repay": 0 }
 }
@@ -91,10 +93,25 @@ Editing adds `offer_id` and an optional signed `delta_amount`:
   "owner_account": "1.2.x",
   "offer_id": "1.21.x",
   "delta_amount": { "amount": 2000000, "asset_id": "1.3.x" },
-  "new_fee_rate": 300,
+  "new_fee_rate": 30000,
   "extensions": []
 }
 ```
+
+  </TabItem>
+  <TabItem label="credit_offer_delete">
+
+Deleting an offer broadcasts `credit_offer_delete` (operation `70`):
+
+```json
+{
+  "owner_account": "1.2.x",
+  "offer_id": "1.21.x",
+  "extensions": []
+}
+```
+
+Alternatively, keep the offer listed but inactive by setting `enabled: false` or an `auto_disable_time` via `credit_offer_update`.
 
   </TabItem>
 </Tabs>
@@ -103,14 +120,10 @@ Editing adds `offer_id` and an optional signed `delta_amount`:
 | --- | --- |
 | `asset_type` | The lent asset (`1.3.x`). |
 | `balance` / `delta_amount` | Offer size; `delta_amount` is relative on update. |
-| `fee_rate` / `new_fee_rate` | Basis points. |
+| `fee_rate` / `new_fee_rate` | Chain fee units (`10000` = 1%). |
 | `acceptable_collateral` | Asset + price per accepted collateral. |
 | `acceptable_borrowers` | Optional whitelist `[account, max amount]`. |
 | `offer_id` | The `1.21.x` credit offer object id. |
-
-<Aside type="note" title="No cancel op">
-  The app currently only supports creating, accepting and updating offers — there is no `credit_offer_cancel` operation. Disable an offer by setting `enabled: false` or an `auto_disable_time`.
-</Aside>
 
 ## Related pages
 

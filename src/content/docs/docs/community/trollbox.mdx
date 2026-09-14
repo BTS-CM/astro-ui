@@ -1,0 +1,79 @@
+---
+title: Trollbox
+description: Post on-chain chat messages with custom_operation (trollbox channel catalogs).
+sidebar:
+  order: 2
+---
+
+import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
+
+**Trollbox** is on-chain chat on the BitShares blockchain. Messages are posted from your account into a channel catalog, are visible to everyone, and stay stored permanently. The sender pays a small network fee per message, which keeps spam out.
+
+**Open in the app:** [Trollbox](/trollbox.html).
+
+## What it does
+
+<CardGrid>
+  <Card title="Live channels" icon="chat">
+    Chat in `general`, `trading`, `pools`, `barter`, `credit`, `assets`, `governance`, `proposals`, `dev` and `announcements`.
+  </Card>
+  <Card title="Post on-chain" icon="pencil">
+    Up to 1024 chars per message (plus a chain byte budget), with one optional attachment.
+  </Card>
+  <Card title="Stay in control" icon="eye">
+    Filter friends, block users, delete your own messages, and switch content languages.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Trollbox** from the homepage under *Community*.
+
+2. Pick a channel and a content language. English uses the legacy `trollbox-<channel>` catalog; other languages use `trollbox-<channel>-<lang>`, so history is partitioned per language.
+
+3. Read the live feed (newest first, polling every ~15s). Open a message to see its full text and any attached asset, pair, pool, credit offer or barter action.
+
+4. Type a message (max 1024 characters and within the chain byte budget), optionally attach one item allowed in that channel — e.g. pairs in `#trading`, barters in `#barter`, offers in `#credit` — and authorize.
+
+5. To remove your own message later, delete it; blocked users stay hidden in both All and Friends views.
+
+</Steps>
+
+<Aside type="note" title="Node plugin required">
+  Reading history needs a node with the `custom_operations` plugin enabled. If the page shows *Plugin unavailable*, switch nodes in [Nodes](/docs/settings/nodes.html) — broadcasting still works from any node.
+</Aside>
+
+<Aside type="note" title="Attachments are gated per channel">
+  History renders attachments posted anywhere, but composing only offers the kinds the active channel accepts. Unresolvable attachments show no badge and raw payloads are never rendered.
+</Aside>
+
+## Operation used
+
+Sending (or deleting) a message broadcasts `custom_operation` (operation `35`) with an `account_storage_map` payload. The `id` field is a filterable convention only — the plugin ignores it (`9199` for trollbox, `9198` for forum).
+
+```json
+{
+  "fee": { "amount": 0, "asset_id": "1.3.0" },
+  "payer": "1.2.x",
+  "required_auths": ["1.2.x"],
+  "id": 9199,
+  "data": "<packed account_storage_map hex>"
+}
+```
+
+The packed `data` holds one entry (`remove: false`) in catalog `trollbox-<channel>[-<lang>]`, mapping a unique `key` to a JSON value of `{v, ch, u, ln, text}` plus an optional single `attach`. Deleting your own message re-packs the same catalog/key with `remove: true`.
+
+| Field | Meaning |
+| --- | --- |
+| `payer` / `required_auths` | Your account (`1.2.x`); pays the fee and owns the message. |
+| `id` | `9199` for trollbox messages (convention; ignored by the plugin). |
+| `data` | Packed `account_storage_map`: `catalog`, `key`, and the JSON message value. |
+| Fee | Base `custom_operation` fee plus `price_per_kbyte × ceil(bytes / 1000)` on the packed size. |
+
+## Related pages
+
+- [Forum](/docs/community/forum.html)
+- [Nodes](/docs/settings/nodes.html)
+- [Blocked Users](/docs/settings/blocked-users.html)

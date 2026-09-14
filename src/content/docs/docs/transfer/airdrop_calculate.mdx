@@ -33,7 +33,7 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
 2. Build a candidate pool — manual input, ticket locks, call-order collateral, top holders, limit-order activity, or LTM upgrades.
 
-3. Pick a distribution mode (equal split, fixed amount, or custom) and a selection algorithm seeded from a block witness signature.
+3. Pick a distribution basis (`hits`, `weight`, or `equal`) and a selection algorithm seeded from a block witness signature.
 
 4. Review the winning accounts and per-account amounts.
 
@@ -41,8 +41,53 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
 </Steps>
 
+## How selection works
+
+Every lottery algorithm shares one framework, which is what makes draws both random and verifiable:
+
+1. **Seed** — the witness signature of a block you choose (latest, random, or a specific block number), filtered down to its digits. Nobody knows a future block's signature in advance, so nobody can rig the seed; once the block exists, anyone can re-run the same seed and check the result.
+2. **Tickets** — the algorithm converts the seed into ticket numbers in the range `0` to `2³⁰ − 1`.
+3. **Ranges** — each candidate account owns a slice of that ticket range, sized by its weight in the pool.
+4. **Hits** — a drawn ticket lands in somebody's slice, and that account wins (a "hit"). The same seed plus the same pool always yields the same winners.
+
+You can combine several algorithms in one run; a ticket drawn twice still wins only once. Geometric algorithms additionally render their draws in a 3-D visualizer, non-geometric ones show a step-by-step math breakdown per ticket, and every winner opens a detail dialog explaining exactly which algorithm and ticket selected it.
+
+## The algorithms
+
+**Freebie (everyone)** — not a lottery at all. It ignores the seed and gives every account in the pool exactly one ticket: participation reward, no randomness involved.
+
+### Numeric lotteries (seed digits → arithmetic)
+
+- **Forward** — the simplest draw: each 9-digit seed chunk is read directly as a ticket number. Transparent and easy to audit, but raw digits carry bias (leading zeros shrink values), so outcomes hug the low end of the range.
+- **Reverse** — same as forward, but each chunk's digits are mirrored first. Purpose: decorrelate the outcome from the seed's digit order, so a signature that differs only at one end still produces a completely different draw.
+- **Pi** — pairs of chunks are combined through `floor(√a × √b × π)`. The square roots compress huge values while π multiplication spreads results across a far wider range than raw digits — denser, less predictable coverage than forward/reverse.
+- **Reverse Pi** — the Pi mixing applied to mirrored chunks: both the digit-order decorrelation of reverse and the range-spreading of Pi at once.
+- **Cubed** — the seed is re-cut into 3-digit groups and each is cubed (`x³`). Cubing is deliberately explosive: a single changed digit avalanches into a wildly different ticket, spreading draws across the full numeric range. Overflow past the ticket space wraps around deterministically.
+- **Hash** — the fairest purely-numeric option. The seed is reduced with FNV-1a into a 32-bit value feeding an xorshift32 generator, which emits uniformly distributed tickets across the whole range. No digit bias, no geometry — just seed-derived uniform randomness, fully reproducible.
+
+### Geometric lotteries (seed → shapes in a cube)
+
+These map the seed into a `1024³` cube (each 3-digit group becomes a coordinate, stretched to use the full volume) and draw shapes through it. Cube coordinates pack into ticket numbers with a Morton (Z-order) curve, which preserves locality: neighbours in the cube are neighbours in ticket space, so a shape genuinely sweeps the holder ranges it passes through. Sampling density is constant per unit of length, so longer shapes fairly earn more tickets.
+
+- **Average point lines** — every seed chunk becomes a point; lines are drawn from each point to their centroid and sampled. Outlier chunks (far from average) contribute longer lines, hence more tickets — distance-weighted by construction.
+- **Alien blood** — each 6-digit group fixes an (x, z) position and a vertical line "drips" through the full height of the cube there. Every drip covers the same count of coordinates at different positions: uniform per-drip, positioned by the seed.
+- **Bouncing ball** — the seed vectors are walked in order as a flight path; whenever the next vector descends (z drops), a bounce point is inserted at ground level. Ticket clusters form near impact zones with thin trails along long flights — the most "narrative" of the draws.
+- **Barrel of fish** — the most configurable. The first chunk is the firing origin; other chunks are targets. **Projectile** `beam` fires full lines origin→target, anything else ("slow") truncates to one-third distance like a spent shell; **splinter** `yes` fires at every target chunk, otherwise only the first. One origin, many (or one) shots.
+- **Golden lattice** — the fairest spatial option. Points are placed by a Fibonacci (golden-ratio) lattice, mathematically near-uniform over the whole cube: every region is about equally likely to be hit regardless of position. Pick this when the draw itself must be as unbiased as possible.
+- **Walk** — a meandering path: each chunk steers the next short step (direction and 5–65-unit length from its digits), reflecting off the cube walls. Many small locally-varying steps wander into regions the straight-line algos never visit.
+- **Helix** — a 3-D spiral (seed-set centre, radius, 2–5 turns, phase) climbing the cube's height. Coverage is a tube rather than the volume — a distinctive pattern for themed draws.
+
+### Which to choose
+
+- **Provably unbiased:** Hash (numeric) or Golden lattice (spatial).
+- **Most transparent to audit by hand:** Forward (but accept its low-end bias) or Reverse.
+- **Maximum seed sensitivity:** Cubed or Reverse Pi.
+- **Themed/entertainment draws:** Bouncing ball, Barrel of fish (tune beam/splinter), Helix, Alien blood.
+- **Guaranteed participation:** Freebie, alone or combined with a lottery.
+- Combine several when you want overlapping chances; the one-win-per-ticket rule keeps combined runs fair.
+
 <Aside type="note" title="Batch sizing">
-  Each transaction carries one batch of transfers; the app refuses to build a batch larger than the chain's `maximum_transaction_size`. Very large airdrops therefore span many transactions.
+  Each transaction carries one batch of transfers; batch size caps at `maxPerTx` (95% of the chain's `maximum_transaction_size`, estimated with a live byte model). The page shows per-batch fees and totals before you broadcast, and disables QR/deeplink output if a batch would exceed the cap. Very large airdrops therefore span many transactions.
 </Aside>
 
 ## Operation used

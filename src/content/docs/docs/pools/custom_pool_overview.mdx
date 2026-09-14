@@ -2,12 +2,12 @@
 title: Custom Pool Tracker
 description: Track a single liquidity pool and its reserves, share price and performance (read-only).
 sidebar:
-  order: 2
+  order: 4
 ---
 
 import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
 
-**Custom Pool Tracker** focuses on one liquidity pool at a time. Given a pool id (`1.19.x`), it shows the two reserves, the share asset supply, the implied price and recent swap activity — a targeted view for a pool you care about.
+**Custom Pool Tracker** focuses on one liquidity pool at a time. Given a pool id (`1.19.x`), it shows the two reserves, the share asset supply, the implied price and recent swap activity — a targeted view for a pool you care about. Opening a tracked pool drills into a per-tracker detail view (`/custom_pool_tracker.html?id=...`).
 
 **Open in the app:** [Custom Pool Tracker](/custom_pool_overview.html).
 
@@ -29,18 +29,18 @@ import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
 
 <Steps>
 
-1. Open **Custom Pool Tracker** from the homepage under *Blockchain Overviews*.
+1. Open **Custom Pool Tracker** from the homepage under *Liquidity Pools*.
 
 2. Enter or paste a pool id (`1.19.x`).
 
 3. Review its reserves, share asset, price and activity.
 
-4. Jump to [Stake](/docs/exchanging/stake.html) to deposit/withdraw, or [Swap](/docs/exchanging/swap.html) to trade.
+4. Jump to [Stake](/docs/pools/stake.html) to deposit/withdraw, or [Swap](/docs/pools/swap.html) to trade.
 
 </Steps>
 
 ## Related pages
 
-- [Pools](/docs/blockchain/pools.html)
-- [Stake](/docs/exchanging/stake.html)
-- [Swap](/docs/exchanging/swap.html)
+- [Pools](/docs/pools/pools.html)
+- [Stake](/docs/pools/stake.html)
+- [Swap](/docs/pools/swap.html)

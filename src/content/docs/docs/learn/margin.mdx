@@ -1,0 +1,124 @@
+---
+title: Borrowing, Shorting & Margin Calls
+description: How collateralized borrowing works — debt positions, collateral ratios, margin calls, settlement, and covering.
+sidebar:
+  order: 5
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+BitShares lets you borrow price-stable SmartCoins (see [Assets](/docs/learn/assets.html)) by locking collateral worth more than the loan. This page explains the lifecycle of such a debt position: opening it, staying safe, what happens when you don't (margin calls), how holders can force settlement, and how to close out. Numbers below are worked examples — the real ratios are governable parameters, so always check the [SmartCoins page](/smartcoins.html) for current values.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Borrow" description="Open or adjust a collateralized debt position." href="/borrow.html" />
+  <LinkCard title="Call Orders" description="Inspect your open debt positions." href="/call-orders.html" />
+  <LinkCard title="SmartCoins" description="Parameters, feeds, and settlement terms per asset." href="/smartcoins.html" />
+  <LinkCard title="Settlement Bids" description="Bid on force-settled positions." href="/settlement_bids.html" />
+</CardGrid>
+
+## The short lifecycle
+
+1. **Borrow** SmartCoins from the network against collateral (e.g. BTS).
+2. **Sell** them on the [DEX](/docs/learn/dex.html) at whatever price buyers pay — you are now short that asset.
+3. **Manage** your collateral ratio as prices move — add collateral or repay debt.
+4. **Cover** whenever you like by buying back the SmartCoins and returning them; the debt is destroyed and your collateral unlocks.
+
+At any time you can adjust in either direction: raising the ratio locks more collateral, lowering it means handing some borrowed asset back first.
+
+## Key terms
+
+- **Settlement (feed) price**: the fair market price of the collateral asset, fed in by witnesses from external exchanges.
+- **Maintenance collateral ratio (MCR)**: the minimum required backing, set by witnesses (an MCR of 1.75 means 175% backing).
+- **Short squeeze ratio (SQPR)**: how far shorts are protected against violent moves — it sets the ceiling a forced buy will ever pay.
+- **Squeeze protection price (SQPP)**: feed price × SQPR. A forced margin buy never pays above this.
+- **Call price**: the price at which *your* position gets margin-called. It depends only on your debt, your collateral, and the MCR — not on the feed.
+
+### Where feeds come from
+
+No single oracle dictates the feed price. Each SmartCoin has a set of authorized **feed producers** — usually witnesses elected by holders, or a custom publisher set for [privatized assets](/docs/learn/assets.html). Producers independently post what they see as fair value; the chain takes the **median**, so a lone bad feed can't move the peg. Two guards keep the system honest: a minimum number of live feeds must exist before margining activates, and each feed carries a lifetime (`feed_lifetime_sec`) — stale feeds expire instead of governing real liquidations. The published feed also carries the asset's MCR, squeeze ratio, and core exchange rate, so one update moves every rule at once. Producers publish from the [Publish Feed screen](/publish_feed.html) (see [SmartCoins](/docs/debt/smartcoins.html)).
+
+## Call price and collateral ratio — worked example
+
+Say you open a position with **10 USD** of debt backed by **10,000 BTS** of collateral, and the MCR is **1.75**:
+
+```text
+call price = collateral ÷ (debt × MCR)
+           = 10000 ÷ (10 × 1.75)
+           = 571.429 BTS/USD
+```
+
+Your collateral ratio (CR) depends on the live feed price. At a feed of **300 BTS/USD**:
+
+```text
+CR = (collateral ÷ feed price) ÷ debt
+   = (10000 ÷ 300) ÷ 10
+   = 3.33
+```
+
+Healthy — well above the 1.75 minimum. But "above MCR" is not the same as "safe from margin calls", as the next section shows.
+
+## When does the margin call actually fire?
+
+A margin call is the market forcing you to sell collateral to buy back enough SmartCoins to close (or shrink) your position. It becomes *possible* once the feed price reaches your call price — but the trigger also involves the squeeze protection price. Walk through a tighter position:
+
+- Debt: **10 USD**, collateral: **5,250 BTS**, feed: **300 BTS/USD**, MCR: **1.75**
+- Call price = 5250 ÷ (10 × 1.75) = **300 BTS/USD** — exactly the feed. This is the edge: the "black swan" line where backing just covers debt sits one MCR-buffer above worthlessness, and this position has used up the whole buffer.
+
+Now add SQPR **1.1** → SQPP = 300 × 1.1 = **330 BTS/USD**. Any position with a call price below 330 gets force-settled: it enters the book as a bid buying USD for BTS, capped at 330.
+
+Generalize that and you get the safety rule — to stay *entirely* clear of margin calls, hold:
+
+```text
+safe while CR > MCR × SQPR   (here: 1.75 × 1.1 = 1.925)
+```
+
+Concretely: at feed 300, MCR 1.75, SQPR 1.1, the no-call collateral for 10 USD of debt is (10 × 1.75) × 330 = **5,775 BTS**, giving CR = 1.925. Fall below that and the position can be called.
+
+<Aside type="caution" title="Keep a buffer">
+  The chain calls positions automatically — there is no margin clerk phoning you first. Keep your ratio comfortably above MCR × SQPR, or set a target ratio on the [Borrow page](/borrow.html) ([guide](/docs/debt/borrow.html)).
+</Aside>
+
+## How a margin call executes
+
+A called position buys back its debt **only within the range from its call price up to the SQPP**. Take a position with debt **10 USD**, collateral **5,687.5 BTS** (CR ≈ 1.90), call price **325 BTS/USD**, SQPP **360 BTS/USD** (feed 300, SQPR 1.2). It is below the safe ratio (2.1), so it is called and bids for USD anywhere in **325–360 BTS/USD**. Two consequences surprise newcomers:
+
+1. **Asks below the call price don't get taken.** A sell order offering USD at 315 BTS/USD sits untouched — the forced bid only lifts offers at 325 or above (up to the 360 cap). Worse, that cheap ask *blocks* matching: even a second ask at 345 can't trade with the call order while the 315 order is still the best ask. If the 315 order is cancelled or filled elsewhere, the 345 order fills instantly and the position's debt shrinks accordingly.
+2. **Margin calls can't "buy cheap".** Unless the feed itself moves past the call price, forced buys always pay a premium over the feed — even when cheaper asks are visible. The SQPP cap is the other side of that bargain: in an illiquid market the position is protected from being filled at extortionate prices above the cap.
+
+## Settlement: holders can force your hand
+
+Any SmartCoin holder can demand **settlement at the fair price** at any time. Settlement closes the thinnest-backed borrow positions first (lowest collateral ratio) and pays them out of their collateral. Think of your ranking as your place in line: the bottom slice of positions is always on notice, much like a 24-hour margin notice in traditional markets — add collateral, cover voluntarily on your own terms, or risk being settled.
+
+To blunt manipulation through sudden external price spikes, forced settlement volume per day is capped (a committee-set percentage). Savvy participants watch large settlement demands, which itself makes manipulation expensive and self-defeating: pushing the feed to trigger settlements moves the market against the manipulator.
+
+## Black swans & recovery methods
+
+Margin calls assume collateral still covers debt. In a violent crash it may not: a position's collateral ratio can fall **below 1**, meaning the collateral is worth less than the debt it backs. The margin engine cannot make lenders whole from such a position — this is a **black swan**, and recovery moves from the position level to the asset level.
+
+Historically there was one answer: **global settlement** — every debt position closed at once and borrowing frozen until resolved. Modern SmartCoins instead choose one of four **Black Swan Risk Management** strategies at creation (a `black_swan_response_method` extension on the asset):
+
+| Method | What happens to positions | New borrowing |
+| ------ | ------------------------- | ------------- |
+| **0 — Global Settlement** | All debt positions closed; collateral moved to a settlement fund | Frozen until resolved |
+| **1 — No Settlement** | Nothing closed; settlement price capped by the lowest collateral ratio | Allowed |
+| **2 — Individual Settlement to Fund** | Only undercollateralized positions closed; their collateral moved to a claimable fund | Allowed |
+| **3 — Individual Settlement to Order** | Only undercollateralized positions closed; their collateral placed as a limit order, with no price cap | Allowed |
+
+The individual methods (2 and 3) contain the damage: healthy positions survive and the market keeps functioning, while only the underwater positions are unwound. Which tradeoff fits depends on the asset — a major peg may warrant the full stop of global settlement, while a volatile long-tail asset may prefer to isolate failures and carry on.
+
+The strategy is fixed per asset at creation — check it on the [Create SmartCoin screen](/create_smartcoin.html) ([guide](/docs/asset-creation/create_smartcoin.html)) before borrowing against an unfamiliar SmartCoin, alongside its MCR and feed terms on the [SmartCoins page](/smartcoins.html).
+
+## Covering: closing out
+
+To close, hold the borrowed amount of the SmartCoin and hand it back: the debt is extinguished and your collateral is released. Partial closes work the same way — return some coins, unlock a proportional slice of collateral.
+
+## Related pages
+
+- [Borrow](/docs/debt/borrow.html) — open and adjust positions ([open in app](/borrow.html)).
+- [SmartCoins](/docs/debt/smartcoins.html) — feeds, MCR, and settlement terms ([open in app](/smartcoins.html)).
+- [Settlement Bids](/docs/debt/settlement_bids.html) — bid on settled positions ([open in app](/settlement_bids.html)).
+- [Call Orders](/docs/account/call-orders.html) — your open positions ([open in app](/call-orders.html)).
+- [Assets & Tokens](/docs/learn/assets.html) — what SmartCoins are.
+- [DEX Concepts](/docs/learn/dex.html) — the book your calls execute in ([open in app](/dex.html)).

@@ -1,0 +1,46 @@
+---
+title: HTLC Concepts
+description: How hashed-timelock contracts work — secret locks, time locks, and atomic swaps.
+sidebar:
+  order: 13
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+A **Hashed Timelock Contract (HTLC)** locks funds behind two simultaneous conditions: knowing a secret, and acting before a deadline. It is the primitive behind cross-chain atomic swaps and trustless conditional escrow — no arbitrator required.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="HTLC" description="Create, redeem, and extend hash-locked contracts." href="/htlc.html" />
+</CardGrid>
+
+<Aside type="tip" title="Screen guide">
+  Step-by-step with operation JSON: [HTLC](/docs/transfer/htlc.html).
+</Aside>
+
+## The two locks
+
+- **Hash lock** — the sender commits to `hash(hash(secret))` on-chain (double SHA-256 or RIPEMD160). Only someone who learns the original secret can claim the funds, by revealing it in a `htlc_redeem`.
+- **Time lock** — a `claim_period_seconds` window (minimum 60 seconds, with 1-hour to 30-day presets). If nobody redeems in time, the sender reclaims via refund — funds are never stuck.
+
+## The atomic-swap pattern
+
+Alice and Bob want to trade across chains without trusting each other (or an exchange):
+
+1. Alice locks her coins in an HTLC keyed to `hash(hash(S))`, where only she knows `S`, with a long deadline.
+2. Bob verifies Alice's lock, then locks his coins in a matching HTLC for the same hash with a *shorter* deadline.
+3. Alice claims Bob's coins by revealing `S` — which publishes `S` on-chain.
+4. Bob reads `S` from Alice's claim and uses it to claim Alice's coins before his deadline.
+
+Either both legs complete or both refund. No step lets one side steal: claiming *is* revealing, and revealing enables the other claim.
+
+## Lifecycle in this app
+
+Create (`htlc_create`) → track on the sender/receiver dashboards → recipient redeems (the dialog double-hashes your entered secret and only enables redeem on a hash **Match**) or the sender extends the window (`htlc_extend`, adding seconds). Expired unclaimed contracts refund to the sender.
+
+## Related pages
+
+- [HTLC](/docs/transfer/htlc.html) — the screen ([open in app](/htlc.html)).
+- [Transfer](/docs/transfer/transfer.html) — plain sends ([open in app](/transfer.html)).
+- [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html) — other conditional mechanics.

@@ -1,0 +1,43 @@
+---
+title: Top Operations
+description: See which operation types the chain uses most, with share breakdown (read-only).
+sidebar:
+  order: 3
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+**Top Operations** ranks on-chain operation types by frequency and shows each type's share of chain activity — rare types (under 1%) are grouped as Other. It's a read-only window into what the chain actually does all day.
+
+**Open in the app:** [Top Operations](/top-operations.html).
+
+## What it does
+
+<CardGrid>
+  <Card title="Ranking" icon="list">
+    Operation types ordered by usage.
+  </Card>
+  <Card title="Breakdown" icon="chart">
+    Share of each type, with sub-1% grouped as Other.
+  </Card>
+  <Card title="Read-only" icon="eye">
+    Nothing here broadcasts.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Top Operations** from the homepage under *Blockchain Overviews*.
+
+2. Browse the ranked list and the share chart.
+
+3. Use it to sanity-check what activity dominates the chain before designing around an operation.
+
+</Steps>
+
+## Related pages
+
+- [Blocks](/docs/blockchain/blocks.html)
+- [Explorer](/docs/blockchain/explorer.html)

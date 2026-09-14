@@ -1,0 +1,44 @@
+---
+title: History & Graphene
+description: Where BitShares came from — ProtoShares, TaPoS, DPOS, the Graphene toolkit, and short notes on retired history.
+sidebar:
+  order: 9
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+How did a blockchain end up with elected block producers, a built-in exchange, and self-funding workers? This page condenses the origin story — monthly breakthroughs through 2013–2014 — plus what the underlying **Graphene** toolkit is. For how things work *today*, see [What is BitShares?](/docs/learn/what-is-bitshares.html) and [DPOS](/docs/learn/dpos.html).
+
+## 2013: the invention
+
+In mid-2013, Daniel Larimer ("Bytemaster") published the insight that makes BitShares possible: a crypto-asset pegged to the dollar without holding dollars — what became the SmartCoin (see [Assets](/docs/learn/assets.html)). Invictus Innovations was founded that July to build it, and the ideas of **Distributed Autonomous Companies** — businesses run by auditable software rather than managers — followed within months.
+
+## November 2013: ProtoShares (PTS)
+
+The first implementation challenge was distribution: how do you fairly launch not just one asset but a whole *family* of future DACs? The answer was **ProtoShares**, a minable proto-asset whose holders would receive stakes in each future BitShares chain. It launched in November 2013, was immediately mined by hundreds of thousands of nodes, and listed on exchanges within days — effectively letting the market fund and vet ideas before their implementations existed.
+
+## December 2013: TaPoS and the end of mining
+
+A month later came the second breakthrough: **Transactions as Proof of Stake (TaPoS)**. Mining was increasingly concentrated in a few large pools while burning enormous resources, so future designs would drop proof-of-work entirely — every transaction embeds a recent block hash, binding it to the chain's history and making stake, not hashpower, the security foundation. That same month the first sketch of **Delegated Proof of Stake** appeared: shareholders electing a rotating board of block signers, accountable through continuous voting. See [DPOS](/docs/learn/dpos.html) for where that idea ended up.
+
+## 2014: consolidation and Graphene
+
+Through 2014 the ecosystem experimented with many parallel DACs (voting systems, DNS, music). Late that year — as funding tightened — the parallel projects were merged back into one chain so every developer worked on a single product. That consolidation also introduced reserve-pool-funded block-producer pay, replacing the earlier purely deflationary model.
+
+The software platform distilled from all of this is **Graphene**: an industrial-strength toolkit for high-performance delegated blockchains, separating the consensus and P2P core from wallets and interfaces. BitShares was its first application; the same toolkit has powered other chains since. Orders of magnitude faster than first-generation Bitcoin-derived systems, it is what lets the chain confirm transactions in seconds rather than minutes.
+
+## Historical notes: retired material
+
+<Aside type="note" title="AngelShares and early fundraising">
+  Before the current chain existed, development was funded through AngelShares donations (BTC/PTS) and ProtoShares mining, entitling donors to genesis stakes. Those claims belong to the 2013–2015 era and the original genesis block — they are not actions you can perform in this app.
+</Aside>
+
+<Aside type="note" title="The 1.0 → 2.0 migration">
+  The 2015 move from BitShares 1.0 to the Graphene-based 2.0 re-initialized the chain from a snapshot: balances migrated 1:1, open orders were credited back rather than migrated, short positions carried over, and premium account names gained prefixes to fit the new naming market. Transaction history from 1.0 did not carry over. This matters today only if you are researching very old accounts.
+</Aside>
+
+## Related pages
+
+- [What is BitShares?](/docs/learn/what-is-bitshares.html) — the platform today.
+- [Delegated Proof of Stake](/docs/learn/dpos.html) — the consensus that came out of this history ([open in app](/blocks.html)).
+- [Workers & Funding](/docs/learn/workers.html) — the modern form of chain-funded development.

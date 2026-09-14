@@ -1,0 +1,41 @@
+---
+title: Credit Lending Concepts
+description: How peer-to-peer credit works — offers, acceptance, deals, repayment, and how it differs from margin borrowing.
+sidebar:
+  order: 15
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+**Credit** is peer-to-peer lending with on-chain enforcement: lenders publish offers stating asset, fee, acceptable collateral, and terms; borrowers lock collateral and draw funds; the chain tracks the resulting deal through repayment. Unlike margin borrowing (debt minted against SmartCoins), credit moves *existing* assets from lender to borrower.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Lend" description="Publish and manage credit offers." href="/lend.html" />
+  <LinkCard title="Credit Offers" description="Browse offers as any account." href="/offers.html" />
+  <LinkCard title="Credit Deals" description="Track and repay live deals." href="/deals.html" />
+</CardGrid>
+
+## Lifecycle: offer → accept → deal → repay
+
+1. **Offer** — a lender publishes asset, balance, fee rate (chain units: `10000` = 1%), max duration, minimum deal size, accepted collateral (assets + prices), an optional borrower whitelist with per-account caps, and an auto-disable time. Offers can be edited (`delta_amount` is relative) or deleted outright.
+2. **Accept** — a borrower picks an offer, sets amount and collateral (auto-computed from the offer price, blocked when uncovered), chooses an auto-repay mode (none / full-only / allow-partial), and accepts.
+3. **Deal** — the live loan. The borrower repays (`credit_deal_repay`); narrow deal terms like auto-repay can be updated by the borrower.
+4. **End** — repaid in full, or the offer disabled/deleted by the lender when no longer wanted.
+
+## Credit vs margin borrowing
+
+| | Credit (this page) | Margin ([Borrow](/docs/debt/borrow.html)) |
+|---|---|---|
+| Source of funds | A specific lender's balance | Newly minted SmartCoins |
+| Collateral | Terms per offer, priced by lender | Protocol MCR/SQPR rules |
+| Interest | Lender-set fee rate | No interest — but margin-call risk |
+| Counterparty | Named lender | The network |
+
+## Related pages
+
+- [Lend](/docs/debt/lend.html) — publish and manage offers ([open in app](/lend.html)).
+- [Credit Offers](/docs/account/offers.html) ([open in app](/offers.html)).
+- [Credit Deals](/docs/account/deals.html) ([open in app](/deals.html)).
+- [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html) — the alternative ([open in app](/borrow.html)).

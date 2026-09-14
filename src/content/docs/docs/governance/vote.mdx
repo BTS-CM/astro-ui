@@ -43,6 +43,10 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
   Each `votes` entry is a string `"<type>:<id>"`: `0:` committee, `1:` witness, `2:` worker — matching the chain's `vote_id` encoding. The order doesn't matter; `num_witness` / `num_committee` tell the chain how many of the top votes in each category count.
 </Aside>
 
+<Aside type="tip" title="Boost your weight with tickets">
+  Voting weight comes from your stake — and locking BTS into governance [tickets](/docs/governance/create_ticket.html) multiplies it by a lock-duration boost. See where you rank on the [Ticket Leaderboard](/docs/governance/ticket_leaderboard.html).
+</Aside>
+
 ## Operation used
 
 Voting broadcasts `account_update` (operation `6`):
@@ -73,3 +77,5 @@ Voting broadcasts `account_update` (operation `6`):
 - [Witnesses](/docs/governance/witnesses.html)
 - [Committee](/docs/governance/committee.html)
 - [Create Worker](/docs/governance/create_worker.html)
+- [Create Ticket](/docs/governance/create_ticket.html)
+- [Ticket Leaderboard](/docs/governance/ticket_leaderboard.html)

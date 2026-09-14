@@ -31,11 +31,13 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
 
 1. Open **Create SmartCoin** from the homepage under *Asset Creation*.
 
-2. Enter the symbol, precision and `common_options` (same as a UIA).
+2. Enter the symbol, precision and `common_options` (same as a UIA — including the optional **NFT section** for title, artist, narrative, licences and IPFS media, stored in the description JSON).
 
 3. Configure `bitasset_opts`: feed lifetime, minimum feeds, settlement delay/offset/volume, and the short-backing asset.
 
-4. Authorize. The app broadcasts `asset_create` with `bitasset_opts` and `is_prediction_market: false`.
+4. Pick a **Black Swan Risk Management** strategy (`black_swan_response_method` extension): `0` global settlement, `1` no settlement, `2` individual settlement to fund, or `3` individual settlement to order — deciding what happens to debt positions if collateral ever falls short (see [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html)).
+
+5. Authorize. The app broadcasts `asset_create` with `bitasset_opts` and `is_prediction_market: false`.
 
 </Steps>
 
@@ -81,7 +83,9 @@ Creating a new smartcoin emits `asset_create` (operation `10`) with `bitasset_op
     "force_settlement_offset_percent": 0,
     "maximum_force_settlement_volume": 5,
     "short_backing_asset": "1.3.0",
-    "extensions": {}
+    "extensions": {
+      "black_swan_response_method": 0
+    }
   },
   "is_prediction_market": false,
   "extensions": {}
@@ -95,6 +99,7 @@ Creating a new smartcoin emits `asset_create` (operation `10`) with `bitasset_op
 | `minimum_feeds` | Feeds required before the peg is active. |
 | `force_settlement_*` | Rules for holders settling at the feed. |
 | `short_backing_asset` | Collateral asset (`1.3.x`) backing the debt. |
+| `extensions.black_swan_response_method` | `0` global settlement · `1` no settlement · `2` individual settlement to fund · `3` individual settlement to order. |
 | `is_prediction_market` | `false` for a normal smartcoin. |
 
   </TabItem>

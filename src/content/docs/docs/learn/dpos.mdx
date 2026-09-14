@@ -1,0 +1,163 @@
+---
+title: Delegated Proof of Stake (DPOS)
+description: How BitShares DPOS works — witnesses, committee, voting, block production, and finality.
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+BitShares is an open-source, public, blockchain-based real-time financial platform. It provides a decentralized exchange (DEX) and was designed to process tens of thousands of transactions per second.
+
+To achieve this level of performance and scalability, BitShares introduced a novel consensus algorithm created by Daniel Larimer in 2014: **Delegated Proof of Stake (DPOS)**. BitShares was the first blockchain to implement DPOS, paving the way for later networks like Steem, EOS, and Tron.
+
+This page provides an in-depth overview of how DPOS functions within the BitShares ecosystem — and where to see each part live in this app.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Vote" description="Cast your votes for witnesses, committee members and workers." href="/vote.html" />
+  <LinkCard title="Witnesses" description="Browse block producers, missed blocks and total votes." href="/witnesses.html" />
+  <LinkCard title="Committee" description="Browse committee members governing chain parameters." href="/committee.html" />
+  <LinkCard title="Blocks" description="Watch blocks being produced live by witnesses." href="/blocks.html" />
+</CardGrid>
+
+<Aside type="tip" title="Docs for those pages">
+  Each screen has its own guide: [Vote](/docs/governance/vote.html), [Witnesses](/docs/governance/witnesses.html), [Committee](/docs/governance/committee.html), and [Blocks](/docs/blockchain/blocks.html).
+</Aside>
+
+## Core philosophy of DPOS
+
+Traditional Proof of Work (PoW) relies on computational power to secure the network, while standard Proof of Stake (PoS) relies on wealth (coin age or raw stake). Both can suffer from inefficiencies, slow block times, or centralized mining pools.
+
+DPOS functions like a **corporate democracy** or a **republican governance model**:
+
+1. **Shareholders** (BTS token holders) vote for delegates.
+2. **Delegates** (Witnesses, Committee Members, Workers) perform specialized network duties.
+3. **Accountability** is enforced through continuous voting. Bad actors are simply voted out of their positions rather than penalized through cryptographic slashing.
+
+### Why delegation? The rationale
+
+DPOS was designed around a few practical observations:
+
+- **Mining pools are already delegated proof of work.** In PoW networks, most users point their hardware at a handful of large pools, so a small number of pool operators effectively control block production — but without any formal vote or way to fire them. DPOS makes that delegation explicit, electable, and revocable.
+- **Validating has a real cost, so pure "everyone validates" systems centralize anyway.** Every validator pays bandwidth and compute costs for every transaction, which must be covered by fees. If fees only just cover costs, the network can only afford a few validators; spreading fees across thousands of validators means either very high fees or only the largest stakeholders validating profitably. DPOS accepts this and designs the centralization in from the start — as a small, elected, accountable set — instead of letting it emerge unmanaged.
+- **Random selection from all holders doesn't work.** Most random holders are offline at any given moment, attackers would gain influence strictly proportional to stake with no peer review, and generating the randomness itself securely in a decentralized way is an unsolved problem. Election by approval voting sidesteps all three issues.
+
+The design goals follow directly: keep shareholders in control, maximize the network's performance, minimize what the network pays for security, and minimize the cost of running it — while letting anyone campaign for a seat.
+
+## The three pillars of BitShares governance
+
+In BitShares, governance and network operation are separated into three distinct roles to prevent centralization of power:
+
+<CardGrid>
+  <Card title="Witnesses (Block Producers)" icon="eye">
+    Process transactions, group them into blocks, and broadcast them to the network. Elected by BTS holders via approval voting. Paid a fixed fee per block produced.
+  </Card>
+  <Card title="Committee Members" icon="users">
+    The legislative branch. They propose updates to global parameters (transaction fees, block intervals, witness pay, maximum block size). Changes require a majority vote from the active committee.
+  </Card>
+  <Card title="Workers" icon="gavel">
+    Propose development, marketing, or maintenance projects. If approved by BTS holders, they are paid directly from the network's reserve pool.
+  </Card>
+</CardGrid>
+
+The active witness set is dynamic and determined by voters — shareholders decide how many witnesses secure the network by how many they vote for, with a protocol minimum of 11 (often operating around 21 active witnesses).
+
+**See them live:**
+
+- [Witnesses in the app](/witnesses.html) — full producer list with signing account, missed blocks and total votes ([docs](/docs/governance/witnesses.html)).
+- [Committee in the app](/committee.html) — member list with active status and votes ([docs](/docs/governance/committee.html)).
+- [Vote in the app](/vote.html) — cast your witness, committee and worker votes ([docs](/docs/governance/vote.html)).
+
+## How DPOS works
+
+### The voting process (approval & proxy voting)
+
+In BitShares, voting power is strictly proportional to the amount of Core tokens (BTS) an account holds.
+
+- **Approval Voting**: you can vote for as many witnesses or committee members as you want. If you hold 1,000 BTS, you cast 1,000 votes for Witness A, 1,000 votes for Witness B, and so on. There are deliberately no downvotes: upvotes-only approval voting is simpler to use and keeps the chain logic lean. A candidate needs positive approval to serve — withholding your vote *is* the "no" vote.
+- **Proxy Voting**: if you don't have time to research witnesses, you can delegate your voting power to a "Proxy" account. The proxy's votes then carry the combined weight of all accounts delegating to it. Persuading large proxies is therefore one of the main ways new witness candidates earn their seats.
+
+> Voting balances are calculated continuously, but the *active witness set* is only updated at specific network intervals (maintenance intervals) to ensure stability during a block production round.
+
+**Cast your vote:** open [Vote in the app](/vote.html) and follow the [Vote guide](/docs/governance/vote.html).
+
+### Block production schedule
+
+Unlike PoW where miners compete simultaneously to solve a puzzle, DPOS uses a deterministic, round-robin schedule.
+
+1. **Active set selection**: at the maintenance interval, the network tallies the votes and selects the top N witnesses.
+2. **Shuffling**: the list of N witnesses is randomly shuffled.
+3. **Assignment**: each witness is assigned a specific time slot (typically every 3 seconds) to produce a block.
+4. **Execution**: when a witness's time slot arrives, they sign the block with their private key and broadcast it.
+
+```text
+// Conceptual witness schedule queue
+Round 1: [W4, W19, W2, W7, W21 ... W1]
+Round 2: [W7, W1, W19, W4, W21 ... W2]
+```
+
+*The pseudo-random shuffling prevents witnesses from colluding to ignore transactions, as they do not know the exact long-term order of block production.*
+
+**Watch it happen:** open [Blocks in the app](/blocks.html) — each block shows which witness signed it ([docs](/docs/blockchain/blocks.html)).
+
+### Handling missed blocks
+
+If a witness is offline or fails to produce a block in their 3-second window, the block is simply **skipped**.
+
+- The next witness in the queue produces a block in the subsequent 3-second slot.
+- The gap is visible on the blockchain (e.g. Block 100 produced at `T=0`, Block 101 missed at `T=3`, Block 102 produced at `T=6`).
+- **Penalty**: the network does not confiscate the witness's stake (no slashing). The witness simply misses their block reward. Frequent misses usually lead to voters pulling their votes, effectively firing the witness.
+
+You can spot unhealthy witnesses by their missed-block count on the [Witnesses page](/witnesses.html).
+
+### Transaction as Proof of Stake (TaPoS)
+
+One of the most critical security features of BitShares DPOS is TaPoS — introduced in late 2013 as the invention that made delegated, mining-free consensus possible (see [History](/docs/learn/history.html)).
+
+- Every transaction broadcast to the network must include the hash of a recent block header.
+- **Purpose**: this cryptographically proves that the transaction was created on a specific fork of the blockchain.
+- **Security benefit**: it prevents long-range and replay attacks. An attacker cannot secretly mine a parallel chain from a year ago and inject modern transactions into it, because those transactions reference recent block hashes from the legitimate main chain.
+
+## Consensus, forks, and finality
+
+### Longest chain rule
+
+Like Bitcoin, BitShares resolves short-term forks by selecting the longest valid chain. Because blocks are produced deterministically, forks are extremely rare and typically only occur due to network latency (e.g. a network partition temporarily splitting witnesses into two isolated groups).
+
+### Irreversibility / finality
+
+A block in BitShares is considered **irreversible** (finalized) once it has been built upon by a super-majority (e.g. 2/3 + 1) of the active witnesses.
+
+- With 21 witnesses, once 15 unique witnesses have added blocks to a chain, the block is mathematically impossible to revert under standard protocol rules.
+- At a 3-second block time, transaction finality is reliably achieved in approximately **45 to 60 seconds**.
+
+## DPOS advantages & critiques
+
+### Advantages
+
+1. **High throughput**: by limiting block producers to a known, well-connected set of high-performance servers, DPOS is capable of 10,000+ TPS when pushed — routine load runs far below that ceiling.
+2. **Energy efficient**: no massive computational power (hashing) is wasted.
+3. **Self-funding**: the worker proposal system lets the blockchain fund its own development and marketing without relying on external VCs.
+4. **Fast finality**: deterministic block schedules allow for sub-minute finality.
+
+### Critiques
+
+1. **Voter apathy**: if token holders do not actively vote, governance can stagnate.
+2. **Centralization risks**: since voting is wealth-weighted, large token holders (whales) or exchanges hold significant power over who becomes a witness.
+3. **Cartelization**: critics argue top witnesses could theoretically collude to keep their positions, though the threat of being voted out by whales heavily disincentivizes this in practice.
+
+<Aside type="caution" title="Take part">
+  The best counter to voter apathy is to vote yourself — open [Vote](/vote.html), review the [Witnesses](/witnesses.html) and [Committee](/committee.html) lists, and keep your votes up to date.
+</Aside>
+
+## Related pages
+
+- [Vote](/docs/governance/vote.html) — cast witness, committee and worker votes ([open in app](/vote.html)).
+- [Witnesses](/docs/governance/witnesses.html) — browse block producers ([open in app](/witnesses.html)).
+- [Committee](/docs/governance/committee.html) — browse committee members ([open in app](/committee.html)).
+- [Blocks](/docs/blockchain/blocks.html) — watch live block production ([open in app](/blocks.html)).
+- [Governance registration](/docs/governance/governance.html) — register as a witness or committee member ([open in app](/governance.html)).
+- [What is BitShares?](/docs/learn/what-is-bitshares.html) — the broader platform TaPoS and DPOS secure.
+- [History](/docs/learn/history.html) — how DPOS and TaPoS came to be.

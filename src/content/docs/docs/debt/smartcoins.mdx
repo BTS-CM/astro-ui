@@ -43,7 +43,44 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
   This browser emits **no operations**. Creating or updating a smartcoin's feed/parameters happens elsewhere; borrowing against one uses `call_order_update` from the smartcoin detail page.
 </Aside>
 
+## Publishing price feeds
+
+SmartCoins track their peg through **price feeds** published by authorized feed producers (typically witnesses). If you are a feed producer for an asset, the **Publish Feed** screen (`/publish_feed.html?asset=1.3.x`) pre-fills the current/median feed and lets you submit an update: settlement price, maintenance collateral ratio (MCR), short-squeeze ratio (MSSR), and core exchange rate.
+
+Publishing broadcasts `asset_publish_feed`:
+
+```json
+{
+  "publisher": "1.2.x",
+  "asset_id": "1.3.x",
+  "feed": {
+    "settlement_price": {
+      "base": { "amount": 100000, "asset_id": "1.3.x" },
+      "quote": { "amount": 30000000, "asset_id": "1.3.0" }
+    },
+    "maintenance_collateral_ratio": 1750,
+    "maximum_short_squeeze_ratio": 1100,
+    "core_exchange_rate": {
+      "base": { "amount": 100000, "asset_id": "1.3.x" },
+      "quote": { "amount": 30000000, "asset_id": "1.3.0" }
+    }
+  },
+  "extensions": {}
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `publisher` | Your account — must be an authorized feed producer for the asset. |
+| `asset_id` | The smartcoin being fed (`1.3.x`). |
+| `feed.settlement_price` | Fair price (base = asset, quote = collateral). |
+| `maintenance_collateral_ratio` | MCR × 10 (e.g. `1750` = 175%). |
+| `maximum_short_squeeze_ratio` | MSSR × 10 (e.g. `1100` = 110%). |
+
 ## Related pages
 
 - [Borrow](/docs/debt/borrow.html)
+- [Bid on settlement](/docs/debt/settlement_bids.html)
 - [Lend](/docs/debt/lend.html)
+- [Assets & Tokens](/docs/learn/assets.html)
+- [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html)

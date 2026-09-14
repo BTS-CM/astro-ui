@@ -1,0 +1,71 @@
+---
+title: Governance Roles
+description: Who runs BitShares — witnesses, committee members, workers, marketers, and BTS holders — and how they answer to voters.
+sidebar:
+  order: 6
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+BitShares separates responsibilities so different skills get different incentives — and every paid role answers to the people holding BTS. This page introduces the five roles and how they check each other. The consensus mechanics behind them live on the [DPOS page](/docs/learn/dpos.html); worker funding has its own guide at [Workers & Funding](/docs/learn/workers.html).
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Vote" description="Elect witnesses, committee members, and workers." href="/vote.html" />
+  <LinkCard title="Witnesses" description="Browse block producers and their reliability." href="/witnesses.html" />
+  <LinkCard title="Committee" description="Browse committee members and their standing." href="/committee.html" />
+  <LinkCard title="Become a candidate" description="Register as a witness or committee member." href="/governance.html" />
+</CardGrid>
+
+## The five roles
+
+<CardGrid>
+  <Card title="Witnesses" icon="eye">
+    Paid maintainers of the network's backbone. They collect transactions, bundle them into blocks, sign, and broadcast. Paid per block from the reserve pool at a rate voters approve.
+  </Card>
+  <Card title="Committee members" icon="users">
+    Unpaid volunteers who organize the community and propose chain parameters — fees, block size and interval, expirations, witness pay, witness and committee counts, worker budget. BTS holders approve the committee that approves the parameters.
+  </Card>
+  <Card title="Workers" icon="gavel">
+    Anyone with a proposal: development, marketing, infrastructure, meetups. Publish it on-chain; if voters rank it high enough it gets paid from the reserve pool. See [Workers & Funding](/docs/learn/workers.html).
+  </Card>
+  <Card title="Marketers" icon="rocket">
+    Growth drivers paid through referral fees when the users they bring in transact.
+  </Card>
+  <Card title="BTS holders" icon="star">
+    Everyone holding the core token. BTS is equity in the DAC: volatile like any equity, usable as collateral, and above all carrying the vote that hires and fires everyone above.
+  </Card>
+</CardGrid>
+
+All of the above except marketers operate through approval voting — sufficient stakeholder approval is what seats witnesses and committee members and pays workers.
+
+## What the committee actually governs
+
+Bitcoin famously struggled to reach consensus on something as basic as block size. BitShares answers that with explicit on-chain business management: a set of chain parameters subject to holder approval. Holders express their preferred parameters by voting for committee members who share them. The parameter families include:
+
+- **Fee structure** — what each kind of transaction costs (view them live on the [Network Fees page](/network_fees.html)).
+- **Block production** — block interval, maximum block and transaction sizes, maintenance intervals.
+- **Expiration parameters** — e.g. maximum transaction lifetime, and the review period committee proposals must sit before passing.
+- **Witness parameters** — how many block producers, and their per-block pay.
+- **Committee parameters** — how many committee members.
+- **Worker budget** — how much of the reserve pool is spendable per day.
+- **Vesting and operational knobs** — cashback/vesting periods, force-settlement caps, registrar economics.
+
+The exact parameter set evolves with the protocol — treat this list as categories. Committee members stage changes as proposals ([Committee Parameters](/docs/governance/committee_parameters.html)): they pass after a review period and take effect at chain maintenance, never instantly — so check the [Committee page](/committee.html) for today's values rather than memorizing any number here.
+
+<Aside type="note" title="Businesses compete for seats">
+  If your business needs particular parameters or fees to be profitable, the paths are: persuade holders to elect sympathetic committee members, get elected yourself by showing the business deserves its place, or ship the idea as a protocol feature funded through a fee-backed asset (see [Assets](/docs/learn/assets.html)).
+</Aside>
+
+## Protocol upgrades
+
+Any active witness can propose a protocol or business upgrade (a hard fork), which holders effectively vote on. Upgrades take effect once support exceeds the median witness weight — holders always have the final say, so no single entity can change the deal retroactively.
+
+## Related pages
+
+- [Delegated Proof of Stake](/docs/learn/dpos.html) — the voting and block-production mechanics ([open in app](/vote.html)).
+- [Workers & Funding](/docs/learn/workers.html) — how proposals get paid ([open in app](/create_worker.html)).
+- [Vote](/docs/governance/vote.html) — cast your votes ([open in app](/vote.html)).
+- [Witnesses](/docs/governance/witnesses.html) — producer directory ([open in app](/witnesses.html)).
+- [Committee](/docs/governance/committee.html) — member directory ([open in app](/committee.html)).

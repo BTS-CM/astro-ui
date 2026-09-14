@@ -2,7 +2,7 @@
 title: Barter
 description: Propose peer-to-peer asset trades using proposal_create wrapping transfer operations, with optional escrow.
 sidebar:
-  order: 5
+  order: 3
 ---
 
 import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
@@ -33,7 +33,7 @@ import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
 
 2. Add the lines you will give and the lines you want to receive (asset + amount + counterparty account).
 
-3. Optionally enable **escrow** and pick an escrow account; a small BTS escrow fee is added.
+3. Optionally enable **escrow** and pick an escrow account; a small BTS escrow fee is added. Then choose which leg moves first: **your leg first** (your assets go to escrow, theirs come straight to you, escrow pays the proposal fee) or **counterparty first** (their assets go to escrow, yours go straight to them plus a 1-satoshi escrow→you placeholder, counterparty pays the fee). Only one leg routes through escrow at a time.
 
 4. Submit. The app wraps your transfers in a `proposal_create` with a 7-day expiration and a 1-hour review period.
 

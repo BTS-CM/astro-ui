@@ -10,20 +10,21 @@ import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 The **Settings** section covers account-level actions and local app configuration.
 
 <CardGrid>
-  <LinkCard title="Account Lists" description="On-chain whitelist/blacklist (account_whitelist)." href="/docs/settings/account_lists/" />
   <LinkCard title="Blocked Users" description="Local mute list (no broadcast)." href="/docs/settings/blocked-users/" />
   <LinkCard title="Lifetime Membership" description="Upgrade to LTM (account_upgrade)." href="/docs/settings/ltm/" />
   <LinkCard title="Nodes" description="Configure API nodes (local)." href="/docs/settings/nodes/" />
   <LinkCard title="Create Account" description="Register an account (account_create)." href="/docs/settings/create_account/" />
+  <LinkCard title="Change Password" description="Rotate owner/active/memo keys (account_update)." href="/docs/settings/change_password/" />
   <LinkCard title="Configure Visuals" description="Background & IPFS settings (local)." href="/docs/settings/visuals/" />
   <LinkCard title="Theme Customizer" description="Build custom themes (local)." href="/docs/settings/theme/" />
   <LinkCard title="Per-Page Themes" description="Assign themes per page (local)." href="/docs/settings/page_themes/" />
+  <LinkCard title="Broadcasting with Beet" description="Review dialog and broadcast methods (no broadcast itself)." href="/docs/settings/broadcasting/" />
 </CardGrid>
 
 ## Operations broadcast by this section
 
-- `account_whitelist` — manage whitelist/blacklist membership.
 - `account_upgrade` — upgrade to Lifetime Member.
 - `account_create` — register a new account (LTM method).
+- `account_update` — rotate account keys (Change Password).
 
-`Blocked Users`, `Nodes`, `Configure Visuals`, `Theme Customizer` and `Per-Page Themes` are local-only and never broadcast.
+`Blocked Users`, `Nodes`, `Configure Visuals`, `Theme Customizer` and `Per-Page Themes` are local-only and never broadcast. On-chain whitelist/blacklist management lives under [Account Overviews](/docs/account/account_lists.html).

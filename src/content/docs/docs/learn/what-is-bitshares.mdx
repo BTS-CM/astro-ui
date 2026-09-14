@@ -1,0 +1,63 @@
+---
+title: What is BitShares?
+description: The BitShares platform at a glance — DACs, consensus, the DEX, and how the pieces fit together.
+sidebar:
+  order: 2
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+BitShares is a technology for finding free-market solutions through globally decentralized consensus and decision-making. If Bitcoin did for money what the internet did for information, BitShares aims to do the same for business: banking, exchanges, prediction markets, voting, and more — run as **Distributed Autonomous Companies (DACs)** that operate under incorruptible business rules encoded in open-source software, distributed across the computers of their shareholders.
+
+This page is the big picture. Deeper guides cover each piece: [DPOS](/docs/learn/dpos.html), [Assets](/docs/learn/assets.html), the [DEX](/docs/learn/dex.html), [Governance Roles](/docs/learn/governance-roles.html), and [History](/docs/learn/history.html).
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="DEX" description="Trade on the built-in decentralized exchange." href="/dex.html" />
+  <LinkCard title="Top Markets" description="See the busiest markets on the chain right now." href="/top-markets.html" />
+  <LinkCard title="Blocks" description="Watch the chain produce blocks in real time." href="/blocks.html" />
+</CardGrid>
+
+## The core idea
+
+Bitcoin's breakthrough was a cryptographically secured public ledger that moves value directly between people — no middleman acting as trusted fiduciary. BitShares extends that breakthrough from payments to whole industries: any service that relies on the internet can be rebuilt as a DAC.
+
+A **Distributed Autonomous Company** runs without human management under a set of business rules that anyone can audit. You become a stakeholder by holding its token or earning it for services. That stake can entitle you to a share of profits, participation in growth, and a say in how the company is run — enforced by software, not by trusting a board behind closed doors.
+
+## What makes BitShares different
+
+<CardGrid>
+  <Card title="Consensus, not mining" icon="zap">
+    Secured by Delegated Proof of Stake: elected witnesses produce blocks every few seconds instead of burning energy on puzzles. See [DPOS](/docs/learn/dpos.html).
+  </Card>
+  <Card title="A built-in exchange" icon="swap">
+    Trading isn't a smart contract bolted on later — order matching is part of the protocol. See [DEX Concepts](/docs/learn/dex.html).
+  </Card>
+  <Card title="Assets, not just coins" icon="coins">
+    Anyone can issue tokens, borrow price-stable SmartCoins against collateral, or run prediction markets. See [Assets](/docs/learn/assets.html).
+  </Card>
+  <Card title="On-chain governance" icon="users">
+    Stakeholders elect block producers, set chain parameters through a committee, and fund workers from a reserve pool. See [Governance Roles](/docs/learn/governance-roles.html).
+  </Card>
+</CardGrid>
+
+## Things worth knowing up front
+
+- **You control your funds.** No one can access them unless you let them — intentionally or accidentally. That independence comes with responsibility for your own keys and permissions (see [Accounts](/docs/learn/accounts.html)).
+- **Transactions settle in seconds** and are irreversible once confirmed by a supermajority of witnesses — typically under a minute (see [DPOS finality](/docs/learn/dpos.html)).
+- **Everything is public by default.** Account activity lives on an open ledger. The chain offers blinded transfers that hide amounts for users who need financial privacy.
+- **Holding BTS makes you a stakeholder.** Buy it on the DEX or bring it from elsewhere and you can vote on the network's direction, earn a say in fee policy, and approve the workers your stake pays for.
+- **The rules can evolve.** Protocol upgrades are decided through on-chain governance rather than back-room deals, so the business can adapt over time.
+
+<Aside type="tip" title="New to the app?">
+  Start with the screen guides: [DEX](/docs/exchanging/dex.html) for trading, [Borrow](/docs/debt/borrow.html) for collateralized debt, and [Vote](/docs/governance/vote.html) for governance.
+</Aside>
+
+## Related pages
+
+- [Delegated Proof of Stake](/docs/learn/dpos.html) — how consensus works ([open in app](/blocks.html)).
+- [Assets & Tokens](/docs/learn/assets.html) — what you can hold and trade.
+- [DEX Concepts](/docs/learn/dex.html) — how the exchange works ([open in app](/dex.html)).
+- [Accounts, Permissions & Memos](/docs/learn/accounts.html) — identities, authorities, and privacy.
+- [History](/docs/learn/history.html) — where BitShares came from.

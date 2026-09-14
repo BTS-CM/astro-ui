@@ -1,0 +1,76 @@
+---
+title: Workers & Funding
+description: How BitShares pays for itself — the reserve pool, worker proposals, ranked payouts, and refund/burn/polling workers.
+sidebar:
+  order: 7
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+BitShares is designed to be self-funding and self-sustaining: stakeholders direct where the blockchain's reserves are spent, paying for development, maintenance, marketing, and ecosystem growth without outside investors. The instrument is the **worker proposal** — the catch-all role for anyone with an idea that improves the network.
+
+Have a BitShares-related project? **Make your case to the blockchain and get paid for it.** Worker proposals fund all kinds — championing a cause, running a marketing or market-making strategy, building features, or operating extra infrastructure for the network. If it makes BitShares stronger, the network itself can be your client.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Create Worker" description="Publish a worker proposal on-chain." href="/create_worker.html" />
+  <LinkCard title="Vote" description="Vote worker proposals up or down." href="/vote.html" />
+  <LinkCard title="Ticket Leaderboard" description="Find the accounts holding the most voting power." href="/ticket_leaderboard.html" />
+</CardGrid>
+
+<Aside type="tip" title="Docs for those pages">
+  Screen guides: [Create Worker](/docs/governance/create_worker.html) and [Vote](/docs/governance/vote.html).
+</Aside>
+
+## Where the money comes from
+
+Transaction fees flow into a **reserve pool** — a non-liquid balance owned by the chain itself. A blockchain parameter (set through the [committee](/docs/learn/governance-roles.html)) caps how much of it is spendable per day. Workers are paid out of that daily budget, which means worker pay mints previously illiquid BTS into circulation — so payouts **vest over time** rather than landing all at once.
+
+## How the daily budget is split
+
+Funding is a ranked competition, recomputed continuously from holder approval:
+
+1. The day's budget leaves the reserve pool.
+2. Worker proposals are sorted by approval (for-votes minus against-votes), highest first.
+3. Starting at the top, each worker receives its requested daily pay until the budget runs out.
+4. The last funded worker may receive a partial day's pay.
+
+The lesson for proposers: being liked is not enough — your approval must rank above the cutoff. Campaign for votes on the [Vote page](/vote.html) just as witnesses do.
+
+### The bar to beat: refund workers
+
+There is one more hurdle, and it is deliberate. The ballot always includes **refund workers** — notably `refund400k` plus several `refund100k` proposals — that return their pay to the reserves instead of spending it. They act as **safety blockers**: your proposal only gets funded if holders want it *more* than they want the money saved. To get paid, you must outrank them. Check the live standings on the [Vote page](/vote.html) before publishing, so you know exactly how much approval you need.
+
+## Making your case
+
+A worker proposal is a pitch. Publish it on-chain with its dates, daily pay, name, and a link laying out the work — then go win the argument:
+
+- **Prove yourself first.** Proposals from unknown accounts rarely pass. Complete some voluntary pro-bono work up front — a fix, a report, a trial campaign — so network participants have evidence of what you can do before they vote to pay you.
+- **Appeal to the powerful directly.** Voting is stake-weighted, so a few large holders decide most outcomes. The [Ticket Leaderboard](/ticket_leaderboard.html) ([guide](/docs/governance/ticket_leaderboard.html)) shows exactly who holds the most governance power — take your case to them.
+- **Build your own weight.** You can lock BTS into vote-lock [tickets](/docs/governance/create_ticket.html) ([open in app](/create_ticket.html)) to multiply your own voting power, making your proposal harder to ignore and your support of allies' proposals worth more.
+
+## Publishing a proposal
+
+A worker proposal published on-chain states when the work starts and ends, the daily pay in BTS, the worker's name, and a link describing the work. On top of that, the proposer picks one pay destination:
+
+- **Vesting** — pay to the worker's account (the normal case).
+- **Refund** — return the pay to the reserve pool for future projects.
+- **Burn** — destroy the pay, shrinking BTS supply (the equivalent of a company buying back its own stock).
+
+## The three pseudo-workers
+
+Not every worker exists to draw a salary. Three special patterns use the worker mechanism itself as a governance tool:
+
+- **Polling workers** — ask holders a yes/no question (a proposal or recommendation). Little or no pay; the vote distribution is the product.
+- **Refund workers** — set a spending cap. A top-ranked refund worker requesting the entire daily budget returns everything to reserves, so nothing else gets paid unless it outranks the refund worker — a holder-controlled emergency brake on spending.
+- **Burn workers** — like refund workers, but destroy the budget instead of returning it, for holders who prefer supply reduction to savings.
+
+## Related pages
+
+- [Governance Roles](/docs/learn/governance-roles.html) — where workers fit ([open in app](/vote.html)).
+- [Create Worker](/docs/governance/create_worker.html) — publish a proposal ([open in app](/create_worker.html)).
+- [Vote](/docs/governance/vote.html) — rank proposals ([open in app](/vote.html)).
+- [Create Ticket](/docs/governance/create_ticket.html) — lock BTS to build voting power ([open in app](/create_ticket.html)).
+- [Ticket Leaderboard](/docs/governance/ticket_leaderboard.html) — find the power holders ([open in app](/ticket_leaderboard.html)).
+- [Delegated Proof of Stake](/docs/learn/dpos.html) — the approval voting behind it all.

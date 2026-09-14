@@ -1,0 +1,40 @@
+---
+title: Private Transfers Concepts
+description: How blind transfers hide amounts — commitments, the three flows, and record-keeping risks.
+sidebar:
+  order: 17
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+Most BitShares activity is public by design. **Blind transfers** are the exception: cryptographic commitments conceal the amounts (and asset movements) so third parties cannot trace value by blockchain analysis alone.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Blind Transfers" description="Move value confidentially." href="/blind_transfers.html" />
+</CardGrid>
+
+<Aside type="tip" title="Screen guide">
+  Operations and flows: [Blind Transfers](/docs/transfer/blind_transfers.html).
+</Aside>
+
+## The three flows
+
+Confidential value lives in *commitments* rather than balances, and moves through three operations:
+
+1. **To blind** (`transfer_to_blind`) — lock public funds into a commitment. This is the on-ramp from ordinary balances.
+2. **Blind transfer** (`blind_transfer`) — move value between commitments with amounts hidden. No account history reveals the sums.
+3. **From blind** (`transfer_from_blind`) — redeem a commitment back into an ordinary public balance. This is the off-ramp — and the point where privacy ends, since the destination balance is public again.
+
+Privacy holds only while value stays inside commitments *and* is never reused in linkable ways: when privacy matters, never reuse a blinded account, and remember the on/off ramps are visible.
+
+## Record-keeping warning
+
+There is no password recovery for lost blinding factors — only you hold the data needed to spend a commitment. Lose your local records and the funds are unspendable, with no support desk able to help. Back up before moving significant value, and treat the feature as advanced tooling rather than everyday payments.
+
+## Related pages
+
+- [Blind Transfers](/docs/transfer/blind_transfers.html) ([open in app](/blind_transfers.html)).
+- [Transfer](/docs/transfer/transfer.html) — ordinary public sends ([open in app](/transfer.html)).
+- [Accounts, Permissions & Memos](/docs/learn/accounts.html) — memo-key privacy for regular transfers.

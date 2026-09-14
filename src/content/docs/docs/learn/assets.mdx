@@ -1,0 +1,121 @@
+---
+title: Assets & Tokens
+description: The six asset types on BitShares — UIAs, SmartCoins, privatized assets, IOUs, fee-backed assets, and prediction markets.
+sidebar:
+  order: 3
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+Almost anything of value can be represented as a blockchain token on BitShares — and every token trades on the same [DEX](/docs/learn/dex.html). There are six asset types, each with a different backing and control model. Understanding which is which tells you who guarantees its value and what you can do with it. Orthogonally, **any** of these assets can carry [NFT metadata](#nft-features-on-any-asset) — title, artist, licences, IPFS media — via an opt-in section on the creation screens.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Create UIA" description="Issue your own user-issued token." href="/create_uia.html" />
+  <LinkCard title="Create SmartCoin" description="Launch a market-pegged asset." href="/create_smartcoin.html" />
+  <LinkCard title="Borrow" description="Borrow SmartCoins against collateral." href="/borrow.html" />
+  <LinkCard title="SmartCoins" description="Explore SmartCoin positions and parameters." href="/smartcoins.html" />
+</CardGrid>
+
+## The six asset types
+
+<CardGrid>
+  <Card title="User-Issued Assets (UIAs)" icon="coins">
+    Freely created tokens for anything imaginable — event tickets, reward points, crowdfunding shares, company stock. The issuer controls supply and can set permissions.
+  </Card>
+  <Card title="Market-Pegged Assets (SmartCoins)" icon="chart">
+    Track an underlying asset (USD, EUR, GOLD) through collateralized contracts-for-difference, with no issuer controlling supply. Always backed by 100%+ collateral.
+  </Card>
+  <Card title="Privatized BitAssets" icon="setting">
+    Entrepreneur-run SmartCoins with custom collateral rules, feeds, and settlement terms. The manager earns trading fees for running a good asset.
+  </Card>
+  <Card title="Exchange-Backed Assets (IOUs)" icon="document">
+    Deposit receipts issued by a centralized entity (exchange, bank) redeemable for the backing asset. Trust sits with the issuer.
+  </Card>
+  <Card title="Fee-Backed Assets (FBAs)" icon="gavel">
+    Kickstarter-for-features tokens: fund a protocol feature and earn a cut of the future fees it generates.
+  </Card>
+  <Card title="Prediction Markets" icon="eye">
+    Binary-outcome assets trading between 0 and 1, settled globally by the issuer once the predicted event resolves.
+  </Card>
+</CardGrid>
+
+## User-Issued Assets (UIAs)
+
+Anyone can create a UIA in seconds: pick a symbol, maximum supply, and precision, and the token exists. From then on you can issue it to anyone, and it instantly trades against every other asset on the DEX.
+
+Issuers get privileges — and responsibilities. You can restrict trading to certain pairs, whitelist who may hold the token (useful for staying compliant with regulations in your jurisdiction), charge market fees, or approve transfers. You can also permanently opt out of these powers to earn trust. The tradeoff of the model is centralized issuance: one party controls new supply, optionally restrained in future by issuing from a multi-signature account so no single person can print alone (chain-supported, but not yet signable with Beet — see [Multi-Signature](/docs/learn/multisig.html)).
+
+Typical uses: reward points, fan credits, flight miles, event tickets, digital property, crowdfunding, company shares.
+
+**Create one:** [Create UIA in the app](/create_uia.html) — see the [Create UIA guide](/docs/asset-creation/create_uia.html) for the operation it broadcasts.
+
+## Market-Pegged Assets (SmartCoins)
+
+SmartCoins solve the opposite problem: a token whose supply *nobody* controls, yet whose value tracks something real. Instead of an issuer printing supply, the blockchain protocol expands and shrinks supply through collateralized borrowing:
+
+1. Lock collateral (e.g. BTS) worth well over 100% of what you borrow into a smart contract (a contract-for-difference).
+2. New SmartCoins are minted against it — supply grows.
+3. Return the SmartCoins later to reclaim your collateral — the returned coins are destroyed, so supply shrinks.
+
+Because every coin is always backed by more collateral than its face value, and because any holder can **settle** — convert the coin into backing collateral at a fair price — a SmartCoin is always worth *at least* its peg. A network of price feeds (the settlement price) tells the chain the fair value and triggers margin calls on under-collateralized positions.
+
+The best-known SmartCoins are committee-owned and labeled by their peg: USD, CNY, EUR, GOLD, Silver. In the wallet they appear under those short names because they represent the same value as the underlying.
+
+**Go deeper:** [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html) explains collateral ratios, margin calls, and settlement. **Act:** [Borrow in the app](/borrow.html) ([guide](/docs/debt/borrow.html)).
+
+## Privatized BitAssets
+
+Privatized BitAssets let entrepreneurs run their *own* SmartCoins with custom parameters: different collateral requirements, their own set of price-feed publishers (no stakeholder approval needed), custom settlement delays and fees. Managers earn the trading fees on their asset, so discovering and marketing the best parameter set is a real business — including tuning settlement terms so the asset hugs exactly $1.00 rather than floating slightly above it, or building prediction markets with guaranteed settlement only at the resolution date.
+
+**Launch one:** [Create SmartCoin in the app](/create_smartcoin.html) ([guide](/docs/asset-creation/create_smartcoin.html)).
+
+## Exchange-Backed Assets (IOUs)
+
+An exchange-backed asset is a deposit receipt: a centralized entity (exchange, bank, gateway) issues a blockchain token when you deposit the native asset with them, and destroys it when you withdraw. On-chain they work exactly like UIAs — the difference is the promise behind them. They trade on the DEX like anything else, but redeeming them means trusting the issuer to honor the deposit.
+
+**Example:** deposit BTC with a gateway, receive an IOU token, trade it freely, send it back to the gateway later to reclaim native BTC (minus fees).
+
+<Aside type="note" title="Bridges vs gateways">
+  Services moving outside value onto the chain come in two flavors. A **gateway** issues the IOUs above — you trust the operator to stay solvent until you redeem. A **bridge** instead swaps your deposit directly into SmartCoins: counterparty-free tokens, so your only exposure is the brief window while the swap completes.
+</Aside>
+
+## Fee-Backed Assets (FBAs)
+
+Fee-backed assets fund protocol innovation the way Kickstarter funds products. If a feature needs a new kind of on-chain transaction, a developer can implement it and fund the work with an FBA — a token that pays holders a share of the future fees that feature generates. Back the winners and you profit from the features the ecosystem actually uses. (Proposed in BSIP-0007.)
+
+## Prediction Markets
+
+A prediction market is a specialized asset where total debt always equals total collateral — no margin calls, no forced settlements along the way. It trades between 0 and 1, representing the market's estimated probability, and the issuer globally settles it at 0 or 1 once the event resolves.
+
+- **Betting YES:** buy the token below 1 (say 0.8 for an 80% conviction). If the event happens, settle at 1 and keep the difference.
+- **Betting NO:** borrow the token at 1:1 collateral and sell it (say at 0.2). If the event doesn't happen, your debt is worth 0 — reclaim your collateral and keep the sale proceeds.
+
+<Aside type="note" title="Daily settlement limits">
+  Forced settlement of SmartCoin positions may be rate-limited (a maximum daily settlement volume set by the committee) to blunt manipulation via sudden external price moves. Check the [SmartCoins page](/smartcoins.html) for current terms.
+</Aside>
+
+## NFT features on any asset
+
+NFT support on BitShares is not a separate asset type — it is an **opt-in metadata layer any asset can carry**, UIA or SmartCoin alike. Flip the NFT toggle on the creation screen and the asset's on-chain description gains a structured `nft_object` with:
+
+- **Title, artist, narrative** — what the work is, who made it, and the story behind it.
+- **Type and tags** — a type string like `NFT/ART/VISUAL` (audio, video, 3D, text and more follow the same pattern) plus searchable keywords.
+- **Attestation** — the creator's statement committing the work to that asset id and declaring its uniqueness (including intent on re-issues or other chains).
+- **Licences** — a media licence for the artwork (e.g. a Creative Commons identifier) and an optional holder licence granting token holders extra rights, such as printing physical copies or collecting commercial royalties.
+- **Acknowledgements** — credits for collaborators.
+- **IPFS media** — a list of attached media files referenced by content identifier, so galleries and explorers can render the work.
+
+Because the metadata lives in the asset's description JSON on-chain, it travels with the token wherever it trades — no sidecar server required.
+
+**Add it:** enable the NFT section on [Create UIA in the app](/create_uia.html) ([guide](/docs/asset-creation/create_uia.html)) or [Create SmartCoin in the app](/create_smartcoin.html) ([guide](/docs/asset-creation/create_smartcoin.html)).
+
+## Related pages
+
+- [Borrowing, Shorting & Margin Calls](/docs/learn/margin.html) — the mechanics behind SmartCoins ([open in app](/borrow.html)).
+- [Create UIA](/docs/asset-creation/create_uia.html) — issue a token ([open in app](/create_uia.html)).
+- [Create SmartCoin](/docs/asset-creation/create_smartcoin.html) — launch a pegged asset ([open in app](/create_smartcoin.html)).
+- [SmartCoins](/docs/debt/smartcoins.html) — positions and parameters ([open in app](/smartcoins.html)).
+- [DEX Concepts](/docs/learn/dex.html) — where all these assets trade ([open in app](/dex.html)).
+- [Issued Assets](/docs/asset-creation/issued_assets.html) — inspect any account's creations ([open in app](/issued_assets.html)).

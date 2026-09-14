@@ -1,0 +1,44 @@
+---
+title: Network Fees
+description: Browse the live on-chain fee schedule for every operation type (read-only).
+sidebar:
+  order: 4
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+**Network Fees** lists the current fee schedule operation by operation — base fees plus per-parameter prices (`price_per_kbyte`, basic vs premium name fees, 3/4/long symbol fees, membership fees). It's the live answer to "what does this action cost", read straight from the chain. Nothing here broadcasts.
+
+**Open in the app:** [Network Fees](/network_fees.html).
+
+## What it does
+
+<CardGrid>
+  <Card title="Full schedule" icon="receipt">
+    Every operation type with its fee parameters.
+  </Card>
+  <Card title="Live values" icon="zap">
+    Read from the chain, so committee changes show up.
+  </Card>
+  <Card title="Read-only" icon="eye">
+    Nothing here broadcasts.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Network Fees** from the homepage under *Blockchain Overviews*.
+
+2. Find your operation type and read its base fee plus extras (per-KB, per-output, per-day where applicable).
+
+3. Compare membership tiers — LTM rebates change the effective price (see below).
+
+</Steps>
+
+## Related pages
+
+- [Fees, Membership & Rewards](/docs/learn/fees.html)
+- [Lifetime Membership](/docs/settings/ltm.html)
+- [Blocks](/docs/blockchain/blocks.html)

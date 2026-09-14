@@ -1,0 +1,75 @@
+---
+title: Committee Parameters
+description: Review and propose global chain parameters via committee proposal (committee_member_update_global_parameters).
+sidebar:
+  order: 8
+---
+
+import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
+
+**Committee Parameters** lets you review the chain's global parameters — fees, block sizes, timing, vesting, budgets — and, if you're an active committee member, stage a new parameter set as a committee proposal for approval. Changes never apply instantly: they travel inside a proposal with a review period and take effect at chain maintenance once approved.
+
+**Open in the app:** [Committee Parameters](/committee_parameters.html).
+
+## What it does
+
+<CardGrid>
+  <Card title="Review" icon="eye">
+    Browse every global parameter grouped by section.
+  </Card>
+  <Card title="Propose" icon="file">
+    Active committee members can stage a new parameter set.
+  </Card>
+  <Card title="Guardrails" icon="shield">
+    Typed inputs with range checks plus cross-parameter validation.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Committee Parameters** from the homepage under *Governance*.
+
+2. Browse the current parameter set by section (fees, timing, limits, budgets).
+
+3. As an active committee member, edit values — the app validates types, ranges and cross-parameter rules (e.g. proposal lifetime vs review period).
+
+4. Authorize. The app wraps `committee_member_update_global_parameters` in a committee proposal; it takes effect at maintenance once approved — never immediately.
+
+</Steps>
+
+<Aside type="note" title="Members only">
+  Staging a proposal requires your account to be an active committee member. Everyone else gets a read-only view — cast your influence via [Vote](/docs/governance/vote.html) instead.
+</Aside>
+
+## Operation used
+
+Proposals carry `committee_member_update_global_parameters` with the full new parameter set:
+
+```json
+{
+  "new_parameters": {
+    "current_fees": {},
+    "block_interval": 3,
+    "maintenance_interval": 86400,
+    "committee_proposal_review_period": 1209600,
+    "maximum_proposal_lifetime": 2419200
+  }
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `new_parameters` | Complete replacement global parameter set. |
+| `committee_proposal_review_period` | Minimum review before the proposal can pass. |
+| `maximum_proposal_lifetime` | Longest a proposal may stay open. |
+
+Values above are illustrative — the page always starts from the live chain parameters.
+
+## Related pages
+
+- [Committee](/docs/governance/committee.html)
+- [Vote](/docs/governance/vote.html)
+- [Governance Roles](/docs/learn/governance-roles.html)
+- [Network Fees](/docs/blockchain/network_fees.html)

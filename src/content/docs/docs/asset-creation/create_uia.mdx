@@ -33,16 +33,22 @@ import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/
 
 2. Enter the symbol, precision and description, and supply caps.
 
-3. Configure market fee percent, max market fee, issuer permissions and flags (transferable, marketable, etc.).
+3. Optionally enable the **NFT section** to attach NFT metadata (title, artist, narrative, tags, type, attestation, licences, IPFS media) — stored inside the description JSON (see below).
 
-4. Optionally set whitelist/blacklist authorities and markets, plus a core exchange rate.
+4. Configure market fee percent, max market fee, issuer permissions and flags (transferable, marketable, etc.).
 
-5. Authorize. The app broadcasts `asset_create`.
+5. Optionally set whitelist/blacklist authorities and markets, plus a core exchange rate.
+
+6. Authorize. The app broadcasts `asset_create`.
 
 </Steps>
 
 <Aside type="note" title="Lifetime member">
   On BitShares, issuing assets generally requires **Lifetime Member (LTM)** status. Upgrade first via [Lifetime Membership](/docs/settings/ltm.html) if you see a permission error.
+</Aside>
+
+<Aside type="tip" title="NFT metadata lives in the description">
+  With the NFT toggle on, the `description` field carries an `nft_object` alongside the main text — e.g. `{"main":"...","short_name":"...","market":"...","nft_object":{"title":"...","artist":"...","narrative":"...","tags":"...","type":"NFT/ART/VISUAL","attestation":"...","acknowledgements":"...","holder_license":"...","license":"...","media":[...]}}`. Any asset — UIA or SmartCoin — can carry this. See [Assets & Tokens](/docs/learn/assets.html).
 </Aside>
 
 ## Operations used
@@ -130,5 +136,5 @@ Editing an existing UIA emits `asset_update` (operation `11`) with a `new_option
 ## Related pages
 
 - [Create SmartCoin](/docs/asset-creation/create_smartcoin.html)
-- [Issued Assets](/docs/account/issued_assets.html)
+- [Issued Assets](/docs/asset-creation/issued_assets.html)
 - [Lifetime Membership](/docs/settings/ltm.html)

@@ -1,0 +1,69 @@
+---
+title: Accounts, Permissions & Memos
+description: How BitShares identity works — named accounts, object IDs, authorities, multisig, memos, and the node/wallet split.
+sidebar:
+  order: 8
+---
+
+import { Card, CardGrid, Aside, Badge, LinkCard } from '@astrojs/starlight/components';
+
+If you come from Bitcoin-style chains, BitShares identity feels unfamiliar: no addresses to manage, human-readable names instead, and permissions designed around people rather than cryptography. This page explains the model and where each piece surfaces in the app.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Transfer" description="Send assets to a named account with an optional memo." href="/transfer.html" />
+  <LinkCard title="Custom Authorities" description="Define granular, reusable authorization rules." href="/custom_authorities.html" />
+  <LinkCard title="Proposals" description="Propose transactions for others to approve on-chain." href="/proposals.html" />
+  <LinkCard title="Create Account" description="Register a new named account." href="/create_account.html" />
+</CardGrid>
+
+## Named accounts, not addresses
+
+Every participant registers a unique, human-readable **account name** — closer to an email address than a hex string. To receive funds you just share your name. Names are transferable blockchain property in their own right.
+
+Under the hood, everything on the chain is an **object** with an ID. The ones you'll meet most:
+
+<Badge text="1.2.x" variant="note" /> account &nbsp; <Badge text="1.3.x" variant="note" /> asset &nbsp; <Badge text="1.6.x" variant="note" /> witness &nbsp; <Badge text="1.7.x" variant="note" /> limit order &nbsp; <Badge text="1.5.x" variant="note" /> committee member
+
+The `x` is the object's numeric id. You'll see these IDs across the app's explorers and operation previews.
+
+## Permissions are separated from identity
+
+The key insight: *who you are* (your name) is separate from *who can move your funds* (your **authorities**). An authority is a weighted combination of accounts and keys with a threshold — anything from a single key up to tree-structured corporate hierarchies:
+
+- **Multi-user control** — require M-of-N signatures so no single hacked key drains the account. Properly used, this nearly eliminates theft-by-hacking. (Chain-supported today, but not yet signable with Beet — see [Multi-Signature](/docs/learn/multisig.html).)
+- **Role separation** — different keys for different jobs (e.g. a memo key that can only read memos — see below).
+- **Custom authorities** — reusable, restricted rules such as "account Y may issue transfers up to a limit, only in December" (see [Custom Authorities](/docs/account/custom_authorities.html)).
+- **On-chain proposals** — propose a transaction on the blockchain itself and let the required signers approve it there. No passing half-signed transactions around over side channels (see [Proposals](/docs/account/proposals.html)).
+
+<Aside type="tip" title="Corporate-ready by design">
+  On-the-fly authority management, weighted approvals, and hierarchical accounts make BitShares accounts behave like real-world organizations — a deliberate contrast with one-key-per-address chains.
+</Aside>
+
+## Memos without exposing funds
+
+To tell customers apart (e.g. deposits to one shared account), transfers carry encrypted **memos**. BitShares gives every account a dedicated **memo key** that can *decode memos but cannot spend funds* — so a deposit-watching server only ever holds the memo key, never the money key. The spending keys stay offline.
+
+**Send one:** [Transfer in the app](/transfer.html) ([guide](/docs/transfer/transfer.html)).
+
+## Recurring access, referral rewards
+
+Two protocol-level conveniences build on the same account model:
+
+- **Withdraw permissions** — authorize a third party to pull funds within limits you set: daily, weekly, or monthly caps. Set-and-forget subscriptions and bills, revocable at any time (see [Withdraw Permissions](/docs/transfer/withdraw_permissions.html)).
+- **Referral program** — the users you bring in earn you a cut of the fees they pay, tracked and paid transparently on-chain.
+
+## Nodes and wallets are separate
+
+The peer-to-peer blockchain core (`witness_node`) and the wallet are distinct programs. You can run a full node with no wallet at all, and connect a wallet to any node — your private keys never leave the wallet. In this app that split is invisible: the interface talks to API nodes (see [Nodes](/docs/settings/nodes.html)) while signing happens in your own wallet.
+
+## Related pages
+
+- [Transfer](/docs/transfer/transfer.html) — send to names, attach memos ([open in app](/transfer.html)).
+- [Custom Authorities](/docs/account/custom_authorities.html) — granular rules ([open in app](/custom_authorities.html)).
+- [Proposals](/docs/account/proposals.html) — on-chain multisig workflow ([open in app](/proposals.html)).
+- [Withdraw Permissions](/docs/transfer/withdraw_permissions.html) — recurring access ([open in app](/withdraw_permissions.html)).
+- [Create Account](/docs/settings/create_account.html) — register a name ([open in app](/create_account.html)).
+- [Multi-Signature](/docs/learn/multisig.html) — weights, thresholds, corporate schemes.
+- [Wallets, Accounts & Keys](/docs/learn/wallets.html) — custody in Beet, key roles, rotation.

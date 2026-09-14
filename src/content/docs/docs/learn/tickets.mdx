@@ -1,0 +1,49 @@
+---
+title: Tickets & Locked Voting Power
+description: How vote-lock tickets multiply governance power — lock types, boosts, and THUMBSUP.1.
+sidebar:
+  order: 14
+---
+
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
+
+Voting weight comes from stake — and **tickets** let you lock BTS to multiply yours. The longer the lock, the bigger the boost, up to 8×. Locked tickets also underpin worker-proposal campaigning: backers lock to amplify the votes that fund the work.
+
+## Try it in the app
+
+<CardGrid>
+  <LinkCard title="Create Ticket" description="Lock BTS into governance tickets." href="/create_ticket.html" />
+  <LinkCard title="Ticket Leaderboard" description="Rank accounts by locked voting power." href="/ticket_leaderboard.html" />
+  <LinkCard title="Vote" description="Cast your boosted votes." href="/vote.html" />
+</CardGrid>
+
+<Aside type="tip" title="Screen guide">
+  Operations and the THUMBSUP.1 request flow: [Create Ticket](/docs/governance/create_ticket.html).
+</Aside>
+
+## Lock types and boosts
+
+| Lock | Boost |
+| ---- | ----- |
+| Liquid | 1× |
+| 180 days | 2× |
+| 360 days | 4× |
+| 720 days / forever | 8× |
+
+Create offers the three fixed locks; updating additionally allows moving to liquid. Forever tickets are frozen — they cannot be changed afterwards. Effective power (locked × boost) is what the [leaderboard](/ticket_leaderboard.html) ranks.
+
+## THUMBSUP.1
+
+On mainnet, every locked BTS must be matched by a THUMBSUP.1 balance — a token issued by the `abit` account that tracks ticket coverage. Short of it? The ticket screen builds a proposal asking `abit` to transfer you the deficit (capped by your BTS balance), so coverage and locking stay in step.
+
+## Using tickets politically
+
+- **Amplify yourself** before publishing or backing a [worker proposal](/docs/learn/workers.html) — boosted votes rank it above the refund blockers.
+- **Read the room** on the [leaderboard](/docs/governance/ticket_leaderboard.html): it names exactly whose approval decides outcomes, so appeals (and competing locks) can be targeted.
+
+## Related pages
+
+- [Create Ticket](/docs/governance/create_ticket.html) — lock and update ([open in app](/create_ticket.html)).
+- [Ticket Leaderboard](/docs/governance/ticket_leaderboard.html) — power ranking ([open in app](/ticket_leaderboard.html)).
+- [Vote](/docs/governance/vote.html) — cast votes ([open in app](/vote.html)).
+- [Workers & Funding](/docs/learn/workers.html) — where boosted votes get spent.

@@ -1,0 +1,107 @@
+---
+title: Bid on settlement
+description: Browse smartcoin settlement funds and bid collateral with bid_collateral, or force-settle with asset_settle.
+sidebar:
+  order: 5
+---
+
+import { Card, CardGrid, Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+**Bid on settlement** lets you claim a share of a globally settled smartcoin's **settlement fund** by pledging collateral. Browsing the funds is read-only; placing a bid broadcasts `bid_collateral`, and holders of the settled asset can instead force-settle via `asset_settle`. Winning bids convert into margin positions if the asset revives.
+
+**Open in the app:** [Bid on settlement](/settlement_bids.html). Bidding on a single asset happens at [Settlement](/settlement.html?id=1.3.x).
+
+## What it does
+
+<CardGrid>
+  <Card title="Find funds" icon="document">
+    List every smartcoin with a positive `settlement_fund`, with fund size, issuer and settle fee.
+  </Card>
+  <Card title="Pledge collateral" icon="coins">
+    Pair additional collateral with debt covered via `bid_collateral` (operation `45`).
+  </Card>
+  <Card title="Settle or revive" icon="refresh">
+    Holders force-settle at the fixed rate via `asset_settle` (operation `17`); covered debt can revive the asset.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Bid on settlement** from the homepage under *Forms of Debt*.
+
+2. Search or filter the fund list (by issuer, black-swan response method, or bidding enabled/disabled) and sort by id, symbol or fund size.
+
+3. Click a fund to open its **Settlement** page (`/settlement.html?id=1.3.x`). Review the settlement fund, settlement price, current feed, auto-revive price and the existing bid table.
+
+4. Enter additional collateral and debt covered (the price field links them: price × debt = collateral). Authorize. The app broadcasts `bid_collateral`.
+
+5. To withdraw your bid later, remove it with a zero-collateral `bid_collateral`. As a holder, use the force-settle card instead → `asset_settle`.
+
+</Steps>
+
+<Aside type="caution" title="Bids can lose">
+  Bids are ranked best-first at maintenance. The first bid whose resulting position fails the revive collateral check stops inclusion and later bids are ignored. Only bid collateral you can afford to lock into a margin position on revival.
+</Aside>
+
+<Aside type="note" title="Bidding disabled">
+  If the asset has the `disable_collateral_bidding` flag (`0x8000`), `bid_collateral` is rejected. The list shows these funds with a warning — use force-settlement instead.
+</Aside>
+
+## Operations used
+
+<Tabs>
+  <TabItem label="bid_collateral">
+
+Placing (or replacing) a bid broadcasts `bid_collateral` (operation `45`). One bid per account per asset — a new bid cancels and replaces your old one.
+
+```json
+{
+  "bidder": "1.2.x",
+  "additional_collateral": { "amount": 1500000, "asset_id": "1.3.x" },
+  "debt_covered": { "amount": 100000, "asset_id": "1.3.x" },
+  "extensions": []
+}
+```
+
+To **remove** your bid, send zero amounts:
+
+```json
+{
+  "bidder": "1.2.x",
+  "additional_collateral": { "amount": 0, "asset_id": "1.3.x" },
+  "debt_covered": { "amount": 0, "asset_id": "1.3.x" },
+  "extensions": []
+}
+```
+
+  </TabItem>
+  <TabItem label="asset_settle">
+
+Holders force-settle the settled asset against the fund at the fixed settlement rate via `asset_settle` (operation `17`):
+
+```json
+{
+  "account": "1.2.x",
+  "amount": { "amount": 100000, "asset_id": "1.3.x" },
+  "extensions": []
+}
+```
+
+  </TabItem>
+</Tabs>
+
+| Field | Meaning |
+| --- | --- |
+| `bidder` / `account` | Your account (`1.2.x`). |
+| `additional_collateral` | Collateral you pledge (`{amount, asset_id}` of the backing asset). |
+| `debt_covered` | Amount of settled debt your bid covers (`{amount, asset_id}`). |
+| `amount` | Amount of settled asset to force-settle (settle only). |
+| `extensions` | Empty on this app. |
+
+## Related pages
+
+- [Borrow](/docs/debt/borrow.html)
+- [SmartCoins](/docs/debt/smartcoins.html)
+- [Lend](/docs/debt/lend.html)

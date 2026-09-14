@@ -1,0 +1,21 @@
+---
+title: Community
+description: Chat and discuss on-chain with the BitShares community via the Trollbox and Forum.
+sidebar:
+  order: 10
+---
+
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+The **Community** section covers on-chain chat and discussion, stored permanently on the BitShares blockchain via `custom_operation` payloads.
+
+<CardGrid>
+  <LinkCard title="Trollbox" description="Live on-chain chat in channel catalogs (custom_operation)." href="/docs/community/trollbox/" />
+  <LinkCard title="Forum" description="Start topics and replies in forum catalogs (custom_operation)." href="/docs/community/forum/" />
+</CardGrid>
+
+## Operations broadcast by this section
+
+- `custom_operation` — post or delete a trollbox message (`id: 9199`) or forum topic/reply (`id: 9198`), each carrying a packed `account_storage_map`.
+
+Reading history requires a node with the `custom_operations` plugin enabled; broadcasting works from any node. Each post pays a base fee plus a per-kbyte surcharge on its packed size.

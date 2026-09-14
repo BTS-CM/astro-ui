@@ -1,0 +1,63 @@
+---
+title: Monthly Referrer
+description: See the top donors leaderboard and donate via transfer on the Monthly Referrer page.
+sidebar:
+  order: 8
+---
+
+import { Card, CardGrid, Steps } from '@astrojs/starlight/components';
+
+**Monthly Referrer** ranks the top donors over a rolling lookback window and lets you donate yourself — a `transfer` to the configured donations target. It's part leaderboard, part tip jar.
+
+**Open in the app:** [Monthly Referrer](/monthly_referrer.html).
+
+## What it does
+
+<CardGrid>
+  <Card title="Leaderboard" icon="trophy">
+    Top donors ranked over recent days.
+  </Card>
+  <Card title="Donate" icon="gift">
+    Send a donation transfer to the target account.
+  </Card>
+  <Card title="Referrer link" icon="users">
+    The top donor's name doubles as the effective referrer label.
+  </Card>
+</CardGrid>
+
+## How to use
+
+<Steps>
+
+1. Open **Monthly Referrer** from the homepage under *Transferring Funds*.
+
+2. Browse the ranked donor list (refresh to update).
+
+3. Enter a donation amount and authorize. The app broadcasts a `transfer` of the donations asset to the donations target account.
+
+</Steps>
+
+## Operation used
+
+Donating broadcasts `transfer` (operation `0`):
+
+```json
+{
+  "fee": { "amount": 0, "asset_id": "1.3.0" },
+  "from": "1.2.x",
+  "to": "1.2.x",
+  "amount": { "amount": 100000, "asset_id": "1.3.x" },
+  "extensions": {}
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `from` | Your account (`1.2.x`). |
+| `to` | The configured donations target account. |
+| `amount` | Donation amount in the donations asset. |
+
+## Related pages
+
+- [Transfer](/docs/transfer/transfer.html)
+- [Fees, Membership & Rewards](/docs/learn/fees.html)
