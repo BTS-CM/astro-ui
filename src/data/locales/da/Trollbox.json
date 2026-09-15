@@ -131,5 +131,15 @@
     "attachChipWant": "Ønsker",
     "attachNotAllowedChannel": "Denne vedhæftning kan ikke postes i denne kanal.",
     "roleWitnessBadge": "vidne",
-    "roleCommitteeBadge": "komitémedlem"
+    "roleCommitteeBadge": "komitémedlem",
+    "footerTitle": "Markedstrollbox",
+    "footerPlaceholder": "On-chain chat for dette marked. Intet indlæses, før du starter den.",
+    "footerStart": "Start trollbox",
+    "footerSilence": "Sluk trollbox",
+    "footerSilenceHint": "Stop med at indlæse trollboxen",
+    "footerTabs": "Trollbox-rum",
+    "footerTabPair": "Par",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "Et dedikeret rum for dette par — vær den første til at skrive.",
+    "footerRisksButton": "Se trollbox-risici"
 }

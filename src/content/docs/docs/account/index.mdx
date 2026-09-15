@@ -1,6 +1,6 @@
 ---
 title: Account Overviews
-description: Inspect balances, orders, debt, authorities, proposals and activity for any account.
+description: Inspect balances, authorities, proposals and activity for any account.
 sidebar:
   order: 5
 ---
@@ -11,13 +11,9 @@ The **Account Overviews** section is a set of viewers and light actions centered
 
 <CardGrid>
   <LinkCard title="Portfolio Balances" description="Assets held by an account (read-only)." href="/docs/account/balances/" />
-  <LinkCard title="Open Orders" description="Resting limit orders; cancel via limit_order_cancel." href="/docs/account/open-orders/" />
-  <LinkCard title="Call Orders" description="Margin debt positions (read-only)." href="/docs/account/call-orders/" />
   <LinkCard title="Custom Authorities" description="Create/update/delete account authorities." href="/docs/account/custom_authorities/" />
   <LinkCard title="Account Lists" description="On-chain whitelist/blacklist (account_whitelist)." href="/docs/account/account_lists/" />
   <LinkCard title="Favourites" description="Local quick-access lists (read-only)." href="/docs/account/favourites/" />
-  <LinkCard title="Credit Offers" description="Browse credit offers (read-only)." href="/docs/account/offers/" />
-  <LinkCard title="Credit Deals" description="Credit deals; repay via credit_deal_repay." href="/docs/account/deals/" />
   <LinkCard title="Vesting Balances" description="Vesting balances; claim via vesting_balance_withdraw." href="/docs/account/vesting/" />
   <LinkCard title="Proposals" description="Approve/reject proposals." href="/docs/account/proposals/" />
   <LinkCard title="Recent Activity" description="On-chain operation history (read-only)." href="/docs/account/recent-activity/" />
@@ -25,9 +21,7 @@ The **Account Overviews** section is a set of viewers and light actions centered
 
 ## Operations broadcast by this section
 
-- `limit_order_cancel` — cancel an open order.
 - `custom_authority_create` / `_update` / `_delete` — account authorities.
-- `credit_deal_repay` — repay a credit deal.
 - `vesting_balance_withdraw` — claim vested funds.
 - `proposal_update` / `proposal_delete` — approve or reject proposals.
 - `account_whitelist` — manage whitelist/blacklist membership.

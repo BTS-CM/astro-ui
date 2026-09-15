@@ -135,5 +135,16 @@
     "donorBadge": "donor",
     "topDonorBadge": "top donor",
     "donorBadgeTitle": "Monthly donor",
-    "topDonorBadgeTitle": "Top donor #{{rank}}"
+    "topDonorBadgeTitle": "Top donor #{{rank}}",
+    "footerTitle": "Market trollbox",
+    "footerPlaceholder": "On-chain chat for this market. Nothing loads until you start it.",
+    "footerStart": "Start trollbox",
+    "footerSilence": "Silence trollbox",
+    "footerSilenceHint": "Stop loading the trollbox",
+    "footerTabs": "Trollbox rooms",
+    "footerTabPair": "Pair",
+    "footerTabTrading": "Trading",
+    "footerTabPools": "Pools",
+    "footerPairHint": "A dedicated room for this pair — be the first to post.",
+    "footerRisksButton": "View trollbox risks"
 }

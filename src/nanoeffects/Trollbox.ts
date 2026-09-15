@@ -69,6 +69,44 @@ export function trollboxCatalog(channelId: string, lang: string): string {
 }
 
 /**
+ * DEX pair rooms: "pair-<min>-<max>" derived from two 1.3.x asset ids.
+ * Numeric suffixes are sorted small-to-large, so BTS:USD and USD:BTS
+ * resolve to the same room (e.g. 1.3.0 + 1.3.31 -> "pair-0-31",
+ * catalog "trollbox-pair-0-31"). Null when either id is unparseable
+ * or both sides are the same asset (not a real pair).
+ */
+export function pairRoomId(assetIdA: unknown, assetIdB: unknown): string | null {
+  const num = (id: unknown): number | null => {
+    const tail = String(id ?? "").split(".").pop() ?? "";
+    if (!/^\d+$/.test(tail)) {
+      return null;
+    }
+    return parseInt(tail, 10);
+  };
+  const a = num(assetIdA);
+  const b = num(assetIdB);
+  if (a === null || b === null || a === b) {
+    return null;
+  }
+  const [min, max] = a < b ? [a, b] : [b, a];
+  return `pair-${min}-${max}`;
+}
+
+export function isPairRoomChannel(channelId: unknown): boolean {
+  return typeof channelId === "string" && /^pair-\d+-\d+$/.test(channelId);
+}
+
+export function isValidTrollboxChannel(
+  channelId: unknown
+): channelId is string {
+  return (
+    typeof channelId === "string" &&
+    (TROLLBOX_CHANNELS.some((c) => c.id === channelId) ||
+      isPairRoomChannel(channelId))
+  );
+}
+
+/**
  * Which attachment kinds each channel accepts (attachment `kind` names:
  * "asset" | "pair" | "pool" | "offer" | "barter"). Channels absent here
  * accept nothing. History still renders attachments posted anywhere —
@@ -91,7 +129,18 @@ export function channelAllowsAttach(channelId: string, kind: string | null): boo
   if (!kind) {
     return false;
   }
-  return (CHANNEL_ATTACH_TYPES[channelId] ?? []).includes(kind);
+  return attachTypesFor(channelId).includes(kind);
+}
+
+/**
+ * Attachment kinds a channel accepts. Pair rooms accept the same kinds
+ * as #trading (a pair badge plus plain asset badges).
+ */
+export function attachTypesFor(channelId: string): string[] {
+  if (isPairRoomChannel(channelId)) {
+    return ["pair", "asset"];
+  }
+  return CHANNEL_ATTACH_TYPES[channelId] ?? [];
 }
 
 export const TROLLBOX_META_CATALOG = "trollbox-meta";
@@ -107,6 +156,16 @@ export function isSupportedTrollboxLang(lang: unknown): lang is string {
  * is never overridden by stored or locale state.
  */
 export const $trollboxLang = persistentAtom<string>("trollboxLang", "");
+
+/**
+ * Footer trollbox opt-in, persisted across page visits. "1" = the user
+ * started the footer trollbox at least once and hasn't silenced it;
+ * anything else = show the inert placeholder (no chain traffic).
+ */
+export const $trollboxFooter = persistentAtom<string>(
+  "trollboxFooterEnabled",
+  "0"
+);
 
 export function resolveContentLang(
   urlLang: unknown,
@@ -453,12 +512,12 @@ export async function fetchChannelMessages(
         const decoded = decodeTrollboxValue(o);
         if (decoded) {
           const author = cleanMessageText(decoded.author);
-          // Offline hardening: channel must be a known id (else a hostile
-          // payload could spoof tags like "#announcements"), and text is
-          // display-capped.
+          // Offline hardening: channel must be a known id or a pair room
+          // (else a hostile payload could spoof tags like
+          // "#announcements"), and text is display-capped.
           const channel =
             typeof decoded.channel === "string" &&
-            TROLLBOX_CHANNELS.some((c) => c.id === decoded.channel)
+            isValidTrollboxChannel(decoded.channel)
               ? decoded.channel
               : null;
           out.push({

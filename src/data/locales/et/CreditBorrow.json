@@ -35,6 +35,22 @@
     "noResults": "Tulemusi ei leitud",
     "loading": "Pakkumiste laadimine...",
     "hideExpired": "Peida aegunud pakkumised",
-    "showExpired": "Kuva aegunud pakkumised"
+    "showExpired": "Kuva aegunud pakkumised",
+    "filterLender": "Laenuandjalt",
+    "filterBorrowAsset": "Laenatav vara",
+    "filterAll": "Kõik",
+    "sortLabel": "Sordi",
+    "sortNone": "Vaikejärjekord",
+    "sortAmountAsc": "Laenatud summa (väikseim enne)",
+    "sortAmountDesc": "Laenatud summa (suurim enne)",
+    "sortFeeAsc": "Tasu (väikseim enne)",
+    "sortFeeDesc": "Tasu (suurim enne)",
+    "sortIdAsc": "Pakkumise ID (kasvav)",
+    "sortIdDesc": "Pakkumise ID (kahanev)",
+    "sortDurationAsc": "Laenu kestus (lühim enne)",
+    "sortDurationDesc": "Laenu kestus (pikim enne)",
+    "clearFilters": "Tühjenda",
+    "noFilterMatch": "Ükski pakkumine ei vasta nendele filtritele.",
+    "ofFilter": "kokku {{count}}"
   }
 }

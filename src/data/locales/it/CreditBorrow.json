@@ -35,6 +35,22 @@
     "noResults": "Nessun risultato trovato",
     "loading": "Caricamento offerte...",
     "hideExpired": "Nascondi offerte scadute",
-    "showExpired": "Mostra offerte scadute"
+    "showExpired": "Mostra offerte scadute",
+    "filterLender": "Preso in prestito da",
+    "filterBorrowAsset": "Bene preso in prestito",
+    "filterAll": "Tutti",
+    "sortLabel": "Ordina",
+    "sortNone": "Ordine predefinito",
+    "sortAmountAsc": "Importo prestato (crescente)",
+    "sortAmountDesc": "Importo prestato (decrescente)",
+    "sortFeeAsc": "Commissione (crescente)",
+    "sortFeeDesc": "Commissione (decrescente)",
+    "sortIdAsc": "ID offerta (crescente)",
+    "sortIdDesc": "ID offerta (decrescente)",
+    "sortDurationAsc": "Durata del prestito (crescente)",
+    "sortDurationDesc": "Durata del prestito (decrescente)",
+    "clearFilters": "Azzera",
+    "noFilterMatch": "Nessuna offerta corrisponde a questi filtri.",
+    "ofFilter": "di {{count}}"
   }
 }

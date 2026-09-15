@@ -151,8 +151,8 @@ export default function MarketOverlay(properties) {
 
       if (!market || !market.length) {
         console.log("No market parameters found.");
-        finalAssetA = isTestnetChain ? "TEST" : "1.3.0";
-        finalAssetB = isTestnetChain ? "NFTEA.TESTNET" : "XBTSX.USDT";
+        finalAssetA = defaultAssetA;
+        finalAssetB = defaultAssetB;
       } else {
         let asset_a = market.split("_")[0].toUpperCase();
         let asset_b = market.split("_")[1].toUpperCase();
@@ -168,7 +168,7 @@ export default function MarketOverlay(properties) {
           (!searchSymbols.includes(asset_a) && !searchIds.includes(asset_a))
         ) {
           console.log("Asset A replaced with default.");
-          finalAssetA = isTestnetChain ? "TEST" : "1.3.0";
+          finalAssetA = defaultAssetA;
         } else {
           finalAssetA = null;
         }
@@ -181,7 +181,7 @@ export default function MarketOverlay(properties) {
             finalAssetA = foundAssetA.s;
           } else {
             console.log("Setting default asset A");
-            finalAssetA = isTestnetChain ? "TEST" : "1.3.0";
+            finalAssetA = defaultAssetA;
           }
         }
 
@@ -331,6 +331,8 @@ export default function MarketOverlay(properties) {
         _marketSearchTEST={_marketSearchTEST}
         _poolsBTS={_poolsBTS}
         _poolsTEST={_poolsTEST}
+        _globalParamsBTS={_globalParamsBTS}
+        _globalParamsTEST={_globalParamsTEST}
         balances={balances}
       />
     </div>

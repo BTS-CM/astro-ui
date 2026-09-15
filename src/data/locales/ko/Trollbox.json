@@ -131,5 +131,15 @@
     "attachChipWant": "희망",
     "attachNotAllowedChannel": "이 첨부는 이 채널에 게시할 수 없습니다.",
     "roleWitnessBadge": "증인",
-    "roleCommitteeBadge": "위원회 위원"
+    "roleCommitteeBadge": "위원회 위원",
+    "footerTitle": "마켓 트롤박스",
+    "footerPlaceholder": "이 마켓의 온체인 채팅. 시작하기 전에는 아무것도 로드되지 않습니다.",
+    "footerStart": "트롤박스 시작",
+    "footerSilence": "트롤박스 끄기",
+    "footerSilenceHint": "트롤박스 로드 중지",
+    "footerTabs": "트롤박스 방",
+    "footerTabPair": "페어",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "이 페어 전용 방 — 첫 글을 남겨보세요.",
+    "footerRisksButton": "트롤박스 위험 보기"
 }

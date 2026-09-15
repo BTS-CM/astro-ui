@@ -42,7 +42,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import HoverInfo from "@/components/common/HoverInfo.tsx";
-import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
+import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 import { BarChart3, Plus, SearchX, TriangleAlert } from "lucide-react";
 
 import {
@@ -626,7 +626,7 @@ export default function CustomPoolOverview(properties) {
                     header={t("CustomPoolOverview:hoverBuyingHeader")}
                   />
                 </div>
-                <BasicAssetDropDownCard
+                <AssetDropDown
                   assetSymbol={buyingAsset ?? ""}
                   assetData={buyingAssetData}
                   storeCallback={(symbol) => {
@@ -637,8 +637,7 @@ export default function CustomPoolOverview(properties) {
                   type={"base"}
                   size="small"
                   chain={_chain}
-                  borrowPositions={[]}
-                  usrBalances={usrBalances}
+                  balances={usrBalances}
                 />
               </div>
               <div className="rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-2)/0.06)] to-transparent p-3">
@@ -649,7 +648,7 @@ export default function CustomPoolOverview(properties) {
                     header={t("CustomPoolOverview:hoverSellingHeader")}
                   />
                 </div>
-                <BasicAssetDropDownCard
+                <AssetDropDown
                   assetSymbol={sellingAsset ?? ""}
                   assetData={sellingAssetData}
                   storeCallback={(symbol) => {
@@ -660,8 +659,7 @@ export default function CustomPoolOverview(properties) {
                   type={"base"}
                   size="small"
                   chain={_chain}
-                  borrowPositions={[]}
-                  usrBalances={usrBalances}
+                  balances={usrBalances}
                 />
               </div>
               <div className="flex items-end justify-end">

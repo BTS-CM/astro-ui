@@ -35,6 +35,22 @@
     "noResults": "No results found",
     "loading": "Loading offers...",
     "hideExpired": "Hide expired offers",
-    "showExpired": "Show expired offers"
+    "showExpired": "Show expired offers",
+    "filterLender": "Borrowing from",
+    "filterBorrowAsset": "Borrow asset",
+    "filterAll": "All",
+    "sortLabel": "Sort by",
+    "sortNone": "Default order",
+    "sortAmountAsc": "Amount lent (lowest first)",
+    "sortAmountDesc": "Amount lent (highest first)",
+    "sortFeeAsc": "Fee (lowest first)",
+    "sortFeeDesc": "Fee (highest first)",
+    "sortIdAsc": "Offer ID (ascending)",
+    "sortIdDesc": "Offer ID (descending)",
+    "sortDurationAsc": "Borrow duration (shortest first)",
+    "sortDurationDesc": "Borrow duration (longest first)",
+    "clearFilters": "Clear",
+    "noFilterMatch": "No offers match these filters.",
+    "ofFilter": "of {{count}}"
   }
 }

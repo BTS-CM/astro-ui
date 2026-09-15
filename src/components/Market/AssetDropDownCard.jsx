@@ -299,6 +299,27 @@ export default function AssetDropDown(properties) {
     accentColor: propsAccentColor,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+
+  // Prefer the human-readable symbol over the object id (e.g. "1.3.0").
+  // Callers may still pass an id as `assetSymbol` (historical defaults), so
+  // resolve through `assetData.symbol` first, then marketSearch, else raw.
+  const displaySymbol = useMemo(() => {
+    if (assetData?.symbol) {
+      return assetData.symbol;
+    }
+    if (
+      assetSymbol &&
+      /^1\.3\.\d+$/.test(assetSymbol) &&
+      marketSearch &&
+      marketSearch.length
+    ) {
+      const found = marketSearch.find((a) => a.id === assetSymbol);
+      if (found?.s) {
+        return found.s;
+      }
+    }
+    return assetSymbol;
+  }, [assetData, assetSymbol, marketSearch]);
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
@@ -320,13 +341,20 @@ export default function AssetDropDown(properties) {
     } else {
       let currentContents = otherAsset
         ? marketSearch.filter(
-            (asset) => asset.s !== otherAsset && asset.s !== assetSymbol
+            (asset) =>
+              asset.s !== otherAsset &&
+              asset.id !== otherAsset &&
+              asset.s !== assetSymbol &&
+              asset.id !== assetSymbol
           )
-        : marketSearch.filter((asset) => asset.s !== assetSymbol);
+        : marketSearch.filter(
+            (asset) => asset.s !== assetSymbol && asset.id !== assetSymbol
+          );
 
       if (otherAssets && Array.isArray(otherAssets) && otherAssets.length) {
         currentContents = currentContents.filter(
-          (asset) => !otherAssets.includes(asset.s)
+          (asset) =>
+            !otherAssets.includes(asset.s) && !otherAssets.includes(asset.id)
         );
       }
 
@@ -783,14 +811,12 @@ export default function AssetDropDown(properties) {
             <span className="truncate">
               {triggerLabel
                 ? triggerLabel
-                : !assetSymbol
+                : !displaySymbol
                 ? t("AssetDropDownCard:select")
-                : !size && assetSymbol
+                : !size && displaySymbol
                 ? t("AssetDropDownCard:change")
-                : size && assetSymbol && assetSymbol.length < 12
-                ? assetSymbol
-                : size && assetSymbol && assetSymbol.length >= 12
-                ? assetData.id
+                : size && displaySymbol
+                ? displaySymbol
                 : null}
             </span>
           </Button>
@@ -800,8 +826,8 @@ export default function AssetDropDown(properties) {
         <DialogHeader>
           <DialogTitle>
             <h3 className="text-xl font-bold tracking-tight">
-              {assetSymbol
-                ? t("AssetDropDownCard:replacing", { assetSymbol: assetSymbol })
+              {displaySymbol
+                ? t("AssetDropDownCard:replacing", { assetSymbol: displaySymbol })
                 : t("AssetDropDownCard:selecting")}
             </h3>
           </DialogTitle>

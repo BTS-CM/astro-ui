@@ -26,6 +26,7 @@ import { createMarketOrderStore } from "@/nanoeffects/MarketOrderBook.ts";
 import { useDexOrderBookLive } from "@/hooks/useDexLiveSubscriptions";
 import { useMarketCandles } from "@/hooks/useMarketCandles";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
+import TrollboxFooter from "./TrollboxFooter.jsx";
 import { $currentNode } from "@/stores/node.ts";
 import CandleChart from "./InstantTrade/CandleChart.jsx";
 import DepthChart from "./InstantTrade/DepthChart.jsx";
@@ -76,6 +77,8 @@ export default function Market(properties) {
     _marketSearchTEST,
     _poolsBTS,
     _poolsTEST,
+    _globalParamsBTS,
+    _globalParamsTEST,
     //
     balances,
   } = properties;
@@ -1176,6 +1179,23 @@ export default function Market(properties) {
             _resetMarketData={_resetMarketData}
           />
         ) : null}
+
+        <div className="mt-4 mb-4">
+          <TrollboxFooter
+            assetAId={assetAData?.id ?? null}
+            assetBId={assetBData?.id ?? null}
+            assetASymbol={assetA ?? null}
+            assetBSymbol={assetB ?? null}
+            _assetsBTS={_assetsBTS}
+            _assetsTEST={_assetsTEST}
+            _marketSearchBTS={_marketSearchBTS}
+            _marketSearchTEST={_marketSearchTEST}
+            _poolsBTS={_poolsBTS}
+            _poolsTEST={_poolsTEST}
+            _feeScheduleBTS={_globalParamsBTS}
+            _feeScheduleTEST={_globalParamsTEST}
+          />
+        </div>
 
         <DexLiveFooterCard
           lastFetchAt={liveLastFetchAt}

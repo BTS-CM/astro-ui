@@ -11,8 +11,11 @@ The **Forms of Debt** section covers borrowing against collateral, peer-to-peer 
 
 <CardGrid>
   <LinkCard title="Borrow" description="Open or adjust a smartcoin margin position (call_order_update)." href="/docs/debt/borrow/" />
+  <LinkCard title="Credit Deals" description="Credit deals; repay via credit_deal_repay." href="/docs/debt/deals/" />
   <LinkCard title="Lend" description="Create and accept credit offers." href="/docs/debt/lend/" />
+  <LinkCard title="Credit Offers" description="Browse credit offers (read-only)." href="/docs/debt/offers/" />
   <LinkCard title="SmartCoins" description="Read-only browser of market-pegged assets." href="/docs/debt/smartcoins/" />
+  <LinkCard title="Call Orders" description="Margin debt positions (read-only)." href="/docs/debt/call-orders/" />
   <LinkCard title="Bid on settlement" description="Bid on settlement debt (bid_collateral) or force-settle (asset_settle)." href="/docs/debt/settlement_bids/" />
   <LinkCard title="Same-T Funds" description="Create and manage Samet Funds." href="/docs/debt/tfunds/" />
 </CardGrid>
@@ -22,6 +25,7 @@ The **Forms of Debt** section covers borrowing against collateral, peer-to-peer 
 - `call_order_update` — open/adjust/close a margin debt position (borrow).
 - `bid_collateral` / `asset_settle` — bid on or force-settle globally settled smartcoins.
 - `credit_offer_create` / `credit_offer_update` / `credit_offer_accept` — the credit marketplace.
+- `credit_deal_repay` — repay a credit deal.
 - `samet_fund_create` / `samet_fund_update` / `samet_fund_delete` — fund management.
 
 Each page documents its exact operation shapes with example JSON.

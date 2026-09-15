@@ -131,5 +131,15 @@
     "attachChipWant": "Je cherche",
     "attachNotAllowedChannel": "Cette pièce jointe ne peut pas être publiée dans ce canal.",
     "roleWitnessBadge": "témoin",
-    "roleCommitteeBadge": "membre du comité"
+    "roleCommitteeBadge": "membre du comité",
+    "footerTitle": "Trollbox du marché",
+    "footerPlaceholder": "Discussion on-chain pour ce marché. Rien ne se charge tant que vous ne la démarrez pas.",
+    "footerStart": "Démarrer la trollbox",
+    "footerSilence": "Couper la trollbox",
+    "footerSilenceHint": "Arrêter de charger la trollbox",
+    "footerTabs": "Salons trollbox",
+    "footerTabPair": "Paire",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "Un salon dédié à cette paire — soyez le premier à poster.",
+    "footerRisksButton": "Voir les risques de la trollbox"
 }

@@ -131,5 +131,15 @@
     "attachChipWant": "Suche",
     "attachNotAllowedChannel": "Dieser Anhang kann in diesem Kanal nicht gepostet werden.",
     "roleWitnessBadge": "Witness",
-    "roleCommitteeBadge": "Komiteemitglied"
+    "roleCommitteeBadge": "Komiteemitglied",
+    "footerTitle": "Markt-Trollbox",
+    "footerPlaceholder": "On-Chain-Chat für diesen Markt. Es wird nichts geladen, bis du ihn startest.",
+    "footerStart": "Trollbox starten",
+    "footerSilence": "Trollbox stummschalten",
+    "footerSilenceHint": "Trollbox nicht mehr laden",
+    "footerTabs": "Trollbox-Räume",
+    "footerTabPair": "Paar",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "Ein eigener Raum für dieses Paar — schreibe die erste Nachricht.",
+    "footerRisksButton": "Trollbox-Risiken ansehen"
 }

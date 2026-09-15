@@ -35,6 +35,22 @@
     "noResults": "Nenhum resultado encontrado",
     "loading": "Carregando ofertas...",
     "hideExpired": "Ocultar ofertas expiradas",
-    "showExpired": "Mostrar ofertas expiradas"
+    "showExpired": "Mostrar ofertas expiradas",
+    "filterLender": "Emprestado de",
+    "filterBorrowAsset": "Ativo emprestado",
+    "filterAll": "Todos",
+    "sortLabel": "Ordenar",
+    "sortNone": "Ordem padrão",
+    "sortAmountAsc": "Valor emprestado (menor primeiro)",
+    "sortAmountDesc": "Valor emprestado (maior primeiro)",
+    "sortFeeAsc": "Taxa (menor primeiro)",
+    "sortFeeDesc": "Taxa (maior primeiro)",
+    "sortIdAsc": "ID da oferta (crescente)",
+    "sortIdDesc": "ID da oferta (decrescente)",
+    "sortDurationAsc": "Duração do empréstimo (menor primeiro)",
+    "sortDurationDesc": "Duração do empréstimo (maior primeiro)",
+    "clearFilters": "Limpar",
+    "noFilterMatch": "Nenhuma oferta corresponde a estes filtros.",
+    "ofFilter": "de {{count}}"
   }
 }

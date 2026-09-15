@@ -131,5 +131,15 @@
     "attachChipWant": "Busco",
     "attachNotAllowedChannel": "Este adjunto no se puede publicar en este canal.",
     "roleWitnessBadge": "testigo",
-    "roleCommitteeBadge": "miembro del comité"
+    "roleCommitteeBadge": "miembro del comité",
+    "footerTitle": "Trollbox del mercado",
+    "footerPlaceholder": "Chat en cadena para este mercado. No se carga nada hasta que lo inicies.",
+    "footerStart": "Iniciar trollbox",
+    "footerSilence": "Silenciar trollbox",
+    "footerSilenceHint": "Dejar de cargar la trollbox",
+    "footerTabs": "Salas de trollbox",
+    "footerTabPair": "Par",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "Una sala dedicada a este par — sé el primero en publicar.",
+    "footerRisksButton": "Ver riesgos de la trollbox"
 }

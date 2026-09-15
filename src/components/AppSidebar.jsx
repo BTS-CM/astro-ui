@@ -138,6 +138,7 @@ const ITEM_ICONS = {
   tfunds: Landmark,
   portfolio_balances: Wallet,
   portfolio_open_orders: ListOrdered,
+  call_orders: ListOrdered,
   favourites: Star,
   issued_assets: Boxes,
   offers: FileText,
@@ -194,6 +195,11 @@ export default function AppSidebar() {
     { slug: "barter", title: "Home:barter.title", href: "/barter.html" },
     { slug: "tfund_user", title: "Home:tfund_user.title", href: "/tfund_user.html" },
     { slug: "top_markets", title: "Home:top_markets.title", href: "/top-markets.html" },
+    {
+      slug: "portfolio_open_orders",
+      title: "Home:portfolio_open_orders.title",
+      href: "/open-orders.html",
+    },
   ];
 
   const liquidityPoolsHeading = [
@@ -225,8 +231,15 @@ export default function AppSidebar() {
 
   const formsOfDebtHeading = [
     { slug: "borrow", title: "Home:borrow.title", href: "/borrow.html" },
+    { slug: "deals", title: "Home:deals.title", href: "/deals.html" },
     { slug: "lend", title: "Home:lend.title", href: "/lend.html" },
+    { slug: "offers", title: "Home:offers.title", href: "/offers.html" },
     { slug: "smartcoins", title: "Home:smartcoins.title", href: "/smartcoins.html" },
+    {
+      slug: "call_orders",
+      title: "CallOrders:title",
+      href: "/call-orders.html",
+    },
     { slug: "settlement_bids", title: "Home:settlement_bids.title", href: "/settlement_bids.html" },
     { slug: "tfunds", title: "Home:tfunds.title", href: "/tfunds.html" },
   ];
@@ -248,22 +261,10 @@ export default function AppSidebar() {
 
   const accountOverviewsHeading = [
     { slug: "portfolio_balances", title: "Home:portfolio_balances.title", href: "/balances.html" },
-    {
-      slug: "portfolio_open_orders",
-      title: "Home:portfolio_open_orders.title",
-      href: "/open-orders.html",
-    },
     { slug: "recent_activity", title: "Home:recent_activity.title", href: "/recent-activity.html" },
-    {
-      slug: "call_orders",
-      title: "CallOrders:title",
-      href: "/call-orders.html",
-    },
-    { slug: "offers", title: "Home:offers.title", href: "/offers.html" },
-    { slug: "deals", title: "Home:deals.title", href: "/deals.html" },
-    { slug: "proposals", title: "Home:proposals.title", href: "/proposals.html" },
-    { slug: "favourites", title: "Home:favourites.title", href: "/favourites.html" },
     { slug: "vesting", title: "Home:vesting.title", href: "/vesting.html" },
+    { slug: "favourites", title: "Home:favourites.title", href: "/favourites.html" },
+    { slug: "proposals", title: "Home:proposals.title", href: "/proposals.html" },
     {
       slug: "custom_authorities",
       title: "CustomAuthorities:title",

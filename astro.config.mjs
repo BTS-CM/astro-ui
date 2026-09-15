@@ -22,6 +22,7 @@ export default defineConfig({
             { label: 'Barter', link: '/docs/exchanging/barter/' },
             { label: 'Same-T Fund (User)', link: '/docs/exchanging/tfund_user/' },
             { label: 'Top Markets', link: '/docs/exchanging/top-markets/' },
+            { label: 'Open Orders', link: '/docs/exchanging/open-orders/' },
           ],
         },
         {
@@ -51,8 +52,11 @@ export default defineConfig({
           label: 'Forms of Debt',
           items: [
             { label: 'Borrow', link: '/docs/debt/borrow/' },
+            { label: 'Credit Deals', link: '/docs/debt/deals/' },
             { label: 'Lend', link: '/docs/debt/lend/' },
+            { label: 'Credit Offers', link: '/docs/debt/offers/' },
             { label: 'SmartCoins', link: '/docs/debt/smartcoins/' },
+            { label: 'Call Orders', link: '/docs/debt/call-orders/' },
             { label: 'Bid on settlement', link: '/docs/debt/settlement_bids/' },
             { label: 'Same-T Funds', link: '/docs/debt/tfunds/' },
           ],
@@ -70,12 +74,8 @@ export default defineConfig({
           label: 'Account Overviews',
           items: [
             { label: 'Portfolio Balances', link: '/docs/account/balances/' },
-            { label: 'Open Orders', link: '/docs/account/open-orders/' },
-            { label: 'Call Orders', link: '/docs/account/call-orders/' },
             { label: 'Custom Authorities', link: '/docs/account/custom_authorities/' },
             { label: 'Favourites', link: '/docs/account/favourites/' },
-            { label: 'Credit Offers', link: '/docs/account/offers/' },
-            { label: 'Credit Deals', link: '/docs/account/deals/' },
             { label: 'Vesting Balances', link: '/docs/account/vesting/' },
             { label: 'Proposals', link: '/docs/account/proposals/' },
             { label: 'Recent Activity', link: '/docs/account/recent-activity/' },

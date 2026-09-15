@@ -447,7 +447,7 @@
         "transferSubtitle": "Send assets and manage permissions",
         "debtSubtitle": "Borrow, lend and issue collateralized debt",
         "assetCreationSubtitle": "Create tokens, smartcoins and liquidity pools",
-        "accountSubtitle": "Manage your portfolio, orders and favourites",
+        "accountSubtitle": "Manage your balances, proposals and favourites",
         "blockchainSubtitle": "Explore blockchain data, pools and trackers",
         "governanceSubtitle": "Vote, register roles and create worker proposals",
         "invoicingSubtitle": "Create, send and pay invoices on-chain",

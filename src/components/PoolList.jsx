@@ -58,7 +58,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 import HoverInfo from "@/components/common/HoverInfo.tsx";
-import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
+import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 import { humanReadableFloat } from "@/bts/common";
 import {
   Droplets,
@@ -618,7 +618,7 @@ export default function CustomPoolOverview(properties) {
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                     {t("CustomPoolOverview:assetA")}
                   </label>
-                  <BasicAssetDropDownCard
+                  <AssetDropDown
                     assetSymbol={buyingAsset ?? ""}
                     assetData={buyingAssetData}
                     storeCallback={setBuyingAsset}
@@ -627,8 +627,7 @@ export default function CustomPoolOverview(properties) {
                     type={"base"}
                     size="small"
                     chain={_chain}
-                    borrowPositions={[]}
-                    usrBalances={usrBalances}
+                    balances={usrBalances}
                   />
                 </div>
 
@@ -636,7 +635,7 @@ export default function CustomPoolOverview(properties) {
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                     {t("CustomPoolOverview:assetB")}
                   </label>
-                  <BasicAssetDropDownCard
+                  <AssetDropDown
                     assetSymbol={sellingAsset ?? ""}
                     assetData={sellingAssetData}
                     storeCallback={setSellingAsset}
@@ -645,8 +644,7 @@ export default function CustomPoolOverview(properties) {
                     type={"base"}
                     size="small"
                     chain={_chain}
-                    borrowPositions={[]}
-                    usrBalances={usrBalances}
+                    balances={usrBalances}
                   />
                 </div>
 

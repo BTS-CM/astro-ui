@@ -35,6 +35,22 @@
     "noResults": "No se encontraron resultados",
     "loading": "Cargando ofertas...",
     "hideExpired": "Ocultar ofertas caducadas",
-    "showExpired": "Mostrar ofertas caducadas"
+    "showExpired": "Mostrar ofertas caducadas",
+    "filterLender": "Prestado por",
+    "filterBorrowAsset": "Activo prestado",
+    "filterAll": "Todos",
+    "sortLabel": "Ordenar",
+    "sortNone": "Orden predeterminado",
+    "sortAmountAsc": "Cantidad prestada (menor primero)",
+    "sortAmountDesc": "Cantidad prestada (mayor primero)",
+    "sortFeeAsc": "Tarifa (menor primero)",
+    "sortFeeDesc": "Tarifa (mayor primero)",
+    "sortIdAsc": "ID de oferta (ascendente)",
+    "sortIdDesc": "ID de oferta (descendente)",
+    "sortDurationAsc": "Duración del préstamo (menor primero)",
+    "sortDurationDesc": "Duración del préstamo (mayor primero)",
+    "clearFilters": "Borrar",
+    "noFilterMatch": "Ninguna oferta coincide con estos filtros.",
+    "ofFilter": "de {{count}}"
   }
 }

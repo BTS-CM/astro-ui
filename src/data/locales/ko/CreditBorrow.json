@@ -35,6 +35,22 @@
     "noResults": "검색결과가 없습니다",
     "loading": "쿠폰 로드 중...",
     "hideExpired": "만료된 제안 숨기기",
-    "showExpired": "만료된 제안 표시"
+    "showExpired": "만료된 제안 표시",
+    "filterLender": "차용처",
+    "filterBorrowAsset": "차용 자산",
+    "filterAll": "전체",
+    "sortLabel": "정렬",
+    "sortNone": "기본 순서",
+    "sortAmountAsc": "대출 금액 (적은 순)",
+    "sortAmountDesc": "대출 금액 (많은 순)",
+    "sortFeeAsc": "수수료 (낮은 순)",
+    "sortFeeDesc": "수수료 (높은 순)",
+    "sortIdAsc": "오퍼 ID (오름차순)",
+    "sortIdDesc": "오퍼 ID (내림차순)",
+    "sortDurationAsc": "차용 기간 (짧은 순)",
+    "sortDurationDesc": "차용 기간 (긴 순)",
+    "clearFilters": "초기화",
+    "noFilterMatch": "이 필터와 일치하는 제안이 없습니다.",
+    "ofFilter": "{{count}}개 중"
   }
 }

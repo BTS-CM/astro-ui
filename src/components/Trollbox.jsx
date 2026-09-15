@@ -73,6 +73,7 @@ import {
   Paperclip,
   Radio,
   Send,
+  ShieldAlert,
   FlaskConical,
   RefreshCw,
   Trash2,
@@ -107,13 +108,15 @@ import {
   TROLLBOX_CHANNELS,
   TROLLBOX_LANGS,
   NATIVE_LANG_NAMES,
-  CHANNEL_ATTACH_TYPES,
   $trollboxLang,
+  attachTypesFor,
   fetchChannelMessages,
   fetchMaxMessageBytes,
   fetchRoleAccountIds,
+  isPairRoomChannel,
   isPluginMissingError,
   isSupportedTrollboxLang,
+  isValidTrollboxChannel,
   channelAllowsAttach,
   probeTrollboxSupport,
   resolveContentLang,
@@ -170,7 +173,7 @@ function channelFromUrl() {
     const v = new URLSearchParams(window.location.search).get(
       TROLLBOX_CHANNEL_PARAM
     );
-    return TROLLBOX_CHANNELS.some((c) => c.id === v) ? v : "general";
+    return isValidTrollboxChannel(v) ? v : "general";
   } catch {
     return "general";
   }
@@ -455,6 +458,23 @@ export default function Trollbox(properties) {
     _poolsTEST = [],
     _feeScheduleBTS = [],
     _feeScheduleTEST = [],
+    // Embedded (footer) mode: fixed single channel, no channel picker,
+    // no ?channel= URL syncing, compact chrome. The parent remounts
+    // (via key) to switch channels, so only one channel polls at a time.
+    initialChannel = null,
+    embedded = false,
+    // Human label for the room (e.g. "BTS · XBTSX.USDT"); falls back to
+    // "#<channel>" (numeric pair rooms are unreadable raw). NOTE: keep
+    // this free of characters i18next escapes (&, /, <, >) — it is
+    // interpolated into translated strings.
+    channelLabel = null,
+    // Extra controls rendered in a second row of the viewing card header
+    // (used by footer embeds for room tabs + silence toggle).
+    headerActions = null,
+    // When true, the embedded footer risks button below the card is hidden
+    // (the host renders its own "View trollbox risks" button in the header,
+    // e.g. left of the silence toggle, with its own dialog).
+    hideEmbeddedRisksButton = false,
   } = properties || {};
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
@@ -492,7 +512,7 @@ export default function Trollbox(properties) {
   useInitCache(chain, []);
 
   const [activeChannel, setActiveChannel] = useState(() =>
-    channelFromUrl()
+    isValidTrollboxChannel(initialChannel) ? initialChannel : channelFromUrl()
   );
   const activeChannelRef = useRef(activeChannel);
   activeChannelRef.current = activeChannel;
@@ -516,7 +536,7 @@ export default function Trollbox(properties) {
     () => trollboxCatalog(activeChannel, activeLang),
     [activeChannel, activeLang]
   );
-  const allowedAttachTypes = CHANNEL_ATTACH_TYPES[activeChannel] ?? [];
+  const allowedAttachTypes = attachTypesFor(activeChannel);
   const [draft, setDraft] = useState("");
   const [probe, setProbe] = useState({ state: "probing", node: nodeUrl });
   const [messages, setMessages] = useState([]);
@@ -536,6 +556,7 @@ export default function Trollbox(properties) {
   const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
   const [verifyingAttach, setVerifyingAttach] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
+  const [showRisks, setShowRisks] = useState(false);
   const [maxBytes, setMaxBytes] = useState(() => maxMessageBytes());
   const [roleIds, setRoleIds] = useState({ witnesses: [], committee: [] });
   const [donorRank, setDonorRank] = useState({});
@@ -587,9 +608,15 @@ export default function Trollbox(properties) {
   }, [chain]);
 
   const channelInfo = useMemo(
-    () => TROLLBOX_CHANNELS.find((c) => c.id === activeChannel),
+    () =>
+      TROLLBOX_CHANNELS.find((c) => c.id === activeChannel) ??
+      (isPairRoomChannel(activeChannel) ? { id: activeChannel } : undefined),
     [activeChannel]
   );
+
+  // Display tag for the active room, shared by the viewing title, the
+  // empty state and the composer placeholder.
+  const channelTag = channelLabel ?? `#${activeChannel}`;
 
   // Drop a staged attachment its channel no longer allows (e.g.
   // leaving #barter) so it can never be posted elsewhere.
@@ -624,7 +651,12 @@ export default function Trollbox(properties) {
   // {index, ...} there and ignores popstate events whose state is null,
   // so replaceState(null) would strand the page content on Back
   // navigation. English omits the lang param (canonical legacy URLs).
+  // Skipped entirely in embedded mode: the host page owns its URL
+  // (?market=...) and must never gain a ?channel= param.
   useEffect(() => {
+    if (embedded) {
+      return undefined;
+    }
     try {
       const url = new URL(window.location.href);
       const wantLang = activeLang === "en" ? null : activeLang;
@@ -648,9 +680,12 @@ export default function Trollbox(properties) {
     } catch {
       // non-browser or restricted context: channel simply isn't shared
     }
-  }, [activeChannel, activeLang]);
+  }, [activeChannel, activeLang, embedded]);
 
   useEffect(() => {
+    if (embedded) {
+      return undefined;
+    }
     const onPopState = () => {
       const v = channelFromUrl();
       const l = resolveContentLang(langFromUrl(), locale.get());
@@ -663,7 +698,7 @@ export default function Trollbox(properties) {
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
-  }, []);
+  }, [embedded]);
 
   // 1. Probe the connected node for the custom_operations plugin.
   useEffect(() => {
@@ -1345,7 +1380,14 @@ export default function Trollbox(properties) {
   })();
 
   return (
-    <div className="container mx-auto mt-3 mb-5 px-3 sm:px-4 max-w-5xl">
+    <div
+      className={
+        embedded
+          ? "w-full"
+          : "container mx-auto mt-3 mb-5 px-3 sm:px-4 max-w-5xl"
+      }
+    >
+      {!embedded ? (
       <Card className="mb-4 relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
         <span
           aria-hidden="true"
@@ -1387,6 +1429,7 @@ export default function Trollbox(properties) {
           </p>
         </CardContent>
       </Card>
+      ) : null}
 
       {probe.state === "unsupported" || probe.state === "none" || probe.state === "error" ? (
         <Alert variant="destructive" className="mb-4">
@@ -1442,6 +1485,7 @@ export default function Trollbox(properties) {
           setMessagesError(null);
         }}
       >
+      {!embedded ? (
       <Card className="mb-4 relative overflow-hidden">
         <span
           aria-hidden="true"
@@ -1519,6 +1563,7 @@ export default function Trollbox(properties) {
             </TabsList>
         </CardContent>
       </Card>
+      ) : null}
 
       <Card className="mb-4 relative overflow-hidden">
         <span
@@ -1546,7 +1591,7 @@ export default function Trollbox(properties) {
             </span>
             <CardTitle className="text-base truncate flex-1 min-w-0">
               {t("Trollbox:viewingTitle", "Viewing the {{tag}} trollbox", {
-                tag: `#${activeChannel}`,
+                tag: channelTag,
               })}
             </CardTitle>
             <div
@@ -1572,6 +1617,11 @@ export default function Trollbox(properties) {
               </Button>
             </div>
           </div>
+          {headerActions ? (
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              {headerActions}
+            </div>
+          ) : null}
         </CardHeader>
         <CardContent>
                 {probe.state === "live" ? (
@@ -1603,7 +1653,7 @@ export default function Trollbox(properties) {
                         {t(
                           "Trollbox:messagesEmpty",
                           "No messages in {{channel}} yet — be the first.",
-                          { channel: activeChannel }
+                          { channel: channelTag }
                         )}
                         {hiddenBlockedCount > 0 ? (
                           <span className="mt-1 block text-xs">
@@ -1741,7 +1791,7 @@ export default function Trollbox(properties) {
               placeholder={
                 loggedIn
                   ? t("Trollbox:composerPlaceholder", "Message {{channel}}…", {
-                      channel: activeChannel,
+                      channel: channelTag,
                     })
                   : t("Trollbox:composerLogin", "Log in to post on-chain messages.")
               }
@@ -1870,7 +1920,35 @@ export default function Trollbox(properties) {
       </Card>
       </Tabs>
 
-      <TrollboxRisks page="trollbox" />
+      {embedded ? (
+        hideEmbeddedRisksButton ? null : (
+          <>
+            <div className="mb-4 flex justify-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowRisks(true)}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                <ShieldAlert className="mr-1.5 h-3.5 w-3.5" />
+                {t("Trollbox:footerRisksButton", "View trollbox risks")}
+              </Button>
+            </div>
+            <Dialog open={showRisks} onOpenChange={setShowRisks}>
+              <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-[560px]">
+                <DialogHeader>
+                  <DialogTitle className="sr-only">
+                    {t("Trollbox:risksTitle", "Trollbox risks")}
+                  </DialogTitle>
+                </DialogHeader>
+                <TrollboxRisks page="trollbox" />
+              </DialogContent>
+            </Dialog>
+          </>
+        )
+      ) : (
+        <TrollboxRisks page="trollbox" />
+      )}
 
       <Dialog
         open={!!openMessage}

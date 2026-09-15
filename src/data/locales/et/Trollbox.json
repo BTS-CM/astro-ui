@@ -131,5 +131,15 @@
     "attachChipWant": "Soovin",
     "attachNotAllowedChannel": "Seda manust ei saa sellesse kanalisse postitada.",
     "roleWitnessBadge": "tunnistaja",
-    "roleCommitteeBadge": "komitee liige"
+    "roleCommitteeBadge": "komitee liige",
+    "footerTitle": "Turu trollbox",
+    "footerPlaceholder": "Ahelasisene vestlus selle turu jaoks. Midagi ei laadi enne, kui selle käivitad.",
+    "footerStart": "Käivita trollbox",
+    "footerSilence": "Vaigista trollbox",
+    "footerSilenceHint": "Lõpeta trollboxi laadimine",
+    "footerTabs": "Trollboxi toad",
+    "footerTabPair": "Paar",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "Selle paari eraldi tuba — ole esimene postitaja.",
+    "footerRisksButton": "Vaata trollboxi riske"
 }

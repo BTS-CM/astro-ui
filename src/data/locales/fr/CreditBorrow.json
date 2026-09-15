@@ -35,6 +35,22 @@
     "noResults": "Aucun résultat trouvé",
     "loading": "Chargement des offres...",
     "hideExpired": "Masquer les offres expirées",
-    "showExpired": "Afficher les offres expirées"
+    "showExpired": "Afficher les offres expirées",
+    "filterLender": "Emprunter auprès de",
+    "filterBorrowAsset": "Actif emprunté",
+    "filterAll": "Tous",
+    "sortLabel": "Trier",
+    "sortNone": "Ordre par défaut",
+    "sortAmountAsc": "Montant prêté (croissant)",
+    "sortAmountDesc": "Montant prêté (décroissant)",
+    "sortFeeAsc": "Frais (croissants)",
+    "sortFeeDesc": "Frais (décroissants)",
+    "sortIdAsc": "ID d'offre (croissant)",
+    "sortIdDesc": "ID d'offre (décroissant)",
+    "sortDurationAsc": "Durée d'emprunt (croissante)",
+    "sortDurationDesc": "Durée d'emprunt (décroissante)",
+    "clearFilters": "Effacer",
+    "noFilterMatch": "Aucune offre ne correspond à ces filtres.",
+    "ofFilter": "sur {{count}}"
   }
 }

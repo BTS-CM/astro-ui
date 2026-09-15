@@ -134,6 +134,14 @@ import {
   Ban,
 } from "lucide-react";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { cn } from "@/lib/utils";
 
@@ -199,6 +207,143 @@ function hoursTillExpiration(expirationTime) {
   var hours = Math.round(difference / 1000 / 60 / 60);
   return hours;
 }
+
+function applyOfferFiltersAndSort(list, controls, normalizedAmount, offerIdNumber) {
+  if (!list || !list.length) return [];
+  let result = [...list];
+
+  if (controls.lender !== "all") {
+    result = result.filter((o) => o.owner_account === controls.lender);
+  }
+
+  if (controls.asset !== "all") {
+    result = result.filter((o) => o.asset_type === controls.asset);
+  }
+
+  switch (controls.sort) {
+    case "amount-asc":
+      result.sort((a, b) => normalizedAmount(a) - normalizedAmount(b));
+      break;
+    case "amount-desc":
+      result.sort((a, b) => normalizedAmount(b) - normalizedAmount(a));
+      break;
+    case "fee-asc":
+      result.sort((a, b) => a.fee_rate - b.fee_rate);
+      break;
+    case "fee-desc":
+      result.sort((a, b) => b.fee_rate - a.fee_rate);
+      break;
+    case "id-asc":
+      result.sort((a, b) => offerIdNumber(a) - offerIdNumber(b));
+      break;
+    case "id-desc":
+      result.sort((a, b) => offerIdNumber(b) - offerIdNumber(a));
+      break;
+    case "duration-asc":
+      result.sort(
+        (a, b) => a.max_duration_seconds - b.max_duration_seconds
+      );
+      break;
+    case "duration-desc":
+      result.sort(
+        (a, b) => b.max_duration_seconds - a.max_duration_seconds
+      );
+      break;
+    default:
+      break;
+  }
+
+  return result;
+}
+
+const CreditBorrowFilterRow = memo(function CreditBorrowFilterRow({ controls, onChange, onClear, hasActiveFilters, lenderOptions, borrowAssetOptions, t }) {
+  return (
+    <div className="mb-3 flex flex-wrap items-end gap-2 px-1">
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("CreditBorrow:card.filterLender")}
+        </span>
+        <Select
+          value={controls.lender}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, lender: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("CreditBorrow:card.filterAll")}</SelectItem>
+            {lenderOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("CreditBorrow:card.filterBorrowAsset")}
+        </span>
+        <Select
+          value={controls.asset}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, asset: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("CreditBorrow:card.filterAll")}</SelectItem>
+            {borrowAssetOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("CreditBorrow:card.sortLabel")}
+        </span>
+        <Select
+          value={controls.sort}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, sort: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">{t("CreditBorrow:card.sortNone")}</SelectItem>
+            <SelectItem value="amount-asc">{t("CreditBorrow:card.sortAmountAsc")}</SelectItem>
+            <SelectItem value="amount-desc">{t("CreditBorrow:card.sortAmountDesc")}</SelectItem>
+            <SelectItem value="fee-asc">{t("CreditBorrow:card.sortFeeAsc")}</SelectItem>
+            <SelectItem value="fee-desc">{t("CreditBorrow:card.sortFeeDesc")}</SelectItem>
+            <SelectItem value="id-asc">{t("CreditBorrow:card.sortIdAsc")}</SelectItem>
+            <SelectItem value="id-desc">{t("CreditBorrow:card.sortIdDesc")}</SelectItem>
+            <SelectItem value="duration-asc">{t("CreditBorrow:card.sortDurationAsc")}</SelectItem>
+            <SelectItem value="duration-desc">{t("CreditBorrow:card.sortDurationDesc")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {hasActiveFilters ? (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onClear}
+          className="shrink-0 border-[hsl(var(--accent-1)/0.2)] bg-card/60 hover:bg-[hsl(var(--accent-1)/0.1)]"
+        >
+          {t("CreditBorrow:card.clearFilters")}
+        </Button>
+      ) : null}
+    </div>
+  );
+});
 
 const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 
@@ -306,6 +451,77 @@ export default function CreditBorrow(properties) {
     }
     return [];
   }, [allOffers, _chain, blocklist, chainUserBlockList, showExpired]);
+
+  const [offerControls, setOfferControls] = useState({
+    sort: "none",
+    lender: "all",
+    asset: "all",
+  });
+
+  const lenderOptions = useMemo(() => {
+    const ids = Array.from(
+      new Set((offers ?? []).map((o) => o.owner_account).filter(Boolean))
+    );
+    return ids
+      .map((id) => {
+        const found = (offers ?? []).find((o) => o.owner_account === id);
+        const name = found?.owner_name;
+        return { value: id, label: name ? `${name} (${id})` : id };
+      })
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [offers]);
+
+  const borrowAssetOptions = useMemo(() => {
+    const ids = Array.from(
+      new Set((offers ?? []).map((o) => o.asset_type).filter(Boolean))
+    );
+    return ids
+      .map((id) => {
+        const found = (assets ?? []).find((a) => a.id === id);
+        return { value: id, label: found ? `${found.symbol} (${id})` : id };
+      })
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [offers, assets]);
+
+  const normalizedAmount = useCallback(
+    (offer) => {
+      const found = (assets ?? []).find((a) => a.id === offer.asset_type);
+      const precision = found?.precision ?? 5;
+      return offer.current_balance / Math.pow(10, precision);
+    },
+    [assets]
+  );
+
+  const offerIdNumber = useCallback((offer) => {
+    const parts = (offer.id ?? "").split(".");
+    const num = parseInt(parts[2] ?? parts[parts.length - 1] ?? "0", 10);
+    return Number.isNaN(num) ? 0 : num;
+  }, []);
+
+  const displayedOffers = useMemo(() => {
+    return applyOfferFiltersAndSort(offers, offerControls, normalizedAmount, offerIdNumber);
+  }, [offers, offerControls, normalizedAmount, offerIdNumber]);
+
+  const hasActiveOfferFilters =
+    offerControls.sort !== "none" ||
+    offerControls.lender !== "all" ||
+    offerControls.asset !== "all";
+
+  const clearOfferControls = useCallback(() => {
+    setOfferControls({ sort: "none", lender: "all", asset: "all" });
+  }, []);
+
+  const filterRowElement = (
+    <CreditBorrowFilterRow
+      controls={offerControls}
+      onChange={setOfferControls}
+      onClear={clearOfferControls}
+      hasActiveFilters={hasActiveOfferFilters}
+      lenderOptions={lenderOptions}
+      borrowAssetOptions={borrowAssetOptions}
+      t={t}
+    />
+  );
 
   const [activeTab, setActiveTab] = useState("allOffers");
   const [activeSearch, setActiveSearch] = useState("borrow");
@@ -506,10 +722,36 @@ export default function CreditBorrow(properties) {
     }
   }, [offerSearch, thisInput]);
 
+  const displayedCompatibleOffers = useMemo(() => {
+    return applyOfferFiltersAndSort(compatibleOffers, offerControls, normalizedAmount, offerIdNumber);
+  }, [compatibleOffers, offerControls, normalizedAmount, offerIdNumber]);
+
+  const displayedSearchResult = useMemo(() => {
+    if (!thisResult || !thisResult.length) return thisResult;
+    // Filter Fuse hits by shared lender/asset controls
+    let filtered = thisResult.filter(({ item }) => {
+      if (!item) return false;
+      if (offerControls.lender !== "all" && item.owner_account !== offerControls.lender) return false;
+      if (offerControls.asset !== "all" && item.asset_type !== offerControls.asset) return false;
+      return true;
+    });
+    // Apply shared sort; when sort is "none" keep Fuse relevance order
+    if (offerControls.sort === "none") return filtered;
+    const items = filtered.map((r) => r.item);
+    const sortedItems = applyOfferFiltersAndSort(
+      items,
+      { ...offerControls, lender: "all", asset: "all" },
+      normalizedAmount,
+      offerIdNumber
+    );
+    const order = new Map(sortedItems.map((o, idx) => [o.id, idx]));
+    return [...filtered].sort((a, b) => (order.get(a.item.id) ?? 0) - (order.get(b.item.id) ?? 0));
+  }, [thisResult, offerControls, normalizedAmount, offerIdNumber]);
+
   const creditBorrowCommonProps = useMemo(() => ({ assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs }), [assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
-  const offerRowProps = useMemo(() => ({ offers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [offers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
-  const balanceRowProps = useMemo(() => ({ compatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [compatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
-  const searchRowProps = useMemo(() => ({ thisResult, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [thisResult, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
+  const offerRowProps = useMemo(() => ({ offers: displayedOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [displayedOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
+  const balanceRowProps = useMemo(() => ({ compatibleOffers: displayedCompatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [displayedCompatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
+  const searchRowProps = useMemo(() => ({ thisResult: displayedSearchResult, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [displayedSearchResult, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
 
   const [thisSearchInput, setThisSearchInput] = useState();
 
@@ -632,26 +874,33 @@ export default function CreditBorrow(properties) {
 
               {activeTab === "allOffers" && (
                 <div>
-                  <div className="flex items-center gap-2 mb-3 px-1">
+                  <div className="mb-3 flex flex-wrap items-end gap-2 px-1">
                     <Sparkles className="h-3.5 w-3.5 dark:text-[hsl(var(--accent-1-fg)/0.7)] text-[hsl(var(--accent-1-fg)/0.8)]" />
                     <span className="text-xs font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.7)] text-[hsl(var(--accent-1-fg)/0.8)]">
                       {t("CreditBorrow:card.allOffers")}
                     </span>
                     <span className="text-xs text-muted-foreground/60">·</span>
                     <span className="text-xs text-muted-foreground">
-                      {offers.length} {offers.length === 1 ? "offer" : "offers"}
+                      {displayedOffers.length} {displayedOffers.length === 1 ? "offer" : "offers"}
+                      {hasActiveOfferFilters && displayedOffers.length !== offers.length ? ` (${t("CreditBorrow:card.ofFilter", { count: offers.length })})` : ""}
                     </span>
                   </div>
-                  {assets && offers && offers.length ? (
+                  {filterRowElement}
+                  {assets && displayedOffers && displayedOffers.length ? (
                     <div className="w-full h-[600px]">
                       <List
                         rowComponent={CreditBorrowOfferRow}
-                        rowCount={offers.length}
+                        rowCount={displayedOffers.length}
                         rowHeight={isDesktop ? 330 : 380}
                         rowProps={offerRowProps}
                         height={600}
                         width="100%"
                       />
+                    </div>
+                  ) : null}
+                  {assets && offers && offers.length && !displayedOffers.length ? (
+                    <div className="text-center py-8 text-muted-foreground text-sm">
+                      {t("CreditBorrow:card.noFilterMatch")}
                     </div>
                   ) : null}
                 </div>
@@ -666,14 +915,16 @@ export default function CreditBorrow(properties) {
                     </span>
                     <span className="text-xs text-muted-foreground/60">·</span>
                     <span className="text-xs text-muted-foreground">
-                      {compatibleOffers.length} compatible
+                      {displayedCompatibleOffers.length} compatible
+                      {hasActiveOfferFilters && displayedCompatibleOffers.length !== compatibleOffers.length ? ` (${t("CreditBorrow:card.ofFilter", { count: compatibleOffers.length })})` : ""}
                     </span>
                   </div>
-                  {assets && compatibleOffers && compatibleOffers.length ? (
+                  {filterRowElement}
+                  {assets && displayedCompatibleOffers && displayedCompatibleOffers.length ? (
                     <div className="w-full h-[600px]">
                       <List
                         rowComponent={CreditBorrowBalanceRow}
-                        rowCount={compatibleOffers.length}
+                        rowCount={displayedCompatibleOffers.length}
                         rowHeight={isDesktop ? 330 : 380}
                         rowProps={balanceRowProps}
                         height={600}
@@ -682,7 +933,9 @@ export default function CreditBorrow(properties) {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-muted-foreground text-sm">
-                      {t("CreditBorrow:card.noCompatibleOffers")}
+                      {assets && compatibleOffers && compatibleOffers.length && !displayedCompatibleOffers.length
+                        ? t("CreditBorrow:card.noFilterMatch")
+                        : t("CreditBorrow:card.noCompatibleOffers")}
                     </div>
                   )}
                 </div>
@@ -745,18 +998,25 @@ export default function CreditBorrow(properties) {
                     />
                   </div>
 
+                  {filterRowElement}
+
                   {["borrow", "collateral", "owner_name"].includes(activeSearch) && (
                     <>
-                      {thisResult && thisResult.length ? (
+                      {displayedSearchResult && displayedSearchResult.length ? (
                         <div className="w-full h-[600px]">
                           <List
                             rowComponent={CreditBorrowSearchRow}
-                            rowCount={thisResult.length}
+                            rowCount={displayedSearchResult.length}
                             rowHeight={isDesktop ? 330 : 380}
                             rowProps={searchRowProps}
                             height={600}
                             width="100%"
                           />
+                        </div>
+                      ) : null}
+                      {thisInput && thisResult && thisResult.length && displayedSearchResult && !displayedSearchResult.length ? (
+                        <div className="text-center py-8 text-muted-foreground text-sm">
+                          {t("CreditBorrow:card.noFilterMatch")}
                         </div>
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (

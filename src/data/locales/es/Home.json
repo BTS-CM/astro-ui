@@ -412,7 +412,7 @@
         "transferSubtitle": "Envía activos y gestiona permisos",
         "debtSubtitle": "Presta, toma prestado y emite deuda colateralizada",
         "assetCreationSubtitle": "Crea tokens, smartcoins y pools de liquidez",
-        "accountSubtitle": "Gestiona tu portfolio, órdenes y favoritos",
+        "accountSubtitle": "Gestiona tus saldos, propuestas y favoritos",
         "blockchainSubtitle": "Explora datos blockchain, pools y rastreadores",
         "governanceSubtitle": "Vota, registra roles y crea propuestas de worker",
         "invoicingSubtitle": "Crea, envía y paga facturas on-chain",

@@ -412,7 +412,7 @@
         "transferSubtitle": "アセットを送信し、権限を管理",
         "debtSubtitle": "借り入れ、貸し出し、そして担保付債務を発行",
         "assetCreationSubtitle": "トークン、スマートコイン、流動性プールを作成",
-        "accountSubtitle": "ポートフォリオ、注文、お気に入りを管理",
+        "accountSubtitle": "残高、提案、お気に入りを管理",
         "blockchainSubtitle": "ブロックチェーンデータ、プール、トラッカーを探索",
         "governanceSubtitle": "投票、ロール登録、ワーカー提案の作成",
         "invoicingSubtitle": "オンチェーンで請求書を作成、送信、支払い",

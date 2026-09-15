@@ -35,6 +35,22 @@
     "noResults": "結果が見つかりませんでした",
     "loading": "オファーを読み込んでいます...",
     "hideExpired": "期限切れのオファーを非表示",
-    "showExpired": "期限切れのオファーを表示"
+    "showExpired": "期限切れのオファーを表示",
+    "filterLender": "借入先",
+    "filterBorrowAsset": "借入資産",
+    "filterAll": "すべて",
+    "sortLabel": "並び替え",
+    "sortNone": "デフォルトの順序",
+    "sortAmountAsc": "貸付金額（少ない順）",
+    "sortAmountDesc": "貸付金額（多い順）",
+    "sortFeeAsc": "手数料（安い順）",
+    "sortFeeDesc": "手数料（高い順）",
+    "sortIdAsc": "オファーID（昇順）",
+    "sortIdDesc": "オファーID（降順）",
+    "sortDurationAsc": "借入期間（短い順）",
+    "sortDurationDesc": "借入期間（長い順）",
+    "clearFilters": "クリア",
+    "noFilterMatch": "これらのフィルターに一致するオファーはありません。",
+    "ofFilter": "{{count}}件中"
   }
 }

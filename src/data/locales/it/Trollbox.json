@@ -131,5 +131,15 @@
     "attachChipWant": "Cerco",
     "attachNotAllowedChannel": "Questo allegato non può essere pubblicato in questo canale.",
     "roleWitnessBadge": "testimone",
-    "roleCommitteeBadge": "membro del comitato"
+    "roleCommitteeBadge": "membro del comitato",
+    "footerTitle": "Trollbox del mercato",
+    "footerPlaceholder": "Chat on-chain per questo mercato. Non viene caricato nulla finché non la avvii.",
+    "footerStart": "Avvia trollbox",
+    "footerSilence": "Silenzia trollbox",
+    "footerSilenceHint": "Smetti di caricare la trollbox",
+    "footerTabs": "Stanze trollbox",
+    "footerTabPair": "Coppia",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "Una stanza dedicata a questa coppia — sii il primo a postare.",
+    "footerRisksButton": "Vedi i rischi della trollbox"
 }

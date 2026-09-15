@@ -131,5 +131,15 @@
     "attachChipWant": "求",
     "attachNotAllowedChannel": "この添付はこのチャンネルに投稿できません。",
     "roleWitnessBadge": "証人",
-    "roleCommitteeBadge": "委員会メンバー"
+    "roleCommitteeBadge": "委員会メンバー",
+    "footerTitle": "マーケットトロールボックス",
+    "footerPlaceholder": "このマーケットのオンチェーンチャット。開始するまで何も読み込まれません。",
+    "footerStart": "トロールボックスを開始",
+    "footerSilence": "トロールボックスを停止",
+    "footerSilenceHint": "トロールボックスの読み込みを停止",
+    "footerTabs": "トロールボックスの部屋",
+    "footerTabPair": "ペア",
+    "footerTabTrading": "Trading",
+    "footerPairHint": "このペア専用の部屋 — 最初に投稿しよう。",
+    "footerRisksButton": "トロールボックスのリスクを見る"
 }

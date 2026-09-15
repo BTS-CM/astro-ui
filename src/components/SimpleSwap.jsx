@@ -72,6 +72,8 @@ import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { useChainObjectsLive } from "@/hooks/useChainObjectsLive";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
+import TrollboxFooter from "./TrollboxFooter.jsx";
+import { pairRoomId } from "@/nanoeffects/Trollbox.ts";
 
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -719,6 +721,36 @@ export default function SimpleSwap(properties) {
     assetA &&
     assetB &&
     !showDialog;
+
+  // Trollbox rooms for the swap page: dedicated pair room for the two
+  // selected assets plus the global pools channel. Only rendered once
+  // both assets are selected (see below); DexLiveFooterCard stays below it.
+  const hasBothAssetsSelected = Boolean(
+    selectedAssetASymbol && selectedAssetBSymbol && assetA?.id && assetB?.id
+  );
+  const swapTrollboxRooms = useMemo(() => {
+    const pairChannel =
+      assetA?.id && assetB?.id ? pairRoomId(assetA.id, assetB.id) : null;
+    // NOTE: joined with "·" — i18next escapes "/" inside interpolated strings.
+    const pairLabel =
+      assetA?.symbol && assetB?.symbol
+        ? `${assetA.symbol} · ${assetB.symbol}`
+        : null;
+    return [
+      {
+        id: "pair",
+        channel: pairChannel,
+        label: pairLabel,
+        tab: t("Trollbox:footerTabPair", "Pair"),
+      },
+      {
+        id: "pools",
+        channel: "pools",
+        label: null,
+        tab: t("Trollbox:footerTabPools", "Pools"),
+      },
+    ];
+  }, [assetA, assetB, t]);
 
   return (
     <>
@@ -1506,6 +1538,26 @@ export default function SimpleSwap(properties) {
                 </a>
               </div>
             ) : null}
+          </div>
+        ) : null}
+
+        {hasBothAssetsSelected ? (
+          <div className="mt-5">
+            <TrollboxFooter
+              assetAId={assetA?.id ?? null}
+              assetBId={assetB?.id ?? null}
+              assetASymbol={assetA?.symbol ?? selectedAssetASymbol ?? null}
+              assetBSymbol={assetB?.symbol ?? selectedAssetBSymbol ?? null}
+              rooms={swapTrollboxRooms}
+              _assetsBTS={_assetsBTS}
+              _assetsTEST={_assetsTEST}
+              _marketSearchBTS={_marketSearchBTS}
+              _marketSearchTEST={_marketSearchTEST}
+              _poolsBTS={_poolsBTS}
+              _poolsTEST={_poolsTEST}
+              _feeScheduleBTS={_globalParamsBTS}
+              _feeScheduleTEST={_globalParamsTEST}
+            />
           </div>
         ) : null}
       </div>

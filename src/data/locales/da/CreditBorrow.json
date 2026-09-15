@@ -35,6 +35,22 @@
     "noResults": "Ingen resultater fundet",
     "loading": "Indlæser tilbud...",
     "hideExpired": "Skjul udløbne tilbud",
-    "showExpired": "Vis udløbne tilbud"
+    "showExpired": "Vis udløbne tilbud",
+    "filterLender": "Låner fra",
+    "filterBorrowAsset": "Låneaktiv",
+    "filterAll": "Alle",
+    "sortLabel": "Sorter",
+    "sortNone": "Standardrækkefølge",
+    "sortAmountAsc": "Udlånt beløb (laveste først)",
+    "sortAmountDesc": "Udlånt beløb (højeste først)",
+    "sortFeeAsc": "Gebyr (laveste først)",
+    "sortFeeDesc": "Gebyr (højeste først)",
+    "sortIdAsc": "Tilbuds-ID (stigende)",
+    "sortIdDesc": "Tilbuds-ID (faldende)",
+    "sortDurationAsc": "Lånevarighed (korteste først)",
+    "sortDurationDesc": "Lånevarighed (længste først)",
+    "clearFilters": "Ryd",
+    "noFilterMatch": "Ingen tilbud matcher disse filtre.",
+    "ofFilter": "af {{count}}"
   }
 }

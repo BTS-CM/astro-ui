@@ -35,6 +35,22 @@
     "noResults": "Keine Ergebnisse gefunden",
     "loading": "Angebote werden geladen...",
     "hideExpired": "Abgelaufene Angebote ausblenden",
-    "showExpired": "Abgelaufene Angebote anzeigen"
+    "showExpired": "Abgelaufene Angebote anzeigen",
+    "filterLender": "Leihen von",
+    "filterBorrowAsset": "Leih-Asset",
+    "filterAll": "Alle",
+    "sortLabel": "Sortieren",
+    "sortNone": "Standardreihenfolge",
+    "sortAmountAsc": "Verliehener Betrag (niedrigste zuerst)",
+    "sortAmountDesc": "Verliehener Betrag (höchste zuerst)",
+    "sortFeeAsc": "Gebühr (niedrigste zuerst)",
+    "sortFeeDesc": "Gebühr (höchste zuerst)",
+    "sortIdAsc": "Angebots-ID (aufsteigend)",
+    "sortIdDesc": "Angebots-ID (absteigend)",
+    "sortDurationAsc": "Leihdauer (kürzeste zuerst)",
+    "sortDurationDesc": "Leihdauer (längste zuerst)",
+    "clearFilters": "Zurücksetzen",
+    "noFilterMatch": "Keine Angebote entsprechen diesen Filtern.",
+    "ofFilter": "von {{count}}"
   }
 }

@@ -38,7 +38,7 @@ import {
 import { humanReadableFloat, assetAmountRegex } from "@/lib/common.js";
 import { cn } from "@/lib/utils";
 
-import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
+import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 
 import {
   ArrowDownUp,
@@ -704,7 +704,7 @@ export default function LimitOrderWizard(properties) {
                       : "0"}
                   </span>
                 ) : null}
-                <BasicAssetDropDownCard
+                <AssetDropDown
                   assetSymbol={buyingAsset ?? ""}
                   assetData={buyingAssetData}
                   storeCallback={setBuyingAsset}
@@ -713,8 +713,7 @@ export default function LimitOrderWizard(properties) {
                   type={"quote"}
                   size="small"
                   chain={chain}
-                  borrowPositions={borrowPositions}
-                  usrBalances={usrBalances}
+                  balances={usrBalances}
                 />
                 <TooltipProvider delayDuration={200}>
                   <Tooltip>
@@ -804,7 +803,7 @@ export default function LimitOrderWizard(properties) {
                       : "0"}
                   </span>
                 ) : null}
-                <BasicAssetDropDownCard
+                <AssetDropDown
                   assetSymbol={sellingAsset ?? ""}
                   assetData={sellingAssetData}
                   storeCallback={setSellingAsset}
@@ -813,8 +812,7 @@ export default function LimitOrderWizard(properties) {
                   type={"base"}
                   size="small"
                   chain={chain}
-                  borrowPositions={borrowPositions}
-                  usrBalances={usrBalances}
+                  balances={usrBalances}
                 />
                 <TooltipProvider delayDuration={200}>
                   <Tooltip>

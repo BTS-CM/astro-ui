@@ -35,6 +35,22 @@
     "noResults": "ไม่พบผลลัพธ์",
     "loading": "กำลังโหลดข้อเสนอ...",
     "hideExpired": "ซ่อนข้อเสนอที่หมดอายุ",
-    "showExpired": "แสดงข้อเสนอที่หมดอายุ"
+    "showExpired": "แสดงข้อเสนอที่หมดอายุ",
+    "filterLender": "ยืมจาก",
+    "filterBorrowAsset": "สินทรัพย์ที่ยืม",
+    "filterAll": "ทั้งหมด",
+    "sortLabel": "เรียงลำดับ",
+    "sortNone": "ลำดับเริ่มต้น",
+    "sortAmountAsc": "จำนวนที่ให้ยืม (น้อยก่อน)",
+    "sortAmountDesc": "จำนวนที่ให้ยืม (มากก่อน)",
+    "sortFeeAsc": "ค่าธรรมเนียม (น้อยก่อน)",
+    "sortFeeDesc": "ค่าธรรมเนียม (มากก่อน)",
+    "sortIdAsc": "ID ข้อเสนอ (น้อยไปมาก)",
+    "sortIdDesc": "ID ข้อเสนอ (มากไปน้อย)",
+    "sortDurationAsc": "ระยะเวลายืม (น้อยก่อน)",
+    "sortDurationDesc": "ระยะเวลายืม (มากก่อน)",
+    "clearFilters": "ล้าง",
+    "noFilterMatch": "ไม่มีข้อเสนอที่ตรงกับตัวกรองเหล่านี้",
+    "ofFilter": "จาก {{count}}"
   }
 }
