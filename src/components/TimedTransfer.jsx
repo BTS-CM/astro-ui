@@ -486,6 +486,8 @@ export default function TimedTransfer(properties) {
                           type={null}
                           chain={usr && usr.chain ? usr.chain : "bitshares"}
                           balances={balances}
+                          initialMode="balances"
+                          balancesOnly
                         />
                       </div>
                     </div>

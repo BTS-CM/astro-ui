@@ -722,6 +722,23 @@ export default function AirdropCalculate(props) {
     return () => sub();
   }, [usr, airdropAsset, currentNode]);
 
+  // All user balances for the balances-only payout asset picker
+  const [userBalances, setUserBalances] = useState(null);
+  useEffect(() => {
+    if (!usr || !usr.id || !currentNode) {
+      setUserBalances(null);
+      return;
+    }
+    const store = createUserBalancesStore([usr.chain, usr.id, currentNode.url]);
+    const sub = store.subscribe(({ data, error, loading }) => {
+      if (data && !error && !loading) {
+        const list = assets || [];
+        setUserBalances((data || []).filter((b) => list.find((x) => x.id === b.asset_id)));
+      }
+    });
+    return () => sub();
+  }, [usr, assets, currentNode]);
+
   // reset the amount whenever the chosen asset changes
   useEffect(() => {
     setAirdropAmount("");
@@ -1870,7 +1887,9 @@ export default function AirdropCalculate(props) {
                     marketSearch={marketSearch}
                     type={null}
                     chain={chain}
-                    balances={null}
+                    balances={userBalances}
+                    initialMode="balances"
+                    balancesOnly
                     size="small"
                     triggerVariant="outline"
                   />

@@ -312,6 +312,7 @@ function BarterLegEditor(properties) {
               otherAssets={excludeIds}
               allowedIds={ownedIds ? [...ownedIds] : undefined}
               initialMode={capToBalance ? "balances" : undefined}
+              balancesOnly={capToBalance}
               marketSearch={marketSearch}
               chain={chain}
               balances={balances}

@@ -421,6 +421,8 @@ function AmountAssetField({
           type={null}
           chain={chain}
           balances={balances}
+          initialMode="balances"
+          balancesOnly
           triggerVariant="outline"
           triggerLabel={selectedSymbol ? selectedSymbol : undefined}
           triggerClassName="w-full border-[hsl(var(--accent-warning)/0.3)] text-[hsl(var(--accent-warning-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.5)]"

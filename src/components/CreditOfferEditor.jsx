@@ -844,6 +844,8 @@ export default function CreditOfferEditor(properties) {
                         type={null}
                         chain={usr.chain}
                         balances={balances}
+                        initialMode="balances"
+                        balancesOnly
                         triggerVariant="outline"
                         triggerClassName="w-auto border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))] hover:border-[hsl(var(--accent-1)/0.5)]"
                       />

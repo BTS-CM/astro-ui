@@ -154,6 +154,12 @@ function BlockchainButton({ name, subtitle, onClick, icon, accentColor }) {
     </Button>
   );
 }
+/**
+ * Static row button classes, hoisted to module scope so scrolling rows
+ * never pay tailwind-merge parsing per render.
+ */
+const ROW_BUTTON_CLASS =
+  "group relative w-full text-left px-3 py-2.5 h-auto rounded-xl justify-start bg-accent/40 dark:bg-white/[0.05] border-border/60 hover:bg-accent/60 hover:border-border transition-all duration-200 ease-out";
 
 const AssetRow = React.memo(function AssetRow({
   index,
@@ -164,10 +170,12 @@ const AssetRow = React.memo(function AssetRow({
   relevantAssets,
   balances,
   marketSearchContents,
+  marketSearchById,
   handleSelectAsset,
   t,
 }) {
   let res;
+  let balanceText = null;
   if (mode === "search") {
     res = thisResult[index]?.item;
   } else if (mode === "featured") {
@@ -176,7 +184,20 @@ const AssetRow = React.memo(function AssetRow({
     res = relevantAssets[index];
   } else if (mode === "balances" && balances && balances.length) {
     const _balance = balances[index];
-    res = marketSearchContents.find((asset) => asset.id === _balance.asset_id);
+    res = marketSearchById
+      ? marketSearchById.get(_balance.asset_id)
+      : marketSearchContents.find((asset) => asset.id === _balance.asset_id);
+    if (res && _balance) {
+      const precision = res.p ?? res.precision ?? 0;
+      // Full float, never scientific notation: fixed decimals at the
+      // asset's precision, then trim padding zeros ("0.00000001" stays,
+      // "12.50000" becomes "12.5").
+      let text = (_balance.amount / 10 ** precision).toFixed(precision);
+      if (text.includes(".")) {
+        text = text.replace(/\.?0+$/, "");
+      }
+      balanceText = text;
+    }
   }
 
   if (!res) {
@@ -195,16 +216,18 @@ const AssetRow = React.memo(function AssetRow({
         onClick={() => {
           handleSelectAsset(res);
         }}
-        className={cn(
-          "group relative w-full text-left px-3 py-2.5 h-auto rounded-xl justify-start",
-          "bg-accent/40 dark:bg-white/[0.05] border-border/60",
-          "hover:bg-accent/60 hover:border-border",
-          "transition-all duration-200 ease-out"
-        )}
+        className={ROW_BUTTON_CLASS}
       >
         <div className="flex flex-col items-start w-full min-w-0">
-          <div className="text-sm font-semibold text-foreground/90 truncate w-full">
-            {symbol} ({id})
+          <div className="flex items-baseline justify-between gap-2 w-full">
+            <span className="text-sm font-semibold text-foreground/90 truncate min-w-0">
+              {symbol} ({id})
+            </span>
+            {balanceText != null ? (
+              <span className="shrink-0 font-mono tabular-nums text-sm text-foreground/80">
+                {balanceText}
+              </span>
+            ) : null}
           </div>
           <div className="text-[11px] text-muted-foreground/70 mt-0.5 truncate w-full">
             {t("AssetDropDownCard:issued", { user: issuer })}
@@ -232,12 +255,7 @@ const AssetRecentRow = React.memo(function AssetRecentRow({
           // reconstruct minimal asset shape for handleSelectAsset
           handleSelectAsset({ s: entry.symbol, symbol: entry.symbol, id: entry.id, u: entry.issuer, issuer: entry.issuer });
         }}
-        className={cn(
-          "group relative w-full text-left px-3 py-2.5 h-auto rounded-xl justify-start",
-          "bg-accent/40 dark:bg-white/[0.05] border-border/60",
-          "hover:bg-accent/60 hover:border-border",
-          "transition-all duration-200 ease-out"
-        )}
+        className={ROW_BUTTON_CLASS}
       >
         <div className="flex flex-col items-start w-full min-w-0">
           <div className="text-sm font-semibold text-foreground/90 truncate w-full">
@@ -277,6 +295,7 @@ export default function AssetDropDown(properties) {
     triggerClassName, // optional custom trigger class
     autoWidth, // optional: use w-auto instead of w-full for compact header buttons
     initialMode, // optional mode to open on ("search"|"balances"|"featured"|"favourites"|"recent"); unset = mode chooser
+    balancesOnly, // optional: lock the picker to the balances view only (no mode chooser, no back button)
     accentColor: propsAccentColor,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -336,6 +355,12 @@ export default function AssetDropDown(properties) {
     }
   }, [marketSearch, blocklist, chain, assetSymbol, otherAsset, otherAssets, allowedIds]);
 
+  // O(1) id -> asset lookup so scrolling rows never scan the full market.
+  const marketSearchById = useMemo(
+    () => new Map(marketSearchContents.map((a) => [a.id, a])),
+    [marketSearchContents]
+  );
+
   // Balances must be pre-filtered to avoid phantom rows: any balance whose asset is blocked
   // or excluded (via marketSearchContents filtering) would otherwise resolve to null in AssetRow
   // and leave a List gap (rowCount includes it but row renders null).
@@ -346,8 +371,8 @@ export default function AssetDropDown(properties) {
     if (!marketSearchContents.length && (!marketSearch || !marketSearch.length)) {
       return balances;
     }
-    return balances.filter((bal) => marketSearchContents.some((a) => a.id === bal.asset_id));
-  }, [balances, marketSearchContents, marketSearch]);
+    return balances.filter((bal) => marketSearchById.has(bal.asset_id));
+  }, [balances, marketSearchContents, marketSearch, marketSearchById]);
 
   const fuse = useMemo(
     () =>
@@ -374,8 +399,16 @@ export default function AssetDropDown(properties) {
     }
   }, [thisInput, fuse]);
 
-  const [mode, setMode] = useState(initialMode ?? null);
+  const [mode, setMode] = useState(initialMode ?? (balancesOnly ? "balances" : null));
   const [featuredCategory, setFeaturedCategory] = useState(null);
+
+  // When locked to balances only, force the balances view — this also
+  // recovers the lock after dialog-close/selection resets set mode to null.
+  useEffect(() => {
+    if (balancesOnly && mode !== "balances") {
+      setMode("balances");
+    }
+  }, [balancesOnly, mode]);
 
   // Per-page list filters — same pattern as global search but local to each pseudo-page
   const [balancesFilter, setBalancesFilter] = useState("");
@@ -529,12 +562,12 @@ export default function AssetDropDown(properties) {
     if (!displayBalances.length) return [];
     return displayBalances
       .map((bal) => {
-        const asset = marketSearchContents.find((a) => a.id === bal.asset_id);
+        const asset = marketSearchById.get(bal.asset_id);
         if (!asset) return null;
         return { balance: bal, asset };
       })
       .filter(Boolean);
-  }, [displayBalances, marketSearchContents]);
+  }, [displayBalances, marketSearchById]);
 
   const balancesFuse = useMemo(
     () =>
@@ -679,10 +712,11 @@ export default function AssetDropDown(properties) {
       relevantAssets,
       balances: filteredBalances,
       marketSearchContents,
+      marketSearchById,
       handleSelectAsset,
       t,
     }),
-    [mode, thisResult, featuredAssets, relevantAssets, filteredBalances, marketSearchContents, handleSelectAsset, t]
+    [mode, thisResult, featuredAssets, relevantAssets, filteredBalances, marketSearchContents, marketSearchById, handleSelectAsset, t]
   );
 
   const recentRowProps = useMemo(
@@ -702,6 +736,20 @@ export default function AssetDropDown(properties) {
       thisResult: [],
     }),
     [filteredRelevantAssets, marketSearchContents, handleSelectAsset, t]
+  );
+
+  const featuredRowProps = useMemo(
+    () => ({
+      mode: "featured",
+      thisResult: [],
+      featuredAssets: filteredFeaturedCategoryAssets,
+      relevantAssets: [],
+      balances: [],
+      marketSearchContents,
+      handleSelectAsset,
+      t,
+    }),
+    [filteredFeaturedCategoryAssets, marketSearchContents, handleSelectAsset, t]
   );
 
   return (
@@ -760,12 +808,14 @@ export default function AssetDropDown(properties) {
         </DialogHeader>
 
         <div className="min-h-[340px]">
-          <StepIndicator
-            currentStep={currentStep}
-            accentColor={accentColor}
-            step1Label={t("AssetDropDownCard:step1")}
-            step2Label={t("AssetDropDownCard:step2")}
-          />
+          {!balancesOnly ? (
+            <StepIndicator
+              currentStep={currentStep}
+              accentColor={accentColor}
+              step1Label={t("AssetDropDownCard:step1")}
+              step2Label={t("AssetDropDownCard:step2")}
+            />
+          ) : null}
 
           {/* MODE SELECTION — pseudo-page landing */}
           {!mode ? (
@@ -850,13 +900,14 @@ export default function AssetDropDown(properties) {
               </div>
 
               {thisResult && thisResult.length ? (
-                <div className="w-full h-[340px] rounded-xl">
+                <div className="w-full h-[340px] rounded-xl overscroll-contain">
                   <List
                     height={340}
                     width="100%"
                     rowComponent={AssetRow}
                     rowCount={thisResult.length}
                     rowHeight={72}
+                    overscanCount={5}
                     rowProps={rowProps}
                     key={`list-search-${chain}`}
                   />
@@ -926,7 +977,7 @@ export default function AssetDropDown(properties) {
                 </div>
               ) : null}
 
-              <div className="w-full h-[340px] rounded-xl">
+              <div className="w-full h-[340px] rounded-xl overscroll-contain">
                 {filteredBalances && filteredBalances.length ? (
                   <List
                     height={340}
@@ -934,6 +985,7 @@ export default function AssetDropDown(properties) {
                     rowComponent={AssetRow}
                     rowCount={filteredBalances.length}
                     rowHeight={72}
+                    overscanCount={5}
                     rowProps={rowProps}
                     key={`list-balances-${chain}-${balancesFilter}`}
                   />
@@ -976,14 +1028,16 @@ export default function AssetDropDown(properties) {
                 )}
               </div>
 
-              <Button
-                variant="ghost"
-                onClick={() => setMode(null)}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground/70 px-2 py-1 h-auto"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                {t("AssetDropDownCard:mode.back")}
-              </Button>
+              {!balancesOnly ? (
+                <Button
+                  variant="ghost"
+                  onClick={() => setMode(null)}
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground/70 px-2 py-1 h-auto"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  {t("AssetDropDownCard:mode.back")}
+                </Button>
+              ) : null}
             </div>
           ) : null}
 
@@ -1053,7 +1107,7 @@ export default function AssetDropDown(properties) {
                     </div>
                   ) : null}
 
-                  <div className="w-full h-[340px] rounded-xl">
+                  <div className="w-full h-[340px] rounded-xl overscroll-contain">
                     {filteredFeaturedCategoryAssets && filteredFeaturedCategoryAssets.length ? (
                       <List
                         height={340}
@@ -1061,16 +1115,8 @@ export default function AssetDropDown(properties) {
                         rowComponent={AssetRow}
                         rowCount={filteredFeaturedCategoryAssets.length}
                         rowHeight={72}
-                        rowProps={{
-                          mode: "featured",
-                          thisResult: [],
-                          featuredAssets: filteredFeaturedCategoryAssets,
-                          relevantAssets: [],
-                          balances: [],
-                          marketSearchContents,
-                          handleSelectAsset,
-                          t,
-                        }}
+                        overscanCount={5}
+                        rowProps={featuredRowProps}
                         key={`list-featured-${featuredCategory}-${chain}-${featuredFilter}`}
                       />
                     ) : featuredCategoryAssets && featuredCategoryAssets.length && featuredFilter ? (
@@ -1151,7 +1197,7 @@ export default function AssetDropDown(properties) {
                 </div>
               ) : null}
 
-              <div className="w-full h-[340px] rounded-xl">
+              <div className="w-full h-[340px] rounded-xl overscroll-contain">
                 {filteredRelevantAssets && filteredRelevantAssets.length ? (
                   <List
                     height={340}
@@ -1159,6 +1205,7 @@ export default function AssetDropDown(properties) {
                     rowComponent={AssetRow}
                     rowCount={filteredRelevantAssets.length}
                     rowHeight={72}
+                    overscanCount={5}
                     rowProps={favouriteRowProps}
                     key={`list-favourites-${chain}-${favouritesFilter}`}
                   />
@@ -1253,7 +1300,7 @@ export default function AssetDropDown(properties) {
                 </div>
               ) : null}
 
-              <div className="w-full h-[340px] rounded-xl">
+              <div className="w-full h-[340px] rounded-xl overscroll-contain">
                 {filteredRecentSearch && filteredRecentSearch.length > 0 ? (
                   <List
                     rowComponent={AssetRecentRow}
@@ -1261,6 +1308,7 @@ export default function AssetDropDown(properties) {
                     rowHeight={72}
                     height={340}
                     width="100%"
+                    overscanCount={5}
                     rowProps={recentRowProps}
                     key={`list-recent-${effectiveChain}-${recentFilter}`}
                   />

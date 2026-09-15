@@ -43,7 +43,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
+import { humanReadableFloat, trimPrice, blockchainFloat, assetAmountRegex } from "@/lib/common";
 import { cn } from "@/lib/utils";
 
 import { Avatar } from "./Avatar.tsx";
@@ -145,6 +145,53 @@ export default function WithdrawPermissions(properties) {
       setFoundAsset(found[0]);
     }
   }, [found]);
+
+  const availableBalance = useMemo(() => {
+    if (!foundAsset || !balances) {
+      return null;
+    }
+    const entry = balances.find((x) => x.asset_id === foundAsset.id);
+    return entry ? humanReadableFloat(entry.amount, foundAsset.precision) : 0;
+  }, [foundAsset, balances]);
+
+  // Enforce the chosen asset's precision if the asset is switched while an
+  // amount with too many decimals is already entered.
+  useEffect(() => {
+    if (!foundAsset || typeof transferAmount !== "string") {
+      return;
+    }
+    const parts = transferAmount.split(".");
+    if (parts[1] && parts[1].length > foundAsset.precision) {
+      const truncated =
+        foundAsset.precision === 0
+          ? parts[0]
+          : `${parts[0]}.${parts[1].slice(0, foundAsset.precision)}`;
+      setTransferAmount(truncated);
+      form.setValue("withdrawAmount", truncated);
+    }
+  }, [foundAsset, transferAmount, form]);
+
+  // Snap an over-balance amount back to the max after a moment (create only).
+  useEffect(() => {
+    if (mode === "edit") {
+      return undefined;
+    }
+    const amount = parseFloat(transferAmount);
+    if (
+      !foundAsset ||
+      availableBalance == null ||
+      !(amount > 0) ||
+      !(amount > parseFloat(availableBalance))
+    ) {
+      return undefined;
+    }
+    const timer = setTimeout(() => {
+      const max = String(parseFloat(availableBalance));
+      setTransferAmount(max);
+      form.setValue("withdrawAmount", max);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [mode, transferAmount, foundAsset, availableBalance, form]);
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
 
@@ -400,6 +447,8 @@ export default function WithdrawPermissions(properties) {
                           type={null}
                           chain={usr && usr.chain ? usr.chain : "bitshares"}
                           balances={balances}
+                          initialMode="balances"
+                          balancesOnly
                         />
                       </div>
                     </div>
@@ -477,11 +526,8 @@ export default function WithdrawPermissions(properties) {
                           className="mb-1"
                           onChange={(event) => {
                             let input = event.target.value;
-                            const inputDecimals = !foundAsset
-                              ? 2
-                              : foundAsset.precision;
-                            let regex = new RegExp(
-                              `^[^+-]*[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
+                            const regex = assetAmountRegex(
+                              foundAsset || { precision: 2 }
                             );
                             if (regex.test(input)) {
                               if (input === "0" || input === "0.") {

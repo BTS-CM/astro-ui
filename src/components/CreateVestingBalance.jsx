@@ -382,6 +382,8 @@ export default function CreateVestingBalance(properties) {
                       type={"backing"}
                       chain={usr && usr.chain ? usr.chain : "bitshares"}
                       balances={usrBalances}
+                      initialMode="balances"
+                      balancesOnly
                     />
                   </span>
                 </div>

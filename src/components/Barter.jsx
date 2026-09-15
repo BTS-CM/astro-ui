@@ -57,7 +57,7 @@ import {
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 import AccountSearch from "./AccountSearch.jsx";
-import BalanceAssetDropDownCard from "./Market/BalanceAssetDropDownCard.jsx";
+import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import { Avatar } from "./Avatar.tsx";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 
@@ -246,6 +246,13 @@ export default function Barter(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const marketSearch = useMemo(() => {
+    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+      return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+    }
+    return [];
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
 
   const [toAccount, setToAccount] = useState(null);
   const [fromAssets, setFromAssets] = useState({});
@@ -831,19 +838,28 @@ export default function Barter(properties) {
   const canAddFrom = !!(fromBalances && fromBalances.length);
   const canAddTo = !!(toAccount && toBalances && toBalances.length);
 
-  const addFromCallback = useCallback((res) => {
-    setFromAssets((prev) => ({
-      ...prev,
-      [res.asset.id]: { amount: res.amount, asset: res.asset },
-    }));
-  }, []);
+  // Picking an asset opens the amount dialog; saving writes the entry.
+  const handlePickFromSymbol = useCallback(
+    (symbol) => {
+      const found = (assets || []).find((a) => a.symbol === symbol);
+      if (!found) return;
+      setEditingAsset({ party: "from", id: found.id, asset: found });
+      setEditAmountInput("");
+      setEditAmountError("");
+    },
+    [assets]
+  );
 
-  const addToCallback = useCallback((res) => {
-    setToAssets((prev) => ({
-      ...prev,
-      [res.asset.id]: { amount: res.amount, asset: res.asset },
-    }));
-  }, []);
+  const handlePickToSymbol = useCallback(
+    (symbol) => {
+      const found = (assets || []).find((a) => a.symbol === symbol);
+      if (!found) return;
+      setEditingAsset({ party: "to", id: found.id, asset: found });
+      setEditAmountInput("");
+      setEditAmountError("");
+    },
+    [assets]
+  );
 
   // ─── Step 1: Counterparty ─────────────────────────────────────────
   const CounterpartyCard = (
@@ -929,12 +945,21 @@ export default function Barter(properties) {
 
   // ─── Step 2 panels ────────────────────────────────────────────────
   const yourOfferAddControl = canAddFrom ? (
-    <BalanceAssetDropDownCard
-      assetsToHide={fromAssets ? Object.keys(fromAssets) : []}
-      storeCallback={addFromCallback}
-      assets={assets}
+    <AssetDropDown
+      assetSymbol=""
+      assetData={null}
+      storeCallback={handlePickFromSymbol}
+      otherAssets={fromAssets ? Object.values(fromAssets).map((e) => e?.asset?.symbol).filter(Boolean) : []}
+      marketSearch={marketSearch}
+      type={null}
+      chain={_chain}
+      balances={fromBalances}
+      initialMode="balances"
+      balancesOnly
       size="small"
-      usrBalances={fromBalances}
+      autoWidth
+      triggerLabel={t("Barter:addAsset")}
+      triggerVariant="outline"
     />
   ) : (
     <Button
@@ -949,12 +974,21 @@ export default function Barter(properties) {
   );
 
   const theirOfferAddControl = canAddTo ? (
-    <BalanceAssetDropDownCard
-      assetsToHide={toAssets ? Object.keys(toAssets) : []}
-      storeCallback={addToCallback}
-      assets={assets}
+    <AssetDropDown
+      assetSymbol=""
+      assetData={null}
+      storeCallback={handlePickToSymbol}
+      otherAssets={toAssets ? Object.values(toAssets).map((e) => e?.asset?.symbol).filter(Boolean) : []}
+      marketSearch={marketSearch}
+      type={null}
+      chain={_chain}
+      balances={toBalances}
+      initialMode="balances"
+      balancesOnly
       size="small"
-      usrBalances={toBalances}
+      autoWidth
+      triggerLabel={t("Barter:addAsset")}
+      triggerVariant="outline"
     />
   ) : (
     <Button

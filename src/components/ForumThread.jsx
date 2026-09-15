@@ -115,6 +115,7 @@ import {
 } from "@/bts/serializer/customOperations.js";
 import { buildRemoveOp } from "@/lib/customRemove.js";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import TipDialog from "@/components/common/TipDialog.jsx";
 import TrollboxRisks from "@/components/TrollboxRisks.jsx";
 import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
 import {
@@ -213,16 +214,23 @@ function ReplyBody({ text, dark }) {
   );
 }
 
-function TipButton({ account, displayAuthor, currentUserId, loggedIn, t }) {
+function TipButton({ account, displayAuthor, currentUserId, loggedIn, t, onTip }) {
   if (!loggedIn || !account || account === currentUserId) {
     return null;
   }
   return (
-    <Button variant="outline" size="sm" asChild className="h-7 shrink-0 text-[11px] hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.4)]">
-      <a href={`/transfer.html?to=${encodeURIComponent(displayAuthor || account)}`}>
-        <HandCoins className="mr-1 h-3 w-3" />
-        {t("Trollbox:tipUser", "Tip user")}
-      </a>
+    <Button
+      variant="outline"
+      size="sm"
+      className="h-7 shrink-0 text-[11px] hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.4)]"
+      onClick={() => {
+        if (onTip) {
+          onTip({ account, name: displayAuthor || account });
+        }
+      }}
+    >
+      <HandCoins className="mr-1 h-3 w-3" />
+      {t("Trollbox:tipUser", "Tip user")}
     </Button>
   );
 }
@@ -268,6 +276,8 @@ export default function ForumThread(properties) {
   const chainMarketSearch =
     chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
   const chainPools = chain === "bitshares" ? _poolsBTS : _poolsTEST;
+  const chainFeeSchedule =
+    chain === "bitshares" ? _feeScheduleBTS : _feeScheduleTEST;
 
   useInitCache(chain, []);
 
@@ -295,6 +305,7 @@ export default function ForumThread(properties) {
   const [pendingAttach, setPendingAttach] = useState(null); // {attach, label}
   const [verifyingAttach, setVerifyingAttach] = useState(false);
   const [blockTarget, setBlockTarget] = useState(null);
+  const [tipTarget, setTipTarget] = useState(null);
   const [offerVerifiedIds, setOfferVerifiedIds] = useState([]);
   const [escrowNames, setEscrowNames] = useState({});
   const [maxBytes, setMaxBytes] = useState(() => maxMessageBytes());
@@ -1041,6 +1052,12 @@ export default function ForumThread(properties) {
     }
     setBlockTarget({ account, displayAuthor: name });
   }, []);
+  const handleTipUser = useCallback((target) => {
+    if (!target || !target.account) {
+      return;
+    }
+    setTipTarget(target);
+  }, []);
   const handleConfirmBlock = useCallback(() => {
     setBlockTarget((target) => {
       if (target && target.account) {
@@ -1187,6 +1204,7 @@ export default function ForumThread(properties) {
                 currentUserId={currentUserId}
                 loggedIn={loggedIn}
                 t={t}
+                onTip={handleTipUser}
               />
             )}
             {own ? null : (
@@ -1440,6 +1458,7 @@ export default function ForumThread(properties) {
                     currentUserId={currentUserId}
                     loggedIn={loggedIn}
                     t={t}
+                    onTip={handleTipUser}
                   />
                   {topic.account === currentUserId ? null : (
                     <TooltipProvider delayDuration={300}>
@@ -1757,6 +1776,20 @@ export default function ForumThread(properties) {
         allowedTypes={FORUM_ATTACH_TYPES}
         initialValue={pendingAttach}
         onAttach={(picked) => setPendingAttach(picked)}
+      />
+
+      <TipDialog
+        open={!!tipTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTipTarget(null);
+          }
+        }}
+        recipient={tipTarget}
+        usr={currentUser}
+        assets={chainAssets}
+        marketSearch={chainMarketSearch}
+        feeSchedule={chainFeeSchedule}
       />
 
       <AlertDialog

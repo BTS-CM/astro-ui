@@ -153,6 +153,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import TipDialog from "@/components/common/TipDialog.jsx";
 import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
 import TrollboxRisks from "@/components/TrollboxRisks.jsx";
 import { Avatar } from "@/components/Avatar.tsx";
@@ -485,6 +486,8 @@ export default function Trollbox(properties) {
   const chainMarketSearch =
     chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
   const chainPools = chain === "bitshares" ? _poolsBTS : _poolsTEST;
+  const chainFeeSchedule =
+    chain === "bitshares" ? _feeScheduleBTS : _feeScheduleTEST;
 
   useInitCache(chain, []);
 
@@ -524,6 +527,7 @@ export default function Trollbox(properties) {
   const [pendingOp, setPendingOp] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [openMessage, setOpenMessage] = useState(null);
+  const [tipTarget, setTipTarget] = useState(null);
   const [blockTarget, setBlockTarget] = useState(null);
   const [removeTarget, setRemoveTarget] = useState(null);
   const [removePendingOp, setRemovePendingOp] = useState(null);
@@ -2039,17 +2043,16 @@ export default function Trollbox(properties) {
                     <Button
                       variant="outline"
                       size="sm"
-                      asChild
                       className="ml-auto shrink-0 hover:text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.4)]"
+                      onClick={() => {
+                        setTipTarget({
+                          account: openMessage.account,
+                          name: openMessage.displayAuthor,
+                        });
+                      }}
                     >
-                      <a
-                        href={`/transfer.html?to=${encodeURIComponent(
-                          openMessage.displayAuthor
-                        )}`}
-                      >
-                        <HandCoins className="mr-1 h-3.5 w-3.5" />
-                        {t("Trollbox:tipUser", "Tip user")}
-                      </a>
+                      <HandCoins className="mr-1 h-3.5 w-3.5" />
+                      {t("Trollbox:tipUser", "Tip user")}
                     </Button>
                     <Button
                       variant="outline"
@@ -2085,6 +2088,20 @@ export default function Trollbox(properties) {
           ) : null}
         </DialogContent>
       </Dialog>
+
+      <TipDialog
+        open={!!tipTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTipTarget(null);
+          }
+        }}
+        recipient={tipTarget}
+        usr={currentUser}
+        assets={chainAssets}
+        marketSearch={chainMarketSearch}
+        feeSchedule={chainFeeSchedule}
+      />
 
       <AlertDialog
         open={!!blockTarget}
