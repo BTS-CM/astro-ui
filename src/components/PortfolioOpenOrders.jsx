@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
@@ -42,14 +41,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { List } from "react-window";
 
 import {
   ArrowLeftRight,
   ArrowUpDown,
+  CircleCheck,
   ClipboardList,
-  Copy,
+  FileJson,
   ListOrdered,
   Loader2Icon,
   Pencil,
@@ -86,33 +95,6 @@ function formatTimeRemaining(expiration, now) {
   if (days < 1) status = "imminent";
   else if (days <= 7) status = "soon";
   return { text: `${days}d ${hours}h ${minutes}m`, status };
-}
-
-function CopyIdButton({ orderId, t }) {
-  return (
-    <TooltipProvider delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof navigator !== "undefined" && navigator.clipboard) {
-                navigator.clipboard.writeText(orderId).catch(() => {});
-              }
-            }}
-            aria-label={t("PortfolioTabs:copyOrderIdTooltip")}
-            className="inline-flex items-center gap-1 text-[11px] font-mono text-muted-foreground/60 hover:text-muted-foreground transition-colors max-w-[140px] truncate"
-          >
-            <span className="truncate">{orderId}</span>
-            <Copy className="h-3 w-3 flex-shrink-0" />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="top">
-          <p>{t("PortfolioTabs:copyOrderIdTooltip")}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
 }
 
 function ActionIconLink({ href, icon: Icon, label, accent = "default" }) {
@@ -170,6 +152,44 @@ function ActionLabelLink({
       <Icon className="h-3.5 w-3.5" />
       <span>{children}</span>
     </a>
+  );
+}
+
+function OrderJsonDialog({ order, orderId, t, children }) {
+  const orderJSON = JSON.stringify(order, null, 2);
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="!bg-card border border-border text-foreground/85 sm:max-w-[620px]">
+        <DialogHeader>
+          <DialogTitle>{t("PortfolioTabs:jsonTitle", { orderId })}</DialogTitle>
+          <DialogDescription className="text-muted-foreground/80">
+            {t("PortfolioTabs:jsonDescription")}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-1">
+          <div className="col-span-1">
+            <ScrollArea className="h-72 rounded-md border border-border bg-card/60 text-sm">
+              <pre className="text-xs text-foreground/80 p-3 font-mono">
+                {orderJSON}
+              </pre>
+            </ScrollArea>
+            <Button
+              variant="outline"
+              className="mt-2 border-border bg-card/40 hover:border-[hsl(var(--accent-warning)/0.4)] hover:bg-[hsl(var(--accent-warning)/0.1)] text-foreground/80 hover:text-accent-foreground"
+              onClick={() => {
+                if (typeof navigator !== "undefined" && navigator.clipboard) {
+                  navigator.clipboard.writeText(orderJSON).catch(() => {});
+                }
+              }}
+            >
+              <CircleCheck className="h-3.5 w-3.5 mr-1.5" />
+              {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -237,22 +257,16 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
     <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
       {/* Mobile: stacked card */}
       <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] block md:hidden">
-        <CardContent className="p-3 space-y-2">
+        <CardContent className="px-4 py-3 space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground truncate">
-              {readableBaseAmount} {sellAsset?.symbol ?? "?"} → {readableQuoteAmount} {buyAsset?.symbol ?? "?"}
+            <span className="text-sm font-semibold truncate min-w-0">
+              <span className="text-muted-foreground font-normal">{t("PortfolioTabs:trading")} </span>
+              <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{readableBaseAmount} {sellAsset?.symbol ?? "?"}</span>
+              <span className="text-muted-foreground font-normal"> {t("PortfolioTabs:tradingFor")} </span>
+              <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{readableQuoteAmount} {buyAsset?.symbol ?? "?"}</span>
             </span>
-            <a href={marketHref} title={marketHref}>
-              <Badge
-                variant="outline"
-                className="shrink-0 border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))] text-[10px] px-1.5 py-0 font-mono"
-              >
-                {sellAsset?.symbol ?? "?"}→{buyAsset?.symbol ?? "?"}
-              </Badge>
-            </a>
           </div>
           <div className="flex items-center gap-3 text-xs">
-            <CopyIdButton orderId={orderId} t={t} />
             <div className="text-sm font-semibold dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
               {priceDisplay}
             </div>
@@ -273,7 +287,16 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
               </Tooltip>
             </TooltipProvider>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
+            <OrderJsonDialog order={order} orderId={orderId} t={t}>
+              <button
+                type="button"
+                className="inline-flex h-8 items-center justify-center gap-1.5 px-3 rounded-full text-sm font-medium transition-colors border border-border text-muted-foreground hover:bg-accent/60 hover:text-foreground/80"
+              >
+                <FileJson className="h-3.5 w-3.5" />
+                <span>{t("PortfolioTabs:json")}</span>
+              </button>
+            </OrderJsonDialog>
             <ActionLabelLink href={marketHref} icon={ArrowLeftRight} accent="outline">
               {t("PortfolioTabs:tradeButton")}
             </ActionLabelLink>
@@ -296,24 +319,15 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
 
       {/* Desktop: two-row layout */}
       <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] hidden md:block">
-        <CardContent className="p-3">
+        <CardContent className="px-4 py-3">
           <div className="grid grid-cols-12 gap-4 items-center">
-            <div className="col-span-5 flex items-center gap-2 min-w-0">
-              <a href={marketHref} title={marketHref} className="shrink-0">
-                <Badge
-                  variant="outline"
-                  className="border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))] text-[10px] px-1.5 py-0 font-mono"
-                >
-                  {sellAsset?.symbol ?? "?"}→{buyAsset?.symbol ?? "?"}
-                </Badge>
-              </a>
-              <span className="text-sm font-semibold text-foreground truncate">
-                {readableBaseAmount} {sellAsset?.symbol ?? "?"} → {readableQuoteAmount} {buyAsset?.symbol ?? "?"}
+            <div className="col-span-10 flex items-center gap-2 min-w-0">
+              <span className="text-sm font-semibold truncate min-w-0">
+                <span className="text-muted-foreground font-normal">{t("PortfolioTabs:trading")} </span>
+                <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{readableBaseAmount} {sellAsset?.symbol ?? "?"}</span>
+                <span className="text-muted-foreground font-normal"> {t("PortfolioTabs:tradingFor")} </span>
+                <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{readableQuoteAmount} {buyAsset?.symbol ?? "?"}</span>
               </span>
-            </div>
-            <div className="col-span-5 min-w-0 text-sm whitespace-nowrap">
-              <span className="font-semibold dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{priceDisplay}</span>
-              <span className="text-muted-foreground"> {buyAsset?.symbol}/{sellAsset?.symbol}</span>
             </div>
             <div className="col-span-2">
               <TooltipProvider delayDuration={300}>
@@ -331,9 +345,22 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
             </TooltipProvider>
             </div>
           </div>
-          <div className="flex items-center justify-between mt-1">
-            <CopyIdButton orderId={orderId} t={t} />
-            <div className="flex items-center gap-1">
+          <div className="flex items-center justify-between gap-3 mt-1.5">
+            <div className="min-w-0 text-sm whitespace-nowrap truncate">
+              <span className="font-mono tabular-nums font-semibold dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{priceDisplay}</span>
+              <span className="text-muted-foreground"> {buyAsset?.symbol}/{sellAsset?.symbol}</span>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <OrderJsonDialog order={order} orderId={orderId} t={t}>
+                <button
+                  type="button"
+                  title={t("PortfolioTabs:json")}
+                  aria-label={t("PortfolioTabs:json")}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors text-muted-foreground hover:text-foreground/80 hover:bg-accent/60"
+                >
+                  <FileJson className="h-4 w-4" />
+                </button>
+              </OrderJsonDialog>
               <ActionIconLink
                 href={marketHref}
                 icon={ArrowLeftRight}
