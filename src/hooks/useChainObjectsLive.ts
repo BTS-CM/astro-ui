@@ -9,6 +9,10 @@ import {
   nodeUrlFor,
 } from "@/bts/chain/chainStoreReady";
 import { useSubscriptionGuard } from "@/hooks/useSubscriptionGuard";
+import {
+  dedupedCall,
+  shouldSkipBackgroundWork,
+} from "@/lib/liveShare";
 
 /**
  * Shared ChainStore object subscription for pages 2-9 rollout.
@@ -163,8 +167,15 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
 
       const fetchTestnet = async () => {
         if (cancelledPoll) return;
+        if (shouldSkipBackgroundWork()) return;
         try {
-          const objs = await getObjects(chain, parsedIds, specificNode);
+          // Concurrent mounts for the same ids previously issued N
+          // identical get_objects RPCs per 3.5s tick; coalesce them.
+          const objs = await dedupedCall(
+            `chainObjects|${chain}|${idsKey}|${specificNode ?? ""}`,
+            () => getObjects(chain, parsedIds, specificNode),
+            3000
+          );
           if (cancelledPoll) return;
           const objectsMap: Record<string, any> = {};
           if (Array.isArray(objs)) {
@@ -412,8 +423,14 @@ export function useAccountBalancesLive(options: {
 
       const fetchTestnet = async () => {
         if (cancelledPoll) return;
+        if (shouldSkipBackgroundWork()) return;
         try {
-          const response = await getAccountBalances(chain, accountId, specificNode);
+          // Same dedupe as objects: one balances RPC per account per tick.
+          const response = await dedupedCall(
+            `accountBalances|${chain}|${accountId}|${specificNode ?? ""}`,
+            () => getAccountBalances(chain, accountId, specificNode),
+            3000
+          );
           if (cancelledPoll) return;
           if (response) {
             setBalances(response as any[]);

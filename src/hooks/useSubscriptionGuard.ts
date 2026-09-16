@@ -34,92 +34,143 @@ export function useSubscriptionGuard(options: SubscriptionGuardOptions) {
   const staleMs = options.staleMs ?? 10000;
 
   useEffect(() => {
-    let mounted = true;
-
-    initConnectionStatus();
-
-    const unsub = $connectionStatus.subscribe((v) => {
-      if (
-        mounted &&
-        (v === "closed" || v === "error") &&
-        optionsRef.current.onConnectionError
-      ) {
-        optionsRef.current.onConnectionError(v as string);
-      }
-    });
-
-    const onOnline = () => {
-      if (mounted && optionsRef.current.onOnline) optionsRef.current.onOnline();
-    };
-    const onOffline = () => {
-      if (mounted && optionsRef.current.onOffline)
-        optionsRef.current.onOffline();
-    };
-    const checkStale = () => {
-      if (!mounted) return;
-      if (
-        typeof document !== "undefined" &&
-        document.visibilityState !== "visible"
-      ) {
-        return;
-      }
-      const opts = optionsRef.current;
-      const last = opts.lastFetchAtRef.current;
-      const stale = !last || Date.now() - last > staleMs;
-      if (
-        (stale || !opts.isSubscribedRef.current) &&
-        (typeof navigator === "undefined" || navigator.onLine)
-      ) {
-        if (opts.onReconnectNeeded) opts.onReconnectNeeded();
-      }
-    };
-    const onVisibility = () => {
-      if (
-        typeof document !== "undefined" &&
-        document.visibilityState === "visible"
-      ) {
-        checkStale();
-      }
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("online", onOnline);
-      window.addEventListener("offline", onOffline);
-      document.addEventListener("visibilitychange", onVisibility);
-      window.addEventListener("pageshow", onVisibility);
-      window.addEventListener("focus", onVisibility);
-    }
-
-    const staleId = setInterval(() => {
-      if (!mounted) return;
-      const opts = optionsRef.current;
-      const last = opts.lastFetchAtRef.current;
-      if (!last) return;
-      if (
-        Date.now() - last > staleMs &&
-        opts.isSubscribedRef.current &&
-        (typeof navigator === "undefined" || navigator.onLine)
-      ) {
-        if (opts.onStale) opts.onStale();
-        if (opts.onReconnectNeeded) opts.onReconnectNeeded();
-      }
-    }, 2000);
-
-    return () => {
-      mounted = false;
-      try {
-        unsub();
-      } catch {}
-      if (typeof window !== "undefined") {
-        window.removeEventListener("online", onOnline);
-        window.removeEventListener("offline", onOffline);
-        document.removeEventListener("visibilitychange", onVisibility);
-        window.removeEventListener("pageshow", onVisibility);
-        window.removeEventListener("focus", onVisibility);
-      }
-      clearInterval(staleId);
-    };
+    return ensureSharedGuard(staleMs, optionsRef);
     // staleMs is expected to be a constant per hook; register once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+}
+
+// ---- Shared guard backend: 1 interval + 1 listener set per page ---------
+// Previously every hook instance registered its own 2s interval, 5 window
+// listeners, and $connectionStatus subscription. N hooks => N ticking
+// timers all doing the same stale check. Now one ticker fans out to N
+// registered guards; per-hook semantics (refs/callbacks) are unchanged.
+
+type GuardEntry = {
+  staleMs: number;
+  optionsRef: React.MutableRefObject<SubscriptionGuardOptions>;
+  mounted: boolean;
+};
+
+const guardEntries = new Set<GuardEntry>();
+let guardBackendStarted = false;
+let guardStaleId: any = null;
+let guardUnsub: (() => void) | null = null;
+
+function guardCheckEntry(entry: GuardEntry) {
+  if (!entry.mounted) return;
+  if (
+    typeof document !== "undefined" &&
+    document.visibilityState !== "visible"
+  ) {
+    return;
+  }
+  const opts = entry.optionsRef.current;
+  const last = opts.lastFetchAtRef.current;
+  const stale = !last || Date.now() - last > entry.staleMs;
+  if (
+    (stale || !opts.isSubscribedRef.current) &&
+    (typeof navigator === "undefined" || navigator.onLine)
+  ) {
+    if (opts.onReconnectNeeded) opts.onReconnectNeeded();
+  }
+}
+
+function guardTickStale() {
+  if (typeof navigator !== "undefined" && !navigator.onLine) return;
+  const now = Date.now();
+  for (const entry of guardEntries) {
+    if (!entry.mounted) continue;
+    const opts = entry.optionsRef.current;
+    const last = opts.lastFetchAtRef.current;
+    if (!last) continue;
+    if (
+      now - last > entry.staleMs &&
+      opts.isSubscribedRef.current
+    ) {
+      try {
+        if (opts.onStale) opts.onStale();
+      } catch {}
+      try {
+        if (opts.onReconnectNeeded) opts.onReconnectNeeded();
+      } catch {}
+    }
+  }
+}
+
+function guardOnOnline() {
+  for (const entry of guardEntries) {
+    if (!entry.mounted) continue;
+    try {
+      entry.optionsRef.current.onOnline?.();
+    } catch {}
+  }
+}
+
+function guardOnOffline() {
+  for (const entry of guardEntries) {
+    if (!entry.mounted) continue;
+    try {
+      entry.optionsRef.current.onOffline?.();
+    } catch {}
+  }
+}
+
+function guardOnVisibility() {
+  if (
+    typeof document !== "undefined" &&
+    document.visibilityState === "visible"
+  ) {
+    for (const entry of guardEntries) guardCheckEntry(entry);
+  }
+}
+
+function guardOnConnectionStatus(v: unknown) {
+  if (v !== "closed" && v !== "error") return;
+  for (const entry of guardEntries) {
+    if (!entry.mounted) continue;
+    try {
+      entry.optionsRef.current.onConnectionError?.(v as string);
+    } catch {}
+  }
+}
+
+function ensureGuardBackend() {
+  if (guardBackendStarted || typeof window === "undefined") return;
+  guardBackendStarted = true;
+
+  initConnectionStatus();
+
+  try {
+    guardUnsub = $connectionStatus.subscribe((v) => guardOnConnectionStatus(v));
+  } catch {}
+
+  window.addEventListener("online", guardOnOnline);
+  window.addEventListener("offline", guardOnOffline);
+  document.addEventListener("visibilitychange", guardOnVisibility);
+  window.addEventListener("pageshow", guardOnVisibility);
+  window.addEventListener("focus", guardOnVisibility);
+
+  guardStaleId = setInterval(guardTickStale, 2000);
+}
+
+function ensureSharedGuard(
+  staleMs: number,
+  optionsRef: React.MutableRefObject<SubscriptionGuardOptions>
+) {
+  ensureGuardBackend();
+
+  const entry: GuardEntry = { staleMs, optionsRef, mounted: true };
+  guardEntries.add(entry);
+
+  return () => {
+    entry.mounted = false;
+    guardEntries.delete(entry);
+    // Backend intentionally stays alive for the page lifetime: tearing
+    // down/recreating the interval + listeners on every hook unmount
+    // costs more than one idle 2s tick. No per-hook cleanup needed
+    // beyond dropping the entry.
+    void guardUnsub;
+    void guardStaleId;
+  };
 }

@@ -62,6 +62,7 @@ const chartConfig = {
 // Maps an operation type id to one of the page's accent roles so each op badge
 // gets a stable, themeable colour (mirrors the status/accent var system).
 const ROLE_KEYS = ["1", "2", "3", "success", "info", "warning", "danger"];
+const MAX_VISIBLE_OPS = 4;
 function opRole(opType) {
   const n = typeof opType === "number" ? opType : parseInt(opType, 10);
   if (isNaN(n)) return "1";
@@ -213,6 +214,9 @@ export default function LiveBlocks(properties) {
 
   const [viewJSON, setViewJSON] = useState(false);
   const [json, setJSON] = useState();
+  // Virtualized per-operation viewer opened by clicking a block number
+  // (or a "+x ops" overflow badge). Holds the flattened ops to render.
+  const [opsViewer, setOpsViewer] = useState(null);
 
   const isTestnet = chains[usr && usr.chain ? usr.chain : "bitshares"]?.testnet;
 
@@ -343,61 +347,143 @@ export default function LiveBlocks(properties) {
     setJSON(payload);
   };
 
+  const openOperationJSON = (entry, blockData, transactionData) => {
+    const foundBlock = blockData ? { ...blockData } : undefined;
+    if (foundBlock) delete foundBlock.transactions; // duplicate data
+    openJSON({
+      operationData: entry.op,
+      transactionData,
+      blockData: foundBlock,
+    });
+  };
+
+  // Flatten a block's transactions into a single per-operation list so a
+  // block with hundreds of ops can be scrolled individually.
+  const buildBlockOps = (block) => {
+    if (!block || !block.transactions) return [];
+    return block.transactions.flatMap((tx, txIndex) =>
+      (tx.operations ?? []).map((op, opIndex) => ({
+        op,
+        opType: op[0],
+        txIndex,
+        opIndex,
+        transactionData: tx,
+      }))
+    );
+  };
+
+  const openBlockOpsViewer = (blockNumber) => {
+    const block = recentBlocks.find((x) => x.block === blockNumber);
+    if (!block) return;
+    const blockData = { ...block };
+    delete blockData.transactions; // duplicate data
+    setOpsViewer({
+      blockNumber: block.block,
+      blockData,
+      scope: "block",
+      ops: buildBlockOps(block),
+    });
+  };
+
+  const openTransactionOpsViewer = (activity) => {
+    const block = recentBlocks.find((x) => x.block === activity.block);
+    const blockData = block ? { ...block } : undefined;
+    if (blockData) delete blockData.transactions; // duplicate data
+    setOpsViewer({
+      blockNumber: activity.block,
+      blockData,
+      scope: "transaction",
+      transactionData: activity,
+      ops: (activity.operations ?? []).map((op, opIndex) => ({
+        op,
+        opType: op[0],
+        txIndex: 0,
+        opIndex,
+        transactionData: activity,
+      })),
+    });
+  };
+
   const ActivityRow = ({ index, style }) => {
     const activity = activities[index];
     if (!activity) return null;
+    const ops = activity.operations ?? [];
+    const visibleOps = ops.slice(0, MAX_VISIBLE_OPS);
+    const remaining = ops.length - visibleOps.length;
     return (
       <div
         style={style}
         className="grid grid-cols-[1fr_3fr] items-center gap-2 rounded-lg border border-border/60 px-2.5 py-1.5 mb-1 mt-1 transition-colors hover:border-[hsl(var(--accent-1)/0.5)] hover:bg-[hsl(var(--accent-1)/0.04)]"
       >
-        <span className="font-mono text-sm font-semibold tabular-nums text-[hsl(var(--accent-1-fg))]">
+        <button
+          type="button"
+          title={t("LiveBlocks:dialogContent.jsonDescription")}
+          className="font-mono text-sm font-semibold tabular-nums text-left text-[hsl(var(--accent-1-fg))] cursor-pointer rounded hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-[hsl(var(--accent-1)/0.6)]"
+          onClick={() => openBlockOpsViewer(activity.block)}
+        >
           #{activity.block}
-        </span>
+        </button>
         <div className="flex flex-wrap justify-start gap-1">
-          {activity.operations.length > 10 ? (
+          {visibleOps.map((x, i) => {
+            const opType = x[0];
+            const opName = opTypes[opType] ?? `#${opType}`;
+            const role = opRole(opType);
+            return (
+              <Badge
+                key={`${opType}-${i}`}
+                variant="outline"
+                className={opBadgeClass(role)}
+                onClick={() => {
+                  const foundBlock = recentBlocks.find(
+                    (b) => b.block === activity.block
+                  );
+                  openOperationJSON(x, foundBlock, activity);
+                }}
+              >
+                {opName}
+              </Badge>
+            );
+          })}
+          {remaining > 0 ? (
             <Badge
               variant="outline"
               className={opBadgeClass("1")}
-              onClick={() => {
-                openJSON({
-                  transactionData: activity,
-                  blockData: recentBlocks.find(
-                    (x) => x.block === activity.block
-                  ),
-                });
-              }}
+              onClick={() => openTransactionOpsViewer(activity)}
             >
-              {activity.operations.length}{" "}
-              {t("LiveBlocks:operationsLabel")}
+              +{remaining} {t("LiveBlocks:operationsLabel")}
             </Badge>
-          ) : (
-            activity.operations.map((x, i) => {
-              const opType = x[0];
-              const opName = opTypes[opType] ?? `#${opType}`;
-              const role = opRole(opType);
-              return (
-                <Badge
-                  key={`${opType}-${i}`}
-                  variant="outline"
-                  className={opBadgeClass(role)}
-                  onClick={() => {
-                    const foundBlock = {
-                      ...recentBlocks.find((x) => x.block === activity.block),
-                    };
-                    delete foundBlock.transactions; // duplicate data
-                    openJSON({
-                      operationData: x,
-                      transactionData: activity,
-                      blockData: foundBlock,
-                    });
-                  }}
-                >
-                  {opName}
-                </Badge>
-              );
-            })
-          )}
+          ) : null}
+        </div>
+      </div>
+    );
+  };
+
+  // One row of the per-operation viewer dialog: a single operation rendered
+  // individually so hundreds of ops stay scrollable via react-window.
+  const OpsViewerRow = ({ index, style }) => {
+    const entry = opsViewer?.ops?.[index];
+    if (!entry) return null;
+    const opName = opTypes[entry.opType] ?? `#${entry.opType}`;
+    const role = opRole(entry.opType);
+    return (
+      <div style={style}>
+        <div className="flex items-center gap-2 rounded-lg border border-border/60 px-2.5 py-1.5 mb-1 transition-colors hover:border-[hsl(var(--accent-1)/0.5)] hover:bg-[hsl(var(--accent-1)/0.04)]">
+          <span className="font-mono text-xs tabular-nums text-muted-foreground w-10 shrink-0">
+            #{index + 1}
+          </span>
+          <Badge
+            variant="outline"
+            className={opBadgeClass(role)}
+            onClick={() =>
+              openOperationJSON(
+                entry,
+                opsViewer.blockData,
+                entry.transactionData
+              )
+            }
+          >
+            {opName}
+          </Badge>
         </div>
       </div>
     );
@@ -418,9 +504,14 @@ export default function LiveBlocks(properties) {
         className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-2 md:grid-cols-4 items-center mb-1 mt-1 transition-colors hover:border-[hsl(var(--accent-2)/0.5)] hover:bg-[hsl(var(--accent-2)/0.04)]"
         title={`${_ts} : ${block.witness}`}
       >
-        <div className="font-mono text-sm font-semibold tabular-nums text-[hsl(var(--accent-2-fg))]">
+        <button
+          type="button"
+          title={t("LiveBlocks:dialogContent.jsonDescription")}
+          className="font-mono text-sm font-semibold tabular-nums text-left text-[hsl(var(--accent-2-fg))] cursor-pointer rounded hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-[hsl(var(--accent-2)/0.6)]"
+          onClick={() => openBlockOpsViewer(block.block)}
+        >
           #{block.block}
-        </div>
+        </button>
         <div className="hidden md:block text-xs text-muted-foreground">
           {relativeTime(block.timestamp)}
         </div>
@@ -668,6 +759,43 @@ export default function LiveBlocks(properties) {
             )}
           </div>
         </div>
+
+        {opsViewer ? (
+          <Dialog
+            open={Boolean(opsViewer)}
+            onOpenChange={(open) => {
+              if (!open) setOpsViewer(null);
+            }}
+          >
+            <DialogContent className="sm:max-w-[500px] bg-card">
+              <DialogHeader>
+                <DialogTitle>
+                  #{opsViewer.blockNumber} — {opsViewer.ops.length}{" "}
+                  {t("LiveBlocks:operationsLabel")}
+                </DialogTitle>
+                <DialogDescription>
+                  {t("LiveBlocks:recentActivity.operations")}
+                </DialogDescription>
+              </DialogHeader>
+              {opsViewer.ops.length ? (
+                <div className="w-full h-[400px] mt-1">
+                  <List
+                    rowComponent={OpsViewerRow}
+                    rowCount={opsViewer.ops.length}
+                    rowHeight={44}
+                    height={400}
+                    width="100%"
+                    rowProps={{}}
+                  />
+                </div>
+              ) : (
+                <div className="mt-3 text-sm text-muted-foreground">
+                  {t("LiveBlocks:waiting")}
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+        ) : null}
 
         {viewJSON && json ? (
           <Dialog

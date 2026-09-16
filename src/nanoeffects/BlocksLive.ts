@@ -3,6 +3,7 @@ import chain_store from "@/bts/chain/ChainStore";
 import { acquireChainStore, nodeUrlFor } from "@/bts/chain/chainStoreReady";
 import { getObjects } from "@/nanoeffects/src/common";
 import { chains } from "@/config/chains";
+import { subscribeSharedTopic } from "@/lib/liveShare";
 
 /**
  * Live blocks subscription - replaces the Electron main-process polling
@@ -87,6 +88,58 @@ export function toEmitBatch(results: any[]): RecentBlock[] {
 }
 
 export async function subscribeRecentBlocks(
+  chain: string,
+  onUpdate: (blocks: RecentBlock[]) => void,
+  onError: (e: any) => void,
+  lookback: number = 30,
+  specificNode?: string | null
+): Promise<RecentBlocksSubscription> {
+  const nodeKey = specificNode ?? nodeUrlFor(chain, specificNode);
+  // One block feed per chain+node+lookback: LiveBlocks + footers +
+  // explorers previously opened N set_block_applied_callback feeds.
+  // Late joiners replay the latest batch instead of bursting their own
+  // lookback fetch.
+  const key = `recentBlocks|${chain}|${nodeKey}|${lookback}`;
+  let sharedStop: (() => void) | null = null;
+  let latestForCatchUp: RecentBlocksSubscription | null = null;
+
+  const release = subscribeSharedTopic<RecentBlock[]>(
+    key,
+    async (emit, fail) => {
+      const sub = await subscribeRecentBlocksDirect(
+        chain,
+        emit,
+        fail,
+        lookback,
+        specificNode
+      );
+      latestForCatchUp = sub;
+      sharedStop = sub.unsubscribe;
+      return sub.unsubscribe;
+    },
+    onUpdate,
+    onError
+  );
+
+  return {
+    unsubscribe: () => {
+      release();
+    },
+    catchUp: async (fromBlock?: number) => {
+      const sub = latestForCatchUp;
+      if (sub?.catchUp) {
+        try {
+          return await sub.catchUp(fromBlock);
+        } catch {
+          return "failed";
+        }
+      }
+      return "failed";
+    },
+  };
+}
+
+async function subscribeRecentBlocksDirect(
   chain: string,
   onUpdate: (blocks: RecentBlock[]) => void,
   onError: (e: any) => void,

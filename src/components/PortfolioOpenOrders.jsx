@@ -472,31 +472,37 @@ export default function PortfolioOpenOrders({
     return () => window.removeEventListener("resize", update);
   }, []);
 
+  const liveOrdersRef = useRef(null);
+
   useEffect(() => {
-    async function fetchLimitOrders() {
-      if (usr && usr.id) {
-        const limitOrdersStore = createAccountLimitOrderStore([
-          usr.chain,
-          usr.id,
-        ]);
-        limitOrdersStore.subscribe(({ data, error, loading }) => {
-          setOpenOrdersLoading(Boolean(loading));
-          if (data && !error && !loading) {
-            // prefer live subscription when it is active; poll store fills
-            // gaps (e.g. >100 orders where get_full_accounts truncates)
-            setOpenOrders((prev) =>
-              liveOrdersRef.current && liveOrdersRef.current.length ? prev : data
-            );
-          }
-          if (!data && !loading && error) {
-            setOpenOrders((prev) =>
-              liveOrdersRef.current && liveOrdersRef.current.length ? prev : []
-            );
-          }
-        });
+    if (!usr || !usr.id) return undefined;
+    const limitOrdersStore = createAccountLimitOrderStore([
+      usr.chain,
+      usr.id,
+    ]);
+    const unsubscribe = limitOrdersStore.subscribe(({ data, error, loading }) => {
+      setOpenOrdersLoading(Boolean(loading));
+      if (loading) return;
+      if (Array.isArray(data) && !error) {
+        // prefer live subscription when it is active; poll store fills
+        // gaps (e.g. >100 orders where get_full_accounts truncates)
+        // Empty array is valid: user simply has no open orders.
+        setOpenOrders((prev) =>
+          liveOrdersRef.current && liveOrdersRef.current.length ? prev : data
+        );
+      } else if (error) {
+        setOpenOrders((prev) =>
+          liveOrdersRef.current && liveOrdersRef.current.length ? prev : []
+        );
       }
-    }
-    fetchLimitOrders();
+    });
+    return () => {
+      if (typeof unsubscribe === "function") {
+        try {
+          unsubscribe();
+        } catch {}
+      }
+    };
   }, [usr, openOrderCounter]);
 
   // Live open-order subscription (ChainStore full-account push, ~per block)
@@ -511,7 +517,6 @@ export default function PortfolioOpenOrders({
     specificNode: ooNodeUrl,
     enabled: Boolean(usr && usr.id),
   });
-  const liveOrdersRef = useRef(null);
   useEffect(() => {
     liveOrdersRef.current = liveOrders.orders;
     if (liveOrders.orders) {

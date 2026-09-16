@@ -1,5 +1,9 @@
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
+import {
+  subscribeSharedTopic,
+  shouldSkipBackgroundWork,
+} from "@/lib/liveShare";
 
 /**
  * Live order book subscriptions - NEW file for DEX pilot.
@@ -207,6 +211,42 @@ export async function subscribeMarketOrderBook(
   specificNode?: string | null,
   accountId?: string | null
 ): Promise<() => Promise<void>> {
+  const nodeKey = specificNode ?? (chains as any)[chain]?.nodeList?.[0]?.url ?? "";
+  // One underlying WS/poll per market+account: concurrent mounts (e.g.
+  // Market + chart + footer widgets) previously opened N connections and
+  // N 3.5s testnet polls for identical params.
+  const key = `orderbook|${chain}|${baseId}|${quoteId}|${limit}|${nodeKey}|${accountId ?? ""}`;
+  const release = subscribeSharedTopic<LiveMarketData>(
+    key,
+    (emit, fail) =>
+      subscribeMarketOrderBookDirect(
+        chain,
+        baseId,
+        quoteId,
+        emit,
+        fail,
+        limit,
+        specificNode,
+        accountId
+      ),
+    onUpdate,
+    onError
+  );
+  return async () => {
+    await release();
+  };
+}
+
+async function subscribeMarketOrderBookDirect(
+  chain: string,
+  baseId: string,
+  quoteId: string,
+  onUpdate: (data: LiveMarketData) => void,
+  onError: (e: any) => void,
+  limit: number = 50,
+  specificNode?: string | null,
+  accountId?: string | null
+): Promise<() => Promise<void>> {
   // Testnet: never use subscribe_to_market (ChainStore-adjacent). Use
   // REFERENCE_CODE nanoeffects polling (createMarketOrderStore pattern).
   const isTestnet = (chains as any)[chain]?.testnet;
@@ -216,6 +256,7 @@ export async function subscribeMarketOrderBook(
 
     const pollOnce = async () => {
       if (unsubscribedPoll) return;
+      if (shouldSkipBackgroundWork()) return;
       const nodePoll = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
       let pollApi: any = null;
       try {

@@ -3,6 +3,10 @@ import chain_store from "@/bts/chain/ChainStore";
 import { acquireChainStore } from "@/bts/chain/chainStoreReady";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
+import {
+  subscribeSharedTopic,
+  shouldSkipBackgroundWork,
+} from "@/lib/liveShare";
 
 /**
  * Live account limit order subscription via ChainStore.
@@ -25,6 +29,29 @@ const BATCH_TIME = 500;
  *          releases its connection token.
  */
 export async function subscribeAccountLimitOrders(
+  chain: string,
+  accountId: string,
+  onUpdate: (orders: any[]) => void,
+  onError: (e: any) => void,
+  specificNode?: string | null
+): Promise<() => void> {
+  const nodeKey = specificNode ?? (chains as any)[chain]?.nodeList?.[0]?.url ?? "";
+  // One ChainStore listener + poll per account: Portfolio + order widgets
+  // previously subscribed N times for the same account.
+  const key = `accountOrders|${chain}|${accountId}|${nodeKey}`;
+  const release = subscribeSharedTopic<any[]>(
+    key,
+    (emit, fail) =>
+      subscribeAccountLimitOrdersDirect(chain, accountId, emit, fail, specificNode),
+    onUpdate,
+    onError
+  );
+  return () => {
+    release();
+  };
+}
+
+async function subscribeAccountLimitOrdersDirect(
   chain: string,
   accountId: string,
   onUpdate: (orders: any[]) => void,
@@ -80,6 +107,7 @@ export async function subscribeAccountLimitOrders(
 
       const pollOrders = async () => {
         if (cancelledPoll) return;
+        if (shouldSkipBackgroundWork()) return;
         const node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
         let api: any = null;
         try {

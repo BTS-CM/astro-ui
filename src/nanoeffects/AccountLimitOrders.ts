@@ -38,25 +38,25 @@ function getAccountLimitOrders(
     const API_ITERATIONS =
       chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
 
-    let limitOrders: any;
+    let limitOrders: any[];
     try {
       limitOrders = await currentAPI
         .db_api()
         .exec("get_limit_orders_by_account", [accountID, API_LIMIT])
         .then((results: Object[]) => {
-          if (results && results.length) {
-            return results;
-          }
+          return Array.isArray(results) ? results : [];
         });
     } catch (error) {
       console.log({ error });
       currentAPI.close();
       reject(error);
+      return;
     }
 
+    // Empty is a valid state (user has no open orders), not an error.
     if (!limitOrders || !limitOrders.length) {
       currentAPI.close();
-      reject(new Error("Account limit orders not found"));
+      resolve([]);
       return;
     }
 
@@ -87,14 +87,13 @@ function getAccountLimitOrders(
               startId,
             ])
             .then((results: Object[]) => {
-              if (results && results.length) {
-                return results;
-              }
+              return Array.isArray(results) ? results : [];
             });
         } catch (error) {
           console.log({ error });
           currentAPI.close();
           reject(error);
+          return;
         }
 
         if (nextLimitOrders && nextLimitOrders.length) {
@@ -130,12 +129,11 @@ const [createAccountLimitOrderStore, , nanoqueryHelpers] = nanoquery({
       response = await getAccountLimitOrders(chain, account_id, specificNode);
     } catch (error) {
       console.log({ error });
-      return;
+      return [];
     }
 
     if (!response) {
-      console.log(`Failed to fetch account limit orders`);
-      return;
+      return [];
     }
 
     return response;

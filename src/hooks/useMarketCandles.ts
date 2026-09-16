@@ -1,5 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { getCandleHistory, getMarketHistoryBuckets, type CandleDatum } from "@/nanoeffects/MarketCandleHistory";
+import {
+  dedupedCall,
+  shouldSkipBackgroundWork,
+} from "@/lib/liveShare";
 
 export interface UseMarketCandlesOptions {
   chain: string;
@@ -41,8 +45,14 @@ export function useMarketCandles(options: UseMarketCandlesOptions) {
 
   const fetchBuckets = useCallback(async () => {
     if (!chain) return;
+    if (shouldSkipBackgroundWork()) return;
     try {
-      const b = await getMarketHistoryBuckets(chain, specificNode);
+      // Concurrent chart mounts previously fetched buckets N times.
+      const b = await dedupedCall(
+        `candleBuckets|${chain}|${specificNode ?? ""}`,
+        () => getMarketHistoryBuckets(chain, specificNode),
+        30000
+      );
       if (Array.isArray(b) && b.length) setBuckets(b);
     } catch (e) {
       console.log("useMarketCandles buckets error", e);
@@ -55,17 +65,25 @@ export function useMarketCandles(options: UseMarketCandlesOptions) {
       setLoading(false);
       return;
     }
+    if (shouldSkipBackgroundWork()) return;
     setLoading(true);
     setError(null);
     try {
-      const { candles: data, buckets: fetchedBuckets } = await getCandleHistory(
-        chain,
-        baseId,
-        quoteId,
-        bucketSeconds,
-        basePrecision,
-        quotePrecision,
-        specificNode
+      // Market ticks previously refetched 1-3 full windows per chart
+      // instance; concurrent identical charts now share one RPC.
+      const { candles: data, buckets: fetchedBuckets } = await dedupedCall(
+        `candles|${chain}|${baseId}|${quoteId}|${bucketSeconds}|${basePrecision}|${quotePrecision}|${specificNode ?? ""}`,
+        () =>
+          getCandleHistory(
+            chain,
+            baseId,
+            quoteId,
+            bucketSeconds,
+            basePrecision,
+            quotePrecision,
+            specificNode
+          ),
+        5000
       );
       setCandles(data ?? []);
       if (Array.isArray(fetchedBuckets) && fetchedBuckets.length) setBuckets(fetchedBuckets);
@@ -101,6 +119,7 @@ export function useMarketCandles(options: UseMarketCandlesOptions) {
     if (!enabled || !chain || !baseId || !quoteId) return;
     const intervalMs = Math.max(10000, Math.min(60000, bucketSeconds * 1000));
     const id = setInterval(() => {
+      if (shouldSkipBackgroundWork()) return;
       fetchCandles();
     }, intervalMs);
     return () => clearInterval(id);
@@ -108,11 +127,14 @@ export function useMarketCandles(options: UseMarketCandlesOptions) {
 
   // Live subscription resync: when market pushes, refetch candles debounced 800ms
   // This mirrors bitshares-ui MarketsActions subscription batch (subscribe_to_market -> 500ms then re-fetch 3 windows)
+  // Debounce coalesces rapid ticks; dedupedCall above coalesces across mounts.
   const debounceRef = useRef<any>(null);
   useEffect(() => {
     if (liveTick == null || liveTick === 0) return;
+    if (shouldSkipBackgroundWork()) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      if (shouldSkipBackgroundWork()) return;
       fetchCandles();
     }, 800);
     return () => {
