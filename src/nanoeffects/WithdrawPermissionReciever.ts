@@ -68,11 +68,26 @@ function fetchReceiverWithdrawPermissions(
       for (let i = 1; i < iterations; i++) {
         let nextPage;
         try {
+          // The DB API treats the start id as inclusive, so start one higher
+          // than the last fetched id to avoid duplicating the boundary row.
+          let startId =
+            withdrawPermissions[withdrawPermissions.length - 1].id;
+          try {
+            const parts = startId.split(".");
+            const lastNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(lastNum)) {
+              parts[parts.length - 1] = String(lastNum + 1);
+              startId = parts.join(".");
+            }
+          } catch (e) {
+            // fall back to the original id (existing behavior)
+          }
+
           nextPage = await currentAPI
             .db_api()
             .exec("get_withdraw_permissions_by_recipient", [
               account_name_or_id,
-              withdrawPermissions[withdrawPermissions.length - 1].id,
+              startId,
               limit,
             ]);
         } catch (error) {
@@ -86,11 +101,19 @@ function fetchReceiverWithdrawPermissions(
 
         if (nextPage && nextPage.length) {
           withdrawPermissions = [...withdrawPermissions, ...nextPage];
+          if (nextPage.length < limit) {
+            break;
+          }
         } else {
           break;
         }
       }
     }
+
+    // Defense in depth: drop any duplicate ids from inclusive-cursor overlap.
+    withdrawPermissions = [
+      ...new Map(withdrawPermissions.map((w: any) => [w.id, w])).values(),
+    ];
 
     if (!existingAPI) {
       currentAPI.close();

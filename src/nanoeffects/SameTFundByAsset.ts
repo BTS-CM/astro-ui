@@ -35,22 +35,10 @@ function getSameTFundsByAsset(
       return;
     }
 
-    let latestObjectID;
-    try {
-      latestObjectID = await currentAPI
-        .db_api()
-        .exec("get_next_object_id", [1, 20, false]);
-    } catch (error) {
-      console.log({ error });
-      reject(error);
-      return;
-    }
-
-    const latestObjectIDNumber = parseInt(latestObjectID.split(".")[2], 10);
-
     let limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
+    const maxIterations =
+      chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
     let allSameTFunds: any[] = [];
-    let start_id = null;
 
     let firstPageOffers;
     try {
@@ -66,21 +54,28 @@ function getSameTFundsByAsset(
     if (firstPageOffers && firstPageOffers.length) {
       allSameTFunds.push(...firstPageOffers);
 
-      let lastOfferIDNumber = parseInt(
-        firstPageOffers[firstPageOffers.length - 1].id.split(".")[2],
-        10
-      );
-      let totalItems = latestObjectIDNumber - lastOfferIDNumber;
+      if (firstPageOffers.length === limit) {
+        // The DB API treats the start id as inclusive, so start one higher
+        // than the last fetched id to avoid duplicating the boundary row.
+        const bumpId = (id: string) => {
+          try {
+            const parts = id.split(".");
+            const lastNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(lastNum)) {
+              parts[parts.length - 1] = String(lastNum + 1);
+              return parts.join(".");
+            }
+          } catch (e) {
+            // fall through to the original id
+          }
+          return id;
+        };
 
-      if (totalItems > 0) {
-        let totalFetches = Math.min(
-          Math.ceil(totalItems / limit),
-          chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS
+        let start_id = bumpId(
+          firstPageOffers[firstPageOffers.length - 1].id
         );
 
-        start_id = firstPageOffers[firstPageOffers.length - 1].id;
-
-        for (let i = 1; i < totalFetches; i++) {
+        for (let i = 1; i < maxIterations; i++) {
           let options = [asset_symbol_or_id, limit, start_id];
           let pageOffers;
           try {
@@ -92,14 +87,22 @@ function getSameTFundsByAsset(
             reject(error);
             return;
           }
-          if (!pageOffers || pageOffers.length) {
+          if (!pageOffers || !pageOffers.length) {
             break;
           }
           allSameTFunds.push(...pageOffers);
-          start_id = pageOffers[pageOffers.length - 1].id;
+          if (pageOffers.length < limit) {
+            break;
+          }
+          start_id = bumpId(pageOffers[pageOffers.length - 1].id);
         }
       }
     }
+
+    // Defense in depth: drop any duplicate ids from inclusive-cursor overlap.
+    allSameTFunds = [
+      ...new Map(allSameTFunds.map((fund: any) => [fund.id, fund])).values(),
+    ];
 
     currentAPI.close();
     resolve(allSameTFunds);

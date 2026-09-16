@@ -35,22 +35,10 @@ function getCreditDealsByOfferId(
       return;
     }
 
-    let latestObjectID;
-    try {
-      latestObjectID = await currentAPI
-        .db_api()
-        .exec("get_next_object_id", [1, 22, false]);
-    } catch (error) {
-      console.log({ error });
-      reject(error);
-      return;
-    }
-
-    const latestObjectIDNumber = parseInt(latestObjectID.split(".")[2], 10);
-
     let limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
+    const maxIterations =
+      chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
     let allOffers: any[] = [];
-    let start_id = null;
 
     let firstPage;
     try {
@@ -64,43 +52,56 @@ function getCreditDealsByOfferId(
     }
 
     if (firstPage && firstPage.length) {
-      let lastIDNumber = parseInt(
-        firstPage[firstPage.length - 1].id.split(".")[2],
-        10
-      );
-
-      let totalItems = latestObjectIDNumber - lastIDNumber;
-
-      let totalFetches = Math.min(
-        Math.ceil(totalItems / limit),
-        chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS
-      );
-
       allOffers.push(...firstPage);
 
-      start_id = firstPage[firstPage.length - 1].id;
+      if (firstPage.length === limit) {
+        // The DB API treats the start id as inclusive, so start one higher
+        // than the last fetched id to avoid duplicating the boundary row.
+        const bumpId = (id: string) => {
+          try {
+            const parts = id.split(".");
+            const lastNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(lastNum)) {
+              parts[parts.length - 1] = String(lastNum + 1);
+              return parts.join(".");
+            }
+          } catch (e) {
+            // fall through to the original id
+          }
+          return id;
+        };
 
-      // Use a for loop for the remaining fetches
-      for (let i = 1; i < totalFetches; i++) {
-        let options = [offerId, limit, start_id];
+        let start_id = bumpId(firstPage[firstPage.length - 1].id);
 
-        let pageOffers;
-        try {
-          pageOffers = await currentAPI
-            .db_api()
-            .exec("get_credit_deals_by_offer_id", options);
-        } catch (error) {
-          console.log({ error });
-          reject(error);
-          return;
+        for (let i = 1; i < maxIterations; i++) {
+          let options = [offerId, limit, start_id];
+
+          let pageOffers;
+          try {
+            pageOffers = await currentAPI
+              .db_api()
+              .exec("get_credit_deals_by_offer_id", options);
+          } catch (error) {
+            console.log({ error });
+            reject(error);
+            return;
+          }
+          if (!pageOffers || !pageOffers.length) {
+            break;
+          }
+          allOffers.push(...pageOffers);
+          if (pageOffers.length < limit) {
+            break;
+          }
+          start_id = bumpId(pageOffers[pageOffers.length - 1].id);
         }
-        if (!pageOffers || pageOffers.length) {
-          break;
-        }
-        allOffers.push(...pageOffers);
-        start_id = pageOffers[pageOffers.length - 1].id;
       }
     }
+
+    // Defense in depth: drop any duplicate ids from inclusive-cursor overlap.
+    allOffers = [
+      ...new Map(allOffers.map((offer: any) => [offer.id, offer])).values(),
+    ];
 
     currentAPI.close();
     resolve(allOffers);

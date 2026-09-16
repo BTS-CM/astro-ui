@@ -64,12 +64,27 @@ function getAccountLimitOrders(
       for (let i = 1; i < API_ITERATIONS; i++) {
         let nextLimitOrders;
         try {
+          // Compute a start id one higher than the last fetched id's numeric suffix.
+          // The DB API treats the start id as inclusive, so passing the last id
+          // would return it again and duplicate a row at every page boundary.
+          let startId = limitOrders[limitOrders.length - 1].id;
+          try {
+            const parts = startId.split(".");
+            const lastNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(lastNum)) {
+              parts[parts.length - 1] = String(lastNum + 1);
+              startId = parts.join(".");
+            }
+          } catch (e) {
+            // if anything goes wrong, fall back to the original id (existing behavior)
+          }
+
           nextLimitOrders = await currentAPI
             .db_api()
             .exec("get_limit_orders_by_account", [
               accountID,
               API_LIMIT,
-              limitOrders[limitOrders.length - 1].id,
+              startId,
             ])
             .then((results: Object[]) => {
               if (results && results.length) {
@@ -82,11 +97,22 @@ function getAccountLimitOrders(
           reject(error);
         }
 
-        if (nextLimitOrders) {
+        if (nextLimitOrders && nextLimitOrders.length) {
           limitOrders = limitOrders.concat(nextLimitOrders);
+          if (nextLimitOrders.length < API_LIMIT) {
+            break;
+          }
+        } else {
+          break;
         }
       }
     }
+
+    // Defense in depth: drop any duplicate ids (e.g. from inclusive-cursor
+    // overlap) so callers never receive the same order twice.
+    limitOrders = [
+      ...new Map(limitOrders.map((order: any) => [order.id, order])).values(),
+    ];
 
     currentAPI.close();
     resolve(limitOrders);

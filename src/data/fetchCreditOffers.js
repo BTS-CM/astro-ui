@@ -13,7 +13,12 @@ const getAllOfferData = async (chain) => {
     return;
   }
 
-  let objectIds = Array.from({ length: maxObjectID }, (_, i) => `1.21.${i}`);
+  // getMaxObjectIDs returns the maximum existing id (next id minus one),
+  // so the range 0..max inclusive needs length max + 1.
+  let objectIds = Array.from(
+    { length: maxObjectID + 1 },
+    (_, i) => `1.21.${i}`
+  );
 
   console.log(`Fetching ${chain} offer data for ${objectIds.length} offers!`);
 

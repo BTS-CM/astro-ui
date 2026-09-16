@@ -51,8 +51,10 @@ const [createSmartcoinsStore] = nanoquery({
     }
 
     const maxObjectID = parseInt(nextObjectId.split(".")[2]) - 1;
+    // maxObjectID is the maximum existing id, so 0..max inclusive needs
+    // length max + 1, otherwise the newest bitasset object is never fetched.
     let smartcoinIDs: string[] = Array.from(
-      { length: maxObjectID },
+      { length: maxObjectID + 1 },
       (_, i) => `2.4.${i}`
     );
 

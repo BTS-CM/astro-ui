@@ -64,11 +64,26 @@ async function fetchingIssuedAssets(
       for (let i = 1; i < maximumIterations; i++) {
         let nextPage;
         try {
+          // Compute a start id one higher than the last fetched id's numeric suffix.
+          // The DB API treats the start id as inclusive, so passing the last id
+          // would return it again and duplicate a row at every page boundary.
+          let startId = issuedAssets[issuedAssets.length - 1].id;
+          try {
+            const parts = startId.split(".");
+            const lastNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(lastNum)) {
+              parts[parts.length - 1] = String(lastNum + 1);
+              startId = parts.join(".");
+            }
+          } catch (e) {
+            // if anything goes wrong, fall back to the original id (existing behavior)
+          }
+
           nextPage = await currentAPI
             .db_api()
             .exec("get_assets_by_issuer", [
               accountID,
-              issuedAssets[issuedAssets.length - 1].id,
+              startId,
               maximumQuerySize,
             ]);
         } catch (error) {
@@ -90,6 +105,12 @@ async function fetchingIssuedAssets(
         }
       }
     }
+
+    // Defense in depth: drop any duplicate ids (e.g. from inclusive-cursor
+    // overlap) so the UI never renders the same asset twice.
+    issuedAssets = [
+      ...new Map(issuedAssets.map((asset: any) => [asset.id, asset])).values(),
+    ];
 
     if (!existingAPI) {
       currentAPI.close();
