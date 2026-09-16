@@ -24,6 +24,10 @@
     "selectCollateral": "담보 자료를 선택하세요..",
     "borrowDescription": "빌리다 {{symbol}} ~에서 {{owner_name}}, 위에서 허용된 담보 자산 중에서 선택하세요.",
     "borrowDescription2": "대출 기관이 지정한 가격: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "대출 기관 지정 가격({{quote}} / {{base}})",
+    "designatedPricePending": "대출 기관 지정 가격",
+    "noCompatibleTitle": "사용 가능한 담보 없음",
+    "noCompatibleDesc": "이 계정은 이 대출 기관이 허용하는 모든 자산의 잔액이 0입니다({{symbols}}). 제안을 수락하기 전에 이러한 자산 중 하나에 자금을 입금하세요.",
     "noCollateralMessage": "계정에 이 담보 자산이 보관되어 있지 않습니다.",
     "borrowAmount": "금액 {{symbol}} 너는 빌릴 계획이야",
     "availableAmountRange": "사용 가능: {{availableAmount}} {{symbol}} (최저한의: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "사용 가능",
     "minimum": "최소",
     "expiry": "만료"
+  },
+  "steps": {
+    "step1Title": "당사자",
+    "step2Title": "내 거래",
+    "step3Title": "조건 및 비용",
+    "youBadge": "본인",
+    "lenderBadge": "대출 기관",
+    "dealStep1": "담보",
+    "dealStep2": "대출 금액",
+    "dealStep3": "상환 방법"
+  },
+  "summary": {
+    "title": "거래 요약",
+    "subtitle": "서명 전 동의 내용입니다.",
+    "youBorrow": "차용 금액",
+    "youLock": "담보로 예치",
+    "lenderFee": "대출 기관 수수료",
+    "repayBy": "상환 기한",
+    "networkCost": "네트워크 비용",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "계속하려면 담보를 선택하세요.",
+    "submitHintAmount": "{{minAmount}}에서 {{availableAmount}} {{symbol}} 사이의 금액을 입력하세요.",
+    "submitHintRepay": "계속하려면 상환 방법을 선택하세요.",
+    "submitHintBalance": "필요한 담보에 {{symbol}} 잔액이 부족합니다.",
+    "submitHintImpossible": "이 계정은 허용된 담보 자산을 보유하고 있지 않습니다."
   },
   "dialogContent": {
     "borrowing": "차용 {{finalBorrowAmount}} {{symbol}} ~에서 {{owner_name}} ({{owner_account}})"

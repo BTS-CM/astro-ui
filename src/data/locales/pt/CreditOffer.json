@@ -24,6 +24,10 @@
     "selectCollateral": "Selecione sua garantia de apoio.",
     "borrowDescription": "Para pedir emprestado {{symbol}} de {{owner_name}}, escolha entre os ativos colaterais aceitos acima.",
     "borrowDescription2": "Preço designado pelo credor: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Preço designado pelo credor em {{quote}} / {{base}}",
+    "designatedPricePending": "Preço designado pelo credor",
+    "noCompatibleTitle": "Sem garantia utilizável",
+    "noCompatibleDesc": "Esta conta tem saldo zero em todos os ativos aceitos por este credor ({{symbols}}). Financie um desses ativos antes de aceitar esta oferta.",
     "noCollateralMessage": "A conta não contém esse ativo de garantia.",
     "borrowAmount": "Quantidade de {{symbol}} você planeja pedir emprestado",
     "availableAmountRange": "Disponível: {{availableAmount}} {{symbol}} (Mínimo: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Disponível",
     "minimum": "Mínimo",
     "expiry": "Vencimento"
+  },
+  "steps": {
+    "step1Title": "Partes",
+    "step2Title": "Sua operação",
+    "step3Title": "Termos e custos",
+    "youBadge": "Você",
+    "lenderBadge": "Credor",
+    "dealStep1": "Garantia",
+    "dealStep2": "Valor do empréstimo",
+    "dealStep3": "Método de reembolso"
+  },
+  "summary": {
+    "title": "Resumo do acordo",
+    "subtitle": "O que você aceita antes de assinar.",
+    "youBorrow": "Você toma emprestado",
+    "youLock": "Você bloqueia como garantia",
+    "lenderFee": "Taxa do credor",
+    "repayBy": "Pagar até",
+    "networkCost": "Custo de rede",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Selecione uma garantia para continuar.",
+    "submitHintAmount": "Insira um valor entre {{minAmount}} e {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Escolha um método de reembolso para continuar.",
+    "submitHintBalance": "{{symbol}} insuficiente para a garantia necessária.",
+    "submitHintImpossible": "Esta conta não possui nenhum dos ativos de garantia aceitos."
   },
   "dialogContent": {
     "borrowing": "Empréstimo {{finalBorrowAmount}} {{symbol}} de {{owner_name}} ({{owner_account}})"

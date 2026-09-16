@@ -24,6 +24,10 @@
     "selectCollateral": "Vælg din sikkerhedsstillelse..",
     "borrowDescription": "At låne {{symbol}} fra {{owner_name}}, vælg mellem ovenstående accepterede sikkerhedsstillelsesaktiver.",
     "borrowDescription2": "Långivers angivne pris: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Långivers angivne pris i {{quote}} / {{base}}",
+    "designatedPricePending": "Långivers angivne pris",
+    "noCompatibleTitle": "Ingen brugbar sikkerhedsstillelse",
+    "noCompatibleDesc": "Denne konto har nul saldo på hvert aktiv, som denne långiver accepterer ({{symbols}}). Fyld et af disse aktiver op, før du accepterer tilbuddet.",
     "noCollateralMessage": "Kontoen indeholder ikke dette sikkerhedsstillelsesaktiv.",
     "borrowAmount": "Mængde af {{symbol}} du planlægger at låne",
     "availableAmountRange": "Tilgængelig: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Tilgængelig",
     "minimum": "Minimum",
     "expiry": "Udløb"
+  },
+  "steps": {
+    "step1Title": "Parter",
+    "step2Title": "Din aftale",
+    "step3Title": "Vilkår og omkostninger",
+    "youBadge": "Dig",
+    "lenderBadge": "Långiver",
+    "dealStep1": "Sikkerhedsstillelse",
+    "dealStep2": "Lånebeløb",
+    "dealStep3": "Tilbagebetalingsmetode"
+  },
+  "summary": {
+    "title": "Aftaleoversigt",
+    "subtitle": "Hvad du accepterer, før du underskriver.",
+    "youBorrow": "Du låner",
+    "youLock": "Du stiller som sikkerhed",
+    "lenderFee": "Långivers gebyr",
+    "repayBy": "Tilbagebetal senest",
+    "networkCost": "Netværksomkostning",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Vælg sikkerhedsstillelse for at fortsætte.",
+    "submitHintAmount": "Indtast et beløb mellem {{minAmount}} og {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Vælg en tilbagebetalingsmetode for at fortsætte.",
+    "submitHintBalance": "Utilstrækkelig {{symbol}} saldo til den krævede sikkerhed.",
+    "submitHintImpossible": "Denne konto indeholder ingen af de accepterede sikkerhedsaktiver."
   },
   "dialogContent": {
     "borrowing": "Lån {{finalBorrowAmount}} {{symbol}} fra {{owner_name}} ({{owner_account}})"

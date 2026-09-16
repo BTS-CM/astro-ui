@@ -12,7 +12,22 @@
     "min": "Minimum beløb: {{amount}} {{asset}}",
     "proceed": "Fortsæt med kredittilbud #{{offerID}}",
     "edit": "Rediger tilbud",
-    "view": "Se indstillinger"
+    "view": "Se indstillinger",
+    "offeringWord": "Tilbyder",
+    "chargingWord": "Opkræver",
+    "feeWord": "gebyr",
+    "repayPeriodLabel": "Tilbagebetalingsperiode",
+    "minLabel": "Minimum beløb",
+    "validityLabel": "Gælder for",
+    "moreCollateral": "+{{count}} mere",
+    "expiredShort": "Udløbet",
+    "json": "JSON",
+    "jsonTitle": "Kredittilbud #{{offerID}} JSON-data",
+    "jsonDescription": "De rå blockchain-data for dette kredittilbud.",
+    "outOfFunds": "Tilbud #{{offerID}} uden midler",
+    "outOfFundsDescription": "Dette kredittilbud er i øjeblikket løbet tør for midler til udlån.",
+    "expiredOffer": "Tilbud #{{offerID}} er udløbet",
+    "expiredOfferDescription": "Dette kredittilbud er udløbet og kan ikke længere accepteres."
   },
   "card": {
     "title": "Se tilgængelige kredittilbud",

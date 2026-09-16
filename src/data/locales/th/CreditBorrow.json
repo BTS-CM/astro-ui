@@ -12,7 +12,22 @@
     "min": "จำนวนเงินขั้นต่ำ: {{amount}} {{asset}}",
     "proceed": "ดำเนินการเสนอสินเชื่อ #{{offerID}}",
     "edit": "แก้ไขข้อเสนอ",
-    "view": "ดูการตั้งค่า"
+    "view": "ดูการตั้งค่า",
+    "offeringWord": "เสนอให้",
+    "chargingWord": "คิด",
+    "feeWord": "ค่าธรรมเนียม",
+    "repayPeriodLabel": "ระยะเวลาชำระคืน",
+    "minLabel": "จำนวนเงินขั้นต่ำ",
+    "validityLabel": "ใช้ได้สำหรับ",
+    "moreCollateral": "+{{count}} เพิ่มเติม",
+    "expiredShort": "หมดอายุ",
+    "json": "JSON",
+    "jsonTitle": "ข้อมูล JSON ข้อเสนอเครดิต #{{offerID}}",
+    "jsonDescription": "ข้อมูลบล็อกเชนดิบสำหรับข้อเสนอเครดิตนี้",
+    "outOfFunds": "ข้อเสนอ #{{offerID}} หมดเงิน",
+    "outOfFundsDescription": "ข้อเสนอเครดิตนี้ไม่มีเงินเหลือให้ยืมในขณะนี้",
+    "expiredOffer": "ข้อเสนอ #{{offerID}} หมดอายุ",
+    "expiredOfferDescription": "ข้อเสนอเครดิตนี้หมดอายุแล้วและไม่สามารถยอมรับได้อีก"
   },
   "card": {
     "title": "การดูข้อเสนอเครดิตที่มีอยู่",

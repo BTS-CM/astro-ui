@@ -12,7 +12,22 @@
     "min": "Cantidad mínima: {{amount}} {{asset}}",
     "proceed": "Continuar con la oferta de crédito #{{offerID}}",
     "edit": "Editar oferta",
-    "view": "Ver configuración"
+    "view": "Ver configuración",
+    "offeringWord": "Ofrece",
+    "chargingWord": "Cobra",
+    "feeWord": "tarifa",
+    "repayPeriodLabel": "Periodo de amortización",
+    "minLabel": "Cantidad mínima",
+    "validityLabel": "Válida por",
+    "moreCollateral": "+{{count}} más",
+    "expiredShort": "Caducada",
+    "json": "JSON",
+    "jsonTitle": "Oferta de crédito #{{offerID}} datos JSON",
+    "jsonDescription": "Los datos brutos de la cadena de bloques para esta oferta de crédito.",
+    "outOfFunds": "Oferta #{{offerID}} sin fondos",
+    "outOfFundsDescription": "Esta oferta de crédito se ha quedado sin fondos para prestar.",
+    "expiredOffer": "Oferta #{{offerID}} caducada",
+    "expiredOfferDescription": "Esta oferta de crédito ha caducado y ya no puede aceptarse."
   },
   "card": {
     "title": "Ver ofertas de crédito disponibles",

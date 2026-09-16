@@ -12,7 +12,22 @@
     "min": "Importo minimo: {{amount}} {{asset}}",
     "proceed": "Procedi con l'offerta di credito #{{offerID}}",
     "edit": "Modifica offerta",
-    "view": "Visualizza le impostazioni"
+    "view": "Visualizza le impostazioni",
+    "offeringWord": "Offre",
+    "chargingWord": "Addebita",
+    "feeWord": "tassa",
+    "repayPeriodLabel": "Periodo di rimborso",
+    "minLabel": "Importo minimo",
+    "validityLabel": "Valida per",
+    "moreCollateral": "+{{count}} altri",
+    "expiredShort": "Scaduta",
+    "json": "JSON",
+    "jsonTitle": "Offerta di credito #{{offerID}} dati JSON",
+    "jsonDescription": "I dati grezzi della blockchain per questa offerta di credito.",
+    "outOfFunds": "Offerta #{{offerID}} senza fondi",
+    "outOfFundsDescription": "Questa offerta di credito ha attualmente esaurito i fondi da prestare.",
+    "expiredOffer": "Offerta #{{offerID}} scaduta",
+    "expiredOfferDescription": "Questa offerta di credito è scaduta e non può più essere accettata."
   },
   "card": {
     "title": "Visualizzazione delle offerte di credito disponibili",

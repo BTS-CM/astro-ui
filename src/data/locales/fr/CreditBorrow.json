@@ -12,7 +12,22 @@
     "min": "Montant minimum : {{amount}} {{asset}}",
     "proceed": "Procéder à l'offre de crédit #{{offerID}}",
     "edit": "Modifier l'offre",
-    "view": "Afficher les paramètres"
+    "view": "Afficher les paramètres",
+    "offeringWord": "Propose",
+    "chargingWord": "Facture",
+    "feeWord": "frais",
+    "repayPeriodLabel": "Période de remboursement",
+    "minLabel": "Montant minimum",
+    "validityLabel": "Valable pendant",
+    "moreCollateral": "+{{count}} autres",
+    "expiredShort": "Expirée",
+    "json": "JSON",
+    "jsonTitle": "Offre de crédit #{{offerID}} données JSON",
+    "jsonDescription": "Les données brutes de la blockchain pour cette offre de crédit.",
+    "outOfFunds": "Offre #{{offerID}} sans fonds",
+    "outOfFundsDescription": "Cette offre de crédit est actuellement à court de fonds à prêter.",
+    "expiredOffer": "Offre #{{offerID}} expirée",
+    "expiredOfferDescription": "Cette offre de crédit a expiré et ne peut plus être acceptée."
   },
   "card": {
     "title": "Visualisation des offres de crédit disponibles",

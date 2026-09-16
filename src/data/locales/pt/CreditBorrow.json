@@ -12,7 +12,22 @@
     "min": "Quantidade mínima: {{amount}} {{asset}}",
     "proceed": "Prossiga com a oferta de crédito #{{offerID}}",
     "edit": "Editar oferta",
-    "view": "Ver configurações"
+    "view": "Ver configurações",
+    "offeringWord": "Oferece",
+    "chargingWord": "Cobra",
+    "feeWord": "taxa",
+    "repayPeriodLabel": "Período de reembolso",
+    "minLabel": "Quantidade mínima",
+    "validityLabel": "Válida por",
+    "moreCollateral": "+{{count}} mais",
+    "expiredShort": "Expirada",
+    "json": "JSON",
+    "jsonTitle": "Oferta de crédito #{{offerID}} dados JSON",
+    "jsonDescription": "Os dados brutos da blockchain para esta oferta de crédito.",
+    "outOfFunds": "Oferta #{{offerID}} sem fundos",
+    "outOfFundsDescription": "Esta oferta de crédito ficou sem fundos para emprestar.",
+    "expiredOffer": "Oferta #{{offerID}} expirada",
+    "expiredOfferDescription": "Esta oferta de crédito expirou e não pode mais ser aceita."
   },
   "card": {
     "title": "Visualizando ofertas de crédito disponíveis",

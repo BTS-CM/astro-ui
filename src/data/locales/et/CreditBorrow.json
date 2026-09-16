@@ -12,7 +12,22 @@
     "min": "Minimaalne summa: {{amount}} {{asset}}",
     "proceed": "Jätkake krediidipakkumisega #{{offerID}}",
     "edit": "Muuda pakkumist",
-    "view": "Kuva seaded"
+    "view": "Kuva seaded",
+    "offeringWord": "Pakub",
+    "chargingWord": "Küsib",
+    "feeWord": "tasu",
+    "repayPeriodLabel": "Tagasimakse periood",
+    "minLabel": "Minimaalne summa",
+    "validityLabel": "Kehtib",
+    "moreCollateral": "+{{count}} veel",
+    "expiredShort": "Aegunud",
+    "json": "JSON",
+    "jsonTitle": "Krediidipakkumine #{{offerID}} JSON-andmed",
+    "jsonDescription": "Selle krediidipakkumise töötlemata plokiahela andmed.",
+    "outOfFunds": "Pakkumine #{{offerID}} ilma vahenditeta",
+    "outOfFundsDescription": "Sellel krediidipakkumisel on laenamiseks mõeldud vahendid otsa saanud.",
+    "expiredOffer": "Pakkumine #{{offerID}} on aegunud",
+    "expiredOfferDescription": "See krediidipakkumine on aegunud ja seda ei saa enam vastu võtta."
   },
   "card": {
     "title": "Saadaolevate krediidipakkumiste vaatamine",

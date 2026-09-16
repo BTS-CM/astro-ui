@@ -24,6 +24,10 @@
     "selectCollateral": "เลือกหลักประกันสำรอง..",
     "borrowDescription": "ที่จะยืม {{symbol}} จาก {{owner_name}}ให้เลือกระหว่างสินทรัพย์หลักประกันที่ได้รับการยอมรับข้างต้น",
     "borrowDescription2": "ราคาที่กำหนดของผู้ให้กู้: {{price}} {{quote}}-{{base}}",
+    "designatedPriceLabel": "ราคาที่ผู้ให้กู้กำหนดใน {{quote}} / {{base}}",
+    "designatedPricePending": "ราคาที่ผู้ให้กู้กำหนด",
+    "noCompatibleTitle": "ไม่มีหลักประกันที่ใช้ได้",
+    "noCompatibleDesc": "บัญชีนี้มียอดคงเหลือเป็นศูนย์สำหรับทุกสินทรัพย์ที่ผู้ให้กู้รายนี้ยอมรับ ({{symbols}}) กรุณาเติมเงินในสินทรัพย์เหล่านี้ก่อนยอมรับข้อเสนอ",
     "noCollateralMessage": "บัญชีไม่ได้ถือครองสินทรัพย์หลักประกันนี้",
     "borrowAmount": "จำนวน {{symbol}} คุณวางแผนที่จะกู้ยืม",
     "availableAmountRange": "มีอยู่: {{availableAmount}} {{symbol}} (ขั้นต่ำ: {{minAmount}}-",
@@ -62,6 +66,33 @@
     "available": "พร้อมใช้งาน",
     "minimum": "ขั้นต่ำ",
     "expiry": "วันหมดอายุ"
+  },
+  "steps": {
+    "step1Title": "คู่สัญญา",
+    "step2Title": "ข้อตกลงของคุณ",
+    "step3Title": "เงื่อนไขและค่าใช้จ่าย",
+    "youBadge": "คุณ",
+    "lenderBadge": "ผู้ให้กู้",
+    "dealStep1": "หลักประกัน",
+    "dealStep2": "จำนวนเงินกู้",
+    "dealStep3": "วิธีชำระคืน"
+  },
+  "summary": {
+    "title": "สรุปข้อตกลง",
+    "subtitle": "สิ่งที่คุณยอมรับก่อนลงนาม",
+    "youBorrow": "คุณยืม",
+    "youLock": "คุณล็อกเป็นหลักประกัน",
+    "lenderFee": "ค่าธรรมเนียมผู้ให้กู้",
+    "repayBy": "ชำระคืนภายใน",
+    "networkCost": "ค่าเครือข่าย",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "เลือกหลักประกันเพื่อดำเนินการต่อ",
+    "submitHintAmount": "ป้อนจำนวนเงินระหว่าง {{minAmount}} ถึง {{availableAmount}} {{symbol}}",
+    "submitHintRepay": "เลือกวิธีชำระคืนเพื่อดำเนินการต่อ",
+    "submitHintBalance": "{{symbol}} ไม่เพียงพอสำหรับหลักประกันที่ต้องการ",
+    "submitHintImpossible": "บัญชีนี้ไม่มีสินทรัพย์หลักประกันที่ยอมรับเลย"
   },
   "dialogContent": {
     "borrowing": "การยืม {{finalBorrowAmount}} {{symbol}} จาก {{owner_name}} -{{owner_account}}-"

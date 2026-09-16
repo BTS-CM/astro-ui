@@ -12,7 +12,22 @@
     "min": "Mindestbetrag: {{amount}} {{asset}}",
     "proceed": "Mit Kreditangebot fortfahren #{{offerID}}",
     "edit": "Angebot bearbeiten",
-    "view": "Einstellungen anzeigen"
+    "view": "Einstellungen anzeigen",
+    "offeringWord": "Bietet",
+    "chargingWord": "Berechnet",
+    "feeWord": "Gebühr",
+    "repayPeriodLabel": "Rückzahlungszeitraum",
+    "minLabel": "Mindestbetrag",
+    "validityLabel": "Gültig für",
+    "moreCollateral": "+{{count}} weitere",
+    "expiredShort": "Abgelaufen",
+    "json": "JSON",
+    "jsonTitle": "Kreditangebot #{{offerID}} JSON-Daten",
+    "jsonDescription": "Die Roh-Blockchain-Daten für dieses Kreditangebot.",
+    "outOfFunds": "Angebot #{{offerID}} ohne Mittel",
+    "outOfFundsDescription": "Diesem Kreditangebot sind derzeit die Mittel zum Verleihen ausgegangen.",
+    "expiredOffer": "Angebot #{{offerID}} abgelaufen",
+    "expiredOfferDescription": "Dieses Kreditangebot ist abgelaufen und kann nicht mehr angenommen werden."
   },
   "card": {
     "title": "Anzeigen verfügbarer Kreditangebote",

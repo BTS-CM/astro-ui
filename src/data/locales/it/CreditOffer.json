@@ -24,6 +24,10 @@
     "selectCollateral": "Seleziona la garanzia di supporto..",
     "borrowDescription": "Prendere in prestito {{symbol}} da {{owner_name}}, scegliere tra le attività collaterali di supporto accettate sopra.",
     "borrowDescription2": "Prezzo designato dal prestatore: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Prezzo designato dal prestatore in {{quote}} / {{base}}",
+    "designatedPricePending": "Prezzo designato dal prestatore",
+    "noCompatibleTitle": "Nessuna garanzia utilizzabile",
+    "noCompatibleDesc": "Questo conto ha saldo zero per ogni bene accettato da questo prestatore ({{symbols}}). Finanzia uno di questi beni prima di accettare l'offerta.",
     "noCollateralMessage": "Il conto non detiene questa risorsa collaterale di supporto.",
     "borrowAmount": "Importo di {{symbol}} hai intenzione di prendere in prestito",
     "availableAmountRange": "Disponibile: {{availableAmount}} {{symbol}} (Minimo: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Disponibile",
     "minimum": "Minimo",
     "expiry": "Scadenza"
+  },
+  "steps": {
+    "step1Title": "Parti",
+    "step2Title": "La tua operazione",
+    "step3Title": "Termini e costi",
+    "youBadge": "Tu",
+    "lenderBadge": "Prestatore",
+    "dealStep1": "Garanzia",
+    "dealStep2": "Importo del prestito",
+    "dealStep3": "Metodo di rimborso"
+  },
+  "summary": {
+    "title": "Riepilogo dell'accordo",
+    "subtitle": "Cosa accetti prima di firmare.",
+    "youBorrow": "Prendi in prestito",
+    "youLock": "Blocchi come garanzia",
+    "lenderFee": "Commissione del prestatore",
+    "repayBy": "Rimborsa entro il",
+    "networkCost": "Costo di rete",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Seleziona una garanzia per continuare.",
+    "submitHintAmount": "Inserisci un importo tra {{minAmount}} e {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Scegli un metodo di rimborso per continuare.",
+    "submitHintBalance": "{{symbol}} insufficiente per la garanzia richiesta.",
+    "submitHintImpossible": "Questo conto non detiene nessuno dei beni di garanzia accettati."
   },
   "dialogContent": {
     "borrowing": "Prendere in prestito {{finalBorrowAmount}} {{symbol}} da {{owner_name}} ({{owner_account}})"

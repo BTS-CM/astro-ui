@@ -24,6 +24,10 @@
     "selectCollateral": "Valige oma tagatis..",
     "borrowDescription": "Laenama {{symbol}} alates {{owner_name}}, valige ülaltoodud aktsepteeritud tagatistagatisvarade vahel.",
     "borrowDescription2": "Laenuandja määratud hind: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Laenuandja määratud hind: {{quote}} / {{base}}",
+    "designatedPricePending": "Laenuandja määratud hind",
+    "noCompatibleTitle": "Kasutatavat tagatist pole",
+    "noCompatibleDesc": "Sellel kontol on nullsaldo iga vara puhul, mida see laenuandja aktsepteerib ({{symbols}}). Enne pakkumise vastuvõtmist kandke ühele neist varadest vahendeid.",
     "noCollateralMessage": "Kontol ei ole seda tagatisvara.",
     "borrowAmount": "Kogus {{symbol}} plaanite laenu võtta",
     "availableAmountRange": "Saadaval: {{availableAmount}} {{symbol}} (Minimaalne: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Saadaval",
     "minimum": "Vähimum",
     "expiry": "Aegumine"
+  },
+  "steps": {
+    "step1Title": "Pooled",
+    "step2Title": "Teie tehing",
+    "step3Title": "Tingimused ja kulud",
+    "youBadge": "Teie",
+    "lenderBadge": "Laenuandja",
+    "dealStep1": "Tagatis",
+    "dealStep2": "Laenusumma",
+    "dealStep3": "Tagasimakseviis"
+  },
+  "summary": {
+    "title": "Tehingu kokkuvõte",
+    "subtitle": "Millega nõustute enne allkirjastamist.",
+    "youBorrow": "Laenate",
+    "youLock": "Lukustate tagatiseks",
+    "lenderFee": "Laenuandja tasu",
+    "repayBy": "Tagastamise tähtaeg",
+    "networkCost": "Võrgukulu",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Jätkamiseks valige tagatis.",
+    "submitHintAmount": "Sisestage summa vahemikus {{minAmount}} kuni {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Jätkamiseks valige tagasimakseviis.",
+    "submitHintBalance": "Nõutava tagatise jaoks ebapiisav {{symbol}} saldo.",
+    "submitHintImpossible": "Sellel kontol pole ühtegi aktsepteeritud tagatisvara."
   },
   "dialogContent": {
     "borrowing": "Laenamine {{finalBorrowAmount}} {{symbol}} alates {{owner_name}} ({{owner_account}})"

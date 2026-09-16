@@ -12,7 +12,22 @@
     "min": "최소 금액: {{amount}} {{asset}}",
     "proceed": "크레딧 제안을 진행하세요 #{{offerID}}",
     "edit": "제안 수정",
-    "view": "설정 보기"
+    "view": "설정 보기",
+    "offeringWord": "제공",
+    "chargingWord": "청구",
+    "feeWord": "수수료",
+    "repayPeriodLabel": "상환 기간",
+    "minLabel": "최소 금액",
+    "validityLabel": "유효 기간",
+    "moreCollateral": "+{{count}}개 더",
+    "expiredShort": "만료됨",
+    "json": "JSON",
+    "jsonTitle": "크레딧 제안 #{{offerID}} JSON 데이터",
+    "jsonDescription": "이 크레딧 제안에 대한 원시 블록체인 데이터입니다.",
+    "outOfFunds": "제안 #{{offerID}} 자금 소진",
+    "outOfFundsDescription": "이 크레딧 제안은 현재 대출 자금이 소진되었습니다.",
+    "expiredOffer": "제안 #{{offerID}} 만료됨",
+    "expiredOfferDescription": "이 크레딧 제안은 만료되어 더 이상 수락할 수 없습니다."
   },
   "card": {
     "title": "사용 가능한 크레딧 제안 보기",

@@ -24,6 +24,10 @@
     "selectCollateral": "Sélectionnez votre garantie de soutien.",
     "borrowDescription": "Pour emprunter {{symbol}} depuis {{owner_name}}, choisissez parmi les actifs de garantie acceptés ci-dessus.",
     "borrowDescription2": "Prix ​​désigné par le prêteur : {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Prix désigné par le prêteur en {{quote}} / {{base}}",
+    "designatedPricePending": "Prix désigné par le prêteur",
+    "noCompatibleTitle": "Aucune garantie utilisable",
+    "noCompatibleDesc": "Ce compte a un solde nul pour chaque actif accepté par ce prêteur ({{symbols}}). Approvisionnez l'un de ces actifs avant d'accepter cette offre.",
     "noCollateralMessage": "Le compte ne détient pas cet actif de garantie de garantie.",
     "borrowAmount": "Montant de {{symbol}} vous envisagez d'emprunter",
     "availableAmountRange": "Disponible: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Disponible",
     "minimum": "Minimum",
     "expiry": "Expiration"
+  },
+  "steps": {
+    "step1Title": "Parties",
+    "step2Title": "Votre opération",
+    "step3Title": "Conditions et coûts",
+    "youBadge": "Vous",
+    "lenderBadge": "Prêteur",
+    "dealStep1": "Garantie",
+    "dealStep2": "Montant emprunté",
+    "dealStep3": "Mode de remboursement"
+  },
+  "summary": {
+    "title": "Résumé de l'accord",
+    "subtitle": "Ce que vous acceptez avant de signer.",
+    "youBorrow": "Vous empruntez",
+    "youLock": "Vous bloquez en garantie",
+    "lenderFee": "Frais du prêteur",
+    "repayBy": "Rembourser avant le",
+    "networkCost": "Coût réseau",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Sélectionnez une garantie pour continuer.",
+    "submitHintAmount": "Saisissez un montant entre {{minAmount}} et {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Choisissez un mode de remboursement pour continuer.",
+    "submitHintBalance": "{{symbol}} insuffisant pour la garantie requise.",
+    "submitHintImpossible": "Ce compte ne détient aucun des actifs de garantie acceptés."
   },
   "dialogContent": {
     "borrowing": "Emprunt {{finalBorrowAmount}} {{symbol}} depuis {{owner_name}} ({{owner_account}})"

@@ -24,6 +24,10 @@
     "selectCollateral": "Seleccione su garantía de respaldo.",
     "borrowDescription": "pedir prestado {{symbol}} de {{owner_name}}, elija entre los activos de garantía de respaldo aceptados anteriormente.",
     "borrowDescription2": "Precio designado por el prestamista: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Precio designado por el prestamista en {{quote}} / {{base}}",
+    "designatedPricePending": "Precio designado por el prestamista",
+    "noCompatibleTitle": "Sin garantía utilizable",
+    "noCompatibleDesc": "Esta cuenta tiene saldo cero en todos los activos que acepta este prestamista ({{symbols}}). Fondee uno de estos activos antes de aceptar esta oferta.",
     "noCollateralMessage": "La cuenta no tiene este activo de garantía de respaldo.",
     "borrowAmount": "cantidad de {{symbol}} planeas pedir prestado",
     "availableAmountRange": "Disponible: {{availableAmount}} {{symbol}} (Mínimo: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Disponible",
     "minimum": "Mínimo",
     "expiry": "Caducidad"
+  },
+  "steps": {
+    "step1Title": "Partes",
+    "step2Title": "Tu operación",
+    "step3Title": "Términos y costos",
+    "youBadge": "Tú",
+    "lenderBadge": "Prestamista",
+    "dealStep1": "Garantía",
+    "dealStep2": "Monto del préstamo",
+    "dealStep3": "Método de pago"
+  },
+  "summary": {
+    "title": "Resumen del acuerdo",
+    "subtitle": "Lo que aceptas antes de firmar.",
+    "youBorrow": "Pides prestado",
+    "youLock": "Bloqueas como garantía",
+    "lenderFee": "Tarifa del prestamista",
+    "repayBy": "Pagar antes del",
+    "networkCost": "Costo de red",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Seleccione una garantía para continuar.",
+    "submitHintAmount": "Ingrese un monto entre {{minAmount}} y {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Elija un método de pago para continuar.",
+    "submitHintBalance": "{{symbol}} insuficiente para la garantía requerida.",
+    "submitHintImpossible": "Esta cuenta no posee ninguno de los activos de garantía aceptados."
   },
   "dialogContent": {
     "borrowing": "Préstamo {{finalBorrowAmount}} {{symbol}} de {{owner_name}} ({{owner_account}})"

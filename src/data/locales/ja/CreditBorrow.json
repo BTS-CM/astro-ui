@@ -12,7 +12,22 @@
     "min": "最低金額: {{amount}} {{asset}}",
     "proceed": "クレジットオファーを続行します #{{offerID}}",
     "edit": "オファーを編集する",
-    "view": "設定を表示する"
+    "view": "設定を表示する",
+    "offeringWord": "提供",
+    "chargingWord": "課金",
+    "feeWord": "手数料",
+    "repayPeriodLabel": "返済期間",
+    "minLabel": "最低金額",
+    "validityLabel": "有効期間",
+    "moreCollateral": "+他{{count}}件",
+    "expiredShort": "期限切れ",
+    "json": "JSON",
+    "jsonTitle": "クレジットオファー #{{offerID}} JSONデータ",
+    "jsonDescription": "このクレジットオファーの生ブロックチェーンデータ。",
+    "outOfFunds": "オファー #{{offerID}} 資金切れ",
+    "outOfFundsDescription": "このクレジットオファーは現在貸出資金が枯渇しています。",
+    "expiredOffer": "オファー #{{offerID}} 期限切れ",
+    "expiredOfferDescription": "このクレジットオファーは期限切れのため、受け入れることができません。"
   },
   "card": {
     "title": "利用可能なクレジット特典の表示",

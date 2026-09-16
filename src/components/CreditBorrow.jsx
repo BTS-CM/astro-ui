@@ -11,10 +11,26 @@ import { List } from "react-window";
 const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, foundAsset, assets, balanceAssetIDs, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen }) {
   const offerID = res.id.replace("1.21.", "");
   const offeringAmount = humanReadableFloat(res.current_balance, foundAsset.precision);
+  const isOutOfFunds = Number(res.current_balance) === 0;
   const feePct = (res.fee_rate / 10000).toFixed(2);
   const repayHours = (res.max_duration_seconds / 60 / 60).toFixed(res.max_duration_seconds / 60 / 60 < 1 ? 2 : 0);
   const minAmount = humanReadableFloat(res.min_deal_amount, foundAsset.precision);
   const validHours = hoursTillExpiration(res.auto_disable_time);
+  const fullTitle = `${t("CreditBorrow:common.offer")} #${offerID} - ${t("CreditBorrow:common.offeringWord")} ${offeringAmount} ${foundAsset.symbol} - ${t("CreditBorrow:common.chargingWord")} ${feePct}% ${t("CreditBorrow:common.feeWord")}`;
+  const collateralSymbols = assets && assets.length ? res.acceptable_collateral.map((asset) => asset[0]).map((x) => assets.find((y) => y.id === x)?.symbol).filter((x) => x) : null;
+  const MAX_VISIBLE_COLLATERAL = 8;
+  const orderedCollateral = collateralSymbols ? [...collateralSymbols].sort((a, b) => {
+    const assetA = assets.find((y) => y.symbol === a);
+    const assetB = assets.find((y) => y.symbol === b);
+    const heldA = assetA && balanceAssetIDs && balanceAssetIDs.includes(assetA.id) ? 0 : 1;
+    const heldB = assetB && balanceAssetIDs && balanceAssetIDs.includes(assetB.id) ? 0 : 1;
+    return heldA - heldB;
+  }) : null;
+  const visibleCollateral = orderedCollateral ? orderedCollateral.slice(0, MAX_VISIBLE_COLLATERAL) : null;
+  const hiddenCollateralCount = orderedCollateral ? orderedCollateral.length - visibleCollateral.length : 0;
+  const validityClass = validHours < 0 ? "text-red-400/90" : validHours < 24 ? "text-amber-400/90" : "text-foreground/85";
+  const validityText = validHours < 0 ? t("CreditBorrow:common.expiredShort") : `${validHours}h`;
+  const isExpired = validHours < 0;
   return (
     <div style={{ ...style, padding: "0 8px 6px 8px" }} key={`acard-${res.id}`}>
       <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
@@ -24,24 +40,24 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
                 <HandCoins className="h-3.5 w-3.5" strokeWidth={2.25} />
               </span>
-              <h3 className="text-[13px] font-semibold leading-tight truncate min-w-0">
-                <span className="text-foreground">{t("CreditBorrow:common.offer")} </span>
+              <h3 title={fullTitle} className="text-[13px] font-semibold leading-tight truncate min-w-0">
+                <span className="text-muted-foreground font-normal">{t("CreditBorrow:common.offer")} </span>
                 <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">#{offerID}</span>
-                <span className="text-muted-foreground"> - </span>
-                <span className="text-foreground">Offering </span>
+                <span className="text-muted-foreground/60 font-normal"> - </span>
+                <span className="text-muted-foreground font-normal">{t("CreditBorrow:common.offeringWord")} </span>
                 <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">{offeringAmount} {foundAsset.symbol}</span>
-                <span className="text-muted-foreground"> - </span>
-                <span className="text-foreground">Charging </span>
-                <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">{feePct}% fee</span>
+                <span className="text-muted-foreground/60 font-normal"> - </span>
+                <span className="text-muted-foreground font-normal">{t("CreditBorrow:common.chargingWord")} </span>
+                <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg)/0.9)] text-[hsl(var(--accent-1-fg))]">{feePct}% {t("CreditBorrow:common.feeWord")}</span>
               </h3>
             </div>
             <Badge variant="outline" className="gap-1.5 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] text-[11px] py-0 px-1.5 flex-shrink-0 max-w-[45%]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button type="button" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity cursor-pointer min-w-0">
+                  <button type="button" title={`${res.owner_name} (${res.owner_account})`} className="flex items-center gap-1.5 hover:opacity-80 transition-opacity cursor-pointer min-w-0">
                     <Avatar size={14} name={res.owner_name} extra="offer-owner" expression={{ eye: "normal", mouth: "smile" }} />
                     <span className="whitespace-nowrap truncate">{res.owner_name}</span>
-                    <span className="text-muted-foreground/50 text-[10px] flex-shrink-0">({res.owner_account})</span>
+                    <span className="text-muted-foreground/50 text-[10px] flex-shrink-0 hidden sm:inline">({res.owner_account})</span>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
@@ -73,19 +89,33 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
           <div className="flex flex-col md:flex-row gap-2 mb-1.5">
             <div className="w-full md:w-1/2 rounded-lg border border-border/60 bg-card/40 px-2 py-1">
               <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5">{t("CreditBorrow:common.accepting")}</div>
-              <div className="font-mono text-xs tabular-nums text-foreground/85 leading-snug break-words line-clamp-2 overflow-hidden">
-                {assets && assets.length ? res.acceptable_collateral.map((asset) => asset[0]).map((x) => assets.find((y) => y.id === x)?.symbol).filter((x) => x).map((x, idx, arr) => { const a = assets.find((y) => y.symbol === x); const hasBal = a && balanceAssetIDs && balanceAssetIDs.includes(a.id); return (<span key={`${x}-${idx}`} className={cn("inline", hasBal ? "font-semibold text-foreground" : "text-muted-foreground/60")}>{x}{idx < arr.length - 1 ? ", " : ""}</span>); }) : t("CreditBorrow:common.loading")}
+              <div className="font-mono text-xs tabular-nums text-foreground/85 leading-snug break-words">
+                {visibleCollateral ? (<>
+                  {visibleCollateral.map((x, idx) => { const a = assets.find((y) => y.symbol === x); const hasBal = a && balanceAssetIDs && balanceAssetIDs.includes(a.id); return (<span key={`${x}-${idx}`} className={cn("inline", hasBal ? "font-semibold text-foreground" : "text-muted-foreground/60")}>{x}{idx < visibleCollateral.length - 1 || hiddenCollateralCount > 0 ? ", " : ""}</span>); })}
+                  {hiddenCollateralCount > 0 && (
+                    <TooltipProvider delayDuration={300}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="ml-1 inline-flex cursor-help whitespace-nowrap rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-px font-sans text-[10px] font-medium text-[hsl(var(--accent-1-fg))]">{t("CreditBorrow:common.moreCollateral", { count: hiddenCollateralCount })}</span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs break-words">
+                          {orderedCollateral.join(", ")}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </>) : t("CreditBorrow:common.loading")}
               </div>
             </div>
             <div className="w-full md:w-1/2 rounded-lg border border-border/60 bg-card/40 px-2 py-1">
               <div className="grid grid-cols-3 gap-2">
-                <div className="min-w-0"><div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5 truncate">{t("CreditBorrow:common.repayPeriod", { repayPeriod: "" })}</div><div className="font-mono text-[11px] tabular-nums text-foreground/85">{repayHours}h</div></div>
-                <div className="min-w-0"><div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5 truncate">{t("CreditBorrow:common.min", { amount: "", asset: "" })}</div><div className="font-mono text-[11px] tabular-nums text-foreground/85 truncate">{minAmount} {foundAsset.symbol}</div></div>
-                <div className="min-w-0"><div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5 truncate">{t("CreditBorrow:common.validity", { validity: "" })}</div><div className="font-mono text-[11px] tabular-nums text-foreground/85">{validHours}h</div></div>
+                <div className="min-w-0"><div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5 truncate">{t("CreditBorrow:common.repayPeriodLabel")}</div><div className="font-mono text-[11px] tabular-nums text-foreground/85">{repayHours}h</div></div>
+                <div className="min-w-0"><div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5 truncate">{t("CreditBorrow:common.minLabel")}</div><div title={`${minAmount} ${foundAsset.symbol}`} className="font-mono text-[11px] tabular-nums text-foreground/85 truncate">{minAmount} {foundAsset.symbol}</div></div>
+                <div className="min-w-0"><div className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5 truncate">{t("CreditBorrow:common.validityLabel")}</div><div className={cn("font-mono text-[11px] tabular-nums", validityClass)}>{validityText}</div></div>
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-between gap-2"><a href={`/offer.html?id=${res.id}`}><Button size="sm" className="w-auto bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] border-0 shadow-[0_4px_14px_-4px_rgba(16,185,129,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(16,185,129,0.6)] transition-all">{t("CreditBorrow:common.proceed", { offerID })}<ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Button></a><a href={`/lend.html?id=${res.id}`}><Button size="sm" variant="outline" className="w-auto border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))]">{t(`CreditBorrow:common.${usr.id === res.owner_account ? "edit" : "view"}`, { offerID: res.id.replace("1.21.", "") })}</Button></a></div>
+          <div className="flex items-center justify-between gap-2">{isExpired ? (<span title={t("CreditBorrow:common.expiredOfferDescription")}><Button size="sm" disabled className="w-auto border border-border/60 bg-card/40 text-muted-foreground/70 cursor-not-allowed disabled:opacity-70">{t("CreditBorrow:common.expiredOffer", { offerID })}</Button></span>) : isOutOfFunds ? (<span title={t("CreditBorrow:common.outOfFundsDescription")}><Button size="sm" disabled className="w-auto border border-border/60 bg-card/40 text-muted-foreground/70 cursor-not-allowed disabled:opacity-70">{t("CreditBorrow:common.outOfFunds", { offerID })}</Button></span>) : (<a href={`/offer.html?id=${res.id}`}><Button size="sm" className="w-auto bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] border-0 shadow-[0_4px_14px_-4px_rgba(16,185,129,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(16,185,129,0.6)] transition-all">{t("CreditBorrow:common.proceed", { offerID })}<ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Button></a>)}<div className="flex items-center gap-2"><Dialog><DialogTrigger asChild><Button size="sm" variant="outline" className="w-auto border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))]"><FileJson className="h-3.5 w-3.5 mr-1.5" />{t("CreditBorrow:common.json")}</Button></DialogTrigger><DialogContent className="!bg-card border border-border text-foreground/85 sm:max-w-[620px]"><DialogHeader><DialogTitle>{t("CreditBorrow:common.jsonTitle", { offerID })}</DialogTitle><DialogDescription className="text-muted-foreground/80">{t("CreditBorrow:common.jsonDescription")}</DialogDescription></DialogHeader><div className="grid grid-cols-1"><div className="col-span-1"><ScrollArea className="h-72 rounded-md border border-border bg-card/60 text-sm"><pre className="text-xs text-foreground/80 p-3 font-mono">{JSON.stringify(res, null, 2)}</pre></ScrollArea><Button variant="outline" className="mt-2 border-border bg-card/40 hover:border-[hsl(var(--accent-warning)/0.4)] hover:bg-[hsl(var(--accent-warning)/0.1)] text-foreground/80 hover:text-accent-foreground" onClick={() => { navigator.clipboard.writeText(JSON.stringify(res, null, 2)); }}><CircleCheck className="h-3.5 w-3.5 mr-1.5" />{t("DeepLinkDialog:tabsContent.copyOperationJSON")}</Button></div></div></DialogContent></Dialog><a href={`/lend.html?id=${res.id}`}><Button size="sm" variant="outline" className="w-auto border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))]">{t(`CreditBorrow:common.${usr.id === res.owner_account ? "edit" : "view"}`, { offerID: res.id.replace("1.21.", "") })}</Button></a></div></div>
         </div>
       </Card>
     </div>
@@ -122,13 +152,14 @@ import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 import {
   HandCoins,
   Search,
-  Clock,
   ShieldCheck,
   ArrowRight,
   Sparkles,
   Star,
   StarOff,
   Ban,
+  FileJson,
+  CircleCheck,
 } from "lucide-react";
 
 import {
@@ -160,6 +191,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   AlertDialog,
   AlertDialogContent,

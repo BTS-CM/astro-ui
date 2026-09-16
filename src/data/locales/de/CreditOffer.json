@@ -24,6 +24,10 @@
     "selectCollateral": "Wählen Sie Ihre Sicherheiten aus.",
     "borrowDescription": "Zum Ausleihen {{symbol}} aus {{owner_name}}Wählen Sie zwischen den oben genannten akzeptierten Sicherungswerten.",
     "borrowDescription2": "Vom Kreditgeber festgelegter Preis: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Vom Kreditgeber festgelegter Preis in {{quote}} / {{base}}",
+    "designatedPricePending": "Vom Kreditgeber festgelegter Preis",
+    "noCompatibleTitle": "Keine verwendbare Sicherheit",
+    "noCompatibleDesc": "Dieses Konto hat einen Nullsaldo bei jedem Vermögenswert, den dieser Kreditgeber akzeptiert ({{symbols}}). Füllen Sie einen dieser Vermögenswerte auf, bevor Sie dieses Angebot annehmen.",
     "noCollateralMessage": "Das Konto enthält diesen Sicherungswert nicht.",
     "borrowAmount": "Menge von {{symbol}} Sie planen, einen Kredit aufzunehmen",
     "availableAmountRange": "Verfügbar: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
@@ -62,6 +66,33 @@
     "available": "Verfügbar",
     "minimum": "Minimum",
     "expiry": "Ablauf"
+  },
+  "steps": {
+    "step1Title": "Parteien",
+    "step2Title": "Ihr Geschäft",
+    "step3Title": "Konditionen & Kosten",
+    "youBadge": "Sie",
+    "lenderBadge": "Kreditgeber",
+    "dealStep1": "Sicherheiten",
+    "dealStep2": "Leihbetrag",
+    "dealStep3": "Rückzahlungsmethode"
+  },
+  "summary": {
+    "title": "Geschäftsübersicht",
+    "subtitle": "Womit Sie vor der Unterzeichnung einverstanden sind.",
+    "youBorrow": "Sie leihen",
+    "youLock": "Sie hinterlegen als Sicherheit",
+    "lenderFee": "Kreditgebergebühr",
+    "repayBy": "Rückzahlung bis",
+    "networkCost": "Netzwerkkosten",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Wählen Sie Sicherheiten, um fortzufahren.",
+    "submitHintAmount": "Geben Sie einen Betrag zwischen {{minAmount}} und {{availableAmount}} {{symbol}} ein.",
+    "submitHintRepay": "Wählen Sie eine Rückzahlungsmethode, um fortzufahren.",
+    "submitHintBalance": "Unzureichend {{symbol}} Guthaben für die erforderliche Sicherheit.",
+    "submitHintImpossible": "Dieses Konto enthält keine der akzeptierten Sicherheiten."
   },
   "dialogContent": {
     "borrowing": "Ausleihen {{finalBorrowAmount}} {{symbol}} aus {{owner_name}} ({{owner_account}})"

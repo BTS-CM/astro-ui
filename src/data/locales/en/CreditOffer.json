@@ -28,6 +28,10 @@
     "selectCollateral": "Select your backing collateral..",
     "borrowDescription": "To borrow {{symbol}} from {{owner_name}}, choose between the above accepted backing collateral assets.",
     "borrowDescription2": "Lender's designated price: {{price}} {{quote}}/{{base}}",
+    "designatedPriceLabel": "Lender's designated price in {{quote}} / {{base}}",
+    "designatedPricePending": "Lender's designated price",
+    "noCompatibleTitle": "No usable backing collateral",
+    "noCompatibleDesc": "This account holds a zero balance of every asset this lender accepts ({{symbols}}). Fund one of these assets before accepting this offer.",
     "noCollateralMessage": "Account doesn't hold this backing collateral asset.",
     "borrowAmount": "Amount of {{symbol}} you plan on borrowing",
     "availableAmountRange": "Available: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
@@ -62,6 +66,33 @@
     "networkFeeDescription": "The cost to broadcast your credit deal operation onto the network.",
     "ltmRebate": "LTM rebate: {{rebate}} BTS (vesting)",
     "submit": "Submit"
+  },
+  "steps": {
+    "step1Title": "Parties",
+    "step2Title": "Your deal",
+    "step3Title": "Terms & costs",
+    "youBadge": "You",
+    "lenderBadge": "Lender",
+    "dealStep1": "Backing collateral",
+    "dealStep2": "Borrow amount",
+    "dealStep3": "Repay method"
+  },
+  "summary": {
+    "title": "Deal summary",
+    "subtitle": "What you're agreeing to before signing.",
+    "youBorrow": "You borrow",
+    "youLock": "You lock as collateral",
+    "lenderFee": "Lender fee",
+    "repayBy": "Repay by",
+    "networkCost": "Network cost",
+    "pendingValue": "—"
+  },
+  "submitHint": {
+    "submitHintCollateral": "Select backing collateral to continue.",
+    "submitHintAmount": "Enter an amount between {{minAmount}} and {{availableAmount}} {{symbol}}.",
+    "submitHintRepay": "Choose a repay method to continue.",
+    "submitHintBalance": "Insufficient {{symbol}} balance for the required collateral.",
+    "submitHintImpossible": "This account holds none of the accepted backing collateral assets."
   },
   "dialogContent": {
     "borrowing": "Borrowing {{finalBorrowAmount}} {{symbol}} from {{owner_name}} ({{owner_account}})"
