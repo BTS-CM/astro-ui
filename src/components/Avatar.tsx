@@ -2,11 +2,12 @@ import React, {
   type HTMLProps,
   memo,
   useMemo,
+  useRef,
   useState,
   useEffect,
   useId,
+  useSyncExternalStore,
 } from "react";
-import { useThrottle } from "@react-hook/throttle";
 
 import { getContrast, hashCode, RNG } from "@/lib/utilities";
 
@@ -16,6 +17,102 @@ const SIZE = 36;
 // same account must render the same avatar in every theme and mode, or users
 // lose visual recognition. Do NOT derive these from the active theme.
 const DEFAULT_COLORS = ["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"];
+
+// Shared per-page mouse + idle tracker (1 window listener for all avatars).
+// Previously every Avatar added its own mousemove listener, throttle state,
+// blink setInterval + inner setTimeout, and 30s idle setTimeout — O(N) timers
+// that re-rendered every instance on each mouse move. Now a single passive
+// listener feeds all instances; blink is pure CSS (see globals.css).
+type SharedMouse = { x: number | null; y: number | null };
+
+let sharedMouse: SharedMouse = { x: null, y: null };
+let sharedIdle = false;
+const mouseSubscribers = new Set<() => void>();
+const idleSubscribers = new Set<() => void>();
+let trackerInitialised = false;
+let lastMouseEmit = 0;
+let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+function notifySet(subs: Set<() => void>) {
+  subs.forEach((cb) => {
+    try {
+      cb();
+    } catch {
+      // ignore subscriber errors
+    }
+  });
+}
+
+function resetSharedIdleTimer() {
+  if (typeof window === "undefined") return;
+  if (idleTimer) clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    sharedIdle = true;
+    notifySet(idleSubscribers);
+  }, 30000);
+}
+
+function ensureSharedTracker() {
+  if (trackerInitialised || typeof window === "undefined") return;
+  trackerInitialised = true;
+  resetSharedIdleTimer();
+  window.addEventListener(
+    "mousemove",
+    (event: MouseEvent) => {
+      // ~30ms throttle (matches previous useThrottle) without per-instance state
+      const now = performance.now();
+      if (now - lastMouseEmit < 30) return;
+      lastMouseEmit = now;
+      sharedMouse = { x: event.clientX, y: event.clientY };
+      notifySet(mouseSubscribers);
+      // Any mouse activity clears idle (previously per-avatar timeout churn)
+      if (sharedIdle) {
+        sharedIdle = false;
+        notifySet(idleSubscribers);
+      }
+      resetSharedIdleTimer();
+    },
+    { passive: true }
+  );
+}
+
+function subscribeMouse(cb: () => void) {
+  ensureSharedTracker();
+  mouseSubscribers.add(cb);
+  return () => {
+    mouseSubscribers.delete(cb);
+  };
+}
+
+function subscribeIdle(cb: () => void) {
+  ensureSharedTracker();
+  idleSubscribers.add(cb);
+  return () => {
+    idleSubscribers.delete(cb);
+  };
+}
+
+const getSharedMouseSnapshot = () => sharedMouse;
+const SERVER_MOUSE_SNAPSHOT: SharedMouse = { x: null, y: null };
+const getSharedMouseServerSnapshot = () => SERVER_MOUSE_SNAPSHOT;
+const getSharedIdleSnapshot = () => sharedIdle;
+const getSharedIdleServerSnapshot = () => false;
+
+function useSharedMousePosition(): SharedMouse {
+  return useSyncExternalStore(
+    subscribeMouse,
+    getSharedMouseSnapshot,
+    getSharedMouseServerSnapshot
+  );
+}
+
+function useSharedIdle(): boolean {
+  return useSyncExternalStore(
+    subscribeIdle,
+    getSharedIdleSnapshot,
+    getSharedIdleServerSnapshot
+  );
+}
 
 const eyesRendererFactory = (
   renderer: React.FC<EyeProps>,
@@ -174,7 +271,7 @@ function generateData(
   };
 }
 
-export const Avatar = ({
+const AvatarBase = ({
   name,
   extra,
   colors,
@@ -190,156 +287,71 @@ export const Avatar = ({
     [name, colors, expression]
   );
   const maskID = useId();
+  const mouse = useSharedMousePosition();
+  const isIdle = useSharedIdle();
+  const faceRef = useRef<SVGGElement>(null);
 
-  type MousePosition = {
-    mouseX: number | null;
-    mouseY: number | null;
-  };
-
-  const [mousePosition, setMousePosition] = useThrottle<MousePosition>(
-    {
-      mouseX: null,
-      mouseY: null,
-    },
-    30
-  );
-
-  const handleMouseMove = (event: MouseEvent) => {
-    setMousePosition({ mouseX: event.clientX, mouseY: event.clientY });
-  };
+  // Single batched pose state (was 4 separate states + 2 effects per
+  // instance, re-rendering every avatar on every mousemove).
+  const [pose, setPose] = useState<{
+    direction: "left" | "right" | undefined;
+    distance: number;
+    adjustedDegrees: number;
+  }>({ direction: undefined, distance: 0, adjustedDegrees: 15 });
+  const poseRef = useRef(pose);
+  poseRef.current = pose;
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
+    if (mouse.x == null || mouse.y == null) return;
+    const node = faceRef.current;
+    if (!node) return;
+    const { left, top, width, height } = node.getBoundingClientRect();
+    if (!width && !height) return;
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+    let angle =
+      (Math.atan2(mouse.y - centerY, mouse.x - centerX) * 180) / Math.PI + 90;
+    if (!angle) angle = 0;
+    if (angle < 0) angle = 360 + angle;
+    if (angle === 0) angle = 1;
+    angle = parseInt(angle.toFixed(0), 10);
 
-  const [direction, setDirection] = useState<"left" | "right" | undefined>(
-    undefined
-  );
-  const [angle, setAngle] = useState(0);
-  const [distance, setDistance] = useState(0);
+    let adjustedDegrees = 15;
+    if (angle > 20 && angle <= 95) adjustedDegrees = angle;
+    else if (angle > 95 && angle <= 180) adjustedDegrees = 95;
+    else if (angle > 180 && angle <= 275) adjustedDegrees = 275;
+    else if (angle > 275 && angle < 345) adjustedDegrees = angle;
+    else if (angle >= 345 && angle <= 360) adjustedDegrees = 345;
+    else adjustedDegrees = 15;
 
-  useEffect(() => {
-    function calculate() {
-      // getElementById (not querySelector): ids embed storage ids like
-      // "7.0.416" whose dots are class selectors to querySelector and
-      // throw. IDs may also be absent (virtualized rows unmount
-      // off-screen), so bail out instead of crashing.
-      const avatar = document.getElementById(
-        `avatar${extra}_${name ? name.replaceAll(".", "") : ""}`
-      ) as HTMLElement | null;
-      if (!avatar) {
-        return;
-      }
+    const direction = mouse.x <= left ? "left" : "right";
+    const distance = Math.sqrt(
+      Math.pow(mouse.x - centerX, 2) + Math.pow(mouse.y - centerY, 2)
+    );
 
-      const { left, top, width, height } = avatar.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
-
-      const mouseY = mousePosition.mouseY ?? 0;
-      const mouseX = mousePosition.mouseX ?? 0;
-
-      let _angle =
-        (Math.atan2(mouseY - centerY, mouseX - centerX) * 180) / Math.PI + 90;
-
-      if (!_angle) {
-        _angle = 0;
-      }
-
-      if (_angle < 0) {
-        _angle = 360 + _angle;
-      }
-
-      if (_angle === 0) {
-        _angle = 1;
-      }
-
-      _angle = parseInt(_angle.toFixed(0));
-
-      const _distance = Math.sqrt(
-        Math.pow(mouseX - centerX, 2) + Math.pow((mouseY ?? 0) - centerY, 2)
-      );
-
-      setDirection(mouseX <= left ? "left" : "right");
-      setDistance(_distance);
-      setAngle(_angle);
+    const prev = poseRef.current;
+    if (
+      prev.direction === direction &&
+      Math.abs(prev.distance - distance) < 2 &&
+      prev.adjustedDegrees === adjustedDegrees
+    ) {
+      return;
     }
+    setPose({ direction, distance, adjustedDegrees });
+  }, [mouse.x, mouse.y]);
 
-    calculate();
-  }, [mousePosition]);
+  const { direction, distance, adjustedDegrees } = pose;
 
-  const [adjustedDegrees, setAdjustedDegrees] = useState(1);
-  useEffect(() => {
-    if (!angle) {
-      setAdjustedDegrees(15);
-    } else if (angle >= 0 && angle <= 15) {
-      setAdjustedDegrees(15);
-    } else if (angle > 20 && angle <= 95) {
-      setAdjustedDegrees(angle);
-    } else if (angle > 95 && angle <= 180) {
-      setAdjustedDegrees(95);
-    } else if (angle > 180 && angle <= 275) {
-      setAdjustedDegrees(275);
-    } else if (angle > 275 && angle < 345) {
-      setAdjustedDegrees(angle);
-    } else if (angle >= 345 && angle <= 360) {
-      setAdjustedDegrees(345);
-    }
-  }, [direction, distance, angle]);
-
-  const [isIdle, setIsIdle] = useState(false);
-  const [activeMouth, setActiveMouth] = useState(data.mouthType);
-  const [activeEyes, setActiveEyes] = useState(data.eyeType);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isIdle) {
-        setActiveEyes("sleepy");
-        setActiveMouth("surprise");
-        return;
-      }
-      // blink every 4 seconds
-      setActiveEyes(data.eyeType !== "sleepy" ? "sleepy" : "normal"); //blink
-      // wait 333ms
-      setTimeout(() => {
-        setActiveEyes(data.eyeType); //open
-      }, Math.max(100, Math.random() * 500));
-    }, Math.max(3000, Math.random() * 10000));
-    return () => clearInterval(interval);
-  }, [isIdle]);
-
-  const [timeoutTimer, setTimeoutTimer] = useState<NodeJS.Timeout | null>(null);
-  useEffect(() => {
-    function handleIdle() {
-      //console.log("User has gone idle");
-      setIsIdle(true);
-    }
-
-    function handleMouseMove() {
-      if (timeoutTimer) {
-        clearTimeout(timeoutTimer);
-      }
-      if (isIdle) {
-        //console.log("No longer idle");
-        setIsIdle(false);
-        setActiveEyes(data.eyeType);
-        setActiveMouth(data.mouthType);
-      }
-      setTimeoutTimer(setTimeout(handleIdle, 30000));
-    }
-
-    if (mousePosition.mouseX && mousePosition.mouseY) {
-      handleMouseMove();
-    }
-
-    return () => {
-      if (timeoutTimer) {
-        clearTimeout(timeoutTimer);
-      }
-    };
-  }, [mousePosition]);
+  // Blink is now pure CSS (`.avatar-eyes` keyframes) — no per-instance
+  // setInterval/setTimeout. Idle still swaps to sleepy/surprise via the
+  // single shared 30s timer above.
+  const activeEyes = isIdle ? "sleepy" : data.eyeType;
+  const activeMouth = isIdle ? "surprise" : data.mouthType;
+  const blinkDelay = useMemo(() => {
+    const h = Math.abs(hashCode(name ?? "avatar"));
+    return `-${h % 5000}ms`;
+  }, [name]);
 
   return (
     <svg
@@ -385,27 +397,37 @@ export const Avatar = ({
           rx={SIZE}
         />
         <g
+          ref={faceRef}
           id={`avatar${extra}_${name ? name.replaceAll(".", "") : ""}`}
           transform={`rotate(${
             direction === "left" ? adjustedDegrees + 65 : adjustedDegrees - 65
           }, ${SIZE / 2} ${SIZE / 2})`}
         >
-          {eyeTypes[activeEyes].leftEye({
-            eyeSize: data.eyeSize,
-            eyeSpread:
-              Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
-            eyeColor: data.faceColor,
-            x: 20,
-            y: 14,
-          })}
-          {eyeTypes[activeEyes].rightEye({
-            eyeSize: data.eyeSize,
-            eyeSpread:
-              Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
-            eyeColor: data.faceColor,
-            x: 14,
-            y: 14,
-          })}
+          <g
+            className={isIdle ? undefined : "avatar-eyes"}
+            style={
+              isIdle
+                ? undefined
+                : ({ animationDelay: blinkDelay } as React.CSSProperties)
+            }
+          >
+            {eyeTypes[activeEyes].leftEye({
+              eyeSize: data.eyeSize,
+              eyeSpread:
+                Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
+              eyeColor: data.faceColor,
+              x: 20,
+              y: 14,
+            })}
+            {eyeTypes[activeEyes].rightEye({
+              eyeSize: data.eyeSize,
+              eyeSpread:
+                Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
+              eyeColor: data.faceColor,
+              x: 14,
+              y: 14,
+            })}
+          </g>
           {mouthTypes[activeMouth]({
             mouthSpread: Math.min(distance / 50, 5),
             mouthSize: data.mouthSize,
@@ -417,7 +439,10 @@ export const Avatar = ({
   );
 };
 
+const Avatar = memo(AvatarBase);
 Avatar.displayName = "Avatar";
+
+export { Avatar };
 
 type ExpressionProps = {
   eye?: keyof typeof eyeTypes;
