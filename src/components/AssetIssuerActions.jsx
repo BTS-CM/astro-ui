@@ -59,6 +59,49 @@ import {
 
 const CORE_PRECISION = 5;
 
+function preventNegativeKeys(event) {
+  if (
+    event.key === "-" ||
+    event.key === "+" ||
+    event.key === "e" ||
+    event.key === "E"
+  ) {
+    event.preventDefault();
+  }
+}
+
+function sanitizeNonNegativeValue(value) {
+  if (value === "" || value === null || value === undefined) {
+    return "";
+  }
+  const str = String(value);
+  if (str.includes("-") || str.includes("e") || str.includes("E") || str.includes("+")) {
+    return null;
+  }
+  const num = Number(str);
+  if (Number.isNaN(num) || num < 0) {
+    return null;
+  }
+  return str;
+}
+
+function handleNonNegativeChange(setter) {
+  return (event) => {
+    const sanitized = sanitizeNonNegativeValue(event.target.value);
+    if (sanitized !== null) {
+      setter(sanitized);
+    }
+  };
+}
+
+function isPositiveAmount(value) {
+  if (value === "" || value === null || value === undefined) {
+    return false;
+  }
+  const num = Number(value);
+  return !Number.isNaN(num) && num > 0;
+}
+
 const mapContacts = (contacts, chain) => {
   if (!contacts || !contacts.length) return [];
   return contacts.filter((user) => user.chain === chain);
@@ -1028,14 +1071,16 @@ function AssetIssuerActions(props) {
             />
             <Input
               type="number"
+              min={0}
               value={fundFeePoolAmount}
-              onChange={(event) => setFundFeePoolAmount(event.target.value)}
+              onKeyDown={preventNegativeKeys}
+              onChange={handleNonNegativeChange(setFundFeePoolAmount)}
             />
 
             <Button
               className="mt-3 w-1/3"
               onClick={() => setFundFeePoolDeeplinkOpen(true)}
-              disabled={!fundFeePoolAmount}
+              disabled={!isPositiveAmount(fundFeePoolAmount)}
             >
               {t("IssuedAssets:fundFeePool")}
             </Button>
@@ -1100,8 +1145,10 @@ function AssetIssuerActions(props) {
             <div className="grid grid-cols-3 gap-2">
               <Input
                 type="number"
+                min={0}
                 value={claimFeePoolAmount}
-                onChange={(event) => setClaimFeePoolAmount(event.target.value)}
+                onKeyDown={preventNegativeKeys}
+                onChange={handleNonNegativeChange(setClaimFeePoolAmount)}
                 className="col-span-2"
               />
               <Button
@@ -1115,7 +1162,7 @@ function AssetIssuerActions(props) {
             <Button
               className="mt-3 w-1/3"
               onClick={() => setClaimFeePoolDeeplinkOpen(true)}
-              disabled={!claimFeePoolAmount}
+              disabled={!isPositiveAmount(claimFeePoolAmount)}
             >
               {t("IssuedAssets:claimFeePool")}
             </Button>
@@ -1185,10 +1232,10 @@ function AssetIssuerActions(props) {
             <div className="grid grid-cols-3 gap-2">
               <Input
                 type="number"
+                min={0}
                 value={claimAssetFeesAmount}
-                onChange={(event) =>
-                  setClaimAssetFeesAmount(event.target.value)
-                }
+                onKeyDown={preventNegativeKeys}
+                onChange={handleNonNegativeChange(setClaimAssetFeesAmount)}
                 className="col-span-2"
               />
               <Button
@@ -1202,7 +1249,7 @@ function AssetIssuerActions(props) {
             <Button
               className="mt-3 w-1/3"
               onClick={() => setClaimAssetFeesDeeplinkOpen(true)}
-              disabled={!claimAssetFeesAmount}
+              disabled={!isPositiveAmount(claimAssetFeesAmount)}
             >
               {t("IssuedAssets:claimAssetFees")}
             </Button>
@@ -1571,8 +1618,10 @@ function AssetIssuerActions(props) {
             />
             <Input
               type="number"
+              min={0}
               value={reserveAmount}
-              onChange={(event) => setReserveAmount(event.target.value)}
+              onKeyDown={preventNegativeKeys}
+              onChange={handleNonNegativeChange(setReserveAmount)}
             />
 
             <HoverInfo
@@ -1589,7 +1638,7 @@ function AssetIssuerActions(props) {
             <Button
               className="mt-3 w-1/3"
               onClick={() => setReserveDeeplinkOpen(true)}
-              disabled={!reserveAmount}
+              disabled={!isPositiveAmount(reserveAmount)}
             >
               {t("IssuedAssets:reserveAsset")}
             </Button>
