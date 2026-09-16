@@ -39,5 +39,8 @@
   "bitassets": "Bitassetid",
   "privateSmartcoins": "Privaatsed smartcoinid",
   "currentSettlementPrice": "Hind",
-  "currentSupply": "Pakkumine"
+  "currentSupply": "Pakkumine",
+  "settlementPointerTitle": "Ei leia otsitavat smartcoini?",
+  "settlementPointerBody": "See võib olla globaalses settlement'is.",
+  "settlementPointerCTA": "Tee pakkumine settlement-võlale"
 }

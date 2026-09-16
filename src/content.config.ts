@@ -244,6 +244,83 @@ const testMinBitassets = defineCollection({
   schema: minBitassetSchema,
 });
 
+const bitassetAmountSchema = z.union([z.number(), z.string()]);
+
+const bitassetSchema = z.object({
+  id: z.string(),
+  asset_id: z.string(),
+  feeds: z.array(z.unknown()),
+  current_feed: z.object({
+    settlement_price: z.object({
+      base: z.object({ amount: bitassetAmountSchema }).passthrough(),
+      quote: z.object({ amount: bitassetAmountSchema }).passthrough(),
+    }).passthrough(),
+    maintenance_collateral_ratio: z.number(),
+    maximum_short_squeeze_ratio: z.number(),
+    initial_collateral_ratio: z.number(),
+  }).passthrough(),
+  settlement_price: z.object({
+    base: z.object({ amount: bitassetAmountSchema }).passthrough(),
+    quote: z.object({ amount: bitassetAmountSchema }).passthrough(),
+  }).passthrough(),
+  settlement_fund: bitassetAmountSchema,
+  options: z.object({ short_backing_asset: z.string() }).passthrough(),
+}).passthrough();
+
+const btsBitassets = defineCollection({
+  loader: file("./src/data/bitshares/bitassetData.json"),
+  schema: bitassetSchema,
+});
+
+const testBitassets = defineCollection({
+  loader: file("./src/data/bitshares_testnet/bitassetData.json"),
+  schema: bitassetSchema,
+});
+
+const borrowAssetSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  precision: z.number(),
+  issuer: z.string(),
+  options: z.object({
+    flags: z.number(),
+    issuer_permissions: z.number().optional(),
+  }).passthrough(),
+  bitasset_data_id: z.string().optional(),
+}).passthrough();
+
+const btsBorrowAssets = defineCollection({
+  loader: file("./src/data/bitshares/allAssets.json", {
+    parser: (text) => {
+      try {
+        const assets = JSON.parse(text);
+        console.log("Successfully parsed borrow assets:", assets.length);
+        return assets;
+      } catch (error) {
+        console.error("Error parsing JSON from allAssets.json:", error);
+        throw error;
+      }
+    },
+  }),
+  schema: borrowAssetSchema,
+});
+
+const testBorrowAssets = defineCollection({
+  loader: file("./src/data/bitshares_testnet/allAssets.json", {
+    parser: (text) => {
+      try {
+        const assets = JSON.parse(text);
+        console.log("Successfully parsed borrow assets:", assets.length);
+        return assets;
+      } catch (error) {
+        console.error("Error parsing JSON from allAssets.json:", error);
+        throw error;
+      }
+    },
+  }),
+  schema: borrowAssetSchema,
+});
+
 const assetSchema = z.object({
   id: z.string(),
   symbol: z.string(),
@@ -450,6 +527,10 @@ export const collections = {
   testAllPools,
   btsMinBitassets,
   testMinBitassets,
+  btsBitassets,
+  testBitassets,
+  btsBorrowAssets,
+  testBorrowAssets,
   btsAllAssets,
   testAllAssets,
   btsMarketData,

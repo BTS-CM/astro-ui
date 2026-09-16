@@ -12,10 +12,15 @@ const testAllAssets = await getCollection('testAllAssets');
 const btsMarketData = await getCollection('btsMarketData');
 const testMarketData = await getCollection('testMarketData');
 
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
 const btsAssets = btsAllAssets.map(collection => collection.data);
 const testAssets = testAllAssets.map(collection => collection.data);
 const _btsMarketData = btsMarketData.map(collection => collection.data);
 const _testMarketData = testMarketData.map(collection => collection.data);
+const btsFeeScheduleList = btsFeeSchedule.map((collection) => collection.data);
+const testFeeScheduleList = testFeeSchedule.map((collection) => collection.data);
 ---
 
 <Layout title="Bitshares vesting balances">
@@ -27,6 +32,8 @@ const _testMarketData = testMarketData.map(collection => collection.data);
 			_assetsTEST={testAssets}
 			_marketSearchBTS={_btsMarketData}
 			_marketSearchTEST={_testMarketData}
+			_globalParamsBTS={btsFeeScheduleList}
+			_globalParamsTEST={testFeeScheduleList}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/create_vesting.astro" />
 	</main>

@@ -1794,30 +1794,18 @@ export default function PoolStake(properties) {
                       ) : null}
 
                       {isFormReady ? (
-                        <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] p-3 mt-5">
-                          <FieldLabel className="text-foreground/80">
-                            <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]">
-                              <Zap className="h-3 w-3" strokeWidth={2.5} />
-                              {t("PoolStake:networkFee")}
-                            </span>
-                          </FieldLabel>
-                          <FieldDescription className="text-muted-foreground/70 text-xs mt-1">
-                            {t(
-                              `PoolStake:networkFeeDescription${
-                                stakeTab === "stake" ? "1" : "2"
-                              }`,
-                            )}
-                          </FieldDescription>
-                          <FieldContent>
-                            <div className="grid grid-cols-1 md:grid-cols-2 mb-3 mt-3 gap-3">
-                              <div className="col-span-1">
-                                <div className="flex items-center gap-1.5 font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
-                                  <Zap className="h-3.5 w-3.5" strokeWidth={2.5} />
-                                  {stakeTab === "stake" ? fee : unstakeFee} BTS
-                                </div>
-                              </div>
+                        <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] p-3 mt-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <FieldLabel className="text-foreground/80">
+                              <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]">
+                                <Zap className="h-3 w-3" strokeWidth={2.5} />
+                                {t("PoolStake:networkFee")}
+                              </span>
+                            </FieldLabel>
+                            <div className="font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                              {stakeTab === "stake" ? fee : unstakeFee} BTS
                             </div>
-                          </FieldContent>
+                          </div>
                           {usr.id === usr.referrer ? (
                             <FieldDescription className="text-xs text-muted-foreground/70">
                               {t("PoolStake:rebate", {
@@ -1839,7 +1827,7 @@ export default function PoolStake(properties) {
                               ? t("PoolStake:insufficientBalance")
                               : undefined
                           }
-                          className="mt-6 w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)] hover:shadow-[0_12px_40px_-12px_rgba(168,85,247,0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-2))] hover:to-[hsl(var(--accent-3))] transition-all flex items-center justify-center gap-2 text-base group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)]"
+                          className="mt-3 w-full h-14 rounded-2xl font-semibold text-[hsl(var(--accent-1-gradFg))] bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)] hover:shadow-[0_12px_40px_-12px_rgba(168,85,247,0.9)] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-2))] hover:to-[hsl(var(--accent-3))] transition-all flex items-center justify-center gap-2 text-base group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[0_8px_32px_-12px_rgba(168,85,247,0.7)]"
                         >
                           <Layers
                             className="h-4 w-4 group-hover:scale-110 transition-transform"

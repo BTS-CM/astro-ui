@@ -39,5 +39,8 @@
   "bitassets": "Bitasset",
   "privateSmartcoins": "Smartcoin private",
   "currentSettlementPrice": "Prezzo",
-  "currentSupply": "Fornitura"
+  "currentSupply": "Fornitura",
+  "settlementPointerTitle": "Non trovi lo smartcoin che stai cercando?",
+  "settlementPointerBody": "Potrebbe essere in regolamento globale.",
+  "settlementPointerCTA": "Fai un'offerta sul debito in regolamento"
 }

@@ -578,6 +578,7 @@ const DateTimePicker = React.forwardRef(
       displayFormat,
       granularity = 'second',
       placeholder = 'Pick a date',
+      calendarDisabled,
       ...props
     },
     ref,
@@ -661,6 +662,7 @@ const DateTimePicker = React.forwardRef(
             onMonthChange={handleSelect}
             yearRange={yearRange}
             locale={locale}
+            disabled={calendarDisabled}
             {...props}
           />
           {granularity !== 'day' && (

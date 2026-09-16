@@ -65,7 +65,7 @@ import {
   Search,
   ArrowUp,
   ArrowDown,
-  ArrowRight,
+  ArrowRightLeft,
   X,
   ArrowUpRight,
   ExternalLink,
@@ -104,7 +104,7 @@ const PoolRow = memo(function PoolRow({ index, style, remainingPools, assets, t 
                 <span className="font-semibold text-foreground truncate">
                   {assetA.symbol}
                 </span>
-                <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
+                <ArrowRightLeft className="h-3 w-3 text-muted-foreground shrink-0" />
                 <span className="font-semibold text-foreground truncate">
                   {assetB.symbol}
                 </span>
@@ -159,7 +159,7 @@ const PoolRow = memo(function PoolRow({ index, style, remainingPools, assets, t 
                 <Droplets className="h-3.5 w-3.5 text-[hsl(var(--accent-1))]" />
               </span>
               {assetA.symbol}
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />
               {assetB.symbol}
             </DialogTitle>
             <DialogDescription>

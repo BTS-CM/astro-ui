@@ -51,7 +51,7 @@ export default function CreateVestingBalance(properties) {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST, _globalParamsBTS, _globalParamsTEST } =
     properties;
 
   const _chain = useMemo(() => {
@@ -76,6 +76,24 @@ export default function CreateVestingBalance(properties) {
     }
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, usr]);
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
+
+  const [fee, setFee] = useState();
+  useEffect(() => {
+    if (globalParams && globalParams.length) {
+      const foundFee = globalParams.find((x) => x.id === 32); // operation: vesting_balance_create
+      if (foundFee) {
+        const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+        setFee(finalFee);
+      }
+    }
+  }, [globalParams]);
 
   const [policy, setPolicy] = useState("ccd"); // Coin Days Destroyed || Linear Vesting with Cliff
 
@@ -133,6 +151,40 @@ export default function CreateVestingBalance(properties) {
   
   const [beginDateTime, setBeginDateTime] = useState();
 
+  // Start of today - used to block past dates in the calendar
+  const today = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
+
+  // Reject datetimes in the past (safety net alongside disabled calendar days)
+  const handleBeginDateTimeChange = (newDate) => {
+    if (!newDate) return;
+    const now = new Date();
+    if (newDate >= now) {
+      setBeginDateTime(newDate);
+    } else {
+      const fallback = new Date();
+      fallback.setDate(fallback.getDate() + 7); // default a week ahead
+      setBeginDateTime(fallback);
+    }
+  };
+
+  // Block the minus key on non-negative duration fields (min="0" only stops the stepper)
+  const blockNegativeKeys = (e) => {
+    if (e.key === "-") {
+      e.preventDefault();
+    }
+  };
+
+  // Reject negative values (e.g. pasted) on non-negative duration fields
+  const handleNonNegativeChange = (setter) => (e) => {
+    const val = e.target.value;
+    if (val !== "" && parseFloat(val) < 0) return;
+    setter(val);
+  };
+
   const isSubmitDisabled = useMemo(() => {
     // require target account, asset selection, positive amount, and a begin date
     if (!targetUser) return true;
@@ -140,8 +192,21 @@ export default function CreateVestingBalance(properties) {
     const amt = parseFloat(amount);
     if (isNaN(amt) || amt <= 0) return true;
     if (!beginDateTime) return true;
+    if (chosenAssetBalance !== undefined && amt > chosenAssetBalance) return true;
     return false;
-  }, [targetUser, asset, assetData, amount, beginDateTime]);
+  }, [targetUser, asset, assetData, amount, beginDateTime, chosenAssetBalance]);
+
+  // Snap excessive amounts back to max balance after a short pause
+  useEffect(() => {
+    if (chosenAssetBalance === undefined) return;
+    const val = parseFloat(amount);
+    if (!isFinite(val) || val <= 0) return;
+    if (val <= chosenAssetBalance) return;
+    const timeout = setTimeout(() => {
+      setAmount(chosenAssetBalance);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [amount, chosenAssetBalance]);
 
   // ccd & lvc
 
@@ -464,19 +529,12 @@ export default function CreateVestingBalance(properties) {
                     <DateTimePicker
                       granularity="day"
                       value={beginDateTime}
-                      onChange={(newDate) => {
-                        const now = new Date();
-                        if (newDate >= now) {
-                          setBeginDateTime(newDate);
-                        } else {
-                          now.setDate(now.getDate() + 7); // default a week ahead
-                          setBeginDateTime(now);
-                        }
-                      }}
+                      onChange={handleBeginDateTimeChange}
+                      calendarDisabled={{ before: today }}
                     />
                     <TimePicker
                       date={beginDateTime}
-                      onChange={setBeginDateTime}
+                      onChange={handleBeginDateTimeChange}
                     />
                   </div>
                   <HoverInfo
@@ -494,7 +552,8 @@ export default function CreateVestingBalance(properties) {
                   <Input
                     type="number"
                     value={vestingSeconds}
-                    onChange={(e) => setVestingSeconds(e.target.value)}
+                    onChange={handleNonNegativeChange(setVestingSeconds)}
+                    onKeyDown={blockNegativeKeys}
                     min="0"
                     className="w-1/2 mt-2 bg-[hsl(var(--accent-1)/0.05)] border-[hsl(var(--accent-1)/0.2)]"
                   />
@@ -516,19 +575,12 @@ export default function CreateVestingBalance(properties) {
                     <DateTimePicker
                       granularity="day"
                       value={beginDateTime}
-                      onChange={(newDate) => {
-                        const now = new Date();
-                        if (newDate >= now) {
-                          setBeginDateTime(newDate);
-                        } else {
-                          now.setDate(now.getDate() + 7); // default a week ahead
-                          setBeginDateTime(now);
-                        }
-                      }}
+                      onChange={handleBeginDateTimeChange}
+                      calendarDisabled={{ before: today }}
                     />
                     <TimePicker
                       date={beginDateTime}
-                      onChange={setBeginDateTime}
+                      onChange={handleBeginDateTimeChange}
                     />
                   </div>
                   <HoverInfo
@@ -546,7 +598,8 @@ export default function CreateVestingBalance(properties) {
                   <Input
                     type="number"
                     value={vestingCliffSeconds}
-                    onChange={(e) => setVestingCliffSeconds(e.target.value)}
+                    onChange={handleNonNegativeChange(setVestingCliffSeconds)}
+                    onKeyDown={blockNegativeKeys}
                     min="0"
                     className="w-1/2 mt-2 mb-1 bg-[hsl(var(--accent-1)/0.05)] border-[hsl(var(--accent-1)/0.2)]"
                   />
@@ -565,14 +618,33 @@ export default function CreateVestingBalance(properties) {
                   <Input
                     type="number"
                     value={vestingDurationSeconds}
-                    onChange={(e) => setVestingDurationSeconds(e.target.value)}
+                    onChange={handleNonNegativeChange(setVestingDurationSeconds)}
+                    onKeyDown={blockNegativeKeys}
                     min="0"
                     className="w-1/2 mt-2 bg-[hsl(var(--accent-1)/0.05)] border-[hsl(var(--accent-1)/0.2)]"
                   />
                 </div>
               ) : null}
+              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] p-3 mt-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]">
+                    <Zap className="h-3 w-3" strokeWidth={2.5} />
+                    {t("PoolStake:networkFee")}
+                  </span>
+                  <div className="font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                    {fee ?? "?"} BTS
+                  </div>
+                </div>
+                {usr && usr.id === usr.referrer && fee !== undefined ? (
+                  <p className="text-xs text-muted-foreground/70 mt-1">
+                    {t("PoolStake:rebate", {
+                      rebate: (fee * 0.8).toFixed(5),
+                    })}
+                  </p>
+                ) : null}
+              </div>
               <Button
-                className="group mt-1 w-full h-14 text-base font-semibold rounded-2xl bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-3))] to-[hsl(var(--accent-3))] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-3))] hover:to-[hsl(var(--accent-3))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_32px_-12px_hsl(var(--accent-3)/0.7)] hover:shadow-[0_12px_40px_-12px_hsl(var(--accent-3)/0.9)] transition-all"
+                className="group mt-3 w-full h-14 text-base font-semibold rounded-2xl bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-3))] to-[hsl(var(--accent-3))] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-3))] hover:to-[hsl(var(--accent-3))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_32px_-12px_hsl(var(--accent-3)/0.7)] hover:shadow-[0_12px_40px_-12px_hsl(var(--accent-3)/0.9)] transition-all"
                 onClick={() => {
                   if (isSubmitDisabled) return;
                   setShowDialog(true);

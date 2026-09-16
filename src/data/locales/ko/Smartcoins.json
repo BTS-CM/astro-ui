@@ -40,5 +40,8 @@
   "bitassets": "비트자산",
   "privateSmartcoins": "프라이빗 스마트코인",
   "currentSettlementPrice": "가격",
-  "currentSupply": "공급"
+  "currentSupply": "공급",
+  "settlementPointerTitle": "찾고 있는 스마트코인을 찾을 수 없나요?",
+  "settlementPointerBody": "글로벌 정산 중일 수 있습니다.",
+  "settlementPointerCTA": "정산 부채에 입찰하기"
 }

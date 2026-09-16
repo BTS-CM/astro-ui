@@ -39,5 +39,8 @@
   "bitassets": "Bitactifs",
   "privateSmartcoins": "Pièces intelligentes privées",
   "currentSettlementPrice": "Prix",
-  "currentSupply": "Fournir"
+  "currentSupply": "Fournir",
+  "settlementPointerTitle": "Vous ne trouvez pas le smartcoin que vous cherchez ?",
+  "settlementPointerBody": "Il est peut-être en règlement global.",
+  "settlementPointerCTA": "Enchérir sur la dette en règlement"
 }

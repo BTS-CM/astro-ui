@@ -39,5 +39,8 @@
   "bitassets": "Bitassets",
   "privateSmartcoins": "Smartcoins privadas",
   "currentSettlementPrice": "Preço",
-  "currentSupply": "Fornecer"
+  "currentSupply": "Fornecer",
+  "settlementPointerTitle": "Não encontra o smartcoin que procura?",
+  "settlementPointerBody": "Pode estar em liquidação global.",
+  "settlementPointerCTA": "Licitar a dívida em liquidação"
 }

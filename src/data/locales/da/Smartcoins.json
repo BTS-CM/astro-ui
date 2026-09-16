@@ -39,5 +39,8 @@
     "bitassets": "Bitassets",
     "privateSmartcoins": "Private smartcoins",
     "currentSettlementPrice": "Pris",
-    "currentSupply": "Levere"
+    "currentSupply": "Levere",
+    "settlementPointerTitle": "Kan du ikke finde den smartcoin, du søger?",
+    "settlementPointerBody": "Den kan være i global settlement.",
+    "settlementPointerCTA": "Byd på settlement-gæld"
 }

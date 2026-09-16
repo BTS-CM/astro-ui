@@ -64,7 +64,10 @@ const getAllAssetData = async (chain) => {
         market_fee_percent: asset.options.market_fee_percent,
         max_market_fee: asset.options.max_market_fee,
         max_supply: asset.options.max_supply,
-        options: { flags: asset.options.flags },
+        options: {
+          flags: asset.options.flags,
+          issuer_permissions: asset.options.issuer_permissions,
+        },
       };
 
       if (asset.bitasset_data_id) {

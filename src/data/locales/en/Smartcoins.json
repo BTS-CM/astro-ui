@@ -39,5 +39,8 @@
   "bitassets": "Bitassets",
   "privateSmartcoins": "Private smartcoins",
   "currentSettlementPrice": "Price",
-  "currentSupply": "Supply"
+  "currentSupply": "Supply",
+  "settlementPointerTitle": "Can't find the smartcoin you're looking for?",
+  "settlementPointerBody": "It may be in global settlement.",
+  "settlementPointerCTA": "Bid on settlement debt"
 }

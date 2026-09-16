@@ -39,5 +39,8 @@
   "bitassets": "บิตแอสเซท",
   "privateSmartcoins": "สมาร์ทคอยน์ส่วนตัว",
   "currentSettlementPrice": "ราคา",
-  "currentSupply": "จัดหา"
+  "currentSupply": "จัดหา",
+  "settlementPointerTitle": "ไม่พบ smartcoin ที่คุณกำลังมองหาใช่ไหม?",
+  "settlementPointerBody": "มันอาจอยู่ระหว่างการชำระบัญชีทั่วโลก",
+  "settlementPointerCTA": "ประมูลหนี้ที่ชำระบัญชี"
 }

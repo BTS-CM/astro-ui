@@ -5,12 +5,91 @@ import Layout from '../layouts/Layout.astro';
 import Smartcoins from '../components/Smartcoins.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsBitassets = await getCollection('btsBitassets');
+const testBitassets = await getCollection('testBitassets');
+
+const btsBorrowAssets = await getCollection('btsBorrowAssets');
+const testBorrowAssets = await getCollection('testBorrowAssets');
+
+const btsAssetIssuers = await getCollection('btsAssetIssuers');
+const testAssetIssuers = await getCollection('testAssetIssuers');
+
+// Trim build-time data to only what the borrow list renders:
+// - bitassets: drop the (large) feeds arrays, keep the count + feed/settlement fields
+// - assets: only those referenced by a bitasset (debt or collateral)
+// - issuers: only issuers of those assets
+function trimSnapshot(bitassets, assets, issuers) {
+	const trimmedBitassets = bitassets.map((collection) => {
+		const b = collection.data;
+		return {
+			id: b.id,
+			asset_id: b.asset_id,
+			feedsCount: b.feeds ? b.feeds.length : 0,
+			current_feed: {
+				settlement_price: {
+					base: { amount: b.current_feed.settlement_price.base.amount },
+					quote: { amount: b.current_feed.settlement_price.quote.amount },
+				},
+				maintenance_collateral_ratio: b.current_feed.maintenance_collateral_ratio,
+				maximum_short_squeeze_ratio: b.current_feed.maximum_short_squeeze_ratio,
+				initial_collateral_ratio: b.current_feed.initial_collateral_ratio,
+			},
+			settlement_price: {
+				base: { amount: b.settlement_price.base.amount },
+				quote: { amount: b.settlement_price.quote.amount },
+			},
+			settlement_fund: b.settlement_fund,
+			options: { short_backing_asset: b.options.short_backing_asset },
+		};
+	});
+
+	const referencedAssetIds = new Set();
+	for (const b of trimmedBitassets) {
+		referencedAssetIds.add(b.asset_id);
+		referencedAssetIds.add(b.options.short_backing_asset);
+	}
+
+	const trimmedAssets = assets
+		.filter((collection) => referencedAssetIds.has(collection.data.id))
+		.map((collection) => {
+			const a = collection.data;
+			return {
+				id: a.id,
+				symbol: a.symbol,
+				precision: a.precision,
+				issuer: a.issuer,
+				options: {
+					flags: a.options.flags,
+					issuer_permissions: a.options.issuer_permissions,
+				},
+			};
+		});
+
+	const referencedIssuerIds = new Set(trimmedAssets.map((a) => a.issuer));
+	const trimmedIssuers = issuers
+		.filter((collection) => referencedIssuerIds.has(collection.data.id))
+		.map((collection) => ({ id: collection.data.id, name: collection.data.name }));
+
+	return { bitassets: trimmedBitassets, assets: trimmedAssets, issuers: trimmedIssuers };
+}
+
+const btsSnapshot = trimSnapshot(btsBitassets, btsBorrowAssets, btsAssetIssuers);
+const testSnapshot = trimSnapshot(testBitassets, testBorrowAssets, testAssetIssuers);
 ---
 
 <Layout title="Bitshares smartcoins - Find a smartcoin to borrow">
 	<main>
 		<PageHeader client:only="react" page="smartcoins" />
-		<Smartcoins client:only="react" />
+		<Smartcoins
+			client:only="react"
+			_bitassetsBTS={btsSnapshot.bitassets}
+			_bitassetsTEST={testSnapshot.bitassets}
+			_assetsBTS={btsSnapshot.assets}
+			_assetsTEST={testSnapshot.assets}
+			_issuersBTS={btsSnapshot.issuers}
+			_issuersTEST={testSnapshot.issuers}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/smartcoins.astro" />
 	</main>
 </Layout>
