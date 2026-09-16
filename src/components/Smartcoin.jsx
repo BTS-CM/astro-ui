@@ -39,7 +39,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import EmptyRow from "./common/EmptyRow.jsx";
@@ -67,7 +67,7 @@ export default function Smartcoin(properties) {
       account: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const tips = {
     charge_market_fee: t("Smartcoin:chargeMarketFee"),
@@ -261,7 +261,7 @@ export default function Smartcoin(properties) {
           ? parsedCollateralBitasset.id
           : "",
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {

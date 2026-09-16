@@ -64,7 +64,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -88,7 +88,7 @@ export default function SimpleSwap(properties) {
       assetB: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [pool, setPool] = useState(""); // Currently selected Pool ID
 
@@ -369,7 +369,7 @@ export default function SimpleSwap(properties) {
         JSON.stringify(pools), // Pass all pools for potential lookups within store
         JSON.stringify(assets), // Pass all assets for lookups
         pool, // The specific pool ID to focus on
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       poolStore.subscribe(({ data, error, loading }) => {
@@ -436,7 +436,7 @@ export default function SimpleSwap(properties) {
     pool,
     pools,
     assets,
-    currentNode,
+    currentNodeUrl,
     selectedAssetASymbol,
     selectedAssetBSymbol,
   ]);
@@ -447,7 +447,7 @@ export default function SimpleSwap(properties) {
     chain: usr ? usr.chain : "",
     ids: pool ? [pool] : [],
     enabled: Boolean(usr && pool),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   useEffect(() => {
     if (livePool.objects && pool && livePool.objects[pool]) {
@@ -463,12 +463,12 @@ export default function SimpleSwap(properties) {
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (usr && usr.id && assets && assets.length > 0 && currentNode) {
+      if (usr && usr.id && assets && assets.length > 0 && currentNodeUrl) {
         // Ensure assets are loaded
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -490,7 +490,7 @@ export default function SimpleSwap(properties) {
     }
 
     fetchUserBalances();
-  }, [usr, assets, currentNode]); // Depend on user, assets list, and node
+  }, [usr, assets, currentNodeUrl]); // Depend on user, assets list, and node
 
   const buyAmount = useMemo(() => {
     if (
@@ -1600,7 +1600,7 @@ export default function SimpleSwap(properties) {
           lastFetchAt={livePool.lastFetchAt}
           isSubscribed={livePool.isSubscribed}
           blockNumber={livePool.blockNumber}
-          nodeUrl={currentNode ? currentNode.url : null}
+          nodeUrl={currentNodeUrl || null}
           warningThresholdSec={10}
         
         chain={_chain}/>

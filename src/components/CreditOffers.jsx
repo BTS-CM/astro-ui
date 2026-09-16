@@ -173,7 +173,7 @@ import { createCreditOfferByOwnerStore } from "@/nanoeffects/CreditOffersByOwner
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 
@@ -193,7 +193,7 @@ export default function CreditOffers(properties) {
     () => true
   );
 
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { _assetsBTS, _assetsTEST } = properties;
 
@@ -223,7 +223,7 @@ export default function CreditOffers(properties) {
         const userOffersStore = createCreditOfferByOwnerStore([
           _chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userOffersStore.subscribe(({ data, error, loading }) => {
@@ -235,7 +235,7 @@ export default function CreditOffers(properties) {
     }
 
     fetchUserOffers();
-  }, [_chain, usr, currentNode]);
+  }, [_chain, usr, currentNodeUrl]);
 
   const offers = useMemo(() => {
     if (_chain && allOffers && allOffers.length) {

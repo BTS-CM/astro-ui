@@ -68,7 +68,7 @@ import {
   blockchainFloat,
   assetAmountRegex,
 } from "@/lib/common.js";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { cn } from "@/lib/utils";
 
@@ -111,7 +111,7 @@ export default function TFundUser(properties) {
     $blockList.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const {
     _assetsBTS,
@@ -205,7 +205,7 @@ export default function TFundUser(properties) {
       setLoadingFunds(true);
       const sameTFundsStore = createEverySameTFundStore([
         _chain,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       sameTFundsStore.subscribe(({ data, error, loading }) => {
@@ -229,10 +229,10 @@ export default function TFundUser(properties) {
       });
     }
 
-    if (_chain && currentNode) {
+    if (_chain && currentNodeUrl) {
       fetching();
     }
-  }, [_chain, currentNode]);
+  }, [_chain, currentNodeUrl]);
 
   const allUserIDs = useMemo(() => {
     if (sameTFunds && sameTFunds.length) {
@@ -247,7 +247,7 @@ export default function TFundUser(properties) {
       const objectsStore = createObjectStore([
         _chain,
         JSON.stringify(allUserIDs),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       objectsStore.subscribe(({ data, error, loading }) => {
@@ -257,10 +257,10 @@ export default function TFundUser(properties) {
       });
     }
 
-    if (allUserIDs.length && _chain && currentNode) {
+    if (allUserIDs.length && _chain && currentNodeUrl) {
       fetching();
     }
-  }, [allUserIDs, _chain, currentNode]);
+  }, [allUserIDs, _chain, currentNodeUrl]);
 
   useEffect(() => {
     async function fetchUserBalances() {
@@ -268,7 +268,7 @@ export default function TFundUser(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {

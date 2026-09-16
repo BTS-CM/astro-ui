@@ -36,7 +36,7 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { Card } from "@/components/ui/card";
 
@@ -133,7 +133,7 @@ export default function CreditOfferEditor(properties) {
       account: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [showDialog, setShowDialog] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState();
@@ -238,7 +238,7 @@ export default function CreditOfferEditor(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -449,7 +449,7 @@ export default function CreditOfferEditor(properties) {
       const ownerDataStore = createObjectStore([
         usr.chain,
         JSON.stringify([offerOwner]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       unsub = ownerDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading && data[0]) {
@@ -461,7 +461,7 @@ export default function CreditOfferEditor(properties) {
     return () => {
       if (unsub) unsub();
     };
-  }, [offerOwner, usr, currentNode]);
+  }, [offerOwner, usr, currentNodeUrl]);
   useEffect(() => {
     let unsub;
 
@@ -469,7 +469,7 @@ export default function CreditOfferEditor(properties) {
       const offerDataStore = createObjectStore([
         usr.chain,
         JSON.stringify([offerID]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       unsub = offerDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -555,7 +555,7 @@ export default function CreditOfferEditor(properties) {
       const usernameDataStore = createObjectStore([
         usr.chain,
         JSON.stringify(_batchIDs),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
       unsub = usernameDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {

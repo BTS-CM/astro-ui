@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useStore } from "@nanostores/react";
-import { $visualSettings } from "@/stores/visuals.ts";
+import { $waveSettings } from "@/stores/visuals.ts";
 
 const VIEWBOX_WIDTH = 2000;
 const VIEWBOX_HEIGHT = 600;
@@ -152,7 +152,10 @@ const PARTICLES = [
 ];
 
 export default function WaveBackground({ className = "", overrideSettings = null }) {
-  const storeSettings = useStore($visualSettings);
+  // Derived $waveSettings atom (with custom eq): re-renders only when one
+  // of the 9 wave fields changes, not on unrelated keys (e.g. ipfsGateway).
+  // Mounted on every page via PageHeader, so this saves a full SVG rebuild.
+  const storeSettings = useStore($waveSettings);
   const settings = overrideSettings || storeSettings;
 
   const {

@@ -54,7 +54,7 @@ import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { humanReadableFloat } from "@/lib/common";
 
@@ -167,7 +167,7 @@ const AccountRow = React.memo(function AccountRow({
 
 export default function AccountLists(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { _globalParamsBTS, _globalParamsTEST } = properties;
 
@@ -207,11 +207,11 @@ export default function AccountLists(properties) {
 
   const [userDetails, setUserDetails] = useState();
   useEffect(() => {
-    if (usr && usr.chain && currentNode) {
+    if (usr && usr.chain && currentNodeUrl) {
       const userStore = createObjectStore([
         usr.chain,
         JSON.stringify([usr.id]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       userStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -220,7 +220,7 @@ export default function AccountLists(properties) {
         }
       });
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const whitelistedAccounts = useMemo(() => {
     if (userDetails && userDetails.whitelisted_accounts) {

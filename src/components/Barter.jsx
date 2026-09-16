@@ -44,7 +44,7 @@ import SectionHeader from "@/components/asset-form/SectionHeader.jsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { getObjects } from "@/nanoeffects/src/common";
@@ -220,7 +220,8 @@ export default function Barter(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNodeChain = useStore($currentNodeChain);
 
   const {
     _assetsBTS,
@@ -257,6 +258,23 @@ export default function Barter(properties) {
   const [toAccount, setToAccount] = useState(null);
   const [fromAssets, setFromAssets] = useState({});
   const [toAssets, setToAssets] = useState({});
+
+  // Giving and receiving the same asset is nonsensical: each side's picker
+  // excludes the other side's symbols, and submit is blocked while any
+  // symbol appears on both sides (e.g. pre-existing entries).
+  const fromSymbols = useMemo(
+    () => (fromAssets ? Object.values(fromAssets).map((e) => e?.asset?.symbol).filter(Boolean) : []),
+    [fromAssets]
+  );
+  const toSymbols = useMemo(
+    () => (toAssets ? Object.values(toAssets).map((e) => e?.asset?.symbol).filter(Boolean) : []),
+    [toAssets]
+  );
+  const duplicateAssetSymbols = useMemo(() => {
+    if (!fromSymbols.length || !toSymbols.length) return [];
+    const toSet = new Set(toSymbols);
+    return [...new Set(fromSymbols.filter((s) => toSet.has(s)))];
+  }, [fromSymbols, toSymbols]);
 
   const [showEscrow, setShowEscrow] = useState(false);
   const [escrowAccount, setEscrowAccount] = useState(null);
@@ -404,13 +422,11 @@ export default function Barter(properties) {
     return undefined;
   }, [assets, urlPrefilled]);
 
-  // Node URL matching the active chain. $currentNode rehydrates after first
-  // render (and may belong to the other chain), so a mismatched URL must
-  // never be used for lookups — null falls back to this chain's default.
+  // Node URL matching the active chain. The node store rehydrates after
+  // first render (and may belong to the other chain), so a mismatched URL
+  // must never be used for lookups — null falls back to this chain's default.
   const accountNodeUrl =
-    currentNode && currentNode.chain === _chain && currentNode.url
-      ? currentNode.url
-      : null;
+    currentNodeChain === _chain && currentNodeUrl ? currentNodeUrl : null;
 
   // Resolve display names for prefilled counterparty/escrow accounts.
   // Separate from the one-shot prefill above so it retries as the chain
@@ -475,11 +491,11 @@ export default function Barter(properties) {
 
   useEffect(() => {
     async function fetchFromBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -496,15 +512,15 @@ export default function Barter(properties) {
     }
 
     fetchFromBalances();
-  }, [usr, assets, currentNode]);
+  }, [usr, assets, currentNodeUrl]);
 
   useEffect(() => {
     async function fetchToBalances() {
-      if (toAccount && toAccount.id && currentNode && assets && assets.length) {
+      if (toAccount && toAccount.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           toAccount.id,
-          currentNode.url,
+          currentNodeUrl,
         ]);
         userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
@@ -522,7 +538,7 @@ export default function Barter(properties) {
     }
 
     fetchToBalances();
-  }, [toAccount, assets, currentNode]);
+  }, [toAccount, assets, currentNodeUrl]);
 
   const fromCount = useMemo(
     () => (fromAssets ? Object.keys(fromAssets).length : 0),
@@ -596,6 +612,7 @@ export default function Barter(properties) {
       isEscrowValid &&
       !escrowConflictsCounterparty &&
       !escrowIsSelf &&
+      !duplicateAssetSymbols.length &&
       !yourShortfalls.length &&
       !theirShortfalls.length,
     [
@@ -606,6 +623,7 @@ export default function Barter(properties) {
       isEscrowValid,
       escrowConflictsCounterparty,
       escrowIsSelf,
+      duplicateAssetSymbols,
       yourShortfalls,
       theirShortfalls,
     ]
@@ -629,6 +647,15 @@ export default function Barter(properties) {
     if (yourShortfalls.length || theirShortfalls.length) {
       reasons.push(t("Barter:errorInsufficientBalance"));
     }
+    if (duplicateAssetSymbols.length) {
+      reasons.push(
+        `${t("Barter:errorSameAssetBothSides")}${
+          duplicateAssetSymbols.length === 1
+            ? `: ${duplicateAssetSymbols[0]}`
+            : `: ${duplicateAssetSymbols.join(", ")}`
+        }`
+      );
+    }
     return reasons;
   }, [
     usr,
@@ -641,6 +668,7 @@ export default function Barter(properties) {
     escrowIsSelf,
     yourShortfalls,
     theirShortfalls,
+    duplicateAssetSymbols,
     t,
   ]);
 
@@ -839,26 +867,30 @@ export default function Barter(properties) {
   const canAddTo = !!(toAccount && toBalances && toBalances.length);
 
   // Picking an asset opens the amount dialog; saving writes the entry.
+  // Symbols already offered on the opposite side are rejected (the pickers
+  // exclude them, this guards any other entry path).
   const handlePickFromSymbol = useCallback(
     (symbol) => {
+      if (toSymbols.includes(symbol)) return;
       const found = (assets || []).find((a) => a.symbol === symbol);
       if (!found) return;
       setEditingAsset({ party: "from", id: found.id, asset: found });
       setEditAmountInput("");
       setEditAmountError("");
     },
-    [assets]
+    [assets, toSymbols]
   );
 
   const handlePickToSymbol = useCallback(
     (symbol) => {
+      if (fromSymbols.includes(symbol)) return;
       const found = (assets || []).find((a) => a.symbol === symbol);
       if (!found) return;
       setEditingAsset({ party: "to", id: found.id, asset: found });
       setEditAmountInput("");
       setEditAmountError("");
     },
-    [assets]
+    [assets, fromSymbols]
   );
 
   // ─── Step 1: Counterparty ─────────────────────────────────────────
@@ -949,7 +981,7 @@ export default function Barter(properties) {
       assetSymbol=""
       assetData={null}
       storeCallback={handlePickFromSymbol}
-      otherAssets={fromAssets ? Object.values(fromAssets).map((e) => e?.asset?.symbol).filter(Boolean) : []}
+      otherAssets={[...new Set([...fromSymbols, ...toSymbols])]}
       marketSearch={marketSearch}
       type={null}
       chain={_chain}
@@ -978,7 +1010,7 @@ export default function Barter(properties) {
       assetSymbol=""
       assetData={null}
       storeCallback={handlePickToSymbol}
-      otherAssets={toAssets ? Object.values(toAssets).map((e) => e?.asset?.symbol).filter(Boolean) : []}
+      otherAssets={[...new Set([...toSymbols, ...fromSymbols])]}
       marketSearch={marketSearch}
       type={null}
       chain={_chain}

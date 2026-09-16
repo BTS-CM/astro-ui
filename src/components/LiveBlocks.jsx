@@ -33,7 +33,7 @@ import {
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { chains } from "@/config/chains";
 
 import { useRecentBlocksLive } from "@/hooks/useRecentBlocksLive";
@@ -210,7 +210,7 @@ export default function LiveBlocks(properties) {
   );
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [viewJSON, setViewJSON] = useState(false);
   const [json, setJSON] = useState();
@@ -225,19 +225,19 @@ export default function LiveBlocks(properties) {
   // (REFERENCE_CODE path, re-introduced for testnet only).
   const liveBlocksMainnet = useRecentBlocksLive({
     chain: usr && usr.chain ? usr.chain : "bitshares",
-    enabled: !isTestnet && Boolean(currentNode && currentNode.url),
-    specificNode: currentNode ? currentNode.url : null,
+    enabled: !isTestnet && Boolean(currentNodeUrl),
+    specificNode: currentNodeUrl || null,
     lookback: 30,
   });
 
   // Testnet poll blocks via Electron background (REFERENCE_CODE/src/background.js)
   const [pollBlocks, setPollBlocks] = useState([]);
   useEffect(() => {
-    if (!isTestnet || !currentNode || !currentNode.url) return;
+    if (!isTestnet || !currentNodeUrl) return;
     if (!window.electron || !window.electron.requestBlocks) return;
 
     window.electron.requestBlocks({
-      url: currentNode.url,
+      url: currentNodeUrl,
       chain: usr && usr.chain ? usr.chain : "bitshares",
     });
 
@@ -253,7 +253,7 @@ export default function LiveBlocks(properties) {
     return () => {
       try { window.electron.stopBlocks(); } catch {}
     };
-  }, [currentNode, isTestnet, usr && usr.chain]);
+  }, [currentNodeUrl, isTestnet, usr && usr.chain]);
 
   const recentBlocks = isTestnet ? pollBlocks : (liveBlocksMainnet.recentBlocks ?? []);
   // Keep hook-compatible shape for footer (footer hidden on testnet anyway)
@@ -568,7 +568,7 @@ export default function LiveBlocks(properties) {
               </div>
             </div>
 
-            {!currentNode ? (
+            {!currentNodeUrl ? (
               <Card>
                 <CardContent className="py-10 text-center text-muted-foreground">
                   {t("LiveBlocks:connecting")}
@@ -834,7 +834,7 @@ export default function LiveBlocks(properties) {
           lastFetchAt={liveBlocks.lastFetchAt}
           isSubscribed={liveBlocks.isSubscribed}
           blockNumber={liveBlocks.blockNumber}
-          nodeUrl={currentNode ? currentNode.url : null}
+          nodeUrl={currentNodeUrl || null}
           warningThresholdSec={10}
         
         chain={usr?.chain}/>

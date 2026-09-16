@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { List } from "react-window";
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -24,7 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Coins, Info, ReceiptText } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { createFeesStore } from "@/nanoeffects/Fees.ts";
 
@@ -262,15 +263,11 @@ export default function NetworkFees() {
     () => true
   );
 
-  const currentNode = useSyncExternalStore(
-    $currentNode.subscribe,
-    $currentNode.get,
-    () => true
-  );
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const chain = usr && usr.chain ? usr.chain : "bitshares";
   const symbol = chain === "bitshares" ? "BTS" : "TEST";
-  const nodeUrl = currentNode && currentNode.url ? currentNode.url : "";
+  const nodeUrl = currentNodeUrl || "";
 
   const [feeSchedule, setFeeSchedule] = useState(null);
   const [loading, setLoading] = useState(true);

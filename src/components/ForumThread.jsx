@@ -68,7 +68,7 @@ import {
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
 import { $userBlockList, $blockList, addBlockedUser } from "@/stores/blocklist.ts";
 
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -91,6 +91,7 @@ import {
   fetchThreadReplies,
   findForumTopic,
 } from "@/nanoeffects/Forum.ts";
+import { stableArray } from "@/lib/stableData.ts";
 import {
   attachmentNoun,
   FORUM_TEXT_MAX_BYTES,
@@ -249,7 +250,8 @@ export default function ForumThread(properties) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
   const currentUser = useStore($currentUser);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNodeChain = useStore($currentNodeChain);
 
   const { resolvedTheme } = useTheme();
   const [domIsDark, setDomIsDark] = useState(
@@ -270,7 +272,7 @@ export default function ForumThread(properties) {
   const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
 
   const chain = (currentUser && currentUser.chain) || "bitshares";
-  const nodeUrl = (currentNode && currentNode.url) || "";
+  const nodeUrl = currentNodeUrl || "";
 
   const chainAssets = chain === "bitshares" ? _assetsBTS : _assetsTEST;
   const chainMarketSearch =
@@ -448,7 +450,9 @@ export default function ForumThread(properties) {
         setTopic(found);
         const list = await fetchThreadReplies(chain, probe.node, derivedCc);
         if (!cancelled) {
-          setReplies(list);
+          // Same fresh-decode issue as Forum/Trollbox: keep prev when the
+          // reply set is unchanged so memo'd rows skip the tick.
+          setReplies((prev) => stableArray(prev, list));
           setLoading(false);
           // Viewed = actually opened the thread (never the list). The
           // last-reply cursor doubles as C2's unread baseline.
@@ -646,9 +650,7 @@ export default function ForumThread(properties) {
 
   // Escrow agent display names for barter attachments (display only).
   const escrowNodeUrl =
-    currentNode && currentNode.chain === chain && currentNode.url
-      ? currentNode.url
-      : null;
+    currentNodeChain === chain && currentNodeUrl ? currentNodeUrl : null;
   useEffect(() => {
     let cancelled = false;
     const ids = new Set();

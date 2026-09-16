@@ -16,7 +16,7 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { $poolTrackers, updateTrackers } from "@/stores/poolTracker";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentUser } from "@/stores/users";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
 
@@ -259,7 +259,7 @@ export default function CustomPoolOverview(properties) {
   } = properties;
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
@@ -296,7 +296,7 @@ export default function CustomPoolOverview(properties) {
         const data = await getAccountBalances(
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null
+          currentNodeUrl || null
         );
 
         if (!data) return;
@@ -311,7 +311,7 @@ export default function CustomPoolOverview(properties) {
     }
 
     loadBalances();
-  }, [usr, assets, currentNode]);
+  }, [usr, assets, currentNodeUrl]);
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {

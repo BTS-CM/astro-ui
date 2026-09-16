@@ -228,7 +228,7 @@ import {
   $userBlockList,
   addBlockedUser,
 } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import {
   $favouriteUsers,
   addFavouriteUser,
@@ -397,7 +397,7 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const favouriteUsers = useStore($favouriteUsers)[usr?.chain ?? "bitshares"] ?? [];
   const userBlockList = useSyncExternalStore(
     $userBlockList.subscribe,
@@ -445,7 +445,7 @@ export default function CreditBorrow(properties) {
     async function fetchCreditOffers() {
       const creditOfferStore = createCreditOfferStore([
         _chain,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       creditOfferStore.subscribe(({ data, error, loading }) => {
@@ -456,7 +456,7 @@ export default function CreditBorrow(properties) {
     }
 
     fetchCreditOffers();
-  }, [_chain, currentNode]);
+  }, [_chain, currentNodeUrl]);
 
   const offers = useMemo(() => {
     if (_chain && allOffers && allOffers.length) {
@@ -573,7 +573,7 @@ export default function CreditBorrow(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -597,7 +597,7 @@ export default function CreditBorrow(properties) {
     chain: usr ? usr.chain : _chain,
     accountId: usr ? usr.id : null,
     enabled: Boolean(usr && usr.id),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   useEffect(() => {
     if (liveBorrowBalances.balances && assets && assets.length) {
@@ -618,7 +618,7 @@ export default function CreditBorrow(properties) {
     chain: _chain,
     ids: visibleOfferIds,
     enabled: Boolean(_chain && visibleOfferIds.length > 0),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   useEffect(() => {
     if (!liveOffers.objects || !allOffers || !allOffers.length) return;
@@ -1110,7 +1110,7 @@ export default function CreditBorrow(properties) {
         lastFetchAt={liveOffers.lastFetchAt}
         isSubscribed={liveOffers.isSubscribed}
         blockNumber={liveOffers.blockNumber}
-        nodeUrl={currentNode ? currentNode.url : null}
+        nodeUrl={currentNodeUrl || null}
         warningThresholdSec={10}
       
         chain={_chain}/>

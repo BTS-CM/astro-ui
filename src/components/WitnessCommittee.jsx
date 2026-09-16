@@ -4,7 +4,6 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { Vote, Users, Eye, Settings } from "lucide-react";
@@ -15,7 +14,8 @@ import { Button } from "@/components/ui/button";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { useStore } from "@nanostores/react";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts"; // To fetch witness/committee details if needed
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -32,7 +32,7 @@ export default function GovernanceActions(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { _globalParamsBTS, _globalParamsTEST } = properties;
 
@@ -69,13 +69,13 @@ export default function GovernanceActions(properties) {
 
   // Fetch witness and committee member objects associated with the current user
   useEffect(() => {
-    if (!usr || !usr.id || !currentNode) return;
+    if (!usr || !usr.id || !currentNodeUrl) return;
 
     async function fetchWitnessAndCommittee() {
       const witnessStore = createObjectStore([
         usr.chain,
         JSON.stringify([`1.6.${usr.id.split(".")[2]}`]), // Assuming witness ID format 1.6.x from account ID 1.2.x
-        currentNode.url,
+        currentNodeUrl,
       ]);
 
       witnessStore.subscribe(({ data, error, loading }) => {
@@ -91,7 +91,7 @@ export default function GovernanceActions(properties) {
       const committeeStore = createObjectStore([
         usr.chain,
         JSON.stringify([`1.5.${usr.id.split(".")[2]}`]), // Assuming committee ID format 1.5.x from account ID 1.2.x
-        currentNode.url,
+        currentNodeUrl,
       ]);
 
       committeeStore.subscribe(({ data, error, loading }) => {
@@ -105,7 +105,7 @@ export default function GovernanceActions(properties) {
     }
 
     fetchWitnessAndCommittee();
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   // Transaction JSON builders
   const witnessCreateTrx = useMemo(

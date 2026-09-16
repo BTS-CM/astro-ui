@@ -42,7 +42,7 @@ import { BarChart3 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $poolTrackers, updateTrackers } from "@/stores/poolTracker";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -510,7 +510,7 @@ const FeaturedPoolRow = memo(function FeaturedPoolRow({ index, style, liquidityP
 
 export default function CustomPoolTracker(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const trackers = useStore($poolTrackers);
 
   const usr = useSyncExternalStore(
@@ -545,10 +545,10 @@ export default function CustomPoolTracker(properties) {
   const [lpTradingVolumes, setLPTradingVolumes] = useState();
   useEffect(() => {
     async function fetchLPTradingVolumes() {
-      if (usr && usr.id && currentNode) {
+      if (usr && usr.id && currentNodeUrl) {
         const lpVolumeStore = createEveryLiquidityPoolStore([
           usr.chain,
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         lpVolumeStore.subscribe(({ data, error, loading }) => {
@@ -562,7 +562,7 @@ export default function CustomPoolTracker(properties) {
     }
 
     fetchLPTradingVolumes();
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const assets = useMemo(() => {
     if (!_chain || (!_assetsBTS && !_assetsTEST)) {
@@ -579,11 +579,11 @@ export default function CustomPoolTracker(properties) {
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (usr && usr.id && assets && assets.length && currentNode) {
+      if (usr && usr.id && assets && assets.length && currentNodeUrl) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -715,7 +715,7 @@ export default function CustomPoolTracker(properties) {
     async function fetchObjects() {
       if (
         assets &&
-        currentNode &&
+        currentNodeUrl &&
         swappableAssets &&
         poolShareAssets &&
         chosenPools &&
@@ -751,7 +751,7 @@ export default function CustomPoolTracker(properties) {
           const objStore = createObjectStore([
             _chain,
             JSON.stringify(objectParams),
-            currentNode ? currentNode.url : null,
+            currentNodeUrl || "",
           ]);
 
           objStore.subscribe(({ data, error, loading }) => {
@@ -768,7 +768,7 @@ export default function CustomPoolTracker(properties) {
     }
 
     fetchObjects();
-  }, [assets, chosenPools, swappableAssets, poolShareAssets, currentNode]);
+  }, [assets, chosenPools, swappableAssets, poolShareAssets, currentNodeUrl]);
 
   // Live subscription for the tracked object set (pools, dynamic data, feeds).
   // Merges fresh values over the one-shot store response so rows update per block.
@@ -793,7 +793,7 @@ export default function CustomPoolTracker(properties) {
     chain: _chain,
     ids: trackerObjectIds,
     enabled: Boolean(_chain && trackerObjectIds.length > 0),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
 
   // apply live overlays to the sliced state derived from requestResponse
@@ -889,13 +889,13 @@ export default function CustomPoolTracker(properties) {
   const [backingAssetDD, setBackingAssetDD] = useState();
   useEffect(() => {
     async function fetchBackingAssetDD() {
-      if (_chain && currentNode && backingAssets && backingAssets.length) {
+      if (_chain && currentNodeUrl && backingAssets && backingAssets.length) {
         const objStore = createObjectStore([
           _chain,
           JSON.stringify([
             ...backingAssets.map((x) => x.id.replace("1.3.", "2.3.")),
           ]),
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || null,
         ]);
 
         objStore.subscribe(({ data, error, loading }) => {
@@ -916,7 +916,7 @@ export default function CustomPoolTracker(properties) {
     }
 
     fetchBackingAssetDD();
-  }, [_chain, backingAssets, currentNode]);
+  }, [_chain, backingAssets, currentNodeUrl]);
 
   // dynamic data for:
   //    swappable assets, pool share assets, backing assets
@@ -1053,14 +1053,14 @@ export default function CustomPoolTracker(properties) {
   const [smartcoinCallOrders, setSmartcoinCallOrders] = useState();
   useEffect(() => {
     async function fetchSmartcoinCallOrders() {
-      if (currentNode && usr && usr.id && assets && swappableAssets) {
+      if (currentNodeUrl && usr && usr.id && assets && swappableAssets) {
         const _inputs = swappableAssets
           .filter((x) => x.bitasset_data_id)
           .map((x) => x.id);
         const _assetStore = createAssetCallOrdersStore([
           _chain,
           JSON.stringify(_inputs),
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         _assetStore.subscribe(({ data, error, loading }) => {
@@ -1085,14 +1085,14 @@ export default function CustomPoolTracker(properties) {
     }
 
     fetchSmartcoinCallOrders();
-  }, [currentNode, usr, assets, swappableAssets]);
+  }, [currentNodeUrl, usr, assets, swappableAssets]);
 
   const [allAssetsMarketTickers, setAllAssetsMarketTickers] = useState();
   useEffect(() => {
     async function fetchAllAssetTickers() {
       if (
         usr &&
-        currentNode &&
+        currentNodeUrl &&
         assets &&
         assets.length &&
         swappableAssets &&
@@ -1133,7 +1133,7 @@ export default function CustomPoolTracker(properties) {
         const assetTickerStore = createMultipleTickerStore([
           usr.chain,
           JSON.stringify([...new Set(allTradingPairs)]),
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         assetTickerStore.subscribe(({ data, error, loading }) => {
@@ -1151,7 +1151,7 @@ export default function CustomPoolTracker(properties) {
     fetchAllAssetTickers();
   }, [
     usr,
-    currentNode,
+    currentNodeUrl,
     assets,
     swappableAssets,
     poolShareAssets,
@@ -1711,7 +1711,7 @@ export default function CustomPoolTracker(properties) {
           lastFetchAt={liveTrackerObjects.lastFetchAt}
           isSubscribed={liveTrackerObjects.isSubscribed}
           blockNumber={liveTrackerObjects.blockNumber}
-          nodeUrl={currentNode ? currentNode.url : null}
+          nodeUrl={currentNodeUrl || null}
           warningThresholdSec={10}
         
         chain={_chain}/>

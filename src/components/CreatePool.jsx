@@ -45,7 +45,7 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser, $userStorage } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { debounce, humanReadableFloat } from "@/lib/common.js";
 
@@ -107,7 +107,7 @@ export default function IssuedAssets(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -142,7 +142,7 @@ export default function IssuedAssets(properties) {
       const requiredStore = createIssuedAssetsStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       requiredStore.subscribe(({ data, error, loading }) => {
@@ -153,11 +153,11 @@ export default function IssuedAssets(properties) {
       });
     }
 
-    if (usr && usr.id && currentNode && currentNode.url) {
+    if (usr && usr.id && currentNodeUrl) {
       setLoading(true);
       fetching();
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const relevantAssets = useMemo(() => {
     if (!issuedAssets || !issuedAssets.length) {
@@ -177,7 +177,7 @@ export default function IssuedAssets(properties) {
         JSON.stringify(
           relevantAssets.map((asset) => asset.dynamic_asset_data_id)
         ),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       requiredStore.subscribe(({ data, error, loading }) => {
@@ -213,11 +213,11 @@ export default function IssuedAssets(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -232,7 +232,7 @@ export default function IssuedAssets(properties) {
     }
 
     fetchBalances();
-  }, [usr, assets, currentNode]);
+  }, [usr, assets, currentNodeUrl]);
 
   const [selectedAsset, setSelectedAsset] = useState(null);
   const assetRowProps = useMemo(() => ({ eligibleAssets, selectedAsset, setSelectedAsset, t }), [eligibleAssets, selectedAsset, setSelectedAsset, t]);
@@ -267,7 +267,7 @@ export default function IssuedAssets(properties) {
     if (!editPoolId) {
       return;
     }
-    if (!currentNode || !currentNode.url) {
+    if (!currentNodeUrl) {
       return;
     }
     let cancelled = false;
@@ -278,7 +278,7 @@ export default function IssuedAssets(properties) {
         const store = createObjectStore([
           _chain ?? "bitshares",
           JSON.stringify([editPoolId]),
-          currentNode.url,
+          currentNodeUrl,
         ]);
         store.subscribe(({ data, error, loading }) => {
           if (cancelled || loading) {
@@ -306,7 +306,7 @@ export default function IssuedAssets(properties) {
     return () => {
       cancelled = true;
     };
-  }, [editPoolId, _chain, currentNode]);
+  }, [editPoolId, _chain, currentNodeUrl]);
 
   const editPoolAssets = useMemo(() => {
     if (!editPool || !assets || !assets.length) {

@@ -66,7 +66,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { debounce, assetAmountRegex } from "@/lib/common";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import {
   $inventoryStorage,
   addItem,
@@ -120,7 +120,7 @@ export default function Inventory(properties) {
   }
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
     properties;
@@ -142,11 +142,11 @@ export default function Inventory(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -161,7 +161,7 @@ export default function Inventory(properties) {
     }
 
     fetchBalances();
-  }, [usr, assets, currentNode]);
+  }, [usr, assets, currentNodeUrl]);
 
   const inventory = useStore($inventoryStorage);
   const items = (inventory && inventory.items) || [];

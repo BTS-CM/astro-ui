@@ -68,7 +68,7 @@ import {
   assetAmountRegex,
 } from "@/lib/common";
 
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -135,7 +135,7 @@ export default function PoolStake(properties) {
       account: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [pool, setPool] = useState(""); // dropdown selected pool
 
@@ -450,7 +450,7 @@ export default function PoolStake(properties) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -471,7 +471,7 @@ export default function PoolStake(properties) {
     chain: usr ? usr.chain : "",
     ids: pool ? [pool] : [],
     enabled: Boolean(usr && pool),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   useEffect(() => {
     if (liveStakePool.objects && pool && liveStakePool.objects[pool]) {
@@ -490,7 +490,7 @@ export default function PoolStake(properties) {
     chain: usr ? usr.chain : "",
     accountId: usr ? usr.id : null,
     enabled: Boolean(usr && usr.id),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   useEffect(() => {
     if (liveStakeBalances.balances && assets.length) {
@@ -2060,7 +2060,7 @@ export default function PoolStake(properties) {
           lastFetchAt={liveStakePool.lastFetchAt}
           isSubscribed={liveStakePool.isSubscribed}
           blockNumber={liveStakePool.blockNumber}
-          nodeUrl={currentNode ? currentNode.url : null}
+          nodeUrl={currentNodeUrl || null}
           warningThresholdSec={10}
         
         chain={_chain}/>

@@ -5,7 +5,6 @@ import React, {
   useSyncExternalStore,
   memo,
 } from "react";
-import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -56,8 +55,6 @@ import { createUserCallOrdersStore } from "@/nanoeffects/UserCallOrders.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
-
 import { humanReadableFloat } from "@/lib/common";
 import { cn } from "@/lib/utils";
 
@@ -272,8 +269,6 @@ export default function CallOrders({
     $blockList.get,
     () => true
   );
-  useStore($currentNode);
-
   const _chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]

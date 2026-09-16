@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import {
   humanReadableFloat,
@@ -77,7 +77,7 @@ export default function TipDialog(properties) {
       transferAmount: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [selectedAsset, setSelectedAsset] = useState();
   const [transferAmount, setTransferAmount] = useState("");
@@ -87,7 +87,7 @@ export default function TipDialog(properties) {
   const [showDeeplink, setShowDeeplink] = useState(false);
 
   const _chain = usr && usr.chain ? usr.chain : "bitshares";
-  const nodeUrl = currentNode && currentNode.url ? currentNode.url : null;
+  const nodeUrl = currentNodeUrl || null;
   // Trollbox/forum pages name this prop _feeSchedule*, transfer page names
   // it _globalParams* — accept either.
   const feeList = feeSchedule && feeSchedule.length ? feeSchedule : globalParams || [];
@@ -211,11 +211,11 @@ export default function TipDialog(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           _chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
@@ -228,7 +228,7 @@ export default function TipDialog(properties) {
       }
     }
     fetchUserBalances();
-  }, [usr, assets, currentNode, _chain]);
+  }, [usr, assets, currentNodeUrl, _chain]);
 
   const availableBalance = useMemo(() => {
     if (!foundAsset || !balances) {

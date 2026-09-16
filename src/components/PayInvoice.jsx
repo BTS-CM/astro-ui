@@ -33,7 +33,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -275,7 +275,7 @@ export default function PayInvoice(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -298,11 +298,11 @@ export default function PayInvoice(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -317,7 +317,7 @@ export default function PayInvoice(properties) {
     }
 
     fetchBalances();
-  }, [usr, assets, currentNode]);
+  }, [usr, assets, currentNodeUrl]);
 
   // subscribe to received invoice store so the save button reflects state
   useStore($receivedInvoiceStorage);
@@ -409,11 +409,11 @@ export default function PayInvoice(properties) {
 
   const [bothUsers, setBothUsers] = useState(false); // 0: self, 1: invoice creator
   useEffect(() => {
-    if (usr && usr.chain && currentNode && recipientId) {
+    if (usr && usr.chain && currentNodeUrl && recipientId) {
       const userStore = createObjectStore([
         usr.chain,
         JSON.stringify([usr.id, recipientId]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       userStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -421,7 +421,7 @@ export default function PayInvoice(properties) {
         }
       });
     }
-  }, [usr, currentNode, recipientId]);
+  }, [usr, currentNodeUrl, recipientId]);
 
   const isValid = useMemo(() => {
     if (

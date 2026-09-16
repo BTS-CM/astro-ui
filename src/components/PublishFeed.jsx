@@ -16,7 +16,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { assetAmountRegex, blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
@@ -31,7 +31,7 @@ function parseDescription(description) {
 export default function PublishFeed(properties) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const {
     _assetsBTS,
@@ -107,9 +107,9 @@ export default function PublishFeed(properties) {
   const [fullBitasset, setFullBitasset] = useState(null);
 
   useEffect(() => {
-    if (!assetIdParam || !currentNode?.url) return;
+    if (!assetIdParam || !currentNodeUrl) return;
     let cancelled = false;
-    const store = createObjectStore([_chain, JSON.stringify([assetIdParam]), currentNode.url]);
+    const store = createObjectStore([_chain, JSON.stringify([assetIdParam]), currentNodeUrl]);
     const unsub = store.subscribe(({ data, error, loading }) => {
       if (cancelled || loading || error || !data?.length) return;
       setFullAsset(data[0]);
@@ -118,7 +118,7 @@ export default function PublishFeed(properties) {
       cancelled = true;
       if (typeof unsub === "function") unsub();
     };
-  }, [assetIdParam, _chain, currentNode?.url]);
+  }, [assetIdParam, _chain, currentNodeUrl]);
 
   const bitassetId = useMemo(() => {
     if (fullAsset?.bitasset_data_id) return fullAsset.bitasset_data_id;
@@ -126,9 +126,9 @@ export default function PublishFeed(properties) {
   }, [fullAsset]);
 
   useEffect(() => {
-    if (!bitassetId || !currentNode?.url) return;
+    if (!bitassetId || !currentNodeUrl) return;
     let cancelled = false;
-    const store = createObjectStore([_chain, JSON.stringify([bitassetId]), currentNode.url]);
+    const store = createObjectStore([_chain, JSON.stringify([bitassetId]), currentNodeUrl]);
     const unsub = store.subscribe(({ data, error, loading }) => {
       if (cancelled || loading || error || !data?.length) return;
       setFullBitasset(data[0]);
@@ -137,7 +137,7 @@ export default function PublishFeed(properties) {
       cancelled = true;
       if (typeof unsub === "function") unsub();
     };
-  }, [bitassetId, _chain, currentNode?.url]);
+  }, [bitassetId, _chain, currentNodeUrl]);
 
   const assetSymbol = fullAsset?.symbol ?? minAsset?.s ?? "";
   const assetPrecision = useMemo(() => {

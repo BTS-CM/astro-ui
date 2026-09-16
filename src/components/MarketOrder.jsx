@@ -92,7 +92,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import {
   humanReadableFloat,
@@ -131,7 +131,7 @@ export default function MarketOrder(properties) {
       repeat: false,
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [quoteAsset, setQuoteAsset] = useState();
   const [baseAsset, setBaseAsset] = useState();
@@ -261,7 +261,7 @@ export default function MarketOrder(properties) {
         const res = await getObjects(
           usr.chain,
           [limitOrderID],
-          currentNode ? currentNode.url : null
+          currentNodeUrl || null
         );
         if (cancelled || !res || !res.length) return;
 
@@ -342,7 +342,7 @@ export default function MarketOrder(properties) {
     return () => {
       cancelled = true;
     };
-  }, [limitOrderID, usr, assets, currentNode]);
+  }, [limitOrderID, usr, assets, currentNodeUrl]);
 
   const [balances, setBalances] = useState();
   const [quoteBalance, setQuoteBalance] = useState(0);
@@ -359,7 +359,7 @@ export default function MarketOrder(properties) {
         const data = await getAccountBalances(
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null
+          currentNodeUrl || null
         );
 
         if (cancelled || !data) return;
@@ -395,7 +395,7 @@ export default function MarketOrder(properties) {
     return () => {
       cancelled = true;
     };
-  }, [usr, currentLimitOrder, baseAsset, quoteAsset, assets, currentNode]);
+  }, [usr, currentLimitOrder, baseAsset, quoteAsset, assets, currentNodeUrl]);
 
   const debouncedSetSpreadPercent = useCallback(
     debounce((input, mcr) => {

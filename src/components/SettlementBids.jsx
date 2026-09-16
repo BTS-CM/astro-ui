@@ -48,7 +48,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createSettlementFundsStore } from "@/nanoeffects/SettlementFunds.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList, $userBlockList } from "@/stores/blocklist.ts";
 
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -227,7 +227,7 @@ export default function SettlementBids() {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
@@ -271,7 +271,7 @@ export default function SettlementBids() {
       const requiredStore = createSettlementFundsStore([
         _chain ?? usr.chain ?? "bitshares",
         "[]",
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       requiredStore.subscribe(({ data, error, loading }) => {
@@ -291,7 +291,7 @@ export default function SettlementBids() {
       });
     }
 
-    if (usr && usr.chain && currentNode && currentNode.url) {
+    if (usr && usr.chain && currentNodeUrl) {
       setLoading(true);
       setSmartcoins([]);
       setAssets([]);
@@ -307,7 +307,7 @@ export default function SettlementBids() {
     return () => {
       cancelled = true;
     };
-  }, [usr, currentNode, _chain]);
+  }, [usr, currentNodeUrl, _chain]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIssuer, setSelectedIssuer] = useState("all");

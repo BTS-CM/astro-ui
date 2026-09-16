@@ -44,7 +44,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { copyToClipboard } from "@/lib/common.js";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
 
 import { Avatar } from "../Avatar.tsx";
@@ -189,7 +189,7 @@ export default function DeepLinkDialog(properties) {
     () => true
   );
 
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [activeTab, setActiveTab] = useState(
     forcePropose ? "propose" : "object"
@@ -207,7 +207,7 @@ export default function DeepLinkDialog(properties) {
 
       let response = await window.electron.generateDeepLink({
         usrChain,
-        currentNode: currentNode ? currentNode.url : "",
+        currentNode: currentNodeUrl || "",
         operationNames,
         trxJSON,
       });
@@ -313,7 +313,7 @@ const [qrECL, setQRECL] = useState("M");
     try {
       const res = await window.electron.generateTotpDeepLink({
         usrChain,
-        currentNode: currentNode ? currentNode.url : "",
+        currentNode: currentNodeUrl || "",
         operationNames,
         trxJSON,
         totpCode: trimmed,
@@ -341,7 +341,7 @@ const [qrECL, setQRECL] = useState("M");
       try {
         const response = await window.electron.generateQRContents({
           usrChain,
-          currentNode: currentNode ? currentNode.url : "",
+          currentNode: currentNodeUrl || "",
           operationNames,
           trxJSON,
         });
@@ -352,7 +352,7 @@ const [qrECL, setQRECL] = useState("M");
       }
     }
     fetchQRContents();
-  }, [usrChain, currentNode, operationNames, trxJSON, disableQR]);
+  }, [usrChain, currentNodeUrl, operationNames, trxJSON, disableQR]);
 
   useEffect(() => {
     async function calculateDeeplinkJSON() {
@@ -371,7 +371,7 @@ const [qrECL, setQRECL] = useState("M");
         let singleFee = null;
         try {
           singleFee = await window.electron.calculateOperationFees({
-            nodeURL: currentNode,
+            nodeURL: currentNodeUrl,
             trxJSON: trxJSON[0],
           });
         } catch (error) {
@@ -405,7 +405,7 @@ const [qrECL, setQRECL] = useState("M");
       let finalFee;
       try {
         finalFee = await window.electron.calculateOperationFees({
-          nodeURL: currentNode,
+          nodeURL: currentNodeUrl,
           trxJSON: _trx,
         });
       } catch (error) {
@@ -428,7 +428,7 @@ const [qrECL, setQRECL] = useState("M");
     operationNumbers,
     operationNames,
     reviewPeriodSeconds,
-    currentNode,
+    currentNodeUrl,
   ]);
 
   return (

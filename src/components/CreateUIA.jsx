@@ -26,7 +26,7 @@ import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
@@ -97,7 +97,7 @@ export default function UIA(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
     properties;
@@ -129,11 +129,11 @@ export default function UIA(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -148,7 +148,7 @@ export default function UIA(properties) {
     }
 
     fetchBalances();
-  }, [usr, assets, currentNode, balanceCounter]);
+  }, [usr, assets, currentNodeUrl, balanceCounter]);
 
   // Asset info
   const [shortName, setShortName] = useState("");
@@ -404,7 +404,7 @@ export default function UIA(properties) {
       const _store = createObjectStore([
         _chain,
         JSON.stringify([params.id]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
 
       _store.subscribe(({ data, error, loading }) => {

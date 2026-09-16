@@ -27,7 +27,7 @@ import { useDexOrderBookLive } from "@/hooks/useDexLiveSubscriptions";
 import { useMarketCandles } from "@/hooks/useMarketCandles";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
 import TrollboxFooter from "./TrollboxFooter.jsx";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import CandleChart from "./InstantTrade/CandleChart.jsx";
 import DepthChart from "./InstantTrade/DepthChart.jsx";
 
@@ -106,7 +106,7 @@ export default function Market(properties) {
 
   const [marketItr, setMarketItr] = useState(0);
   const [orderBookItr, setOrderBookItr] = useState(0);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   // style states
   const [activeLimitCard, setActiveLimitCard] = useState("buy");
@@ -167,8 +167,8 @@ export default function Market(properties) {
   // Live DEX subscription (pilot, 500ms batch like bitshares-ui)
   // Mirrors MarketOrderBook.ts polling swap: poll uses get_order_book(base=assetB, quote=assetA) via fetcher inversion.
   // We use asset ids directly for live subscription (more reliable than symbols).
-  // Pass currentNode.url for both mainnet/testnet node switching (nodes page)
-  const dexNodeUrl = currentNode?.chain === usr.chain ? currentNode?.url : null;
+  // Pass currentNodeUrl for both mainnet/testnet node switching (nodes page)
+  const dexNodeUrl = currentNodeUrl?.chain === usr.chain ? currentNodeUrl : null;
   const {
     bids: liveBids,
     asks: liveAsks,

@@ -16,7 +16,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
@@ -27,7 +27,7 @@ export default function MarketOverlay(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -60,7 +60,7 @@ export default function MarketOverlay(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (!(usr && usr.id && currentNode && assets && assets.length)) {
+      if (!(usr && usr.id && currentNodeUrl && assets && assets.length)) {
         setBalances([]);
         return;
       }
@@ -68,7 +68,7 @@ export default function MarketOverlay(properties) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -82,7 +82,7 @@ export default function MarketOverlay(properties) {
     }
 
     fetchUserBalances();
-  }, [usr, assets, currentNode, balanceCounter]);
+  }, [usr, assets, currentNodeUrl, balanceCounter]);
 
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {

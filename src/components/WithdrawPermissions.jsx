@@ -4,7 +4,6 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { useStore } from "@nanostores/react";
 import { List } from "react-window";
 
 import { format, set } from "date-fns";
@@ -36,7 +35,8 @@ import {
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { useStore } from "@nanostores/react";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { humanReadableFloat, blockchainFloat } from "@/lib/common";
 
@@ -434,7 +434,7 @@ const MemoReceivingWithdrawPermissionRow = React.memo(ReceivingWithdrawPermissio
 
 export default function WithdrawPermissions(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -499,11 +499,11 @@ export default function WithdrawPermissions(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -518,7 +518,7 @@ export default function WithdrawPermissions(properties) {
     }
 
     fetchUserBalances();
-  }, [usr, assets, currentNode, balanceCounter]);
+  }, [usr, assets, currentNodeUrl, balanceCounter]);
 
   const [payerWithdrawalPermissions, setPayerWithdrawalPermissions] =
     useState();
@@ -526,11 +526,11 @@ export default function WithdrawPermissions(properties) {
     useState();
   useEffect(() => {
     async function fetchWithdrawPermissions() {
-      if (usr && usr.chain && currentNode) {
+      if (usr && usr.chain && currentNodeUrl) {
         const withdrawPermissionsStore = createWithdrawPermissionsStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         withdrawPermissionsStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
@@ -550,7 +550,7 @@ export default function WithdrawPermissions(properties) {
     }
 
     fetchWithdrawPermissions();
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const [accounts, setAccounts] = useState([]);
   useEffect(() => {
@@ -558,7 +558,7 @@ export default function WithdrawPermissions(properties) {
       if (
         usr &&
         usr.chain &&
-        currentNode &&
+        currentNodeUrl &&
         payerWithdrawalPermissions &&
         receivingWithdrawalPermissions
       ) {
@@ -580,7 +580,7 @@ export default function WithdrawPermissions(properties) {
         const userStore = createObjectStore([
           usr.chain,
           JSON.stringify(allAccounts),
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userStore.subscribe(({ data, error, loading }) => {
@@ -594,7 +594,7 @@ export default function WithdrawPermissions(properties) {
     fetchAccounts();
   }, [
     usr,
-    currentNode,
+    currentNodeUrl,
     payerWithdrawalPermissions,
     receivingWithdrawalPermissions,
   ]);

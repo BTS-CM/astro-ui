@@ -39,7 +39,7 @@ import ExternalLink from "@/components/common/ExternalLink.jsx";
 import ChainTypes from "@/bts/chain/ChainTypes.js";
 import { humanReadableFloat } from "@/lib/common.js";
 
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { createTicketsStore } from "@/nanoeffects/Tickets.ts";
 import { getObjects } from "@/nanoeffects/src/common";
@@ -52,7 +52,7 @@ export default function TicketLeaderboard() {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
@@ -75,7 +75,7 @@ export default function TicketLeaderboard() {
       if (chain === "bitshares" || chain === "bitshares_testnet") {
         const store = createTicketsStore([
           chain,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
           0,
         ]);
 
@@ -88,7 +88,7 @@ export default function TicketLeaderboard() {
     }
 
     fetchTickets();
-  }, [chain, currentNode]);
+  }, [chain, currentNodeUrl]);
 
   const leaderboard = useMemo(() => {
     if (!tickets || !tickets.length) return { rows: [], total: 0 };
@@ -152,7 +152,7 @@ export default function TicketLeaderboard() {
         return;
       }
       try {
-        const nodeURL = currentNode ? currentNode.url : null;
+        const nodeURL = currentNodeUrl || null;
         const ids = leaderboard.rows.map((r) => r.id);
         const results = await getObjects(chain, ids, nodeURL);
         const map = {};
@@ -165,7 +165,7 @@ export default function TicketLeaderboard() {
       }
     }
     fetchAccountsWS();
-  }, [leaderboard.rows, chain, currentNode]);
+  }, [leaderboard.rows, chain, currentNodeUrl]);
 
   const LeaderboardRow = useCallback(({ index, style }) => {
     const r = leaderboard.rows[index];

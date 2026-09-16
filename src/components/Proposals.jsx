@@ -38,7 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import { humanReadableFloat } from "@/lib/common";
@@ -263,7 +263,7 @@ const ProposalRow = memo(function ProposalRow({ index, style, filteredProposals,
 
 export default function Proposals(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const [showDialog, setShowDialog] = useState(false);
 
   const usr = useSyncExternalStore(
@@ -306,11 +306,11 @@ export default function Proposals(properties) {
 
   const [proposals, setProposals] = useState();
   useEffect(() => {
-    if (usr && usr.chain && currentNode) {
+    if (usr && usr.chain && currentNodeUrl) {
       const proposalStore = createAccountProposalStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
       proposalStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -318,7 +318,7 @@ export default function Proposals(properties) {
         }
       });
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const filteredProposals = useMemo(() => {
     if (
@@ -347,7 +347,7 @@ export default function Proposals(properties) {
       const proposerStore = createObjectStore([
         usr.chain,
         JSON.stringify(proposers),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
       proposerStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

@@ -1,3 +1,4 @@
+import { computed } from "nanostores";
 import { persistentMap } from "@nanostores/persistent";
 
 const DEFAULTS = {
@@ -52,8 +53,41 @@ function resetVisualSettings() {
   }
 }
 
+// Wave fields read by WaveBackground (mounted on every page). Derived atom
+// so unrelated keys (e.g. ipfsGateway) never notify wave readers. The custom
+// `eq` keeps the previous object identity when all 9 fields are unchanged.
+const WAVE_KEYS = [
+  "waveCount",
+  "waveSpeed",
+  "waveThickness",
+  "wavePalette",
+  "customColor1",
+  "customColor2",
+  "auroraIntensity",
+  "particlesEnabled",
+  "blurAmount",
+] as const;
+
+export type WaveSettings = Pick<typeof DEFAULTS, (typeof WAVE_KEYS)[number]>;
+
+const $waveSettings = computed($visualSettings, (s): WaveSettings => {
+  const out = {} as WaveSettings;
+  for (const k of WAVE_KEYS) out[k] = (s as any)?.[k];
+  return out;
+});
+
+$waveSettings.eq = (a, b) => {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  for (const k of WAVE_KEYS) {
+    if (!Object.is((a as any)[k], (b as any)[k])) return false;
+  }
+  return true;
+};
+
 export {
   $visualSettings,
+  $waveSettings,
   setVisualSetting,
   resetVisualSettings,
 };

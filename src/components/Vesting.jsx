@@ -34,7 +34,7 @@ import {
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { createVestingBalanceStore } from "@/nanoeffects/VestingBalances.ts";
 
@@ -147,7 +147,7 @@ export default function Vesting(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [showDialog, setShowDialog] = useState(false);
   const [chosenVestingBalance, setChosenVestingBalance] = useState(null);
@@ -173,15 +173,15 @@ export default function Vesting(properties) {
   }, [_assetsBTS, _assetsTEST, _chain]);
 
   const vestingStore = useMemo(() => {
-    if (!usr || !usr.chain || !usr.id || !currentNode) {
+    if (!usr || !usr.chain || !usr.id || !currentNodeUrl) {
       return;
     }
     return createVestingBalanceStore([
       usr.chain,
       usr.id,
-      currentNode ? currentNode.url : null,
+      currentNodeUrl || "",
     ]);
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const {
     data: vestingData,

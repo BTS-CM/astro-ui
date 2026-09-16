@@ -44,7 +44,7 @@ import { useChainObjectsLive } from "@/hooks/useChainObjectsLive";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 // Hoisted memo row: stable identity across parent renders so react-window
 // rows don't remount on every keystroke or background live update.
@@ -175,7 +175,7 @@ export default function Smartcoins(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const {
     _bitassetsBTS,
@@ -256,7 +256,7 @@ export default function Smartcoins(properties) {
       return;
     }
     let cancelled = false;
-    const nodeUrl = currentNode ? currentNode.url : null;
+    const nodeUrl = currentNodeUrl || null;
     async function discovering() {
       try {
         const snapMax = snapshotBitassets.reduce(
@@ -347,7 +347,7 @@ export default function Smartcoins(properties) {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_chain, currentNode, snapshotBitassets]);
+  }, [_chain, currentNodeUrl, snapshotBitassets]);
 
   // Live bitasset overlay: global-settlement filtering must run on live data,
   // so live objects win over the snapshot once they arrive. Before that the
@@ -379,7 +379,7 @@ export default function Smartcoins(properties) {
     chain: _chain,
     ids: bitassetIds,
     enabled: Boolean(!isTestnet && _chain && bitassetIds.length > 0),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
 
   const [testnetBitassets, setTestnetBitassets] = useState(null);
@@ -398,7 +398,7 @@ export default function Smartcoins(properties) {
         const objs = await getObjects(
           _chain,
           bitassetIds,
-          currentNode ? currentNode.url : null
+          currentNodeUrl || null
         );
         if (cancelled || !Array.isArray(objs)) {
           return;
@@ -418,7 +418,7 @@ export default function Smartcoins(properties) {
     return () => {
       cancelled = true;
     };
-  }, [discoveryDone, isTestnet, _chain, bitassetIds, currentNode]);
+  }, [discoveryDone, isTestnet, _chain, bitassetIds, currentNodeUrl]);
 
   const liveBitassetMap = isTestnet
     ? testnetBitassets
@@ -519,7 +519,7 @@ export default function Smartcoins(properties) {
     }
     missingAssets.forEach((id) => fetchedAssetRef.current.add(id));
     let cancelled = false;
-    const nodeUrl = currentNode ? currentNode.url : null;
+    const nodeUrl = currentNodeUrl || null;
     const snapIssuerIds = new Set(assetIssuers.map((x) => x.id));
     (async () => {
       try {
@@ -568,7 +568,7 @@ export default function Smartcoins(properties) {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discoveryDone, activeAssetSig, _chain, currentNode]);
+  }, [discoveryDone, activeAssetSig, _chain, currentNodeUrl]);
 
   // O(1) lookups shared by enrichment + compatibility checks.
   // Live records (discovery extras, display refreshes) win over the snapshot.
@@ -679,7 +679,7 @@ export default function Smartcoins(properties) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
       unsubscribe = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (cancelled) {
@@ -699,7 +699,7 @@ export default function Smartcoins(properties) {
         } catch {}
       }
     };
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const balanceByAssetId = useMemo(() => {
     const m = new Map();
@@ -1320,7 +1320,7 @@ export default function Smartcoins(properties) {
         lastFetchAt={liveMainnetBitassets.lastFetchAt}
         isSubscribed={liveMainnetBitassets.isSubscribed}
         blockNumber={liveMainnetBitassets.blockNumber}
-        nodeUrl={currentNode ? currentNode.url : null}
+        nodeUrl={currentNodeUrl || null}
         warningThresholdSec={10}
         chain={_chain} />
     </>

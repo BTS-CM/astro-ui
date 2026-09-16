@@ -33,7 +33,7 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import { Avatar } from "./Avatar.tsx";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { copyToClipboard } from "@/lib/common";
 import { cn } from "@/lib/utils";
 import { KeyRound, AlertTriangle, Info, ShieldAlert, CheckCircle2, XCircle } from "lucide-react";
@@ -59,7 +59,7 @@ const MatchIcon = ({ value, expected }) => {
 
 const ChangePassword = () => {  const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useStore($currentUser);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [passwordMode, setPasswordMode] = useState("generated");
 
@@ -160,14 +160,14 @@ const ChangePassword = () => {  const { t } = useTranslation(locale.get(), { i18
       setOptionsLoading(true);
       try {
         // Primary: get_objects 1.2.x → account.options
-        const objs = await getObjects(usr.chain, [usr.id], currentNode?.url || null);
+        const objs = await getObjects(usr.chain, [usr.id], currentNodeUrl || null);
         if (cancelled) return;
         if (objs && objs.length && objs[0] && objs[0].options) {
           setCurrentOptions(objs[0].options);
           return;
         }
         // Fallback: get_full_accounts
-        const full = await getFullAccountDetails(usr.chain, usr.id, currentNode?.url || null);
+        const full = await getFullAccountDetails(usr.chain, usr.id, currentNodeUrl || null);
         if (cancelled) return;
         if (full && full.length && full[0] && full[0][1] && full[0][1].account && full[0][1].account.options) {
           setCurrentOptions(full[0][1].account.options);
@@ -183,7 +183,7 @@ const ChangePassword = () => {  const { t } = useTranslation(locale.get(), { i18
     }
     fetchOptions();
     return () => { cancelled = true; };
-  }, [usr?.id, usr?.chain, currentNode?.url]);
+  }, [usr?.id, usr?.chain, currentNodeUrl]);
 
   const trxJSON = useMemo(() => {
     if (!usr || !usr.id || !derivedKeys) return null;

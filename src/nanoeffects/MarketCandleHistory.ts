@@ -251,7 +251,7 @@ export async function getCandleHistory(
   return { candles, buckets };
 }
 
-const [createMarketHistoryBucketsStore] = nanoquery({
+const [createMarketHistoryBucketsStore, , marketBucketsHelpers] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const specificNode = (args[1] as string | null) ?? null;
@@ -264,7 +264,7 @@ const [createMarketHistoryBucketsStore] = nanoquery({
   },
 });
 
-const [createMarketCandleStore] = nanoquery({
+const [createMarketCandleStore, , marketCandleHelpers] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const baseId = args[1] as string;
@@ -284,4 +284,4 @@ const [createMarketCandleStore] = nanoquery({
   },
 });
 
-export { createMarketHistoryBucketsStore, createMarketCandleStore };
+export { createMarketHistoryBucketsStore, createMarketCandleStore, marketBucketsHelpers, marketCandleHelpers };

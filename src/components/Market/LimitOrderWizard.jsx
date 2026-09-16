@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import {
   $favouriteAssets,
   addFavouriteAsset,
@@ -528,7 +528,7 @@ export default function LimitOrderWizard(properties) {
   } = properties;
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const favouriteAssets = useStore($favouriteAssets);
 
   const [marketLimitOrders, setMarketLimitOrders] = useState([]);
@@ -587,7 +587,7 @@ export default function LimitOrderWizard(properties) {
         sellingAsset,
         buyingAsset,
         100,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       limitOrdersStore.subscribe(({ data, error, loading }) => {
@@ -612,7 +612,7 @@ export default function LimitOrderWizard(properties) {
       sellingAssetData &&
       buyingAssetData &&
       chain &&
-      currentNode
+      currentNodeUrl
     ) {
       fetching();
     }
@@ -622,7 +622,7 @@ export default function LimitOrderWizard(properties) {
     buyingAsset,
     buyingAssetData,
     chain,
-    currentNode,
+    currentNodeUrl,
   ]);
 
   const limitOrderRowProps = useMemo(

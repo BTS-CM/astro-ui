@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
 import { $searchHistory, addSearchHistory, clearSearchHistory } from "@/stores/searchHistory.ts";
 import { readableForeground } from "@/lib/tailwindPalette.js";
@@ -247,7 +247,7 @@ export default function AccountSearch(properties) {
     $blockList.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   // Re-render on theme/page switches so the fallback below stays current.
   useStore($customTheme);
@@ -335,7 +335,7 @@ export default function AccountSearch(properties) {
       response = await accountSearch(
         chain,
         accountInput,
-        currentNode ? currentNode.url : null
+        currentNodeUrl || null
       );
     } catch (error) {
       console.log({ error, msg: t("AccountSearch:noSearch.error") });

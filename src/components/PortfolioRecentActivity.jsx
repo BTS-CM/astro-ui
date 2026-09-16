@@ -47,7 +47,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { opTypes, operationTypes } from "@/lib/opTypes";
 import beautify from "@/lib/beautify.js";
@@ -81,30 +81,23 @@ async function fetchMissingAccountNames(
     const store = createObjectStore([
       chain || "bitshares",
       JSON.stringify(missingIds),
-      nodeUrl || null,
+      nodeUrl || "",
     ]);
-    const fetched = await new Promise((resolve) => {
-      let done = false;
-      const finish = (val) => {
-        if (!done) {
-          done = true;
-          resolve(val);
-        }
-      };
-      try {
-        const unsub = store.subscribe((s) => {
-          if (s && !s.loading && s.data) {
-            finish(s.data);
-            if (typeof unsub === "function") unsub();
-          } else if (s && !s.loading && s.error) {
-            finish(null);
-            if (typeof unsub === "function") unsub();
-          }
-        });
-      } catch (e) {
-        finish(null);
-      }
-      setTimeout(() => finish(null), 10000);
+    // FetcherStore.fetch() resolves once ({data} or {error}) — no manual
+    // subscribe/unsubscribe dance. Raced against a 10s fallback so a hung
+    // fetch can't wedge the beautifier.
+    let timeoutId = null;
+    const timeout = new Promise((resolve) => {
+      timeoutId = setTimeout(() => resolve(null), 10000);
+    });
+    const fetched = await Promise.race([
+      store
+        .fetch()
+        .then((r) => (r && r.data ? r.data : null))
+        .catch(() => null),
+      timeout,
+    ]).finally(() => {
+      if (timeoutId) clearTimeout(timeoutId);
     });
     if (Array.isArray(fetched)) {
       for (const a of fetched) {
@@ -710,7 +703,7 @@ export default function PortfolioRecentActivity() {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
@@ -806,7 +799,7 @@ export default function PortfolioRecentActivity() {
         const accStore = createObjectStore([
           usr.chain,
           JSON.stringify(allAccountIds),
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         accStore.subscribe(({ data }) => {
@@ -862,7 +855,7 @@ export default function PortfolioRecentActivity() {
         await fetchMissingAccountNames(
           [...wantedAccountIds],
           usr?.chain,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
           accountNameById
         );
 
@@ -898,9 +891,9 @@ export default function PortfolioRecentActivity() {
     }
 
     buildAllOperations();
-  }, [activity, usr, allAccounts, assetResults, currentNode]);
+  }, [activity, usr, allAccounts, assetResults, currentNodeUrl]);
 
-  const recentActivityRowProps = useMemo(() => ({ activity, opRowsById, buildingOps, t, usr, currentNodeUrl: currentNode ? currentNode.url : null }), [activity, opRowsById, buildingOps, t, usr, currentNode]);
+  const recentActivityRowProps = useMemo(() => ({ activity, opRowsById, buildingOps, t, usr, currentNodeUrl }), [activity, opRowsById, buildingOps, t, usr, currentNodeUrl]);
 
   if (isTestnet) {
     return (

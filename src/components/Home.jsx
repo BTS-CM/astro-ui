@@ -105,7 +105,7 @@ import {
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList, updateBlockList } from "@/stores/blocklist.ts";
 
 import { createBlockedAccountStore } from "@/nanoeffects/BlockedAccounts.ts";
@@ -284,7 +284,7 @@ export default function Home(properties) {
     $blockList.get,
     () => true,
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
   useEffect(() => {
@@ -294,8 +294,8 @@ export default function Home(properties) {
       usr &&
       usr.chain &&
       usr.chain === "bitshares" &&
-      currentNode &&
-      currentNode.url
+      currentNodeUrl &&
+      currentNodeUrl
     ) {
       const currentTime = Date.now();
       const isOlderThan24Hours =
@@ -303,7 +303,7 @@ export default function Home(properties) {
       if (isOlderThan24Hours || !blocklist.users.length) {
         const blockListStore = createBlockedAccountStore([
           usr.chain,
-          currentNode.url,
+          currentNodeUrl,
         ]);
         const unsub = blockListStore.subscribe((result) => {
           if (result.error) {
@@ -318,7 +318,7 @@ export default function Home(properties) {
         };
       }
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const exchangingFunds = [
     { key: "dex", href: "/dex.html", titleKey: "Home:dex.title", subtitleKey: "Home:dex.subtitle", hoverKeys: ["Home:dex.hover1", "Home:dex.hover2", "Home:dex.hover3", "Home:dex.hover4"] },

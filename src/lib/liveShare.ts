@@ -1,18 +1,16 @@
 /**
- * Shared live-subscription helpers: dedupe concurrent identical feeds.
+ * Shared live-subscription helpers for true push feeds.
  *
- * Problem: every hook instance created its own WS subscription / 3.5s
- * testnet poll / 2s guard interval / ChainStore listener. Mounting N hooks
- * for the same market/account/blocks multiplied RPCs and timers by N.
+ * Request/response dedupe lives in `@nanostores/query` (shared cache,
+ * `dedupeTime`, `revalidateInterval`) — use the nanoquery fetcher stores
+ * for that. This module covers what nanoquery can't: fan-out of a single
+ * underlying push subscription (WS `subscribe_to_market`,
+ * `set_block_applied_callback`, ChainStore listeners) to N concurrent
+ * mounts, plus a hidden-tab guard for the manual testnet fallback loops.
  *
- * This module provides tiny ref-counted primitives with identical call
- * semantics for a single subscriber, but a single underlying feed for N:
- *
- * - subscribeSharedTopic: one underlying start() per key, fan-out to N
- *   onUpdate callbacks, last value replayed to late joiners. Last
- *   unsubscribe tears the feed down.
- * - dedupedCall: coalesce concurrent identical RPCs (+ optional TTL).
- * - shouldSkipBackgroundWork: pause polling when tab hidden.
+ * Longer term these feeds should become `onMount` lazy stores (docs: Lazy
+ * Stores) so components read them via `useStore`; the current
+ * `subscribeSharedTopic` adapters preserve existing hook APIs.
  */
 
 type Unstop = () => void | Promise<void>;
@@ -162,47 +160,4 @@ export function subscribeSharedTopic<T>(
       }
     }
   };
-}
-
-// ---- Deduped one-shot RPCs ---------------------------------------------
-
-interface Inflight {
-  promise: Promise<any>;
-  at: number;
-}
-
-const inflight = new Map<string, Inflight>();
-const INFLIGHT_TTL_MS = 5000;
-
-function pruneInflight(now: number) {
-  if (inflight.size < 50) return;
-  for (const [k, v] of inflight) {
-    if (now - v.at > INFLIGHT_TTL_MS) inflight.delete(k);
-  }
-}
-
-/**
- * Coalesce concurrent identical calls. Concurrent callers share one
- * promise; results are replayed for `ttlMs` to absorb debounce pile-ups
- * (e.g. candle refetch on every market tick).
- */
-export function dedupedCall<T>(
-  key: string,
-  fn: () => Promise<T>,
-  ttlMs: number = 2000
-): Promise<T> {
-  const now = Date.now();
-  pruneInflight(now);
-  const hit = inflight.get(key);
-  if (hit && now - hit.at < Math.max(ttlMs, 1000)) {
-    return hit.promise as Promise<T>;
-  }
-  const promise = fn().finally(() => {
-    // keep for TTL replay, then drop
-    setTimeout(() => {
-      if (inflight.get(key)?.promise === promise) inflight.delete(key);
-    }, Math.max(ttlMs, 1000));
-  });
-  inflight.set(key, { promise, at: now });
-  return promise;
 }

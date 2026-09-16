@@ -48,7 +48,7 @@ import {
 } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 import { opTypes, operationTypes } from "@/lib/opTypes.js";
@@ -570,7 +570,7 @@ export default function CommitteeParams() {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) return usr.chain;
@@ -598,7 +598,7 @@ export default function CommitteeParams() {
 
   // ---- load 2.0.0 (parameters + active committee) ----
   useEffect(() => {
-    if (!currentNode || !currentNode.url) return;
+    if (!currentNodeUrl) return;
     let cancelled = false;
     async function fetching() {
       setLoading(true);
@@ -607,7 +607,7 @@ export default function CommitteeParams() {
         const store = createObjectStore([
           _chain ?? "bitshares",
           JSON.stringify(["2.0.0"]),
-          currentNode.url,
+          currentNodeUrl,
         ]);
         store.subscribe(({ data, error, loading: l }) => {
           if (cancelled || l) return;
@@ -633,11 +633,11 @@ export default function CommitteeParams() {
     return () => {
       cancelled = true;
     };
-  }, [_chain, currentNode]);
+  }, [_chain, currentNodeUrl]);
 
   // ---- load all committee members 1.5.x ----
   useEffect(() => {
-    if (!currentNode || !currentNode.url) {
+    if (!currentNodeUrl) {
       setCommitteeLoading(false);
       return;
     }
@@ -649,7 +649,7 @@ export default function CommitteeParams() {
           1,
           5,
           0,
-          currentNode.url,
+          currentNodeUrl,
         ]);
         store.subscribe(({ data, error, loading: l }) => {
           if (cancelled || l) return;
@@ -667,7 +667,7 @@ export default function CommitteeParams() {
     return () => {
       cancelled = true;
     };
-  }, [_chain, currentNode]);
+  }, [_chain, currentNodeUrl]);
 
   const originalParams = useMemo(() => {
     // Prefer an already-staged parameter set: a new proposal built on stale

@@ -39,7 +39,7 @@ import {
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { createHTLCStore } from "@/nanoeffects/HTLC.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
@@ -449,7 +449,7 @@ const MemoReceiverHtlcRow = React.memo(ReceiverHtlcRow);
 
 export default function Htlc(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
@@ -502,13 +502,13 @@ export default function Htlc(properties) {
   const [receiverHtlcs, setReceiverHtlcs] = useState([]);
   useEffect(() => {
     async function fetchHtlcs() {
-      if (!(usr && usr.chain && usr.id && currentNode && currentNode.url)) {
+      if (!(usr && usr.chain && usr.id && currentNodeUrl)) {
         setSenderHtlcs([]);
         setReceiverHtlcs([]);
         return;
       }
 
-      const htlcStore = createHTLCStore([usr.chain, usr.id, currentNode.url]);
+      const htlcStore = createHTLCStore([usr.chain, usr.id, currentNodeUrl]);
       htlcStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setSenderHtlcs(data.sender || []);
@@ -522,7 +522,7 @@ export default function Htlc(properties) {
     }
 
     fetchHtlcs();
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   // Fetching account names for HTLC participants
   const [htlcAccounts, setHtlcAccounts] = useState({});
@@ -540,8 +540,8 @@ export default function Htlc(properties) {
           usr &&
           usr.chain &&
           uniqueAccountIds.length > 0 &&
-          currentNode &&
-          currentNode.url
+          currentNodeUrl &&
+          currentNodeUrl
         )
       ) {
         return;
@@ -553,7 +553,7 @@ export default function Htlc(properties) {
       const objectStore = createObjectStore([
         usr.chain,
         JSON.stringify(neededIds),
-        currentNode.url,
+        currentNodeUrl,
       ]);
 
       objectStore.subscribe(({ data, error, loading }) => {
@@ -572,7 +572,7 @@ export default function Htlc(properties) {
     }
 
     fetchHtlcAccounts();
-  }, [usr, senderHtlcs, receiverHtlcs, currentNode, htlcAccounts]); // Added htlcAccounts dependency
+  }, [usr, senderHtlcs, receiverHtlcs, currentNodeUrl, htlcAccounts]); // Added htlcAccounts dependency
 
   const senderHtlcRowProps = useMemo(() => ({ senderHtlcs, htlcAccounts, assets, t, usr, chain: _chain }), [senderHtlcs, htlcAccounts, assets, t, usr, _chain]);
   const receiverHtlcRowProps = useMemo(() => ({ receiverHtlcs, htlcAccounts, assets, t, usr, chain: _chain }), [receiverHtlcs, htlcAccounts, assets, t, usr, _chain]);

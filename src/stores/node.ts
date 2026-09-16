@@ -1,4 +1,4 @@
-import { map } from "nanostores";
+import { computed, map } from "nanostores";
 import { chains } from "@/config/chains";
 import { persistentMap } from "@nanostores/persistent";
 
@@ -8,6 +8,12 @@ type Node = {
 };
 
 const $currentNode = map<Node>({ url: "", chain: "" });
+
+// Derived atoms so url-only readers (the common case) never re-render on a
+// chain-only flip and vice versa. Prefer `useStore($currentNodeUrl)` over
+// `useStore($currentNode)` unless the component truly needs both fields.
+const $currentNodeUrl = computed($currentNode, (n) => n?.url ?? "");
+const $currentNodeChain = computed($currentNode, (n) => n?.chain ?? "");
 
 function setCurrentNode(chain: string, url?: string) {
   if (!(chains as any)[chain]) {
@@ -57,4 +63,4 @@ function updateNodes(chain: string, nodes: InitNodes[]) {
   $nodes.set({ ...$nodes.get(), [chain]: nodes });
 }
 
-export { $currentNode, $nodes, setCurrentNode, updateNodes };
+export { $currentNode, $currentNodeUrl, $currentNodeChain, $nodes, setCurrentNode, updateNodes };

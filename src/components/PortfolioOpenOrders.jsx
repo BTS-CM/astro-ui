@@ -74,7 +74,7 @@ import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import { humanReadableFloat } from "@/lib/common";
@@ -426,7 +426,6 @@ export default function PortfolioOpenOrders({
     $blockList.get,
     () => true
   );
-  useStore($currentNode);
 
   const _chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
@@ -506,10 +505,11 @@ export default function PortfolioOpenOrders({
   }, [usr, openOrderCounter]);
 
   // Live open-order subscription (ChainStore full-account push, ~per block)
-  const currentNodeOO = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNodeChain = useStore($currentNodeChain);
   const ooNodeUrl =
-    currentNodeOO && currentNodeOO.chain === (usr ? usr.chain : null)
-      ? currentNodeOO.url
+    currentNodeChain === (usr ? usr.chain : null) && currentNodeUrl
+      ? currentNodeUrl
       : null;
   const liveOrders = useDexAccountOrdersLive({
     chain: usr ? usr.chain : "",

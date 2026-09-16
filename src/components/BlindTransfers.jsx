@@ -44,7 +44,7 @@ import {
 
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import AccountSearch from "@/components/AccountSearch.jsx";
@@ -162,7 +162,6 @@ export default function BlindTransfers({
     () => true
   );
   useStore($blockList);
-  useStore($currentNode);
 
   const _chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
@@ -317,16 +316,16 @@ function SectionCard({ icon: Icon, title, description, children }) {
 }
 
 function useUserBalances(usr, assets, chain) {
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const [balances, setBalances] = useState();
 
   useEffect(() => {
     async function fetchUserBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
@@ -339,7 +338,7 @@ function useUserBalances(usr, assets, chain) {
       }
     }
     fetchUserBalances();
-  }, [usr, assets, currentNode]);
+  }, [usr, assets, currentNodeUrl]);
 
   return balances;
 }

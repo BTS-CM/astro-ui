@@ -41,7 +41,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import {
   humanReadableFloat,
@@ -79,7 +79,7 @@ export default function Transfer(properties) {
       networkFee: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -144,11 +144,11 @@ export default function Transfer(properties) {
   // otherwise they are referenced in the dependency array before initialization
   const [bothUsers, setBothUsers] = useState(false);
   useEffect(() => {
-    if (usr && usr.chain && currentNode && targetUser) {
+    if (usr && usr.chain && currentNodeUrl && targetUser) {
       const userStore = createObjectStore([
         usr.chain,
         JSON.stringify([usr.id, targetUser.id]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       userStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -156,7 +156,7 @@ export default function Transfer(properties) {
         }
       });
     }
-  }, [usr, currentNode, targetUser]);
+  }, [usr, currentNodeUrl, targetUser]);
 
   const [foundAsset, setFoundAsset] = useState();
   const found = useMemo(() => {
@@ -207,11 +207,11 @@ export default function Transfer(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (usr && usr.id && currentNode && assets && assets.length) {
+      if (usr && usr.id && currentNodeUrl && assets && assets.length) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -226,7 +226,7 @@ export default function Transfer(properties) {
     }
 
     fetchUserBalances();
-  }, [usr, assets, currentNode, balanceCounter]);
+  }, [usr, assets, currentNodeUrl, balanceCounter]);
 
   const availableBalance = useMemo(() => {
     if (!foundAsset || !balances) return null;
@@ -268,7 +268,7 @@ export default function Transfer(properties) {
     const params = new URLSearchParams(window.location.search);
     const toName = params.get("to");
     if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
-      accountSearch(usr.chain, toName, currentNode ? currentNode.url : null)
+      accountSearch(usr.chain, toName, currentNodeUrl || null)
         .then((acct) => {
           if (acct && acct.id && acct.name) {
             setTargetUser({ id: acct.id, name: acct.name });
@@ -277,7 +277,7 @@ export default function Transfer(properties) {
         })
         .catch(() => {});
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const operationJSON = useMemo(() => {
     if (!usr || !targetUser || !foundAsset) {

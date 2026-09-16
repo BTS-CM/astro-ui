@@ -70,7 +70,7 @@ import {
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $userBlockList, $blockList, addBlockedUser } from "@/stores/blocklist.ts";
 
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -142,6 +142,11 @@ import {
   donorBadgeClassName,
   donorBadgeText,
 } from "@/lib/donorBadge.js";
+import {
+  stableArray,
+  stableMergeTail,
+  stableRecord,
+} from "@/lib/stableData.ts";
 
 const POLL_MS = 30000;
 const FORUM_ROW_HEIGHT = 96;
@@ -382,7 +387,7 @@ export default function Forum(properties) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
   const currentUser = useStore($currentUser);
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { resolvedTheme } = useTheme();
   const [domIsDark, setDomIsDark] = useState(
@@ -403,7 +408,7 @@ export default function Forum(properties) {
   const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
 
   const chain = (currentUser && currentUser.chain) || "bitshares";
-  const nodeUrl = (currentNode && currentNode.url) || "";
+  const nodeUrl = currentNodeUrl || "";
 
   const chainAssets = chain === "bitshares" ? _assetsBTS : _assetsTEST;
   const chainMarketSearch =
@@ -597,18 +602,23 @@ export default function Forum(properties) {
         }
         if (since) {
           setTopics((prev) => {
-            const ids = new Set(prev.map((topic) => topic.id));
-            const merged = prev.concat(
-              list.filter((topic) => !ids.has(topic.id))
-            );
-            merged.sort((a, b) => storageIdNum(b.id) - storageIdNum(a.id));
-            const capped = merged.slice(0, 2000);
-            maxIdRef.current = capped.length ? capped[0].id : since;
-            return capped;
+            // Tail with nothing new previously still built a fresh
+            // sorted+sliced array, invalidating every memo'd row.
+            const topicId = (t) => t?.id;
+            const desc = (a, b) => storageIdNum(b.id) - storageIdNum(a.id);
+            const merged = stableMergeTail(prev, list, topicId, desc, 2000);
+            if (merged !== prev) {
+              maxIdRef.current = merged.length ? merged[0].id : since;
+            }
+            return merged;
           });
         } else {
           maxIdRef.current = list.length ? list[0].id : null;
-          setTopics(list);
+          // Full load decodes fresh objects; keep prev when identical.
+          setTopics((prev) => {
+            if (!prev || prev.length === 0) return list;
+            return stableArray(prev, list);
+          });
         }
         setLoadingTopics(false);
       })
@@ -982,7 +992,7 @@ export default function Forum(properties) {
         }
       }
       if (!cancelled) {
-        setUnreadCounts(counts);
+        setUnreadCounts((prev) => stableRecord(prev, counts));
         setCheckingUnread(false);
       }
     })();

@@ -61,7 +61,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -513,7 +513,7 @@ export default function CreditDeals(properties) {
       account: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -570,7 +570,7 @@ export default function CreditDeals(properties) {
         const borrowerDealsStore = createBorrowerDealsStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         borrowerDealsStore.subscribe(({ data, error, loading }) => {
@@ -591,7 +591,7 @@ export default function CreditDeals(properties) {
         const lenderDealsStore = createLenderDealsStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         lenderDealsStore.subscribe(({ data, error, loading }) => {
@@ -612,7 +612,7 @@ export default function CreditDeals(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -637,13 +637,13 @@ export default function CreditDeals(properties) {
         ...(lenderDeals ?? []).map((d) => d.borrower),
       ].filter(Boolean));
       const uniqueIds = Array.from(allIds);
-      if (!usr?.chain || !uniqueIds.length || !currentNode?.url) return;
+      if (!usr?.chain || !uniqueIds.length || !currentNodeUrl) return;
       const neededIds = uniqueIds.filter((id) => !accountNames[id]);
       if (!neededIds.length) return;
       const objectStore = createObjectStore([
         usr.chain,
         JSON.stringify(neededIds),
-        currentNode.url,
+        currentNodeUrl,
       ]);
       objectStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -660,7 +660,7 @@ export default function CreditDeals(properties) {
       });
     }
     fetchCounterpartyNames();
-  }, [borrowerDeals, lenderDeals, usr, currentNode]);
+  }, [borrowerDeals, lenderDeals, usr, currentNodeUrl]);
 
   const [summaryParty, setSummaryParty] = useState({
     borrowings: "all",

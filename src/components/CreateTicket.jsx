@@ -41,7 +41,7 @@ import { Label } from "@/components/ui/label";
 
 import { humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import ChainTypes from "@/bts/chain/ChainTypes.js";
 import { createUserTicketsStore } from "@/nanoeffects/UserTickets.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -58,7 +58,7 @@ export default function CreateTicket() {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
@@ -136,7 +136,7 @@ export default function CreateTicket() {
         const store = createUserTicketsStore([
           chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
           0,
           8, // pages to fetch for better coverage
         ]);
@@ -149,7 +149,7 @@ export default function CreateTicket() {
     }
 
     fetchUserTickets();
-  }, [usr, chain, currentNode]);
+  }, [usr, chain, currentNodeUrl]);
 
   // Track user's BTS + THUMBSUP.1 balances (used to cap the request amount)
   useEffect(() => {
@@ -160,7 +160,7 @@ export default function CreateTicket() {
     const store = createUserBalancesStore([
       chain,
       usr.id,
-      currentNode ? currentNode.url : null,
+      currentNodeUrl || "",
     ]);
     const unsub = store.subscribe(({ data, error, loading }) => {
       if (data && !error && !loading) {
@@ -168,7 +168,7 @@ export default function CreateTicket() {
       }
     });
     return unsub;
-  }, [usr, chain, currentNode]);
+  }, [usr, chain, currentNodeUrl]);
 
   // Resolve THUMBSUP.1 asset details (live precision/id, fallback to known values)
   useEffect(() => {
@@ -182,7 +182,7 @@ export default function CreateTicket() {
         const store = createAssetFromSymbolStore([
           "bitshares",
           "THUMBSUP.1",
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         store.subscribe(({ data, error, loading }) => {
           if (cancelled) return;
@@ -208,7 +208,7 @@ export default function CreateTicket() {
     return () => {
       cancelled = true;
     };
-  }, [isMainnet, currentNode]);
+  }, [isMainnet, currentNodeUrl]);
 
   // Resolve `abit` distributor account (proposal sender + fee payer)
   useEffect(() => {
@@ -220,7 +220,7 @@ export default function CreateTicket() {
     accountSearch(
       "bitshares",
       THUMBSUP_ISSUER_NAME,
-      currentNode ? currentNode.url : null
+      currentNodeUrl || null
     )
       .then((acct) => {
         if (!cancelled && acct && acct.id) {
@@ -231,7 +231,7 @@ export default function CreateTicket() {
     return () => {
       cancelled = true;
     };
-  }, [isMainnet, currentNode]);
+  }, [isMainnet, currentNodeUrl]);
 
   const btsBalance = useMemo(() => {
     const entry = (userBalances || []).find((b) => b.asset_id === "1.3.0");

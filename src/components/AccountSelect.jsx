@@ -37,7 +37,6 @@ import {
   removeUser,
 } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
 import { readableForeground } from "@/lib/tailwindPalette.js";
 
@@ -315,7 +314,6 @@ export default function AccountSelect(properties) {
     $blockList.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 

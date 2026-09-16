@@ -30,7 +30,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import AccountSearch from "@/components/AccountSearch.jsx";
@@ -47,7 +47,7 @@ export default function CreateVestingBalance(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -116,7 +116,7 @@ export default function CreateVestingBalance(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -224,7 +224,7 @@ export default function CreateVestingBalance(properties) {
     const params = new URLSearchParams(window.location.search);
     const toName = params.get("to");
     if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
-      accountSearch(usr.chain, toName, currentNode ? currentNode.url : null)
+      accountSearch(usr.chain, toName, currentNodeUrl || null)
         .then((acct) => {
           if (acct && acct.id && acct.name) {
             setTargetUser({ id: acct.id, name: acct.name });
@@ -232,7 +232,7 @@ export default function CreateVestingBalance(properties) {
         })
         .catch(() => {});
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   return (
     <div className="container mx-auto mt-5 mb-5 w-full md:w-1/2">

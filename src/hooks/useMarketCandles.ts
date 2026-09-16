@@ -1,9 +1,11 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { getCandleHistory, getMarketHistoryBuckets, type CandleDatum } from "@/nanoeffects/MarketCandleHistory";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useStore } from "@nanostores/react";
+import { map } from "nanostores";
 import {
-  dedupedCall,
-  shouldSkipBackgroundWork,
-} from "@/lib/liveShare";
+  createMarketCandleStore,
+  createMarketHistoryBucketsStore,
+  type CandleDatum,
+} from "@/nanoeffects/MarketCandleHistory";
 
 export interface UseMarketCandlesOptions {
   chain: string;
@@ -20,6 +22,10 @@ export interface UseMarketCandlesOptions {
 
 const FALLBACK_BUCKETS = [60, 300, 900, 1800, 3600, 14400, 86400];
 
+// Inactive placeholder so the hook can unconditionally subscribe even when
+// params are missing (mirrors the previous null/empty return contract).
+const inactiveState = map({ loading: false as boolean });
+
 export function useMarketCandles(options: UseMarketCandlesOptions) {
   const {
     chain,
@@ -33,119 +39,105 @@ export function useMarketCandles(options: UseMarketCandlesOptions) {
     liveTick = null,
   } = options;
 
-  const [candles, setCandles] = useState<CandleDatum[] | null>(null);
-  const [buckets, setBuckets] = useState<number[]>(FALLBACK_BUCKETS);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+  const paramsValid =
+    enabled &&
+    !!chain &&
+    !!baseId &&
+    !!quoteId &&
+    basePrecision != null &&
+    quotePrecision != null;
+
+  const nodeKey = specificNode ?? "";
+  // nanoquery key parts accept only string|number|true — a null part is
+  // mistaken for a store and crashes getKeyStore (batched([null]) ->
+  // null.listen on mount). nodeKey stays "" when unset, matching the
+  // pre-migration behavior where the node object yielded "".
+  // nanoquery caches by key string globally per creator, so concurrent chart
+  // mounts with identical params share one fetch; `dedupeTime` absorbs the
+  // liveTick pile-up and `revalidateInterval` replaces the manual poll
+  // timer (nanoquery skips hidden tabs natively via focus gating).
+  const candleStore = useMemo(() => {
+    if (!paramsValid) return null;
+    return createMarketCandleStore(
+      [chain, baseId as string, quoteId as string, bucketSeconds, basePrecision as number, quotePrecision as number, nodeKey],
+      {
+        dedupeTime: 5000,
+        revalidateInterval: Math.max(
+          10000,
+          Math.min(60000, (bucketSeconds || 3600) * 1000)
+        ),
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chain, baseId, quoteId, bucketSeconds, basePrecision, quotePrecision, nodeKey, paramsValid]);
+
+  const bucketsStore = useMemo(() => {
+    if (!enabled || !chain) return null;
+    return createMarketHistoryBucketsStore([chain, nodeKey], {
+      dedupeTime: 30000,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chain, nodeKey, enabled]);
+
+  const candleState = useStore(candleStore ?? inactiveState);
+  const bucketState = useStore(bucketsStore ?? inactiveState);
+
   const [lastFetchAt, setLastFetchAt] = useState<number | null>(null);
   const [historyAvailable, setHistoryAvailable] = useState(true);
 
-  const liveTickRef = useRef<number | null>(liveTick);
-  useEffect(() => { liveTickRef.current = liveTick; }, [liveTick]);
+  const candles: CandleDatum[] | null = paramsValid
+    ? ((candleState as any).data?.candles ?? null)
+    : null;
+  const fetchedBuckets: number[] | undefined = (candleState as any).data?.buckets;
+  const buckets: number[] =
+    (fetchedBuckets && fetchedBuckets.length
+      ? fetchedBuckets
+      : (bucketState as any).data) ?? FALLBACK_BUCKETS;
+  const loading = paramsValid ? !!((candleState as any).loading) : false;
+  const error = paramsValid ? (candleState as any).error ?? null : null;
 
-  const fetchBuckets = useCallback(async () => {
-    if (!chain) return;
-    if (shouldSkipBackgroundWork()) return;
-    try {
-      // Concurrent chart mounts previously fetched buckets N times.
-      const b = await dedupedCall(
-        `candleBuckets|${chain}|${specificNode ?? ""}`,
-        () => getMarketHistoryBuckets(chain, specificNode),
-        30000
-      );
-      if (Array.isArray(b) && b.length) setBuckets(b);
-    } catch (e) {
-      console.log("useMarketCandles buckets error", e);
-    }
-  }, [chain, specificNode]);
-
-  const fetchCandles = useCallback(async () => {
-    if (!enabled || !chain || !baseId || !quoteId || basePrecision == null || quotePrecision == null) {
-      setCandles(null);
-      setLoading(false);
-      return;
-    }
-    if (shouldSkipBackgroundWork()) return;
-    setLoading(true);
-    setError(null);
-    try {
-      // Market ticks previously refetched 1-3 full windows per chart
-      // instance; concurrent identical charts now share one RPC.
-      const { candles: data, buckets: fetchedBuckets } = await dedupedCall(
-        `candles|${chain}|${baseId}|${quoteId}|${bucketSeconds}|${basePrecision}|${quotePrecision}|${specificNode ?? ""}`,
-        () =>
-          getCandleHistory(
-            chain,
-            baseId,
-            quoteId,
-            bucketSeconds,
-            basePrecision,
-            quotePrecision,
-            specificNode
-          ),
-        5000
-      );
-      setCandles(data ?? []);
-      if (Array.isArray(fetchedBuckets) && fetchedBuckets.length) setBuckets(fetchedBuckets);
+  // Track freshness + history availability from store transitions.
+  useEffect(() => {
+    if ((candleState as any).data) {
       setLastFetchAt(Date.now());
       setHistoryAvailable(true);
-      setError(null);
-    } catch (e: any) {
-      console.log("useMarketCandles fetch error", e);
-      setError(e);
+    }
+  }, [(candleState as any).data]);
+  useEffect(() => {
+    const e = (candleState as any).error;
+    if (e) {
       // Distinguish history-disabled node: keep prior candles but flag unavailable
-      if (String(e?.message ?? e).toLowerCase().includes("history") || String(e).includes("unknown")) {
+      if (
+        String(e?.message ?? e).toLowerCase().includes("history") ||
+        String(e).includes("unknown")
+      ) {
         setHistoryAvailable(false);
       }
       setLastFetchAt(Date.now());
-    } finally {
-      setLoading(false);
     }
-  }, [enabled, chain, baseId, quoteId, basePrecision, quotePrecision, bucketSeconds, specificNode]);
+  }, [(candleState as any).error]);
 
-  // Initial buckets
-  useEffect(() => {
-    if (!enabled || !chain) return;
-    fetchBuckets();
-  }, [fetchBuckets, enabled, chain]);
-
-  // Fetch on deps change
-  useEffect(() => {
-    fetchCandles();
-  }, [fetchCandles]);
-
-  // Polling interval: max(10s, bucketSec) capped at 60s for large buckets, min 15s for small
-  useEffect(() => {
-    if (!enabled || !chain || !baseId || !quoteId) return;
-    const intervalMs = Math.max(10000, Math.min(60000, bucketSeconds * 1000));
-    const id = setInterval(() => {
-      if (shouldSkipBackgroundWork()) return;
-      fetchCandles();
-    }, intervalMs);
-    return () => clearInterval(id);
-  }, [enabled, chain, baseId, quoteId, bucketSeconds, fetchCandles]);
-
-  // Live subscription resync: when market pushes, refetch candles debounced 800ms
-  // This mirrors bitshares-ui MarketsActions subscription batch (subscribe_to_market -> 500ms then re-fetch 3 windows)
-  // Debounce coalesces rapid ticks; dedupedCall above coalesces across mounts.
+  // Live subscription resync: when market pushes, revalidate debounced 800ms.
+  // This mirrors bitshares-ui MarketsActions subscription batch
+  // (subscribe_to_market -> 500ms then re-fetch windows). nanoquery's
+  // dedupeTime coalesces the herd across mounts.
   const debounceRef = useRef<any>(null);
   useEffect(() => {
     if (liveTick == null || liveTick === 0) return;
-    if (shouldSkipBackgroundWork()) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      if (shouldSkipBackgroundWork()) return;
-      fetchCandles();
+      try {
+        candleStore?.revalidate();
+      } catch {}
     }, 800);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [liveTick, fetchCandles]);
+  }, [liveTick, candleStore]);
 
-  // Reset on market switch
+  // Reset availability flag on market switch
   useEffect(() => {
     if (!enabled || !baseId || !quoteId) {
-      setCandles(null);
       setHistoryAvailable(true);
     }
   }, [enabled, baseId, quoteId]);
@@ -157,6 +149,10 @@ export function useMarketCandles(options: UseMarketCandlesOptions) {
     error,
     lastFetchAt,
     historyAvailable,
-    refetch: fetchCandles,
+    refetch: () => {
+      try {
+        candleStore?.revalidate();
+      } catch {}
+    },
   };
 }

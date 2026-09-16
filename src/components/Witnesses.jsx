@@ -39,7 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar } from "@/components/Avatar.tsx"; // Re-using existing component
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -260,7 +260,7 @@ export default function Witnesses(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
@@ -290,14 +290,14 @@ export default function Witnesses(properties) {
 
   // 1. Fetch Global and Dynamic Global Parameters
   useEffect(() => {
-    if (usr && usr.chain && currentNode) {
+    if (usr && usr.chain && currentNodeUrl) {
       setLoading(true); // Start loading when fetching begins
 
       async function fetchGlobalParameters() {
         const globalParamsStore = createObjectStore([
           usr.chain,
           JSON.stringify(["2.0.0", "2.1.0"]), // Fetch both objects
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
@@ -313,11 +313,11 @@ export default function Witnesses(properties) {
 
       fetchGlobalParameters();
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   // 2. Fetch All Witness Objects (1.6.x)
   useEffect(() => {
-    if (usr && usr.chain && currentNode && globalParameters) {
+    if (usr && usr.chain && currentNodeUrl && globalParameters) {
       // Ensure globalParameters are loaded first
       async function fetchAllWitnessObjects() {
         const allWitnessStore = createEveryObjectStore([
@@ -325,7 +325,7 @@ export default function Witnesses(properties) {
           1, // space_id
           6, // type_id for witness
           0, // start from beginning
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         allWitnessStore.subscribe(({ data, error, loading: wLoading }) => {
@@ -349,11 +349,11 @@ export default function Witnesses(properties) {
 
       fetchAllWitnessObjects();
     }
-  }, [usr, currentNode, globalParameters, blocklist, _chain]); // Added blocklist and _chain dependency
+  }, [usr, currentNodeUrl, globalParameters, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 3. Fetch Account Objects (1.2.x) for all witnesses
   useEffect(() => {
-    if (usr && usr.chain && currentNode && allWitnesses.length > 0) {
+    if (usr && usr.chain && currentNodeUrl && allWitnesses.length > 0) {
       async function fetchWitnessAccounts() {
         const accountIds = allWitnesses.map((w) => w.witness_account);
         const uniqueAccountIds = [...new Set(accountIds)];
@@ -361,7 +361,7 @@ export default function Witnesses(properties) {
         const accountsStore = createObjectStore([
           usr.chain,
           JSON.stringify(uniqueAccountIds),
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         accountsStore.subscribe(({ data, error, loading: accLoading }) => {
@@ -395,7 +395,7 @@ export default function Witnesses(properties) {
     }
   }, [
     usr,
-    currentNode,
+    currentNodeUrl,
     allWitnesses,
     globalParameters,
     dynamicGlobalParameters,
@@ -411,7 +411,7 @@ export default function Witnesses(properties) {
     chain: _chain,
     ids: witnessIds.length ? [...witnessIds, "2.1.0"] : ["2.1.0"],
     enabled: Boolean(_chain && allWitnesses.length > 0),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   const liveWitnessMap = useMemo(
     () =>
@@ -623,7 +623,7 @@ export default function Witnesses(properties) {
         lastFetchAt={liveWitnessData.lastFetchAt}
         isSubscribed={liveWitnessData.isSubscribed}
         blockNumber={liveWitnessData.blockNumber}
-        nodeUrl={currentNode ? currentNode.url : null}
+        nodeUrl={currentNodeUrl || null}
         warningThresholdSec={10}
       
         chain={_chain}/>

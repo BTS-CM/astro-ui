@@ -38,7 +38,7 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 import { blockchainFloat } from "@/lib/common"; // Assuming blockchainFloat is available
@@ -73,7 +73,7 @@ export default function WorkerCreate(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -118,7 +118,7 @@ export default function WorkerCreate(properties) {
 
   // Fetch core asset details (BTS or TEST)
   useEffect(() => {
-    if (usr && usr.chain && currentNode) {
+    if (usr && usr.chain && currentNodeUrl) {
       setCoreAssetLoading(true);
       const coreAssetSymbol = usr.chain === "bitshares" ? "BTS" : "TEST";
 
@@ -126,7 +126,7 @@ export default function WorkerCreate(properties) {
         const assetStore = createAssetFromSymbolStore([
           usr.chain,
           coreAssetSymbol,
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         assetStore.subscribe(({ data, error, loading }) => {
@@ -145,7 +145,7 @@ export default function WorkerCreate(properties) {
 
       fetchCoreAsset();
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   const canSubmit = useMemo(() => coreAsset, [coreAsset]);
 

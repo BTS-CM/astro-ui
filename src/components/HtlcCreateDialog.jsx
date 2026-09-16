@@ -38,7 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { humanReadableFloat, blockchainFloat } from "@/lib/common";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
@@ -92,7 +92,7 @@ export default function HtlcCreateDialog(properties) {
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm();
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const [toAccount, setToAccount] = useState(null);
   const [selectedAssetSymbol, setSelectedAssetSymbol] = useState(null);
@@ -121,7 +121,7 @@ export default function HtlcCreateDialog(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (!(usr && usr.id && currentNode && assets && assets.length)) {
+      if (!(usr && usr.id && currentNodeUrl && assets && assets.length)) {
         setBalances([]);
         return;
       }
@@ -129,7 +129,7 @@ export default function HtlcCreateDialog(properties) {
       const userBalancesStore = createUserBalancesStore([
         _chain,
         usr.id,
-        currentNode.url,
+        currentNodeUrl,
       ]);
 
       userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -143,7 +143,7 @@ export default function HtlcCreateDialog(properties) {
     }
 
     fetchUserBalances();
-  }, [usr, assets, currentNode, _chain]); // Added _chain
+  }, [usr, assets, currentNodeUrl, _chain]); // Added _chain
 
   // Asset details
   const foundAsset = useMemo(() => {

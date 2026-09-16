@@ -40,7 +40,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { Avatar } from "@/components/Avatar.tsx";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -308,7 +308,7 @@ export default function Witnesses(properties) {
     $currentUser.get,
     () => true,
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
@@ -346,12 +346,12 @@ export default function Witnesses(properties) {
 
   // 1. Fetch Global and Dynamic Global Parameters
   useEffect(() => {
-    if (_chain && currentNode) {
+    if (_chain && currentNodeUrl) {
       async function fetchGlobalParameters() {
         const globalParamsStore = createObjectStore([
           _chain,
           JSON.stringify(["2.0.0", "2.1.0"]), // Fetch both objects
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
@@ -368,17 +368,17 @@ export default function Witnesses(properties) {
 
       fetchGlobalParameters();
     }
-  }, [_chain, currentNode]);
+  }, [_chain, currentNodeUrl]);
 
   const [userData, setUserData] = useState(null);
   // 2. Get user votes
   useEffect(() => {
-    if (_chain && currentNode) {
+    if (_chain && currentNodeUrl) {
       async function fetchUserVotes() {
         const voteStore = createObjectStore([
           usr.chain,
           JSON.stringify([usr.id]), // Fetch both objects
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         voteStore.subscribe(({ data, error, loading: gpLoading }) => {
@@ -394,11 +394,11 @@ export default function Witnesses(properties) {
         fetchUserVotes();
       }
     }
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   // 3. Fetch All Witness Objects (1.6.x)
   useEffect(() => {
-    if (_chain && currentNode && globalParameters) {
+    if (_chain && currentNodeUrl && globalParameters) {
       // Ensure globalParameters are loaded first
       async function fetchAllWitnessObjects() {
         const allWitnessStore = createEveryObjectStore([
@@ -406,7 +406,7 @@ export default function Witnesses(properties) {
           1, // space_id
           6, // type_id for witness
           0, // start from beginning
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         allWitnessStore.subscribe(({ data, error, loading: wLoading }) => {
@@ -430,18 +430,18 @@ export default function Witnesses(properties) {
 
       fetchAllWitnessObjects();
     }
-  }, [currentNode, globalParameters, blocklist, _chain]); // Added blocklist and _chain dependency
+  }, [currentNodeUrl, globalParameters, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 4. Fetch All Committee Member Objects (1.5.x)
   useEffect(() => {
     async function fetchAllCommitteeMembers() {
-      if (_chain && currentNode) {
+      if (_chain && currentNodeUrl) {
         const allCommitteeStore = createEveryObjectStore([
           _chain,
           1, // space_id for protocol objects
           5, // type_id for committee_member
           0, // start from beginning
-          currentNode.url,
+          currentNodeUrl,
         ]);
         allCommitteeStore.subscribe(({ data, error, loading: cmLoading }) => {
           if (data && !error && !cmLoading) {
@@ -464,18 +464,18 @@ export default function Witnesses(properties) {
     }
 
     fetchAllCommitteeMembers();
-  }, [currentNode, blocklist, _chain]); // Added blocklist and _chain dependency
+  }, [currentNodeUrl, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 5. Fetch all worker proposals (1.14.x)
   useEffect(() => {
     async function fetchAllWorkerProposals() {
-      if (_chain && currentNode) {
+      if (_chain && currentNodeUrl) {
         const allWorkerProposalStore = createEveryObjectStore([
           _chain,
           1, // space_id for protocol objects
           14, // type_id for worker proposals
           0, // start from beginning
-          currentNode.url,
+          currentNodeUrl,
         ]);
         allWorkerProposalStore.subscribe(
           ({ data, error, loading: cmLoading }) => {
@@ -500,13 +500,13 @@ export default function Witnesses(properties) {
     }
 
     fetchAllWorkerProposals();
-  }, [currentNode, blocklist, _chain]); // Added blocklist and _chain dependency
+  }, [currentNodeUrl, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 6. Fetch Account Objects (1.2.x) for all witnesses
   useEffect(() => {
     if (
       _chain &&
-      currentNode &&
+      currentNodeUrl &&
       allWitnesses.length > 0 &&
       allCommitteeMembers.length > 0 &&
       allWorkerProposals.length > 0
@@ -537,7 +537,7 @@ export default function Witnesses(properties) {
         const accountsStore = createObjectStore([
           _chain,
           JSON.stringify(uniqueAccountIds),
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         accountsStore.subscribe(({ data, error, loading: accLoading }) => {
@@ -559,7 +559,7 @@ export default function Witnesses(properties) {
     }
   }, [
     _chain,
-    currentNode,
+    currentNodeUrl,
     allWitnesses,
     allCommitteeMembers,
     allWorkerProposals,

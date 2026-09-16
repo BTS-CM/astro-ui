@@ -4,7 +4,6 @@ import React, {
   useState,
   useSyncExternalStore,
 } from "react";
-import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -54,8 +53,6 @@ import {
 
 import { createUserCustomAuthoritiesStore } from "@/nanoeffects/UserCustomAuthorities.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
-
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import AccountSearch from "@/components/AccountSearch.jsx";
 import { opTypes } from "@/lib/opTypes.js";
@@ -137,8 +134,6 @@ export default function CustomAuthorities() {
     $currentUser.get,
     () => true
   );
-  useStore($currentNode);
-
   const _chain = useMemo(
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]

@@ -83,7 +83,7 @@ import {
 } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
 import { $userBlockList, $blockList, addBlockedUser } from "@/stores/blocklist.ts";
 
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -159,6 +159,7 @@ import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import TipDialog from "@/components/common/TipDialog.jsx";
 import TrollboxAttachDialog from "@/components/TrollboxAttachDialog.jsx";
 import TrollboxRisks from "@/components/TrollboxRisks.jsx";
+import { stableArray } from "@/lib/stableData.ts";
 import { Avatar } from "@/components/Avatar.tsx";
 import { getObjects } from "@/nanoeffects/src/common";
 
@@ -479,7 +480,10 @@ export default function Trollbox(properties) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   useStore($customTheme);
   const currentUser = useStore($currentUser);
-  const currentNode = useStore($currentNode);
+  // Derived atoms: url/chain flips notify independently, so unrelated node
+  // writes don't re-render this heavyweight list.
+  const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNodeChain = useStore($currentNodeChain);
 
   const { resolvedTheme } = useTheme();
   const [domIsDark, setDomIsDark] = useState(
@@ -500,7 +504,7 @@ export default function Trollbox(properties) {
   const accent = sectionAccentStyles(pair.primary, pair.secondary, isDark);
 
   const chain = (currentUser && currentUser.chain) || "bitshares";
-  const nodeUrl = (currentNode && currentNode.url) || "";
+  const nodeUrl = currentNodeUrl || "";
 
   const chainAssets = chain === "bitshares" ? _assetsBTS : _assetsTEST;
   const chainMarketSearch =
@@ -737,7 +741,9 @@ export default function Trollbox(properties) {
     fetchChannelMessages(chain, probe.node, activeCatalog)
       .then((msgs) => {
         if (!cancelled) {
-          setMessages(msgs);
+          // Fresh decode each poll => new identities. Keep prev when the
+          // channel is unchanged so memo'd rows + the virtual list bail out.
+          setMessages((prev) => stableArray(prev, msgs));
           setLoadingMessages(false);
         }
       })
@@ -1277,13 +1283,11 @@ export default function Trollbox(properties) {
   // only; identity is always the stored 1.2.x id). Resolved live; falls
   // back to the raw id while loading or when the lookup fails.
   const [escrowAgentName, setEscrowAgentName] = useState(null);
-  // $currentNode rehydrates after first render and may belong to the other
+  // The node store rehydrates after first render and may belong to the other
   // chain — never look an account up on a mismatched node (null falls back
   // to this chain's default node inside getObjects).
   const escrowNodeUrl =
-    currentNode && currentNode.chain === chain && currentNode.url
-      ? currentNode.url
-      : null;
+    currentNodeChain === chain && currentNodeUrl ? currentNodeUrl : null;
   useEffect(() => {
     setEscrowAgentName(null);
     const escrowId = openAttachMeta?.details?.escrow?.account;

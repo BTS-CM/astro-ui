@@ -9,10 +9,22 @@ import {
   nodeUrlFor,
 } from "@/bts/chain/chainStoreReady";
 import { useSubscriptionGuard } from "@/hooks/useSubscriptionGuard";
-import {
-  dedupedCall,
-  shouldSkipBackgroundWork,
-} from "@/lib/liveShare";
+
+/**
+ * Skip a poll tick while the tab is hidden; feeds resume on visible.
+ * (nanoquery handles this natively for store reads via focus gating; this
+ * tiny check covers the manual testnet fallback loops below.)
+ */
+function isBackgrounded(): boolean {
+  try {
+    return (
+      typeof document !== "undefined" &&
+      (document as any).visibilityState === "hidden"
+    );
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Shared ChainStore object subscription for pages 2-9 rollout.
@@ -167,15 +179,12 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
 
       const fetchTestnet = async () => {
         if (cancelledPoll) return;
-        if (shouldSkipBackgroundWork()) return;
+        if (isBackgrounded()) return;
         try {
-          // Concurrent mounts for the same ids previously issued N
-          // identical get_objects RPCs per 3.5s tick; coalesce them.
-          const objs = await dedupedCall(
-            `chainObjects|${chain}|${idsKey}|${specificNode ?? ""}`,
-            () => getObjects(chain, parsedIds, specificNode),
-            3000
-          );
+          // Testnet fallback: direct fetch. Cross-mount sharing for object
+          // reads lives in the nanoquery cache (createObjectStore); this
+          // loop stays simple on purpose.
+          const objs = await getObjects(chain, parsedIds, specificNode);
           if (cancelledPoll) return;
           const objectsMap: Record<string, any> = {};
           if (Array.isArray(objs)) {
@@ -423,14 +432,9 @@ export function useAccountBalancesLive(options: {
 
       const fetchTestnet = async () => {
         if (cancelledPoll) return;
-        if (shouldSkipBackgroundWork()) return;
+        if (isBackgrounded()) return;
         try {
-          // Same dedupe as objects: one balances RPC per account per tick.
-          const response = await dedupedCall(
-            `accountBalances|${chain}|${accountId}|${specificNode ?? ""}`,
-            () => getAccountBalances(chain, accountId, specificNode),
-            3000
-          );
+          const response = await getAccountBalances(chain, accountId, specificNode);
           if (cancelledPoll) return;
           if (response) {
             setBalances(response as any[]);

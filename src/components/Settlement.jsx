@@ -66,7 +66,7 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
@@ -579,7 +579,7 @@ export default function Settlement(properties) {
       account: "",
     },
   });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -820,7 +820,7 @@ export default function Settlement(properties) {
     const dynStore = createObjectStore([
       usr.chain,
       JSON.stringify([dynId]),
-      currentNode ? currentNode.url : null,
+      currentNodeUrl || null,
     ]);
     const unsub = dynStore.subscribe(({ data, error, loading }) => {
       if (cancelled || loading || error) return;
@@ -830,7 +830,7 @@ export default function Settlement(properties) {
       cancelled = true;
       if (unsub) unsub();
     };
-  }, [finalAsset, usr, currentNode]);
+  }, [finalAsset, usr, currentNodeUrl]);
 
   const debtSupply = useMemo(() => {
     const raw = finalDynamicData?.current_supply;
@@ -972,7 +972,7 @@ export default function Settlement(properties) {
           parsedBitasset.collateral,
           parsedBitasset.id,
         ]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -991,7 +991,7 @@ export default function Settlement(properties) {
       const collateralBidsStore = createCollateralBidStore([
         usr.chain,
         parsedAsset.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       unsub = collateralBidsStore.subscribe(({ data, error, loading }) => {
@@ -1023,7 +1023,7 @@ export default function Settlement(properties) {
     const bidderStore = createObjectStore([
       usr.chain,
       JSON.stringify(ids),
-      currentNode ? currentNode.url : null,
+      currentNodeUrl || "",
     ]);
     const unsub = bidderStore.subscribe(({ data, error, loading }) => {
       if (cancelled || loading || error) {
@@ -1043,7 +1043,7 @@ export default function Settlement(properties) {
       cancelled = true;
       if (unsub) unsub();
     };
-  }, [collateralBids, usr, currentNode]);
+  }, [collateralBids, usr, currentNodeUrl]);
 
   // Prefill the bid form with our own existing collateral bid (one bid per
   // account per asset on-chain): runs whenever the bid list loads, so
@@ -1118,7 +1118,7 @@ export default function Settlement(properties) {
       return;
     }
     let cancelled = false;
-    getAccountBalances(usr.chain, usr.id, currentNode?.url ?? null, null, [
+    getAccountBalances(usr.chain, usr.id, currentNodeUrl ?? null, null, [
       parsedAsset.id,
       parsedCollateralAsset.id,
     ])
@@ -1155,7 +1155,7 @@ export default function Settlement(properties) {
     return () => {
       cancelled = true;
     };
-  }, [parsedAsset, parsedCollateralAsset, usr, currentNode]);
+  }, [parsedAsset, parsedCollateralAsset, usr, currentNodeUrl]);
 
   // Holder force-settle form state (separate from the individual-pool
   // force-settle fields above): settling here executes at the fixed

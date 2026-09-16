@@ -70,7 +70,7 @@ import {
   blockchainFloat,
   assetAmountRegex,
 } from "@/lib/common.js";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { cn } from "@/lib/utils";
 
@@ -89,7 +89,7 @@ export default function SameTFunds(properties) {
     $blockList.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
     properties;
@@ -124,7 +124,7 @@ export default function SameTFunds(properties) {
       setLoadingFunds(true);
       const sameTFundsStore = createEverySameTFundStore([
         _chain,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       sameTFundsStore.subscribe(({ data, error, loading }) => {
@@ -144,10 +144,10 @@ export default function SameTFunds(properties) {
       });
     }
 
-    if (_chain && currentNode) {
+    if (_chain && currentNodeUrl) {
       fetching();
     }
-  }, [_chain, currentNode]);
+  }, [_chain, currentNodeUrl]);
 
   const [view, setView] = useState("all");
 
@@ -183,7 +183,7 @@ export default function SameTFunds(properties) {
       const objectsStore = createObjectStore([
         _chain,
         JSON.stringify(allUserIDs),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       objectsStore.subscribe(({ data, error, loading }) => {
@@ -193,10 +193,10 @@ export default function SameTFunds(properties) {
       });
     }
 
-    if (allUserIDs.length && _chain && currentNode) {
+    if (allUserIDs.length && _chain && currentNodeUrl) {
       fetching();
     }
-  }, [allUserIDs, _chain, currentNode]);
+  }, [allUserIDs, _chain, currentNodeUrl]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -205,7 +205,7 @@ export default function SameTFunds(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {

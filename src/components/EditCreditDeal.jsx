@@ -35,7 +35,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 
@@ -65,7 +65,7 @@ export default function EditCreditDeal(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -133,7 +133,7 @@ export default function EditCreditDeal(properties) {
     if (!dealId) {
       return;
     }
-    if (!currentNode || !currentNode.url) {
+    if (!currentNodeUrl) {
       return;
     }
     let cancelled = false;
@@ -144,7 +144,7 @@ export default function EditCreditDeal(properties) {
         const store = createObjectStore([
           _chain ?? "bitshares",
           JSON.stringify([dealId]),
-          currentNode.url,
+          currentNodeUrl,
         ]);
         store.subscribe(({ data, error, loading }) => {
           if (cancelled || loading) {
@@ -177,7 +177,7 @@ export default function EditCreditDeal(properties) {
     return () => {
       cancelled = true;
     };
-  }, [dealId, _chain, currentNode]);
+  }, [dealId, _chain, currentNodeUrl]);
 
   const debtAsset = useMemo(() => {
     if (!deal || !assets || !assets.length) return null;

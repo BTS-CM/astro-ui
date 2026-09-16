@@ -36,7 +36,7 @@ import CandleChart from "./InstantTrade/CandleChart.jsx";
 import DepthChart from "./InstantTrade/DepthChart.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
 
 import {
   ArrowDownUp,
@@ -133,7 +133,14 @@ export default function InstantTrade(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNodeChain = useStore($currentNodeChain);
+  // Chain-matched node URL (never look up on a mismatched node after store
+  // rehydration); null falls back to the chain default inside the fetchers.
+  const matchedNodeUrl =
+    currentNodeChain === (usr ? usr.chain : "") && currentNodeUrl
+      ? currentNodeUrl
+      : null;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -177,7 +184,7 @@ export default function InstantTrade(properties) {
   const [balances, setBalances] = useState();
   useEffect(() => {
     async function fetchUserBalances() {
-      if (!(usr && usr.id && currentNode && assets && assets.length)) {
+      if (!(usr && usr.id && currentNodeUrl && assets && assets.length)) {
         setBalances([]);
         return;
       }
@@ -185,7 +192,7 @@ export default function InstantTrade(properties) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -199,7 +206,7 @@ export default function InstantTrade(properties) {
     }
 
     fetchUserBalances();
-  }, [usr, assets, currentNode, balanceCounter]);
+  }, [usr, assets, currentNodeUrl, balanceCounter]);
 
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -399,7 +406,7 @@ export default function InstantTrade(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -469,7 +476,7 @@ export default function InstantTrade(properties) {
     accountId: usr ? usr.id : null,
     enabled: Boolean(usr && assetAData && assetBData),
     limit: 50,
-    specificNode: currentNode && currentNode.chain === (usr ? usr.chain : "") ? currentNode.url : null,
+    specificNode: matchedNodeUrl,
   });
   const liveBidsRef = useRef(null);
   useEffect(() => {
@@ -497,7 +504,7 @@ export default function InstantTrade(properties) {
     quotePrecision: assetAData ? assetAData.precision : null,
     bucketSeconds: candleBucketSec,
     enabled: Boolean(usr && assetAData && assetBData),
-    specificNode: currentNode && currentNode.chain === (usr ? usr.chain : "") ? currentNode.url : null,
+    specificNode: matchedNodeUrl,
     liveTick: liveIT.lastFetchAt,
   });
 
@@ -803,7 +810,7 @@ export default function InstantTrade(properties) {
       const _store = createObjectStore([
         _chain,
         JSON.stringify(buyOrders.map((x) => x.id)),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       _store.subscribe(({ data, error, loading }) => {
@@ -816,10 +823,10 @@ export default function InstantTrade(properties) {
       });
     }
 
-    if (_chain && currentNode && buyOrders && buyOrders.length) {
+    if (_chain && currentNodeUrl && buyOrders && buyOrders.length) {
       fetching();
     }
-  }, [currentNode, _chain, buyOrders]);
+  }, [currentNodeUrl, _chain, buyOrders]);
 
   const instantTradeRowProps = useMemo(() => ({ buyOrders, buyOrderDetails, assetBData, assetAData, t }), [buyOrders, buyOrderDetails, assetBData, assetAData, t]);
   const orderCalcRowProps = useMemo(() => ({ buyOrders: orderCalc?.orders || [], buyOrderDetails, assetBData, assetAData, t }), [orderCalc, buyOrderDetails, assetBData, assetAData, t]);
@@ -1576,11 +1583,7 @@ export default function InstantTrade(properties) {
           lastFetchAt={liveIT.lastFetchAt}
           isSubscribed={liveIT.isSubscribed}
           blockNumber={liveIT.blockNumber}
-          nodeUrl={
-            currentNode && currentNode.chain === (usr ? usr.chain : "")
-              ? currentNode.url
-              : null
-          }
+          nodeUrl={matchedNodeUrl}
           warningThresholdSec={10}
         
         chain={usr?.chain}/>

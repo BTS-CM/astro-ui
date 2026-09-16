@@ -19,7 +19,7 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { $poolTrackers, updateTrackers } from "@/stores/poolTracker";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentUser } from "@/stores/users";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
@@ -323,7 +323,7 @@ export default function CustomPoolOverview(properties) {
   } = properties;
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
     $currentUser.get,
@@ -362,7 +362,7 @@ export default function CustomPoolOverview(properties) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || "",
       ]);
 
       userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -413,7 +413,7 @@ export default function CustomPoolOverview(properties) {
     chain: _chain,
     ids: poolIds,
     enabled: Boolean(_chain && poolIds.length > 0),
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
   });
   const livePoolMap = useMemo(
     () => (livePools.objects ? new Map(Object.entries(livePools.objects)) : null),
@@ -766,7 +766,7 @@ export default function CustomPoolOverview(properties) {
         lastFetchAt={livePools.lastFetchAt}
         isSubscribed={livePools.isSubscribed}
         blockNumber={livePools.blockNumber}
-        nodeUrl={currentNode ? currentNode.url : null}
+        nodeUrl={currentNodeUrl || null}
         warningThresholdSec={10}
       
         chain={_chain}/>

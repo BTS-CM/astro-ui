@@ -28,7 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar } from "@/components/Avatar.tsx"; // Re-using existing component
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import {
@@ -197,7 +197,7 @@ export default function CommitteeMembers(properties) {
     $currentUser.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const blocklist = useSyncExternalStore(
     $blockList.subscribe,
     $blockList.get,
@@ -225,11 +225,11 @@ export default function CommitteeMembers(properties) {
   // 1. Fetch Global Parameters (for active committee list)
   useEffect(() => {
     async function fetchGlobalParams() {
-      if (usr && usr.chain && currentNode) {
+      if (usr && usr.chain && currentNodeUrl) {
         const globalParamsStore = createObjectStore([
           usr.chain,
           JSON.stringify(["2.0.0"]),
-          currentNode.url,
+          currentNodeUrl,
         ]);
         globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
           if (data && !error && !gpLoading && data[0]) {
@@ -242,18 +242,18 @@ export default function CommitteeMembers(properties) {
     }
 
     fetchGlobalParams();
-  }, [usr, currentNode]);
+  }, [usr, currentNodeUrl]);
 
   // 2. Fetch All Committee Member Objects (1.5.x)
   useEffect(() => {
     async function fetchAllCommitteeMembers() {
-      if (usr && usr.chain && currentNode) {
+      if (usr && usr.chain && currentNodeUrl) {
         const allCommitteeStore = createEveryObjectStore([
           usr.chain,
           1, // space_id for protocol objects
           5, // type_id for committee_member
           0, // start from beginning
-          currentNode.url,
+          currentNodeUrl,
         ]);
         allCommitteeStore.subscribe(({ data, error, loading: cmLoading }) => {
           if (data && !error && !cmLoading) {
@@ -276,12 +276,12 @@ export default function CommitteeMembers(properties) {
     }
 
     fetchAllCommitteeMembers();
-  }, [usr, currentNode, blocklist, _chain]); // Added blocklist and _chain dependency
+  }, [usr, currentNodeUrl, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 3. Fetch Account Objects (1.2.x) for all committee members
   useEffect(() => {
     async function fetchCommitteeAccounts() {
-      if (usr && usr.chain && currentNode && allCommitteeMembers.length > 0) {
+      if (usr && usr.chain && currentNodeUrl && allCommitteeMembers.length > 0) {
         const accountIds = allCommitteeMembers.map(
           (cm) => cm.committee_member_account
         );
@@ -291,7 +291,7 @@ export default function CommitteeMembers(properties) {
         const accountsStore = createObjectStore([
           usr.chain,
           JSON.stringify(uniqueAccountIds),
-          currentNode.url,
+          currentNodeUrl,
         ]);
 
         accountsStore.subscribe(({ data, error, loading: accLoading }) => {
@@ -316,7 +316,7 @@ export default function CommitteeMembers(properties) {
     }
 
     fetchCommitteeAccounts();
-  }, [usr, currentNode, allCommitteeMembers]); // depends on allCommitteeMembers
+  }, [usr, currentNodeUrl, allCommitteeMembers]); // depends on allCommitteeMembers
 
   const processedMembers = useMemo(() => {
     return allCommitteeMembers

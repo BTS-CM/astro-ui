@@ -81,7 +81,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -183,7 +183,7 @@ export default function CreditOffer(properties) {
     $blockList.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
 
   const {
     _assetsBTS,
@@ -282,7 +282,7 @@ export default function CreditOffer(properties) {
       const offerStore = createObjectStore([
         _chain,
         JSON.stringify([id]),
-        currentNode ? currentNode.url : null,
+        currentNodeUrl || null,
       ]);
       offerStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -314,7 +314,7 @@ export default function CreditOffer(properties) {
         }
       });
     });
-  }, [_chain, assets, currentNode, blocklist]);
+  }, [_chain, assets, currentNodeUrl, blocklist]);
 
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);
@@ -324,7 +324,7 @@ export default function CreditOffer(properties) {
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
 
         userBalancesStore.subscribe(({ data, error, loading }) => {
@@ -588,7 +588,7 @@ export default function CreditOffer(properties) {
         const userStore = createObjectStore([
           _chain,
           JSON.stringify([relevantOffer.owner_account]),
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || null,
         ]);
         userStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {

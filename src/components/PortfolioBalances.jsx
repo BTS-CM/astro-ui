@@ -56,7 +56,7 @@ import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNode } from "@/stores/node.ts";
+import { $currentNodeUrl } from "@/stores/node.ts";
 import {
   $favouriteAssets,
   addFavouriteAsset,
@@ -228,7 +228,7 @@ export default function PortfolioBalances({
     $blockList.get,
     () => true
   );
-  const currentNode = useStore($currentNode);
+  const currentNodeUrl = useStore($currentNodeUrl);
   const favouriteAssets = useStore($favouriteAssets);
 
   const [sortType, setSortType] = useState("default");
@@ -291,7 +291,7 @@ export default function PortfolioBalances({
         const userBalancesStore = createUserBalancesStore([
           usr.chain,
           usr.id,
-          currentNode ? currentNode.url : null,
+          currentNodeUrl || "",
         ]);
         userBalancesStore.subscribe(({ data, error, loading }) => {
           setBalancesLoading(Boolean(loading));
@@ -314,13 +314,13 @@ export default function PortfolioBalances({
       }
     }
     fetchUserBalances();
-  }, [usr, balanceCounter, assets, currentNode]);
+  }, [usr, balanceCounter, assets, currentNodeUrl]);
 
   // Live balances via ChainStore full-account subscription (push, per block)
   const liveBalances = useAccountBalancesLive({
     chain: usr ? usr.chain : "",
     accountId: usr ? usr.id : null,
-    specificNode: currentNode ? currentNode.url : null,
+    specificNode: currentNodeUrl || null,
     enabled: Boolean(usr && usr.id),
   });
   useEffect(() => {
@@ -507,7 +507,7 @@ export default function PortfolioBalances({
           lastFetchAt={liveBalances.lastFetchAt}
           isSubscribed={liveBalances.isSubscribed}
           blockNumber={liveBalances.blockNumber}
-          nodeUrl={currentNode ? currentNode.url : null}
+          nodeUrl={currentNodeUrl || null}
           warningThresholdSec={10}
         
         chain={usr?.chain}/>
