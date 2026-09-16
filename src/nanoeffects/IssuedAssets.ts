@@ -32,7 +32,11 @@ async function fetchingIssuedAssets(
             true,
             4000,
             { enableDatabase: true },
-            (error: Error) => console.log({ error })
+            (error: Error) => {
+              if (error) {
+                console.log({ error });
+              }
+            }
           );
     } catch (error) {
       console.log({ error });

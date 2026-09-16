@@ -535,9 +535,16 @@ export default function IssuedAssets(properties) {
         if (cancelled) {
           return;
         }
-        if (data && !error && !loading) {
+        if (loading) {
+          return;
+        }
+        if (error) {
           setLoading(false);
-          setIssuedAssets(data);
+          return;
+        }
+        if (data) {
+          setLoading(false);
+          setIssuedAssets(Array.isArray(data) ? data : []);
         }
       });
     }
@@ -656,6 +663,9 @@ export default function IssuedAssets(properties) {
   }, [issuedAssets]);
 
   const [dynamicData, setDynamicData] = useState([]);
+  const [dynamicLoading, setDynamicLoading] = useState(false);
+  const [dynamicError, setDynamicError] = useState(null);
+  const [dynamicRetry, setDynamicRetry] = useState(0);
   useEffect(() => {
     let cancelled = false;
     let unsubscribe;
@@ -671,16 +681,29 @@ export default function IssuedAssets(properties) {
         if (cancelled) {
           return;
         }
-        if (data && !error && !loading) {
-          setDynamicData(data);
+        if (loading) {
+          setDynamicLoading(true);
+          return;
         }
+        if (error) {
+          setDynamicLoading(false);
+          setDynamicError(error);
+          return;
+        }
+        setDynamicLoading(false);
+        setDynamicError(null);
+        setDynamicData(Array.isArray(data) ? data : []);
       });
     }
 
     if (dynamicDataIDs && dynamicDataIDs.length) {
+      setDynamicLoading(true);
+      setDynamicError(null);
       fetching();
     } else {
       setDynamicData([]);
+      setDynamicLoading(false);
+      setDynamicError(null);
     }
 
     return () => {
@@ -689,7 +712,7 @@ export default function IssuedAssets(properties) {
         unsubscribe();
       }
     };
-  }, [dynamicDataIDs]);
+  }, [dynamicDataIDs, usr?.chain, currentNode?.url, dynamicRetry]);
 
   const bitassetDataIDs = useMemo(() => {
     if (!issuedAssets) {
@@ -719,8 +742,14 @@ export default function IssuedAssets(properties) {
         if (cancelled) {
           return;
         }
-        if (data && !error && !loading) {
-          setBitassetData(data);
+        if (loading) {
+          return;
+        }
+        if (error) {
+          return;
+        }
+        if (data) {
+          setBitassetData(Array.isArray(data) ? data : []);
         }
       });
     }
@@ -737,7 +766,7 @@ export default function IssuedAssets(properties) {
         unsubscribe();
       }
     };
-  }, [bitassetDataIDs]);
+  }, [bitassetDataIDs, usr?.chain, currentNode?.url]);
 
   const priceFeederAccountIDs = useMemo(() => {
     if (!bitassetData) {
@@ -745,7 +774,11 @@ export default function IssuedAssets(properties) {
     }
 
     const priceFeeders = Array.from(
-      new Set(bitassetData.flatMap((data) => data.feeds.map((feed) => feed[0])))
+      new Set(
+        bitassetData.flatMap(
+          (data) => data?.feeds?.map((feed) => feed[0]) ?? []
+        )
+      )
     );
 
     return priceFeeders;
@@ -767,8 +800,14 @@ export default function IssuedAssets(properties) {
         if (cancelled) {
           return;
         }
-        if (data && !error && !loading) {
-          setPriceFeederAccounts(data);
+        if (loading) {
+          return;
+        }
+        if (error) {
+          return;
+        }
+        if (data) {
+          setPriceFeederAccounts(Array.isArray(data) ? data : []);
         }
       });
     }
@@ -785,7 +824,7 @@ export default function IssuedAssets(properties) {
         unsubscribe();
       }
     };
-  }, [priceFeederAccountIDs]);
+  }, [priceFeederAccountIDs, usr?.chain, currentNode?.url]);
 
   const dynamicById = useMemo(() => {
     const map = new Map();
@@ -1125,39 +1164,58 @@ export default function IssuedAssets(properties) {
                     )
                   ) : (
                     <>
-                      {dynamicData && dynamicData.length ? (
-                        <>
-                          <div className="w-full h-[500px] block md:hidden">
-                            <List
-                              key={listKey}
-                              height={500}
-                              width="100%"
-                              rowComponent={MemoIssuedAssetRow}
-                              rowCount={relevantAssets.length}
-                              rowHeight={90}
-                              rowProps={assetRowProps}
-                            />
-                          </div>
-                          <div className="w-full h-[500px] hidden md:block">
-                            <List
-                              key={listKey}
-                              height={500}
-                              width="100%"
-                              rowComponent={MemoIssuedAssetRow}
-                              rowCount={relevantAssets.length}
-                              rowHeight={90}
-                              rowProps={assetRowProps}
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex flex-col items-center gap-3 py-12">
-                          <Spinner className="size-6 dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]" />
-                          <p className="text-foreground/70 text-sm">
-                            {t("CreditBorrow:common.loading")}
-                          </p>
+                      {dynamicError ||
+                      (dynamicDataIDs.length > 0 &&
+                        !dynamicLoading &&
+                        (!dynamicData ||
+                          dynamicData.length < dynamicDataIDs.length)) ? (
+                        <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-card/40 px-3 py-2 text-xs text-muted-foreground">
+                          <span>
+                            {t("IssuedAssets:dynamicDataWarning", {
+                              defaultValue:
+                                "Asset details (supply, fee pool) are unavailable right now — the list below still works.",
+                            })}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setDynamicRetry((n) => n + 1)}
+                          >
+                            {t("IssuedAssets:retry", {
+                              defaultValue: "Retry",
+                            })}
+                          </Button>
                         </div>
-                      )}
+                      ) : null}
+                      {dynamicLoading &&
+                      (!dynamicData || !dynamicData.length) ? (
+                        <div className="mb-3 flex items-center gap-2 px-1 text-[11px] text-muted-foreground">
+                          <Spinner className="size-3.5" />
+                          <span>{t("CreditBorrow:common.loading")}</span>
+                        </div>
+                      ) : null}
+                      <div className="w-full h-[500px] block md:hidden">
+                        <List
+                          key={listKey}
+                          height={500}
+                          width="100%"
+                          rowComponent={MemoIssuedAssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={assetRowProps}
+                        />
+                      </div>
+                      <div className="w-full h-[500px] hidden md:block">
+                        <List
+                          key={listKey}
+                          height={500}
+                          width="100%"
+                          rowComponent={MemoIssuedAssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={assetRowProps}
+                        />
+                      </div>
                     </>
                   )}
                 </div>
@@ -1195,39 +1253,58 @@ export default function IssuedAssets(properties) {
                     )
                   ) : (
                     <>
-                      {dynamicData && dynamicData.length ? (
-                        <>
-                          <div className="w-full h-[500px] block md:hidden">
-                            <List
-                              key={listKey}
-                              height={500}
-                              width="100%"
-                              rowComponent={MemoIssuedAssetRow}
-                              rowCount={relevantAssets.length}
-                              rowHeight={90}
-                              rowProps={assetRowProps}
-                            />
-                          </div>
-                          <div className="w-full h-[500px] hidden md:block">
-                            <List
-                              key={listKey}
-                              height={500}
-                              width="100%"
-                              rowComponent={MemoIssuedAssetRow}
-                              rowCount={relevantAssets.length}
-                              rowHeight={90}
-                              rowProps={assetRowProps}
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex flex-col items-center gap-3 py-12">
-                          <Spinner className="size-6 dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))]" />
-                          <p className="text-foreground/70 text-sm">
-                            {t("CreditBorrow:common.loading")}
-                          </p>
+                      {dynamicError ||
+                      (dynamicDataIDs.length > 0 &&
+                        !dynamicLoading &&
+                        (!dynamicData ||
+                          dynamicData.length < dynamicDataIDs.length)) ? (
+                        <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-card/40 px-3 py-2 text-xs text-muted-foreground">
+                          <span>
+                            {t("IssuedAssets:dynamicDataWarning", {
+                              defaultValue:
+                                "Asset details (supply, fee pool) are unavailable right now — the list below still works.",
+                            })}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setDynamicRetry((n) => n + 1)}
+                          >
+                            {t("IssuedAssets:retry", {
+                              defaultValue: "Retry",
+                            })}
+                          </Button>
                         </div>
-                      )}
+                      ) : null}
+                      {dynamicLoading &&
+                      (!dynamicData || !dynamicData.length) ? (
+                        <div className="mb-3 flex items-center gap-2 px-1 text-[11px] text-muted-foreground">
+                          <Spinner className="size-3.5" />
+                          <span>{t("CreditBorrow:common.loading")}</span>
+                        </div>
+                      ) : null}
+                      <div className="w-full h-[500px] block md:hidden">
+                        <List
+                          key={listKey}
+                          height={500}
+                          width="100%"
+                          rowComponent={MemoIssuedAssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={assetRowProps}
+                        />
+                      </div>
+                      <div className="w-full h-[500px] hidden md:block">
+                        <List
+                          key={listKey}
+                          height={500}
+                          width="100%"
+                          rowComponent={MemoIssuedAssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={assetRowProps}
+                        />
+                      </div>
                     </>
                   )}
                 </div>

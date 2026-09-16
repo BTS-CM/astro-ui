@@ -71,11 +71,27 @@ async function getObjects(
             true,
             4000,
             { enableDatabase: true },
-            (error: Error) => console.log({ error })
+            (error: Error) => {
+              if (error) {
+                console.log({ error });
+              }
+            }
           );
     } catch (error) {
       console.log({ error, node });
       return reject(error);
+    }
+
+    if (!object_ids || !object_ids.length) {
+      if (!existingAPI) {
+        try {
+          currentAPI.close();
+        } catch {
+          // ignore close errors for empty fetches
+        }
+      }
+      resolve([]);
+      return;
     }
 
     const chunksOfInputs = _sliceIntoChunks(
@@ -84,6 +100,7 @@ async function getObjects(
     );
 
     let retrievedObjects: Object[] = [];
+    let chunkErrors: unknown[] = [];
     for (let i = 0; i < chunksOfInputs.length; i++) {
       const currentChunk = chunksOfInputs[i];
       let got_objects;
@@ -93,6 +110,7 @@ async function getObjects(
           .exec("get_objects", [currentChunk, false]);
       } catch (error) {
         console.log({ error });
+        chunkErrors.push(error);
         continue;
       }
 
@@ -104,7 +122,19 @@ async function getObjects(
     }
 
     if (!existingAPI) {
-      currentAPI.close();
+      try {
+        currentAPI.close();
+      } catch {
+        // ignore close errors
+      }
+    }
+
+    // Every chunk failed: surface an error so callers can show a warning
+    // instead of treating it as a successful empty result.
+    // A `[null]` response (unknown/deleted object) still resolves to `[]`.
+    if (!retrievedObjects.length && chunkErrors.length === chunksOfInputs.length && chunksOfInputs.length > 0) {
+      reject(chunkErrors[chunkErrors.length - 1]);
+      return;
     }
 
     resolve(retrievedObjects);

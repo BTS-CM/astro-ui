@@ -39,7 +39,13 @@ const [createUsernameStore] = nanoquery({
 const [createObjectStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
-    const object_ids = JSON.parse(args[1] as string);
+    let object_ids: string[];
+    try {
+      object_ids = JSON.parse(args[1] as string);
+    } catch (error) {
+      console.log({ error });
+      throw error;
+    }
 
     const specificNode = args[2] ? (args[2] as string) : null;
 
@@ -48,12 +54,13 @@ const [createObjectStore] = nanoquery({
       response = await getObjects(chain, object_ids, specificNode);
     } catch (error) {
       console.log({ error });
-      return;
+      throw error;
     }
 
     if (!response) {
-      console.log(`Failed to fetch objects`);
-      return;
+      const fetchError = new Error("Failed to fetch objects");
+      console.log({ error: fetchError });
+      throw fetchError;
     }
 
     return response;
@@ -83,7 +90,11 @@ const [createEveryObjectStore] = nanoquery({
         true,
         4000,
         { enableDatabase: true },
-        (error: Error) => console.log({ error })
+        (error: Error) => {
+          if (error) {
+            console.log({ error });
+          }
+        }
       );
     } catch (error) {
       console.log({ error });
