@@ -69,10 +69,11 @@ import {
 } from "@/components/ui/select";
 
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Popover,
   PopoverContent,
@@ -98,7 +99,6 @@ import {
   trimPrice,
   blockchainFloat,
   debounce,
-  isInvertedMarket,
   assetAmountRegex,
 } from "@/lib/common";
 
@@ -109,6 +109,11 @@ import { Avatar } from "./Avatar.tsx";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
+
+function displayPrice(value) {
+  if (value == null || isNaN(Number(value))) return value;
+  return parseFloat(Number(value).toFixed(8));
+}
 
 export default function MarketOrder(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -146,8 +151,6 @@ export default function MarketOrder(properties) {
   const [amount, setAmount] = useState(0.0);
   const [price, setPrice] = useState(0.0);
   const [total, setTotal] = useState(0);
-
-  const [marketInverted, setMarketInverted] = useState(false);
 
   const [expiryType, setExpiryType] = useState("1hr");
   const [expiry, setExpiry] = useState(() => {
@@ -286,16 +289,10 @@ export default function MarketOrder(properties) {
           _data.sell_price.base.amount,
           foundBaseAsset.precision
         );
-        const isInverted = isInvertedMarket(
-          foundBaseAsset.id,
-          foundQuoteAsset.id
-        );
-        setMarketInverted(isInverted);
-
         setExistingQuoteAmount(_quoteAmount);
         setExistingBaseAmount(_baseAmount);
         setExistingPrice(
-          !isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount
+          _quoteAmount > 0 ? _baseAmount / _quoteAmount : 0
         );
         setExistingExpiry(_data.expiration);
 
@@ -303,7 +300,7 @@ export default function MarketOrder(properties) {
         setTotal(_quoteAmount);
 
         setPrice(
-          !isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount
+          _quoteAmount > 0 ? _baseAmount / _quoteAmount : 0
         );
 
         const onFillContents =
@@ -315,9 +312,7 @@ export default function MarketOrder(properties) {
             usr && usr.id === _data.seller
               ? `${usr.username} (${usr.id})`
               : _data.seller,
-          price: !isInverted
-            ? _baseAmount * _quoteAmount
-            : _baseAmount / _quoteAmount,
+          price: _quoteAmount > 0 ? _baseAmount / _quoteAmount : 0,
           amount: _baseAmount,
           total: _quoteAmount,
           expiryType: "1hr",
@@ -530,7 +525,7 @@ export default function MarketOrder(properties) {
                           {t("MarketOrder:viewExistingLimitOrderDataButton")}
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[600px] !bg-background !border !text-card-foreground">
+                      <DialogContent className="sm:max-w-[600px] bg-card border border-border text-foreground/85">
                         <DialogHeader>
                           <DialogTitle>
                             {t("MarketOrder:existingLimitOrderDataTitle")}
@@ -541,7 +536,7 @@ export default function MarketOrder(properties) {
                         </DialogHeader>
                         <div className="grid grid-cols-1">
                           <div className="col-span-1">
-                            <ScrollArea className="h-72 rounded-md border border-border text-sm !bg-card/50">
+                            <ScrollArea className="h-72 rounded-md border border-border text-sm bg-card/60">
                               <pre className="text-foreground/70 text-xs p-3">
                                 {JSON.stringify(currentLimitOrder, null, 2)}
                               </pre>
@@ -611,7 +606,7 @@ export default function MarketOrder(properties) {
                               placeholder={t(
                                 "MarketOrder:bitsharesAccountPlaceholder"
                               )}
-                              className="mb-1 mt-1 !bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                              className="mb-1 mt-1 bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                               value={
                                 usr && usr.id === currentLimitOrder.seller
                                   ? `${usr.username} (${usr.id})`
@@ -638,11 +633,11 @@ export default function MarketOrder(properties) {
                     <FieldContent>
                       <span className="grid grid-cols-12 mt-4 text-xs">
                         <span className="col-span-1">
-                          <HoverCard key="amountLockCard">
-                            <HoverCardTrigger>
+                          <TooltipProvider delayDuration={300}><Tooltip>
+                            <TooltipTrigger asChild>
                                 <Toggle
                                   variant="outline"
-                                  className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                  className="border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] hover:border-[hsl(var(--accent-1)/0.5)]"
                                   onClick={() => {
                                     if (priceLock === "editable") {
                                       setPriceLock("locked");
@@ -663,18 +658,16 @@ export default function MarketOrder(properties) {
                                   <LockClosedIcon className="h-4 w-4" />
                                 )}
                               </Toggle>
-                            </HoverCardTrigger>
-                            <HoverCardContent
-                              className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground"
-                              derp={t(
-                                "MarketOrder:priceLockHoverCardDescription"
-                              )}
+                            </TooltipTrigger>
+                            <TooltipContent side="top"
+                              className="w-40 text-sm text-center pt-1 pb-1 bg-card border border-border text-foreground/85"
                             >
                               {priceLock === "editable"
                                 ? t("MarketOrder:editingThePrice")
                                 : t("MarketOrder:priceIsLocked")}
-                            </HoverCardContent>
-                          </HoverCard>
+                            </TooltipContent>
+                            </Tooltip>
+                            </TooltipProvider>
                         </span>
                         <span className="col-span-10">
                           <FieldLabel className="text-foreground/80">
@@ -685,12 +678,12 @@ export default function MarketOrder(properties) {
                           <FieldDescription className="text-muted-foreground">
                             {priceLock === "editable"
                               ? t("MarketOrder:existingPriceDescription", {
-                                  existingPrice: existingPrice,
-                                  quoteAssetSymbol: quoteAsset
-                                    ? quoteAsset.symbol
-                                    : "?",
-                                  baseAssetSymbol: baseAsset
+                                  existingPrice: displayPrice(existingPrice),
+                                  quoteAssetSymbol: baseAsset
                                     ? baseAsset.symbol
+                                    : "?",
+                                  baseAssetSymbol: quoteAsset
+                                    ? quoteAsset.symbol
                                     : "?",
                                 })
                               : t("MarketOrder:clickToUnlockDescription")}
@@ -707,7 +700,7 @@ export default function MarketOrder(properties) {
                         <span className="col-span-7">
                           <Input
                             label={t("MarketOrder:priceLabel")}
-                            placeholder={`${price} ${quoteAsset.symbol}/${baseAsset.symbol}`}
+                            placeholder={`${displayPrice(price)} ${baseAsset.symbol}/${quoteAsset.symbol}`}
                             disabled
                             readOnly
                           />
@@ -716,14 +709,14 @@ export default function MarketOrder(properties) {
                           <Popover>
                             <PopoverTrigger asChild>
                                 <Button
-                                  className="w-full !border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                  className="w-full border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] hover:border-[hsl(var(--accent-1)/0.5)]"
                                   onClick={() => event.preventDefault()}
                                   variant="outline"
                                 >
                                   {t("MarketOrder:setNewPriceButton")}
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="!bg-background !border">
+                            <PopoverContent className="bg-card border border-border">
                               <Label>
                                 {t("MarketOrder:provideNewPriceLabel")}
                               </Label>
@@ -732,8 +725,8 @@ export default function MarketOrder(properties) {
                                 name="price"
                                 render={({ field }) => (
                                   <Input
-                                    placeholder={price}
-                                    className="mb-2 mt-1 !bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                    placeholder={displayPrice(price)}
+                                    className="mb-2 mt-1 bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                                     onChange={(event) => {
                                       const input = event.target.value;
                                       const regex = /^[0-9,]*\.?[0-9]*$/;
@@ -748,20 +741,33 @@ export default function MarketOrder(properties) {
                                         if (!isNaN(parsedInput)) {
                                           setPrice(parsedInput);
                                           field.onChange(parsedInput);
-                                          if (
-                                            amount &&
-                                            totalLock === "editable"
-                                          ) {
-                                            const newTotal = parseFloat(
-                                              (
-                                                amount *
-                                                (marketInverted
-                                                  ? 1 / parsedInput
-                                                  : parsedInput)
-                                              ).toFixed(quoteAsset.precision)
-                                            );
-                                            setTotal(newTotal);
-                                            form.setValue("total", newTotal);
+                                          if (parsedInput > 0) {
+                                            if (
+                                              amount > 0 &&
+                                              totalLock === "editable"
+                                            ) {
+                                              const newTotal = parseFloat(
+                                                (
+                                                  amount / parsedInput
+                                                ).toFixed(quoteAsset.precision)
+                                              );
+                                              setTotal(newTotal);
+                                              form.setValue("total", newTotal);
+                                            } else if (
+                                              total > 0 &&
+                                              amountLock === "editable"
+                                            ) {
+                                              const newAmount = parseFloat(
+                                                (
+                                                  total * parsedInput
+                                                ).toFixed(baseAsset.precision)
+                                              );
+                                              setAmount(newAmount);
+                                              form.setValue(
+                                                "amount",
+                                                newAmount
+                                              );
+                                            }
                                           }
                                           setInputChars((c) => c + 1);
                                         }
@@ -781,11 +787,11 @@ export default function MarketOrder(properties) {
                     <FieldContent>
                       <span className="grid grid-cols-12 mt-4 text-xs">
                         <span className="col-span-1">
-                          <HoverCard key="amountLockCard">
-                            <HoverCardTrigger>
+                          <TooltipProvider delayDuration={300}><Tooltip>
+                            <TooltipTrigger asChild>
                                 <Toggle
                                   variant="outline"
-                                  className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                  className="border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] hover:border-[hsl(var(--accent-1)/0.5)]"
                                   onClick={() => {
                                     if (amountLock === "editable") {
                                       setAmountLock("locked");
@@ -804,13 +810,14 @@ export default function MarketOrder(properties) {
                                   <LockClosedIcon className="h-4 w-4" />
                                 )}
                               </Toggle>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground">
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="w-40 text-sm text-center pt-1 pb-1 bg-card border border-border text-foreground/85">
                               {amountLock === "editable"
                                 ? t("MarketOrder:editingAmountBeingSold")
                                 : t("MarketOrder:amountLocked")}
-                            </HoverCardContent>
-                          </HoverCard>
+                            </TooltipContent>
+                            </Tooltip>
+                            </TooltipProvider>
                         </span>
                         <span className="col-span-11">
                           <FieldLabel className="text-foreground/80">
@@ -857,14 +864,14 @@ export default function MarketOrder(properties) {
                             <Popover>
                               <PopoverTrigger asChild>
                                   <Button
-                                    className="w-full !border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    className="w-full border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] hover:border-[hsl(var(--accent-1)/0.5)]"
                                     onClick={() => event.preventDefault()}
                                     variant="outline"
                                   >
                                     {t("MarketOrder:setNewSellAmountButton")}
                                   </Button>
                               </PopoverTrigger>
-                              <PopoverContent className="!bg-background !border">
+                              <PopoverContent className="bg-card border border-border">
                                 <Label>
                                   {t("MarketOrder:provideNewAmountLabel")}
                                 </Label>
@@ -874,7 +881,7 @@ export default function MarketOrder(properties) {
                                   render={({ field }) => (
                                     <Input
                                     placeholder={amount}
-                                    className="mb-2 !bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                    className="mb-2 bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                                       onChange={(event) => {
                                         const input = event.target.value;
                                         const regex = /^[0-9,]*\.?[0-9]*$/;
@@ -894,17 +901,27 @@ export default function MarketOrder(properties) {
                                             );
                                             setAmount(fixed);
                                             field.onChange(fixed);
-                                            if (price) {
-                                              const newTotal = parseFloat(
+                                            if (totalLock === "editable") {
+                                              if (price > 0) {
+                                                const newTotal = parseFloat(
+                                                  (
+                                                    parsedInput / price
+                                                  ).toFixed(quoteAsset.precision)
+                                                );
+                                                setTotal(newTotal);
+                                                form.setValue("total", newTotal);
+                                              }
+                                            } else if (
+                                              priceLock === "editable" &&
+                                              total > 0
+                                            ) {
+                                              const newPrice = parseFloat(
                                                 (
-                                                  parsedInput *
-                                                  (marketInverted
-                                                    ? 1 / price
-                                                    : price)
-                                                ).toFixed(quoteAsset.precision)
+                                                  parsedInput / total
+                                                ).toFixed(8)
                                               );
-                                              setTotal(newTotal);
-                                              form.setValue("total", newTotal);
+                                              setPrice(newPrice);
+                                              form.setValue("price", newPrice);
                                             }
                                             setInputChars((c) => c + 1);
                                           }
@@ -925,11 +942,11 @@ export default function MarketOrder(properties) {
                     <FieldContent>
                       <span className="grid grid-cols-12 mt-4 text-xs">
                         <span className="col-span-1">
-                          <HoverCard key="sellTotalCard">
-                            <HoverCardTrigger>
+                          <TooltipProvider delayDuration={300}><Tooltip>
+                            <TooltipTrigger asChild>
                                 <Toggle
                                   variant="outline"
-                                  className="!border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                  className="border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] hover:border-[hsl(var(--accent-1)/0.5)]"
                                   onClick={() => {
                                     if (totalLock === "editable") {
                                       setTotalLock("locked");
@@ -950,13 +967,14 @@ export default function MarketOrder(properties) {
                                   <LockClosedIcon className="h-4 w-4" />
                                 )}
                               </Toggle>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground">
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="w-40 text-sm text-center pt-1 pb-1 bg-card border border-border text-foreground/85">
                               {totalLock === "editable"
                                 ? t("MarketOrder:editingTotalAmountBeingSold")
                                 : t("MarketOrder:totalAmountLocked")}
-                            </HoverCardContent>
-                          </HoverCard>
+                            </TooltipContent>
+                            </Tooltip>
+                            </TooltipProvider>
                         </span>
                         <span className="col-span-11">
                           <FieldLabel className="text-foreground/80">
@@ -1010,14 +1028,14 @@ export default function MarketOrder(properties) {
                             <Popover>
                               <PopoverTrigger asChild>
                                   <Button
-                                    className="w-full !border !border-[hsl(var(--accent-1)/0.3)] !text-[hsl(var(--accent-1-fg))] hover:!bg-[hsl(var(--accent-1)/0.12)] hover:!border-[hsl(var(--accent-1)/0.5)]"
+                                    className="w-full border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] hover:border-[hsl(var(--accent-1)/0.5)]"
                                     onClick={() => event.preventDefault()}
                                     variant="outline"
                                   >
                                     {t("MarketOrder:setNewTotalAmountButton")}
                                   </Button>
                               </PopoverTrigger>
-                              <PopoverContent className="!bg-background !border">
+                              <PopoverContent className="bg-card border border-border">
                                 <Label>
                                   {t("MarketOrder:provideNewTotalLabel")}
                                 </Label>
@@ -1027,7 +1045,7 @@ export default function MarketOrder(properties) {
                                   render={({ field }) => (
                                     <Input
                                       placeholder={total}
-                                      className="mb-2 mt-1 !bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                      className="mb-2 mt-1 bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                                       onChange={(event) => {
                                         const input = event.target.value;
                                         const regex = /^[0-9,]*\.?[0-9]*$/;
@@ -1047,17 +1065,31 @@ export default function MarketOrder(properties) {
                                             );
                                             setTotal(fixed);
                                             field.onChange(fixed);
-                                            if (price) {
-                                              const newAmount = parseFloat(
-                                                (parsedFloat / price).toFixed(
-                                                  baseAsset.precision
-                                                )
+                                            if (amountLock === "editable") {
+                                              if (price > 0) {
+                                                const newAmount = parseFloat(
+                                                  (parsedFloat * price).toFixed(
+                                                    baseAsset.precision
+                                                  )
+                                                );
+                                                setAmount(newAmount);
+                                                form.setValue(
+                                                  "amount",
+                                                  newAmount
+                                                );
+                                              }
+                                            } else if (
+                                              priceLock === "editable" &&
+                                              parsedFloat > 0 &&
+                                              amount > 0
+                                            ) {
+                                              const newPrice = parseFloat(
+                                                (
+                                                  amount / parsedFloat
+                                                ).toFixed(8)
                                               );
-                                              setAmount(newAmount);
-                                              form.setValue(
-                                                "amount",
-                                                newAmount
-                                              );
+                                              setPrice(newPrice);
+                                              form.setValue("price", newPrice);
                                             }
                                             setInputChars((c) => c + 1);
                                           }
@@ -1078,11 +1110,11 @@ export default function MarketOrder(properties) {
                     <FieldContent>
                       <span className="grid grid-cols-12 mt-4 text-sm">
                         <span className="col-span-1">
-                          <HoverCard key="sellTotalCard">
-                            <HoverCardTrigger>
+                          <TooltipProvider delayDuration={300}><Tooltip>
+                            <TooltipTrigger asChild>
                                 <Toggle
                                   variant="outline"
-                                  className="!border !border-[hsl(var(--accent-2)/0.3)] !text-[hsl(var(--accent-2-fg))] hover:!bg-[hsl(var(--accent-2)/0.12)] hover:!border-[hsl(var(--accent-2)/0.5)]"
+                                  className="border border-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-2-fg))] hover:bg-[hsl(var(--accent-2)/0.12)] hover:border-[hsl(var(--accent-2)/0.5)]"
                                   onClick={() => {
                                     if (expirationLock === "editable") {
                                       setExpirationLock("locked");
@@ -1098,13 +1130,14 @@ export default function MarketOrder(properties) {
                                   <LockClosedIcon className="h-4 w-4" />
                                 )}
                               </Toggle>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1 !bg-background !border !text-card-foreground">
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="w-40 text-sm text-center pt-1 pb-1 bg-card border border-border text-foreground/85">
                               {expirationLock === "editable"
                                 ? t("MarketOrder:editingExpiration")
                                 : t("MarketOrder:expirationLocked")}
-                            </HoverCardContent>
-                          </HoverCard>
+                            </TooltipContent>
+                            </Tooltip>
+                            </TooltipProvider>
                         </span>
                         <span className="col-span-11">
                           <FieldLabel className="text-foreground/80">
@@ -1183,7 +1216,7 @@ export default function MarketOrder(properties) {
                                 <SelectTrigger className="mb-3">
                                   <SelectValue placeholder="1hr" />
                                 </SelectTrigger>
-                                <SelectContent className="!bg-background !border !text-card-foreground">
+                                <SelectContent className="bg-card/80 backdrop-blur-xl border border-[hsl(var(--accent-1)/0.2)]">
                                   <SelectItem value="1hr">
                                     {t("MarketOrder:oneHour")}
                                   </SelectItem>
@@ -1212,7 +1245,7 @@ export default function MarketOrder(properties) {
                                     <Button
                                       variant={"outline"}
                                       className={cn(
-                                        "w-full justify-start text-left font-normal !border !text-foreground/80 hover:!bg-accent/50",
+                                        "w-full justify-start text-left font-normal border text-foreground/80 hover:bg-accent/50",
                                         !date && "text-muted-foreground"
                                       )}
                                     >
@@ -1319,7 +1352,7 @@ export default function MarketOrder(properties) {
                                 placeholder={spreadPercent}
                                 disabled
                                 readOnly
-                                className="!bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                className="bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                               />
                               <Slider
                                 className="mt-3"
@@ -1348,7 +1381,7 @@ export default function MarketOrder(properties) {
                                     </Label>
                                   </span>
                                 </PopoverTrigger>
-                                <PopoverContent className="!bg-background !border">
+                                <PopoverContent className="bg-card border border-border">
                                   <Label className="text-foreground/80">
                                     {t(
                                       "MarketOrder:provideNewSpreadPercentLabel"
@@ -1356,7 +1389,7 @@ export default function MarketOrder(properties) {
                                   </Label>
                                   <Input
                                     placeholder={spreadPercent}
-                                    className="mb-2 mt-1 !bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                    className="mb-2 mt-1 bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                                     onChange={(event) => {
                                       const input = event.target.value;
                                       const regex = /^[0-9]*\.?[0-9]*$/;
@@ -1397,7 +1430,7 @@ export default function MarketOrder(properties) {
                                 placeholder={sizePercent}
                                 disabled
                                 readOnly
-                                className="!bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                className="bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                               />
                               <Slider
                                 className="mt-3"
@@ -1426,7 +1459,7 @@ export default function MarketOrder(properties) {
                                     </Label>
                                   </span>
                                 </PopoverTrigger>
-                                <PopoverContent className="!bg-background !border">
+                                <PopoverContent className="bg-card border border-border">
                                   <Label className="text-foreground/80">
                                     {t(
                                       "MarketOrder:provideNewSizePercentLabel"
@@ -1434,7 +1467,7 @@ export default function MarketOrder(properties) {
                                   </Label>
                                   <Input
                                     placeholder={sizePercent}
-                                    className="mb-2 mt-1 !bg-accent/40 !border !text-card-foreground placeholder:text-muted-foreground"
+                                    className="mb-2 mt-1 bg-card/60 border-[hsl(var(--accent-1)/0.2)] text-foreground placeholder:text-muted-foreground"
                                     onChange={(event) => {
                                       const input = event.target.value;
                                       const regex = /^[0-9]*\.?[0-9]*$/;
@@ -1497,19 +1530,19 @@ export default function MarketOrder(properties) {
                   <Separator className="mt-1" />
 
                   <Field>
-                    <FieldLabel className="text-foreground/80">{t("MarketOrder:networkFeeLabel")}</FieldLabel>
                     <FieldContent>
-                      <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.06)] p-3">
-                        <div className="text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))] mb-1 inline-flex items-center gap-1">
-                          <Zap className="h-3 w-3" strokeWidth={2.5} />
-                          {t("MarketOrder:networkFeeLabel")}
-                        </div>
-                        <div className="flex items-center gap-1 font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
-                          <Zap className="h-3.5 w-3.5" strokeWidth={2.5} />
-                          {fee ? fee.toFixed(5) : "0.00000"} {usr.chain === "bitshares" ? "BTS" : "TEST"}
+                      <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.06)] px-3 py-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))] inline-flex items-center gap-1">
+                            <Zap className="h-3 w-3" strokeWidth={2.5} />
+                            {t("MarketOrder:networkFeeLabel")}
+                          </div>
+                          <div className="font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                            {fee ? fee.toFixed(5) : "0.00000"} {usr.chain === "bitshares" ? "BTS" : "TEST"}
+                          </div>
                         </div>
                         {usr.id === usr.referrer ? (
-                          <div className="text-xs dark:text-[hsl(var(--accent-1-fg)/0.6)] text-[hsl(var(--accent-1-fg)/0.8)] mt-1">
+                          <div className="text-[11px] dark:text-[hsl(var(--accent-1-fg)/0.6)] text-[hsl(var(--accent-1-fg)/0.8)] mt-0.5 text-right">
                             {t("MarketOrder:rebateMessage", { rebate: trimPrice(fee * 0.8, 5) })}
                           </div>
                         ) : null}
@@ -1547,7 +1580,7 @@ export default function MarketOrder(properties) {
           </Card>
 
           <div className="grid grid-cols-2 mt-3 gap-5">
-            <Card className="!bg-background/60 !backdrop-blur-xl !border">
+            <Card className="bg-card/60 backdrop-blur-xl border border-border">
               <CardHeader className="pb-0">
                 <CardTitle>
                   {quoteAsset ? quoteAsset.symbol : "?"} (
@@ -1562,7 +1595,7 @@ export default function MarketOrder(properties) {
                 {quoteBalance} {quoteAsset ? quoteAsset.symbol : "?"}
               </CardContent>
             </Card>
-            <Card className="!bg-background/60 !backdrop-blur-xl !border">
+            <Card className="bg-card/60 backdrop-blur-xl border border-border">
               <CardHeader className="pb-0">
                 <CardTitle>
                   {baseAsset ? baseAsset.symbol : "?"} (
@@ -1586,7 +1619,7 @@ export default function MarketOrder(properties) {
                   quoteAsset ? quoteAsset.symbol : "?"
                 }_${baseAsset ? baseAsset.symbol : "?"}`}
               >
-                <Card className="!bg-background/60 !backdrop-blur-xl !border-[hsl(var(--accent-2)/0.2)] hover:!border-[hsl(var(--accent-2)/0.4)] transition-colors">
+                <Card className="bg-card/60 backdrop-blur-xl border-[hsl(var(--accent-2)/0.2)] hover:border-[hsl(var(--accent-2)/0.4)] transition-colors">
                   <CardHeader>
                     <CardTitle className="dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))]">{t("MarketOrder:tradeOnDexTitle")}</CardTitle>
                     <CardDescription className="text-muted-foreground">
@@ -1604,7 +1637,7 @@ export default function MarketOrder(properties) {
             </div>
             <div className="col-span-1">
               <Card
-                className="mb-3 !bg-background/60 !backdrop-blur-xl !border-[hsl(var(--accent-danger)/0.2)] hover:!border-[hsl(var(--accent-danger)/0.4)] cursor-pointer transition-colors"
+                className="mb-3 bg-card/60 backdrop-blur-xl border-[hsl(var(--accent-danger)/0.2)] hover:border-[hsl(var(--accent-danger)/0.4)] cursor-pointer transition-colors"
                 onClick={() => {
                   setCancelDialog(true);
                 }}
