@@ -683,13 +683,20 @@ export default function PoolStake(properties) {
   );
 
   const applyStakePair = useCallback(
-    (aHum, bHum, notice) => {
+    (aHum, bHum, notice, skipField) => {
       const a = Number(aHum) || 0;
       const b = Number(bHum) || 0;
       setAStake(a);
       setBStake(b);
-      form.setValue("stakeA", a);
-      form.setValue("stakeB", b);
+      // Don't overwrite the field the user is actively typing in: normalizing
+      // in-progress text like "100." to the number 100 would strip the decimal
+      // point and make fractional amounts untypeable.
+      if (skipField !== "stakeA") {
+        form.setValue("stakeA", a);
+      }
+      if (skipField !== "stakeB") {
+        form.setValue("stakeB", b);
+      }
       setTotalReceiving(calcShareReceive(a, b));
       setStakeNotice(notice || "");
     },
@@ -725,10 +732,14 @@ export default function PoolStake(properties) {
           clamped = true;
         }
       }
+      // When clamping to the max affordable pair, display the clamped values.
+      // Otherwise keep the user's raw text so decimals can be typed.
+      const editedField = side === "A" ? "stakeA" : "stakeB";
       applyStakePair(
         a,
         b,
         clamped ? t("PoolStake:adjustedToMax") : "",
+        clamped ? null : editedField,
       );
     },
     [
@@ -753,10 +764,14 @@ export default function PoolStake(properties) {
   );
 
   const applyUnstakeAmount = useCallback(
-    (shareHum, notice) => {
+    (shareHum, notice, keepRaw) => {
       const amount = Number(shareHum) || 0;
       setWithdrawAmount(amount);
-      form.setValue("withdrawalAmount", amount ? String(amount) : "");
+      // Same as staking: while typing, keep the raw text so a trailing
+      // decimal point isn't stripped by normalizing to a number.
+      if (!keepRaw) {
+        form.setValue("withdrawalAmount", amount ? String(amount) : "");
+      }
       const pair = calcWithdrawPair(amount);
       setWithdrawingA(pair.a);
       setWithdrawingB(pair.b);
@@ -778,7 +793,7 @@ export default function PoolStake(properties) {
         );
         return;
       }
-      applyUnstakeAmount(floored, "");
+      applyUnstakeAmount(floored, "", true);
     },
     [foundPool, floorToPrecision, userShareBalance, applyUnstakeAmount, t],
   );
@@ -1432,14 +1447,12 @@ export default function PoolStake(properties) {
                                     <div className="col-span-4 ml-3 flex flex-wrap items-center gap-2">
                                       <Popover>
                                         <PopoverTrigger asChild>
-                                          <span
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                            }}
+                                          <button
+                                            type="button"
                                             className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors cursor-pointer"
                                           >
                                             {t("PoolStake:changeAmount")}
-                                          </span>
+                                          </button>
                                         </PopoverTrigger>
                                         <PopoverContent className="bg-card border-border">
                                           <Label className="text-foreground/80">
@@ -1456,13 +1469,14 @@ export default function PoolStake(properties) {
                                                 onChange={(event) => {
                                                   const input =
                                                     event.target.value;
+                                                  if (!input) {
+                                                    field.onChange("");
+                                                    applyStakePair(0, 0, "", "stakeA");
+                                                    return;
+                                                  }
                                                   const regex =
                                                     assetAmountRegex(assetA);
-                                                  if (
-                                                    input &&
-                                                    input.length &&
-                                                    regex.test(input)
-                                                  ) {
+                                                  if (regex.test(input)) {
                                                     field.onChange(input);
                                                     handleStakeInput("A", input);
                                                   }
@@ -1529,14 +1543,12 @@ export default function PoolStake(properties) {
                                     <div className="col-span-4 ml-3 flex flex-wrap items-center gap-2">
                                       <Popover>
                                         <PopoverTrigger asChild>
-                                          <span
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                            }}
+                                          <button
+                                            type="button"
                                             className="inline-flex items-center rounded-md border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))] hover:bg-[hsl(var(--accent-2)/0.2)] hover:border-[hsl(var(--accent-2)/0.5)] transition-colors cursor-pointer"
                                           >
                                             {t("PoolStake:changeAmount")}
-                                          </span>
+                                          </button>
                                         </PopoverTrigger>
                                         <PopoverContent className="bg-card border-border">
                                           <Label className="text-foreground/80">
@@ -1553,13 +1565,14 @@ export default function PoolStake(properties) {
                                                 onChange={(event) => {
                                                   const input =
                                                     event.target.value;
+                                                  if (!input) {
+                                                    field.onChange("");
+                                                    applyStakePair(0, 0, "", "stakeB");
+                                                    return;
+                                                  }
                                                   const regex =
                                                     assetAmountRegex(assetB);
-                                                  if (
-                                                    input &&
-                                                    input.length &&
-                                                    regex.test(input)
-                                                  ) {
+                                                  if (regex.test(input)) {
                                                     field.onChange(input);
                                                     handleStakeInput("B", input);
                                                   }
@@ -1675,14 +1688,12 @@ export default function PoolStake(properties) {
                                     <div className="col-span-4 ml-3 flex flex-wrap items-center gap-2">
                                       <Popover>
                                         <PopoverTrigger asChild>
-                                          <span
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                            }}
+                                          <button
+                                            type="button"
                                             className="inline-flex items-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors cursor-pointer"
                                           >
                                             {t("PoolStake:changeAmount")}
-                                          </span>
+                                          </button>
                                         </PopoverTrigger>
                                         <PopoverContent className="bg-card border-border">
                                           <Label className="text-foreground/80">
@@ -1699,6 +1710,11 @@ export default function PoolStake(properties) {
                                                 onChange={(event) => {
                                                   const input =
                                                     event.target.value;
+                                                  if (!input) {
+                                                    field.onChange("");
+                                                    applyUnstakeAmount(0, "", true);
+                                                    return;
+                                                  }
                                                   const regex =
                                                     assetAmountRegex({
                                                       precision:
@@ -1706,11 +1722,7 @@ export default function PoolStake(properties) {
                                                           .share_asset_details
                                                           .precision,
                                                     });
-                                                  if (
-                                                    input &&
-                                                    input.length &&
-                                                    regex.test(input)
-                                                  ) {
+                                                  if (regex.test(input)) {
                                                     field.onChange(input);
                                                     handleUnstakeInput(input);
                                                   }

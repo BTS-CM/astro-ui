@@ -193,6 +193,7 @@ function PayingWithdrawPermissionRow({ index, style, payerWithdrawalPermissions,
                 assets={onEdit.assets}
                 marketSearch={onEdit.marketSearch}
                 balances={onEdit.balances}
+                globalParams={onEdit.globalParams}
                 showDialog={onEdit.showEditDialog}
                 setShowDialog={onEdit.setShowEditDialog}
                 mode="edit"
@@ -599,7 +600,7 @@ export default function WithdrawPermissions(properties) {
     receivingWithdrawalPermissions,
   ]);
 
-  const editDialogData = useMemo(() => ({ usr, assets, marketSearch, balances, showEditDialog, setShowEditDialog }), [usr, assets, marketSearch, balances, showEditDialog]);
+  const editDialogData = useMemo(() => ({ usr, assets, marketSearch, balances, globalParams, showEditDialog, setShowEditDialog }), [usr, assets, marketSearch, balances, globalParams, showEditDialog]);
   const payingRowProps = useMemo(() => ({ payerWithdrawalPermissions, assets, accounts, t, onEdit: editDialogData }), [payerWithdrawalPermissions, assets, accounts, t, editDialogData]);
   const receivingRowProps = useMemo(() => ({ receivingWithdrawalPermissions, assets, t, usr }), [receivingWithdrawalPermissions, assets, t, usr]);
 
@@ -691,6 +692,7 @@ export default function WithdrawPermissions(properties) {
                           assets={assets}
                           marketSearch={marketSearch}
                           balances={balances}
+                          globalParams={globalParams}
                           showDialog={showCreateDialog}
                           setShowDialog={setShowCreateDialog}
                           mode="create"

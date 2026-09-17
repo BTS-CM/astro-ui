@@ -51,7 +51,7 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
   const isBlocked = blockSet ? blockSet.has(res.owner_account) : (chainUserBlockList || []).some((u) => u.id === res.owner_account);
   return (
     <div style={{ ...style, padding: "0 8px 6px 8px" }} key={`acard-${res.id}`}>
-      <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
+      <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all py-0 gap-0">
         <div className="p-2">
           <div className="flex items-center justify-between gap-2 mb-1">
             <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -870,7 +870,7 @@ export default function CreditBorrow(properties) {
 
   return (
     <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4">
-      <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+      <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)] py-0 gap-0">
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
@@ -980,7 +980,7 @@ export default function CreditBorrow(properties) {
                       <List
                         rowComponent={CreditBorrowOfferRow}
                         rowCount={displayedOffers.length}
-                        rowHeight={isDesktop ? 170 : 215}
+                        rowHeight={isDesktop ? 155 : 210}
                         rowProps={offerRowProps}
                         height={600}
                         width="100%"
@@ -1014,7 +1014,7 @@ export default function CreditBorrow(properties) {
                       <List
                         rowComponent={CreditBorrowBalanceRow}
                         rowCount={displayedCompatibleOffers.length}
-                        rowHeight={isDesktop ? 170 : 215}
+                        rowHeight={isDesktop ? 155 : 210}
                         rowProps={balanceRowProps}
                         height={600}
                         width="100%"
@@ -1096,7 +1096,7 @@ export default function CreditBorrow(properties) {
                           <List
                             rowComponent={CreditBorrowSearchRow}
                             rowCount={displayedSearchResult.length}
-                            rowHeight={isDesktop ? 170 : 215}
+                            rowHeight={isDesktop ? 155 : 210}
                             rowProps={searchRowProps}
                             height={600}
                             width="100%"

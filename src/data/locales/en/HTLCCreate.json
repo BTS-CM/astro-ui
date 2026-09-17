@@ -26,6 +26,7 @@
     "claimPeriodDesc": "How long the recipient has to claim the funds after creation (minimum 60 seconds).",
     "feeLabel": "Network Fee",
     "feeDesc": "Estimated fee to broadcast this HTLC creation.",
+    "feeRebate": "Rebate: {{rebate}} {{symbol}} (vesting)",
     "submitButton": "Create HTLC",
     "deeplinkHeader": "Create HTLC: {{amount}} {{symbol}} to {{recipient}}",
     "algorithm": "Hashing algorithm",

@@ -42,6 +42,12 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { humanReadableFloat, trimPrice, blockchainFloat, assetAmountRegex } from "@/lib/common";
 import { cn } from "@/lib/utils";
@@ -52,7 +58,27 @@ import AccountSearch from "./AccountSearch.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 
-import { Shield, ShieldCheck, Clock, CalendarDays, Coins, User, AlertTriangle } from "lucide-react";
+import { Shield, ShieldCheck, Clock, CalendarDays, Coins, User, AlertTriangle, Info, Zap } from "lucide-react";
+
+// Info icon with a hover tooltip, used in labels so helper text doesn't
+// take up vertical space in the dialog.
+function FieldInfoTip({ text }) {
+  if (!text) return null;
+  return (
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex items-center justify-center rounded-full text-muted-foreground/60 hover:text-foreground transition-colors cursor-help shrink-0">
+            <Info className="h-3.5 w-3.5" />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs bg-card border-border text-foreground text-xs">
+          {text}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 
 const hoursToSeconds = {
   "1hr": 3600,
@@ -86,6 +112,7 @@ export default function WithdrawPermissions(properties) {
     assets,
     marketSearch,
     balances,
+    globalParams,
     showDialog,
     setShowDialog,
     // state
@@ -154,6 +181,18 @@ export default function WithdrawPermissions(properties) {
     return entry ? humanReadableFloat(entry.amount, foundAsset.precision) : 0;
   }, [foundAsset, balances]);
 
+  // Network fee: withdraw_permission_create (25) / withdraw_permission_update (26)
+  const fee = useMemo(() => {
+    if (globalParams && globalParams.length) {
+      const opId = mode === "edit" ? 26 : 25;
+      const foundFee = globalParams.find(
+        (x) => x.id === opId || x.id === String(opId)
+      );
+      return foundFee ? humanReadableFloat(foundFee.data.fee, 5) : 0;
+    }
+    return 0;
+  }, [globalParams, mode]);
+
   // Enforce the chosen asset's precision if the asset is switched while an
   // amount with too many decimals is already entered.
   useEffect(() => {
@@ -191,7 +230,7 @@ export default function WithdrawPermissions(properties) {
       form.setValue("withdrawAmount", max);
     }, 800);
     return () => clearTimeout(timer);
-  }, [mode, foundAsset, availableBalance, form]);
+  }, [mode, foundAsset, availableBalance, transferAmount, form]);
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
 
@@ -661,6 +700,7 @@ export default function WithdrawPermissions(properties) {
                         }}
                         placeholder={periodsUntilExpiration}
                         min={1}
+                        className="mb-3 mt-1"
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -682,6 +722,7 @@ export default function WithdrawPermissions(properties) {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
+                      <div className="grid grid-cols-2 gap-3">
                       <Select
                         value={expiryType}
                         onValueChange={(selectedExpiry) => {
@@ -718,7 +759,7 @@ export default function WithdrawPermissions(properties) {
                           }
                         }}
                       >
-                        <SelectTrigger className="mb-3 mt-1 w-1/4">
+                        <SelectTrigger className="mb-3 mt-1 w-full">
                           <SelectValue placeholder={expiry} />
                         </SelectTrigger>
                         <SelectContent className="bg-card">
@@ -748,13 +789,13 @@ export default function WithdrawPermissions(properties) {
                       {expiryType === "specific" ? (
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
-                              )}
-                            >
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full mt-1 justify-start text-left font-normal",
+                                  !date && "text-muted-foreground"
+                                )}
+                              >
                               <CalendarIcon className="mr-2 h-4 w-4" />
                               {date ? (
                                 format(date, "PPP")
@@ -788,6 +829,7 @@ export default function WithdrawPermissions(properties) {
                           </DialogContent>
                         </Dialog>
                       ) : null}
+                      </div>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -795,6 +837,42 @@ export default function WithdrawPermissions(properties) {
                   )}
                 />
               </div>
+
+              {fee ? (
+                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] p-3 mt-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-[hsl(var(--accent-1-fg))]">
+                      <Zap className="h-3 w-3" strokeWidth={2.5} />
+                      {t("WithdrawDialog:feeLabel")}
+                      <FieldInfoTip text={t("WithdrawDialog:feeDesc")} />
+                    </span>
+                    {usr && usr.id && usr.id === usr.referrer ? (
+                      <TooltipProvider delayDuration={300}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="font-mono text-sm tabular-nums text-[hsl(var(--accent-1-fg))] cursor-help">
+                              {fee}{" "}
+                              {usr.chain === "bitshares" ? "BTS" : "TEST"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="bg-card border-border text-foreground text-xs">
+                            {t("WithdrawDialog:feeRebate", {
+                              rebate: trimPrice(fee * 0.8, 5),
+                              symbol:
+                                usr.chain === "bitshares" ? "BTS" : "TEST",
+                            })}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <span className="font-mono text-sm tabular-nums text-[hsl(var(--accent-1-fg))]">
+                        {fee}{" "}
+                        {usr.chain === "bitshares" ? "BTS" : "TEST"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ) : null}
 
               {targetUser &&
               transferAmount &&

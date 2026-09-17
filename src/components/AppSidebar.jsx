@@ -37,7 +37,6 @@ import {
   ArrowLeftRight,
   Lock,
   KeyRound,
-  EyeOff,
   Layers,
   Handshake,
   Hourglass,
@@ -183,7 +182,6 @@ const ITEM_ICONS = {
   forum: MessageSquare,
   docs: BookOpen,
   custom_authorities: KeyRound,
-  blind_transfers: EyeOff,
 };
 
 export default function AppSidebar() {
@@ -224,7 +222,6 @@ export default function AppSidebar() {
     },
     { slug: "htlc", title: "Home:htlc.title", href: "/htlc.html" },
     { slug: "create_vesting", title: "Home:create_vesting.title", href: "/create_vesting.html" },
-    { slug: "blind_transfers", title: "BlindTransfers:title", href: "/blind_transfers.html" },
     { slug: "airdrop_calculate", title: "Home:airdrop_calculate.title", href: "/airdrop_calculate.html" },
     { slug: "monthly_referrer", title: "Home:monthly_referrer.title", href: "/monthly_referrer.html" },
   ];

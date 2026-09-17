@@ -68,6 +68,7 @@ const PoolRow = memo(function PoolRow({ index, style, remainingPools, assets, se
   return (
     <div style={style} key={`poolNo${index}`}>
       <Card
+        className="py-0 gap-0"
         onClick={() => {
           if (!selectedPools.includes(pool.id)) {
             const newAssets = [assetA.symbol, assetB.symbol].filter(
@@ -124,6 +125,7 @@ const ChosenPoolRow = memo(function ChosenPoolRow({ index, style, chosenPools, a
   return (
     <div style={style} key={`poolNo${index}`}>
       <Card
+        className="py-0 gap-0"
         onClick={() => {
           setSelectedPools(
             selectedPools.filter((poolId) => poolId !== pool.id)
@@ -182,7 +184,7 @@ const TrackerRow = memo(function TrackerRow({ index, style, trackers, _chain, po
     >
       <div className="col-span-5">
         <a href={`/custom_pool_tracker.html?id=${_tracker.id}`}>
-          <Card>
+          <Card className="py-0 gap-0">
             <CardHeader className="pt-2 pb-2">
               <CardDescription>
                 <b>{_tracker.name}</b>
@@ -499,7 +501,7 @@ export default function CustomPoolOverview(properties) {
               </p>
             </div>
           </div>
-          <Card className="p-2">
+          <Card className="p-2 gap-0">
             {trackers && trackers[_chain] && trackers[_chain].length ? (
               <div className="grid grid-cols-6 gap-3">
                 <div className="col-span-5 border rounded border-border p-3">
@@ -507,7 +509,7 @@ export default function CustomPoolOverview(properties) {
                     <List
                       rowComponent={TrackerRow}
                       rowCount={trackers[_chain].length}
-                      rowHeight={100}
+                      rowHeight={92}
                       height={200}
                       width="100%"
                       rowProps={trackerRowProps}
@@ -691,7 +693,7 @@ export default function CustomPoolOverview(properties) {
                   <List
                     rowComponent={PoolRow}
                     rowCount={remainingPools.length}
-                    rowHeight={30}
+                    rowHeight={26}
                     height={200}
                     width="100%"
                     rowProps={poolRowProps}
@@ -734,7 +736,7 @@ export default function CustomPoolOverview(properties) {
                 width="100%"
                 rowComponent={ChosenPoolRow}
                 rowCount={selectedPools.length}
-                rowHeight={30}
+                rowHeight={26}
                 rowProps={chosenPoolRowProps}
               />
             </div>

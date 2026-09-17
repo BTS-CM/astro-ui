@@ -24,6 +24,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -631,17 +637,27 @@ export default function CreateVestingBalance(properties) {
                     <Zap className="h-3 w-3" strokeWidth={2.5} />
                     {t("PoolStake:networkFee")}
                   </span>
-                  <div className="font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
-                    {fee ?? "?"} BTS
-                  </div>
+                  {usr && usr.id === usr.referrer && fee !== undefined ? (
+                    <TooltipProvider delayDuration={300}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] cursor-help">
+                            {fee ?? "?"} BTS
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-card border-border text-foreground text-xs">
+                          {t("PoolStake:rebate", {
+                            rebate: (fee * 0.8).toFixed(5),
+                          })}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <div className="font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
+                      {fee ?? "?"} BTS
+                    </div>
+                  )}
                 </div>
-                {usr && usr.id === usr.referrer && fee !== undefined ? (
-                  <p className="text-xs text-muted-foreground/70 mt-1">
-                    {t("PoolStake:rebate", {
-                      rebate: (fee * 0.8).toFixed(5),
-                    })}
-                  </p>
-                ) : null}
               </div>
               <Button
                 className="group mt-3 w-full h-14 text-base font-semibold rounded-2xl bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-3))] to-[hsl(var(--accent-3))] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-3))] hover:to-[hsl(var(--accent-3))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_32px_-12px_hsl(var(--accent-3)/0.7)] hover:shadow-[0_12px_40px_-12px_hsl(var(--accent-3)/0.9)] transition-all"
@@ -653,17 +669,6 @@ export default function CreateVestingBalance(properties) {
               >
                 {t("CreateUIA:buttons.submit")}
               </Button>
-              {isSubmitDisabled ? (
-                <p className="text-xs text-muted-foreground text-center">
-                  {!targetUser
-                    ? t("CreateVestingBalance:target")
-                    : !asset || !assetData
-                    ? t("CreateVestingBalance:asset")
-                    : !beginDateTime
-                    ? t("CreateVestingBalance:startClaim")
-                    : t("CreateVestingBalance:amount")}
-                </p>
-              ) : null}
             </div>
           </div>
         </div>

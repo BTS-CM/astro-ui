@@ -60,7 +60,6 @@ import {
   Gem,
   Lock,
   KeyRound,
-  EyeOff,
   Layers,
   Banknote,
   HandCoins,
@@ -132,7 +131,6 @@ const ITEM_ICONS = {
   portfolio_open_orders: ListOrdered,
   call_orders: ListOrdered,
   custom_authorities: KeyRound,
-  blind_transfers: EyeOff,
   favourites: Star,
   issued_assets: Boxes,
   offers: FileText,
@@ -343,7 +341,6 @@ export default function Home(properties) {
     { key: "withdraw_permissions", href: "/withdraw_permissions.html", titleKey: "Home:withdraw_permission.title", subtitleKey: "Home:withdraw_permission.subtitle", hoverKeys: ["Home:withdraw_permission.hover1", "Home:withdraw_permission.hover2"] },
     { key: "htlc", href: "/htlc.html", titleKey: "Home:htlc.title", subtitleKey: "Home:htlc.subtitle", hoverKeys: ["Home:htlc.hover1", "Home:htlc.hover2", "Home:htlc.hover3"] },
     { key: "create_vesting", href: "/create_vesting.html", titleKey: "Home:create_vesting.title", subtitleKey: "Home:create_vesting.subtitle", hoverKeys: ["Home:create_vesting.hover1", "Home:create_vesting.hover2", "Home:create_vesting.hover3", "Home:create_vesting.hover4"] },
-    { key: "blind_transfers", href: "/blind_transfers.html", titleKey: "Home:blind_transfers.title", subtitleKey: "Home:blind_transfers.subtitle", hoverKeys: ["Home:blind_transfers.hover1", "Home:blind_transfers.hover2", "Home:blind_transfers.hover3"] },
     { key: "airdrop_calculate", href: "/airdrop_calculate.html", titleKey: "Home:airdrop_calculate.title", subtitleKey: "Home:airdrop_calculate.subtitle", hoverKeys: ["Home:airdrop_calculate.hover1", "Home:airdrop_calculate.hover2", "Home:airdrop_calculate.hover3"] },
     { key: "monthly_referrer", href: "/monthly_referrer.html", titleKey: "Home:monthly_referrer.title", subtitleKey: "Home:monthly_referrer.subtitle", hoverKeys: ["Home:monthly_referrer.hover1", "Home:monthly_referrer.hover2", "Home:monthly_referrer.hover3"] },
   ];

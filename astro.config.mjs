@@ -43,7 +43,6 @@ export default defineConfig({
             { label: 'Withdraw Permissions', link: '/docs/transfer/withdraw_permissions/' },
             { label: 'HTLC', link: '/docs/transfer/htlc/' },
             { label: 'Create Vesting', link: '/docs/transfer/create_vesting/' },
-            { label: 'Blind Transfers', link: '/docs/transfer/blind_transfers/' },
             { label: 'Airdrop Calculator', link: '/docs/transfer/airdrop_calculate/' },
             { label: 'Monthly Referrer', link: '/docs/transfer/monthly_referrer/' },
           ],

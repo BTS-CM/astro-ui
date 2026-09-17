@@ -109,9 +109,9 @@ function ActionIconLink({ href, icon: Icon, label, accent = "default" }) {
           <a
             href={href}
             aria-label={label}
-            className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors ${palette}`}
+            className={`inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors ${palette}`}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-3.5 w-3.5" />
           </a>
         </TooltipTrigger>
         <TooltipContent side="top">
@@ -134,7 +134,7 @@ function ActionLabelLink({
       "border border-border text-muted-foreground hover:bg-accent/60 hover:text-foreground/80",
     destructive: "bg-[hsl(var(--accent-danger))] text-[hsl(var(--accent-danger-gradFg))] hover:bg-[hsl(var(--accent-danger))]",
   }[accent];
-  const className = `inline-flex h-8 items-center justify-center gap-1.5 px-3 rounded-full text-sm font-medium transition-colors ${palette}`;
+  const className = `inline-flex h-7 items-center justify-center gap-1.5 px-3 rounded-full text-sm font-medium transition-colors ${palette}`;
   if (onClick && !href) {
     return (
       <button
@@ -256,8 +256,8 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
   return (
     <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
       {/* Mobile: stacked card */}
-      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] block md:hidden">
-        <CardContent className="px-4 py-3 space-y-2">
+      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] block md:hidden py-2 gap-0">
+        <CardContent className="px-3 py-2 space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold truncate min-w-0">
               <span className="text-muted-foreground font-normal">{t("PortfolioTabs:trading")} </span>
@@ -291,7 +291,7 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
             <OrderJsonDialog order={order} orderId={orderId} t={t}>
               <button
                 type="button"
-                className="inline-flex h-8 items-center justify-center gap-1.5 px-3 rounded-full text-sm font-medium transition-colors border border-border text-muted-foreground hover:bg-accent/60 hover:text-foreground/80"
+                className="inline-flex h-7 items-center justify-center gap-1.5 px-3 rounded-full text-sm font-medium transition-colors border border-border text-muted-foreground hover:bg-accent/60 hover:text-foreground/80"
               >
                 <FileJson className="h-3.5 w-3.5" />
                 <span>{t("PortfolioTabs:json")}</span>
@@ -318,8 +318,8 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
       </Card>
 
       {/* Desktop: two-row layout */}
-      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] hidden md:block">
-        <CardContent className="px-4 py-3">
+      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] hidden md:block py-2 gap-0">
+        <CardContent className="px-3 py-1.5">
           <div className="grid grid-cols-12 gap-4 items-center">
             <div className="col-span-10 flex items-center gap-2 min-w-0">
               <span className="text-sm font-semibold truncate min-w-0">
@@ -345,7 +345,7 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
             </TooltipProvider>
             </div>
           </div>
-          <div className="flex items-center justify-between gap-3 mt-1.5">
+          <div className="flex items-center justify-between gap-3 mt-1">
             <div className="min-w-0 text-sm whitespace-nowrap truncate">
               <span className="font-mono tabular-nums font-semibold dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{priceDisplay}</span>
               <span className="text-muted-foreground"> {buyAsset?.symbol}/{sellAsset?.symbol}</span>
@@ -356,9 +356,9 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
                   type="button"
                   title={t("PortfolioTabs:json")}
                   aria-label={t("PortfolioTabs:json")}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors text-muted-foreground hover:text-foreground/80 hover:bg-accent/60"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors text-muted-foreground hover:text-foreground/80 hover:bg-accent/60"
                 >
-                  <FileJson className="h-4 w-4" />
+                  <FileJson className="h-3.5 w-3.5" />
                 </button>
               </OrderJsonDialog>
               <ActionIconLink
@@ -378,9 +378,9 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
                   setOrderID(orderId);
                   setShowDialog(true);
                 }}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[hsl(var(--accent-danger-fg))] hover:bg-[hsl(var(--accent-danger)/0.1)] transition-colors"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[hsl(var(--accent-danger-fg))] hover:bg-[hsl(var(--accent-danger)/0.1)] transition-colors"
               >
-                <XCircle className="h-4 w-4" />
+                <XCircle className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
@@ -451,7 +451,7 @@ export default function PortfolioOpenOrders({
   const [orderID, setOrderID] = useState();
   const [showDialog, setShowDialog] = useState(false);
   const [now, setNow] = useState(() => Date.now());
-  const [rowHeight, setRowHeight] = useState(108);
+  const [rowHeight, setRowHeight] = useState(92);
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
@@ -462,9 +462,9 @@ export default function PortfolioOpenOrders({
   useEffect(() => {
     if (typeof window === "undefined") return;
     const update = () => {
-      // Stride must exceed the tallest row content (desktop two-line card ≈
-      // 96px, mobile stacked card ≈ 160px); anything smaller overlaps rows.
-      setRowHeight(window.innerWidth < 768 ? 180 : 108);
+      // Stride must exceed the tallest row content (compact desktop two-line
+      // card ≈ 84px, mobile stacked card ≈ 128px); anything smaller overlaps rows.
+      setRowHeight(window.innerWidth < 768 ? 140 : 92);
     };
     update();
     window.addEventListener("resize", update);
@@ -559,7 +559,7 @@ export default function PortfolioOpenOrders({
   return (
     <div className="container mx-auto mt-5 mb-5 max-w-5xl text-foreground">
       <div className="grid grid-cols-1 gap-3">
-        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
+        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)] py-0 gap-0">
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"

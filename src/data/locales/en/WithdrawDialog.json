@@ -13,5 +13,8 @@
     "14d": "14 Days",
     "30d": "30 Days",
     "6m": "6 Months",
-    "12m": "12 Months"
+    "12m": "12 Months",
+    "feeLabel": "Network Fee",
+    "feeDesc": "Estimated fee to broadcast this withdraw permission.",
+    "feeRebate": "Rebate: {{rebate}} {{symbol}} (vesting)"
 }

@@ -12,7 +12,6 @@ import {
   FieldGroup,
   FieldLabel,
   FieldContent,
-  FieldDescription,
   FieldError,
 } from "@/components/ui/field";
 
@@ -38,8 +37,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import { $currentNodeUrl } from "@/stores/node.ts";
-import { humanReadableFloat, blockchainFloat } from "@/lib/common";
+import { humanReadableFloat, blockchainFloat, trimPrice } from "@/lib/common";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { Avatar } from "./Avatar.tsx";
@@ -47,7 +53,7 @@ import AccountSearch from "./AccountSearch.jsx";
 import AssetDropDownCard from "./Market/AssetDropDownCard.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
-import { Lock, Clock, Hash, User, Coins, Send, AlertTriangle, Shield, KeyRound } from "lucide-react";
+import { Lock, Clock, Hash, User, Coins, Send, AlertTriangle, Shield, KeyRound, Info, Zap } from "lucide-react";
 
 // Common claim periods in seconds
 const claimPeriods = {
@@ -85,6 +91,26 @@ const getCipherInt = (cipher) => {
       throw new Error("Unsupported cipher. Use 'sha256' or 'ripemd160'.");
   }
 };
+
+// Info icon with a hover tooltip, used in field labels so the helper text
+// doesn't take up vertical space in the dialog.
+function FieldInfoTip({ text }) {
+  if (!text) return null;
+  return (
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex items-center justify-center rounded-full text-muted-foreground/60 hover:text-foreground transition-colors cursor-help shrink-0">
+            <Info className="h-3.5 w-3.5" />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs bg-card border-border text-foreground text-xs">
+          {text}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 
 export default function HtlcCreateDialog(properties) {
   const { usr, assets, marketSearch, globalParams, showDialog, setShowDialog } =
@@ -276,6 +302,7 @@ export default function HtlcCreateDialog(properties) {
                 <FieldLabel htmlFor="toAccount-display" className="flex items-center gap-2">
                   <User className="w-4 h-4 text-[hsl(var(--accent-1-fg))]" />
                   {t("HTLCCreate:toAccountLabel")}
+                  <FieldInfoTip text={t("HTLCCreate:toAccountDesc")} />
                 </FieldLabel>
                 <FieldContent>
                   <div className="flex items-center space-x-3">
@@ -348,15 +375,13 @@ export default function HtlcCreateDialog(properties) {
                     </Dialog>
                   </div>
                 </FieldContent>
-                <FieldDescription>
-                  {t("HTLCCreate:toAccountDesc")}
-                </FieldDescription>
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="asset-display" className="flex items-center gap-2">
                   <Coins className="w-4 h-4 text-[hsl(var(--accent-3-fg))]" />
                   {t("HTLCCreate:assetLabel")}
+                  <FieldInfoTip text={t("HTLCCreate:assetDesc")} />
                 </FieldLabel>
                 <FieldContent>
                   <div className="flex items-center space-x-3">
@@ -396,10 +421,12 @@ export default function HtlcCreateDialog(properties) {
                       type={"sell"}
                       chain={_chain}
                       balances={balances}
+                      size="small"
+                      autoWidth
+                      triggerClassName="shrink-0"
                     />
                   </div>
                 </FieldContent>
-                <FieldDescription>{t("HTLCCreate:assetDesc")}</FieldDescription>
               </Field>
 
               {foundAsset ? (
@@ -407,6 +434,7 @@ export default function HtlcCreateDialog(properties) {
                   <FieldLabel htmlFor="amount-input" className="flex items-center gap-2">
                     <Send className="w-4 h-4 text-[hsl(var(--accent-danger-fg))]" />
                     {t("HTLCCreate:amountLabel", { symbol: foundAsset.symbol })}
+                    <FieldInfoTip text={t("HTLCCreate:amountDesc")} />
                   </FieldLabel>
                   <FieldContent>
                     <div className="flex items-center space-x-3">
@@ -464,9 +492,6 @@ export default function HtlcCreateDialog(properties) {
                       {t("HTLCCreate:insufficientBalance")}
                     </FieldError>
                   ) : null}
-                  <FieldDescription>
-                    {t("HTLCCreate:amountDesc")}
-                  </FieldDescription>
                 </Field>
               ) : null}
 
@@ -474,6 +499,7 @@ export default function HtlcCreateDialog(properties) {
                 <FieldLabel htmlFor="preimage-textarea" className="flex items-center gap-2">
                   <KeyRound className="w-4 h-4 text-[hsl(var(--accent-1-fg))]" />
                   {t("HTLCCreate:preimageLabel")}
+                  <FieldInfoTip text={t("HTLCCreate:preimageDesc")} />
                 </FieldLabel>
                 <FieldContent>
                   <Textarea
@@ -483,15 +509,13 @@ export default function HtlcCreateDialog(properties) {
                     onChange={(e) => setPreimage(e.target.value)}
                   />
                 </FieldContent>
-                <FieldDescription>
-                  {t("HTLCCreate:preimageDesc")}
-                </FieldDescription>
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="hashing-select" className="flex items-center gap-2">
                   <Hash className="w-4 h-4 text-[hsl(var(--accent-3-fg))]" />
                   {t("HTLCCreate:algorithm")}
+                  <FieldInfoTip text={t("HTLCCreate:algorithmDesc")} />
                 </FieldLabel>
                 <FieldContent>
                   <Select
@@ -511,9 +535,6 @@ export default function HtlcCreateDialog(properties) {
                     </SelectContent>
                   </Select>
                 </FieldContent>
-                <FieldDescription>
-                  {t("HTLCCreate:algorithmDesc")}
-                </FieldDescription>
               </Field>
 
               {preimage && (
@@ -543,6 +564,7 @@ export default function HtlcCreateDialog(properties) {
                 <FieldLabel htmlFor="claimPeriod-input" className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-[hsl(var(--accent-danger-fg))]" />
                   {t("HTLCCreate:claimPeriodLabel")}
+                  <FieldInfoTip text={t("HTLCCreate:claimPeriodDesc")} />
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -562,28 +584,41 @@ export default function HtlcCreateDialog(properties) {
                     }}
                   />
                 </FieldContent>
-                <FieldDescription>
-                  {t("HTLCCreate:claimPeriodDesc")}
-                </FieldDescription>
               </Field>
 
-              <Field>
-                <FieldLabel htmlFor="fee-display" className="flex items-center gap-2">
-                  <Coins className="w-4 h-4 text-[hsl(var(--accent-1-fg))]" />
-                  {t("HTLCCreate:feeLabel")}
-                </FieldLabel>
-                <FieldContent>
-                  <Input
-                    id="fee-display"
-                    disabled
-                    value={`${fee} ${
-                      usr.chain === "bitshares" ? "BTS" : "TEST"
-                    }`}
-                    readOnly
-                  />
-                </FieldContent>
-                <FieldDescription>{t("HTLCCreate:feeDesc")}</FieldDescription>
-              </Field>
+              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-[hsl(var(--accent-1-fg))]">
+                    <Zap className="h-3 w-3" strokeWidth={2.5} />
+                    {t("HTLCCreate:feeLabel")}
+                    <FieldInfoTip text={t("HTLCCreate:feeDesc")} />
+                  </span>
+                  {usr && usr.id && usr.id === usr.referrer ? (
+                    <TooltipProvider delayDuration={300}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="font-mono text-sm tabular-nums text-[hsl(var(--accent-1-fg))] cursor-help">
+                            {fee}{" "}
+                            {usr.chain === "bitshares" ? "BTS" : "TEST"}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-card border-border text-foreground text-xs">
+                          {t("HTLCCreate:feeRebate", {
+                            rebate: trimPrice(fee * 0.8, 5),
+                            symbol:
+                              usr.chain === "bitshares" ? "BTS" : "TEST",
+                          })}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <span className="font-mono text-sm tabular-nums text-[hsl(var(--accent-1-fg))]">
+                      {fee}{" "}
+                      {usr.chain === "bitshares" ? "BTS" : "TEST"}
+                    </span>
+                  )}
+                </div>
+              </div>
 
               <Button
                 type="submit"
