@@ -1,4 +1,7 @@
 {
+  "targets": {
+    "electron": "44"
+  },
   "presets": [
     "@babel/preset-env",
     "@babel/preset-typescript"
