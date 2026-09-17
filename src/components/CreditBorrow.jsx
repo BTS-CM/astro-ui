@@ -8,7 +8,10 @@ import React, {
 } from "react";
 import { List } from "react-window";
 
-const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, foundAsset, assets, balanceAssetIDs, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen }) {
+const AVATAR_EXPRESSION = { eye: "normal", mouth: "smile" };
+const MAX_VISIBLE_COLLATERAL = 8;
+
+const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, foundAsset, assets, balanceAssetIDs, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }) {
   const offerID = res.id.replace("1.21.", "");
   const offeringAmount = humanReadableFloat(res.current_balance, foundAsset.precision);
   const isOutOfFunds = Number(res.current_balance) === 0;
@@ -17,20 +20,35 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
   const minAmount = humanReadableFloat(res.min_deal_amount, foundAsset.precision);
   const validHours = hoursTillExpiration(res.auto_disable_time);
   const fullTitle = `${t("CreditBorrow:common.offer")} #${offerID} - ${t("CreditBorrow:common.offeringWord")} ${offeringAmount} ${foundAsset.symbol} - ${t("CreditBorrow:common.chargingWord")} ${feePct}% ${t("CreditBorrow:common.feeWord")}`;
-  const collateralSymbols = assets && assets.length ? res.acceptable_collateral.map((asset) => asset[0]).map((x) => assets.find((y) => y.id === x)?.symbol).filter((x) => x) : null;
-  const MAX_VISIBLE_COLLATERAL = 8;
-  const orderedCollateral = collateralSymbols ? [...collateralSymbols].sort((a, b) => {
-    const assetA = assets.find((y) => y.symbol === a);
-    const assetB = assets.find((y) => y.symbol === b);
-    const heldA = assetA && balanceAssetIDs && balanceAssetIDs.includes(assetA.id) ? 0 : 1;
-    const heldB = assetB && balanceAssetIDs && balanceAssetIDs.includes(assetB.id) ? 0 : 1;
-    return heldA - heldB;
-  }) : null;
+  const collateralSymbols = useMemo(() => {
+    if (!assets || !assets.length || !res.acceptable_collateral) return null;
+    const out = [];
+    for (let i = 0; i < res.acceptable_collateral.length; i++) {
+      const id = res.acceptable_collateral[i][0];
+      const symbol = assetById ? assetById.get(id)?.symbol : assets.find((y) => y.id === id)?.symbol;
+      if (symbol) out.push(symbol);
+    }
+    return out;
+  }, [res.acceptable_collateral, assets, assetById]);
+  const orderedCollateral = useMemo(() => {
+    if (!collateralSymbols) return null;
+    return [...collateralSymbols].sort((a, b) => {
+      const heldA = balanceSet
+        ? (assetBySymbol?.get(a) && balanceSet.has(assetBySymbol.get(a).id) ? 0 : 1)
+        : 0;
+      const heldB = balanceSet
+        ? (assetBySymbol?.get(b) && balanceSet.has(assetBySymbol.get(b).id) ? 0 : 1)
+        : 0;
+      return heldA - heldB;
+    });
+  }, [collateralSymbols, balanceSet, assetBySymbol]);
   const visibleCollateral = orderedCollateral ? orderedCollateral.slice(0, MAX_VISIBLE_COLLATERAL) : null;
   const hiddenCollateralCount = orderedCollateral ? orderedCollateral.length - visibleCollateral.length : 0;
   const validityClass = validHours < 0 ? "text-red-400/90" : validHours < 24 ? "text-amber-400/90" : "text-foreground/85";
   const validityText = validHours < 0 ? t("CreditBorrow:common.expiredShort") : `${validHours}h`;
   const isExpired = validHours < 0;
+  const isFav = favouriteSet ? favouriteSet.has(res.owner_account) : (favouriteUsers || []).some((u) => u.id === res.owner_account);
+  const isBlocked = blockSet ? blockSet.has(res.owner_account) : (chainUserBlockList || []).some((u) => u.id === res.owner_account);
   return (
     <div style={{ ...style, padding: "0 8px 6px 8px" }} key={`acard-${res.id}`}>
       <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
@@ -54,8 +72,8 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
             <Badge variant="outline" className="gap-1.5 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] text-[11px] py-0 px-1.5 flex-shrink-0 max-w-[45%]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button type="button" title={`${res.owner_name} (${res.owner_account})`} className="flex items-center gap-1.5 hover:opacity-80 transition-opacity cursor-pointer min-w-0">
-                    <Avatar size={14} name={res.owner_name} extra="offer-owner" expression={{ eye: "normal", mouth: "smile" }} />
+                  <button type="button" title={`${res.owner_name} (${res.owner_account})`} aria-label={`${res.owner_name} (${res.owner_account})`} className="flex items-center gap-1.5 hover:opacity-80 transition-opacity cursor-pointer min-w-0">
+                    <Avatar size={14} name={res.owner_name} extra="offer-owner" expression={AVATAR_EXPRESSION} />
                     <span className="whitespace-nowrap truncate">{res.owner_name}</span>
                     <span className="text-muted-foreground/50 text-[10px] flex-shrink-0 hidden sm:inline">({res.owner_account})</span>
                   </button>
@@ -64,23 +82,22 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
                   <DropdownMenuItem
                     onClick={() => {
                       const chain = usr?.chain ?? "bitshares";
-                      const isFav = favouriteUsers.some((u) => u.id === res.owner_account);
                       if (isFav) { removeFavouriteUser(chain, { name: res.owner_name, id: res.owner_account }); } else { addFavouriteUser(chain, { name: res.owner_name, id: res.owner_account }); }
                     }}
                   >
-                    {favouriteUsers.some((u) => u.id === res.owner_account) ? <StarOff className="h-4 w-4 mr-2" /> : <Star className="h-4 w-4 mr-2" />}
-                    {favouriteUsers.some((u) => u.id === res.owner_account) ? t("Blocklist:unfavouriteAccount") : t("Blocklist:favouriteAccount")}
+                    {isFav ? <StarOff className="h-4 w-4 mr-2" /> : <Star className="h-4 w-4 mr-2" />}
+                    {isFav ? t("Blocklist:unfavouriteAccount") : t("Blocklist:favouriteAccount")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      if (chainUserBlockList.some((u) => u.id === res.owner_account)) return;
+                      if (isBlocked) return;
                       setBlockTarget({ name: res.owner_name, id: res.owner_account });
                       setBlockConfirmOpen(true);
                     }}
-                    disabled={chainUserBlockList.some((u) => u.id === res.owner_account)}
+                    disabled={isBlocked}
                   >
                     <Ban className="h-4 w-4 mr-2" />
-                    {chainUserBlockList.some((u) => u.id === res.owner_account) ? t("Blocklist:alreadyBlocked") : t("Blocklist:blockAccount")}
+                    {isBlocked ? t("Blocklist:alreadyBlocked") : t("Blocklist:blockAccount")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -91,7 +108,7 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
               <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5">{t("CreditBorrow:common.accepting")}</div>
               <div className="font-mono text-xs tabular-nums text-foreground/85 leading-snug break-words">
                 {visibleCollateral ? (<>
-                  {visibleCollateral.map((x, idx) => { const a = assets.find((y) => y.symbol === x); const hasBal = a && balanceAssetIDs && balanceAssetIDs.includes(a.id); return (<span key={`${x}-${idx}`} className={cn("inline", hasBal ? "font-semibold text-foreground" : "text-muted-foreground/60")}>{x}{idx < visibleCollateral.length - 1 || hiddenCollateralCount > 0 ? ", " : ""}</span>); })}
+                  {visibleCollateral.map((x, idx) => { const a = assetBySymbol ? assetBySymbol.get(x) : assets.find((y) => y.symbol === x); const hasBal = a && (balanceSet ? balanceSet.has(a.id) : balanceAssetIDs && balanceAssetIDs.includes(a.id)); return (<span key={`${x}-${idx}`} className={cn("inline", hasBal ? "font-semibold text-foreground" : "text-muted-foreground/60")}>{x}{idx < visibleCollateral.length - 1 || hiddenCollateralCount > 0 ? ", " : ""}</span>); })}
                   {hiddenCollateralCount > 0 && (
                     <TooltipProvider delayDuration={300}>
                       <Tooltip>
@@ -122,26 +139,26 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
   );
 });
 
-const CreditBorrowBalanceRow = memo(function CreditBorrowBalanceRow({ index, style, compatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }) {
+const CreditBorrowBalanceRow = memo(function CreditBorrowBalanceRow({ index, style, compatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }) {
   const res = compatibleOffers[index];
   if (!res) return null;
-  const foundAsset = assets.find((x) => x.id === res.asset_type);
+  const foundAsset = assetById ? assetById.get(res.asset_type) : assets.find((x) => x.id === res.asset_type);
   if (!foundAsset) return null;
-  return <CreditBorrowCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} balanceAssetIDs={balanceAssetIDs} t={t} usr={usr} favouriteUsers={favouriteUsers} chainUserBlockList={chainUserBlockList} setBlockTarget={setBlockTarget} setBlockConfirmOpen={setBlockConfirmOpen} />;
+  return <CreditBorrowCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} balanceAssetIDs={balanceAssetIDs} t={t} usr={usr} favouriteUsers={favouriteUsers} chainUserBlockList={chainUserBlockList} setBlockTarget={setBlockTarget} setBlockConfirmOpen={setBlockConfirmOpen} assetById={assetById} assetBySymbol={assetBySymbol} balanceSet={balanceSet} favouriteSet={favouriteSet} blockSet={blockSet} />;
 });
-const CreditBorrowOfferRow = memo(function CreditBorrowOfferRow({ index, style, offers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }) {
+const CreditBorrowOfferRow = memo(function CreditBorrowOfferRow({ index, style, offers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }) {
   const res = offers[index];
   if (!res) return null;
-  const foundAsset = assets.find((x) => x.id === res.asset_type);
+  const foundAsset = assetById ? assetById.get(res.asset_type) : assets.find((x) => x.id === res.asset_type);
   if (!foundAsset) return null;
-  return <CreditBorrowCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} balanceAssetIDs={balanceAssetIDs} t={t} usr={usr} favouriteUsers={favouriteUsers} chainUserBlockList={chainUserBlockList} setBlockTarget={setBlockTarget} setBlockConfirmOpen={setBlockConfirmOpen} />;
+  return <CreditBorrowCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} balanceAssetIDs={balanceAssetIDs} t={t} usr={usr} favouriteUsers={favouriteUsers} chainUserBlockList={chainUserBlockList} setBlockTarget={setBlockTarget} setBlockConfirmOpen={setBlockConfirmOpen} assetById={assetById} assetBySymbol={assetBySymbol} balanceSet={balanceSet} favouriteSet={favouriteSet} blockSet={blockSet} />;
 });
-const CreditBorrowSearchRow = memo(function CreditBorrowSearchRow({ index, style, thisResult, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }) {
+const CreditBorrowSearchRow = memo(function CreditBorrowSearchRow({ index, style, thisResult, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }) {
   const res = thisResult[index]?.item;
   if (!res) return null;
-  const foundAsset = assets.find((x) => x.id === res.asset_type);
+  const foundAsset = assetById ? assetById.get(res.asset_type) : assets.find((x) => x.id === res.asset_type);
   if (!foundAsset) return null;
-  return <CreditBorrowCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} balanceAssetIDs={balanceAssetIDs} t={t} usr={usr} favouriteUsers={favouriteUsers} chainUserBlockList={chainUserBlockList} setBlockTarget={setBlockTarget} setBlockConfirmOpen={setBlockConfirmOpen} />;
+  return <CreditBorrowCommonRow style={style} res={res} foundAsset={foundAsset} assets={assets} balanceAssetIDs={balanceAssetIDs} t={t} usr={usr} favouriteUsers={favouriteUsers} chainUserBlockList={chainUserBlockList} setBlockTarget={setBlockTarget} setBlockConfirmOpen={setBlockConfirmOpen} assetById={assetById} assetBySymbol={assetBySymbol} balanceSet={balanceSet} favouriteSet={favouriteSet} blockSet={blockSet} />;
 });
 import Fuse from "fuse.js";
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -442,20 +459,23 @@ export default function CreditBorrow(properties) {
   }, []);
 
   useEffect(() => {
-    async function fetchCreditOffers() {
-      const creditOfferStore = createCreditOfferStore([
-        _chain,
-        currentNodeUrl || "",
-      ]);
+    let cancelled = false;
+    const creditOfferStore = createCreditOfferStore([
+      _chain,
+      currentNodeUrl || "",
+    ]);
 
-      creditOfferStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setAllOffers(data);
-        }
-      });
-    }
+    const unsub = creditOfferStore.subscribe(({ data, error, loading }) => {
+      if (cancelled) return;
+      if (data && !error && !loading) {
+        setAllOffers(data);
+      }
+    });
 
-    fetchCreditOffers();
+    return () => {
+      cancelled = true;
+      if (typeof unsub === "function") unsub();
+    };
   }, [_chain, currentNodeUrl]);
 
   const offers = useMemo(() => {
@@ -567,30 +587,33 @@ export default function CreditBorrow(properties) {
 
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);
+  const assetIdSet = useMemo(() => new Set((assets || []).map((x) => x.id)), [assets]);
   useEffect(() => {
-    async function fetchUserBalances() {
-      if (usr && usr.id) {
-        const userBalancesStore = createUserBalancesStore([
-          usr.chain,
-          usr.id,
-          currentNodeUrl || "",
-        ]);
+    if (!(usr && usr.id)) return;
+    let cancelled = false;
+    const userBalancesStore = createUserBalancesStore([
+      usr.chain,
+      usr.id,
+      currentNodeUrl || "",
+    ]);
 
-        userBalancesStore.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id)
-            );
+    const unsub = userBalancesStore.subscribe(({ data, error, loading }) => {
+      if (cancelled) return;
+      if (data && !error && !loading) {
+        const filteredData = data.filter((balance) =>
+          assetIdSet.has(balance.asset_id)
+        );
 
-            setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
-            setUsrBalances(filteredData);
-          }
-        });
+        setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+        setUsrBalances(filteredData);
       }
-    }
+    });
 
-    fetchUserBalances();
-  }, [usr]);
+    return () => {
+      cancelled = true;
+      if (typeof unsub === "function") unsub();
+    };
+  }, [usr, currentNodeUrl, assetIdSet]);
 
   // Live balances (push per block when user state changes)
   const liveBorrowBalances = useAccountBalancesLive({
@@ -602,14 +625,14 @@ export default function CreditBorrow(properties) {
   useEffect(() => {
     if (liveBorrowBalances.balances && assets && assets.length) {
       const filteredData = liveBorrowBalances.balances.filter((balance) =>
-        assets.find((x) => x.id === balance.asset_id)
+        assetIdSet.has(balance.asset_id)
       );
       if (filteredData.length) {
         setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
         setUsrBalances(filteredData);
       }
     }
-  }, [liveBorrowBalances.balances, assets]);
+  }, [liveBorrowBalances.balances, assets, assetIdSet]);
 
   // Live subscription for *visible* offers so new/updated offers appear
   // without a page refresh. The heavy full scan stays one-shot.
@@ -625,7 +648,12 @@ export default function CreditBorrow(properties) {
     let changed = false;
     const merged = allOffers.map((offer) => {
       const live = liveOffers.objects[offer.id];
-      if (live) {
+      if (!live) return offer;
+      let differs = false;
+      for (const k of Object.keys(live)) {
+        if (offer[k] !== live[k]) { differs = true; break; }
+      }
+      if (differs) {
         changed = true;
         return { ...offer, ...live };
       }
@@ -636,37 +664,39 @@ export default function CreditBorrow(properties) {
 
   const compatibleOffers = useMemo(() => {
     if (!offers || !balanceAssetIDs) return [];
-
+    const held = new Set(balanceAssetIDs);
     return offers.filter((offer) => {
-      return offer.acceptable_collateral.some((x) => {
-        return balanceAssetIDs.includes(x[0]);
-      });
+      return offer.acceptable_collateral.some((x) => held.has(x[0]));
     });
   }, [offers, balanceAssetIDs]);
+
+  const assetByIdForSearch = useMemo(() => {
+    const m = new Map();
+    for (const a of assets || []) m.set(a.id, a);
+    return m;
+  }, [assets]);
 
   const offerSearch = useMemo(() => {
     if (!offers || !offers.length || !assets || !assets.length) {
       return;
     }
 
-    let adjustedOffers = [];
+    const adjustedOffers = [];
     for (let i = 0; i < offers.length; i++) {
       const offer = offers[i];
       if (!offer) {
         continue;
       }
-      if (offer.acceptable_collateral) {
-        offer["collateral_symbols"] = offer.acceptable_collateral
-          .map((asset) => {
-            const searched = assets.find((x) => x.id === asset[0]);
-            return searched?.symbol;
-          })
+      const copy = { ...offer };
+      if (copy.acceptable_collateral) {
+        copy.collateral_symbols = copy.acceptable_collateral
+          .map((asset) => assetByIdForSearch.get(asset[0])?.symbol)
           .filter((x) => x);
       }
-      offer["offer_symbols"] = [
-        assets.find((x) => x.id === offer.asset_type).symbol,
-      ];
-      adjustedOffers.push(offer);
+      copy.offer_symbols = [
+        assetByIdForSearch.get(copy.asset_type)?.symbol,
+      ].filter(Boolean);
+      adjustedOffers.push(copy);
     }
 
     let keys = [];
@@ -677,14 +707,15 @@ export default function CreditBorrow(properties) {
     } else if (activeSearch === "owner_name") {
       keys = ["owner_name"];
     }
-    return new Fuse(offers, {
+    return new Fuse(adjustedOffers, {
       includeScore: true,
       threshold: 0.2,
       keys: keys,
     });
-  }, [offers, assets, activeSearch]);
+  }, [offers, assets, assetByIdForSearch, activeSearch]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
@@ -739,7 +770,9 @@ export default function CreditBorrow(properties) {
     setActiveTab(finalTab);
     setActiveSearch(finalSearchTab);
     setThisInput(searchInput);
-    window.history.replaceState({}, "", finalURL);
+    if (typeof window !== "undefined") {
+      window.history.replaceState({}, "", finalURL);
+    }
   }, []);
 
   useEffect(() => {
@@ -747,17 +780,19 @@ export default function CreditBorrow(properties) {
       if (!isValid(thisInput)) {
         return;
       }
-      window.history.replaceState(
-        {},
-        "",
-        `?tab=searchOffers&searchTab=${activeSearch ?? "borrow"}${
-          thisInput ? `&searchText=${thisInput}` : ""
-        }`
-      );
+      if (typeof window !== "undefined") {
+        window.history.replaceState(
+          {},
+          "",
+          `?tab=searchOffers&searchTab=${activeSearch ?? "borrow"}${
+            thisInput ? `&searchText=${thisInput}` : ""
+          }`
+        );
+      }
       const result = offerSearch.search(thisInput);
       setThisResult(result);
     }
-  }, [offerSearch, thisInput]);
+  }, [offerSearch, thisInput, activeSearch]);
 
   const displayedCompatibleOffers = useMemo(() => {
     return applyOfferFiltersAndSort(compatibleOffers, offerControls, normalizedAmount, offerIdNumber);
@@ -785,23 +820,40 @@ export default function CreditBorrow(properties) {
     return [...filtered].sort((a, b) => (order.get(a.item.id) ?? 0) - (order.get(b.item.id) ?? 0));
   }, [thisResult, offerControls, normalizedAmount, offerIdNumber]);
 
-  const creditBorrowCommonProps = useMemo(() => ({ assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs }), [assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
-  const offerRowProps = useMemo(() => ({ offers: displayedOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [displayedOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
-  const balanceRowProps = useMemo(() => ({ compatibleOffers: displayedCompatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [displayedCompatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
-  const searchRowProps = useMemo(() => ({ thisResult: displayedSearchResult, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs }), [displayedSearchResult, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs]);
+  const assetById = useMemo(() => {
+    const m = new Map();
+    for (const a of assets || []) if (a?.id) m.set(a.id, a);
+    return m;
+  }, [assets]);
+  const assetBySymbol = useMemo(() => {
+    const m = new Map();
+    for (const a of assets || []) if (a?.symbol) m.set(a.symbol, a);
+    return m;
+  }, [assets]);
+  const balanceSet = useMemo(() => new Set(balanceAssetIDs || []), [balanceAssetIDs]);
+  const favouriteSet = useMemo(() => new Set((favouriteUsers || []).map((u) => u.id)), [favouriteUsers]);
+  const blockSet = useMemo(() => new Set((chainUserBlockList || []).map((u) => u.id)), [chainUserBlockList]);
+
+  const creditBorrowCommonProps = useMemo(() => ({ assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }), [assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet]);
+  const offerRowProps = useMemo(() => ({ offers: displayedOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }), [displayedOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet]);
+  const balanceRowProps = useMemo(() => ({ compatibleOffers: displayedCompatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }), [displayedCompatibleOffers, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet]);
+  const searchRowProps = useMemo(() => ({ thisResult: displayedSearchResult, assets, t, usr, favouriteUsers, chainUserBlockList, setBlockTarget, setBlockConfirmOpen, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet }), [displayedSearchResult, assets, t, usr, favouriteUsers, chainUserBlockList, balanceAssetIDs, assetById, assetBySymbol, balanceSet, favouriteSet, blockSet]);
 
   const [thisSearchInput, setThisSearchInput] = useState();
 
   const debouncedSetSearchInput = useCallback(
     debounce((event) => {
-      setThisInput(event.target.value);
-      window.history.replaceState(
-        {},
-        "",
-        `?tab=searchOffers&searchTab=${activeSearch}&searchText=${event.target.value}`
-      );
+      const value = event.target.value;
+      setThisInput(value);
+      if (typeof window !== "undefined") {
+        window.history.replaceState(
+          {},
+          "",
+          `?tab=searchOffers&searchTab=${activeSearch}&searchText=${value}`
+        );
+      }
     }, 500),
-    []
+    [activeSearch]
   );
 
   const tabs = [

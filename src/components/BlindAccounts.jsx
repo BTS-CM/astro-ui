@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -273,6 +273,8 @@ export default function BlindAccounts({ chain }) {
 
 function AccountRow({ t, account, onRemove, onBackup }) {
   const [copied, setCopied] = useState(false);
+  const copyTimer = useRef(null);
+  useEffect(() => () => { if (copyTimer.current) clearTimeout(copyTimer.current); }, []);
   return (
     <div className="flex items-center gap-2 rounded-lg border border-border bg-accent/20 px-3 py-2">
       <div className="min-w-0 flex-1">
@@ -288,10 +290,12 @@ function AccountRow({ t, account, onRemove, onBackup }) {
         variant="ghost"
         className="h-7 w-7 text-muted-foreground hover:text-foreground"
         title={t("BlindAccounts:pubKeyLabel")}
+        aria-label={t("BlindAccounts:pubKeyLabel")}
         onClick={() => {
           navigator.clipboard?.writeText(account.publicKey);
           setCopied(true);
-          setTimeout(() => setCopied(false), 1200);
+          if (copyTimer.current) clearTimeout(copyTimer.current);
+          copyTimer.current = setTimeout(() => setCopied(false), 1200);
         }}
       >
         {copied ? <Copy className="h-3.5 w-3.5 text-[hsl(var(--accent-success-fg))]" /> : <Copy className="h-3.5 w-3.5" />}

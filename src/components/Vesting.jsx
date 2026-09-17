@@ -41,7 +41,7 @@ import { createVestingBalanceStore } from "@/nanoeffects/VestingBalances.ts";
 import { humanReadableFloat } from "@/lib/common.js";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
-import { Coins, PiggyBank, TrendingUp, Clock, Calendar as Cal, ArrowUpCircle, Info, Hourglass } from "lucide-react";
+import { Coins, PiggyBank, TrendingUp, Clock, Calendar as Cal, ArrowUpCircle, Hourglass } from "lucide-react";
 
 function hoursTillExpiration(expirationTime) {
   var expirationDate = new Date(expirationTime);

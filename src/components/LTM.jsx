@@ -137,7 +137,7 @@ export default function LTM(properties) {
                   const Icon = benefit.icon;
                   return (
                     <div
-                      key={index}
+                      key={benefit.titleKey ?? benefit.title ?? index}
                       className="flex items-start gap-3 rounded-xl border border-border/60 bg-card/40 p-3.5 hover:border-[hsl(var(--accent-1)/0.2)] hover:bg-[hsl(var(--accent-1)/0.03)] transition-all group"
                     >
                       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] group-hover:shadow-[0_0_12px_-4px_rgba(16,185,129,0.4)] transition-all shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">

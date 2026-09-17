@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -191,7 +191,7 @@ export default function WithdrawPermissions(properties) {
       form.setValue("withdrawAmount", max);
     }, 800);
     return () => clearTimeout(timer);
-  }, [mode, transferAmount, foundAsset, availableBalance, form]);
+  }, [mode, foundAsset, availableBalance, form]);
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
 

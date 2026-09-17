@@ -89,7 +89,7 @@ export default function CreateVestingBalance(properties) {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 32); // operation: vesting_balance_create
       if (foundFee) {
-        const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+        const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
         setFee(finalFee);
       }
     }

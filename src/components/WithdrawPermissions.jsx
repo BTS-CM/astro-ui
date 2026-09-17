@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import { List } from "react-window";
 
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -490,7 +490,7 @@ export default function WithdrawPermissions(properties) {
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 0);
-      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+      const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

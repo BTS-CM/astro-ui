@@ -290,109 +290,118 @@ export default function Witnesses(properties) {
 
   // 1. Fetch Global and Dynamic Global Parameters
   useEffect(() => {
-    if (usr && usr.chain && currentNodeUrl) {
-      setLoading(true); // Start loading when fetching begins
+    if (!(usr && usr.chain && currentNodeUrl)) return;
+    setLoading(true); // Start loading when fetching begins
 
-      async function fetchGlobalParameters() {
-        const globalParamsStore = createObjectStore([
-          usr.chain,
-          JSON.stringify(["2.0.0", "2.1.0"]), // Fetch both objects
-          currentNodeUrl,
-        ]);
+    let cancelled = false;
+    const globalParamsStore = createObjectStore([
+      usr.chain,
+      JSON.stringify(["2.0.0", "2.1.0"]), // Fetch both objects
+      currentNodeUrl,
+    ]);
 
-        globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
-          if (data && !error && !gpLoading && data.length === 2) {
-            setActiveWitnessIds(data[0].active_witnesses);
-            setGlobalParameters(data[0].parameters);
-            setDynamicGlobalParameters(data[1]);
-          } else if (error) {
-            console.error("Error fetching global parameters:", error);
-          }
-        });
+    const unsub = globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
+      if (cancelled) return;
+      if (data && !error && !gpLoading && data.length === 2) {
+        setActiveWitnessIds(data[0].active_witnesses);
+        setGlobalParameters(data[0].parameters);
+        setDynamicGlobalParameters(data[1]);
+      } else if (error) {
+        if (import.meta.env?.DEV) console.error("Error fetching global parameters:", error);
       }
+    });
 
-      fetchGlobalParameters();
-    }
+    return () => {
+      cancelled = true;
+      if (typeof unsub === "function") unsub();
+    };
   }, [usr, currentNodeUrl]);
 
   // 2. Fetch All Witness Objects (1.6.x)
   useEffect(() => {
-    if (usr && usr.chain && currentNodeUrl && globalParameters) {
-      // Ensure globalParameters are loaded first
-      async function fetchAllWitnessObjects() {
-        const allWitnessStore = createEveryObjectStore([
-          usr.chain,
-          1, // space_id
-          6, // type_id for witness
-          0, // start from beginning
-          currentNodeUrl,
-        ]);
+    if (!(usr && usr.chain && currentNodeUrl && globalParameters)) return;
+    // Ensure globalParameters are loaded first
+    let cancelled = false;
+    const allWitnessStore = createEveryObjectStore([
+      usr.chain,
+      1, // space_id
+      6, // type_id for witness
+      0, // start from beginning
+      currentNodeUrl,
+    ]);
 
-        allWitnessStore.subscribe(({ data, error, loading: wLoading }) => {
-          if (data && !error && !wLoading) {
-            let filteredData = data.filter((x) => x); // Filter out null/undefined entries
-            if (_chain === "bitshares") {
-              // Apply blocklist filter
-              filteredData = filteredData.filter(
-                (witness) =>
-                  !blocklist.users.includes(
-                    toHex(sha256(utf8ToBytes(witness.witness_account)))
-                  )
-              );
-            }
-            setAllWitnesses(filteredData);
-          } else if (error) {
-            console.error("Error fetching all witnesses:", error);
-          }
-        });
+    const unsub = allWitnessStore.subscribe(({ data, error, loading: wLoading }) => {
+      if (cancelled) return;
+      if (data && !error && !wLoading) {
+        let filteredData = data.filter((x) => x); // Filter out null/undefined entries
+        if (_chain === "bitshares") {
+          // Apply blocklist filter
+          filteredData = filteredData.filter(
+            (witness) =>
+              !blocklist.users.includes(
+                toHex(sha256(utf8ToBytes(witness.witness_account)))
+              )
+          );
+        }
+        setAllWitnesses(filteredData);
+      } else if (error) {
+        if (import.meta.env?.DEV) console.error("Error fetching all witnesses:", error);
       }
+    });
 
-      fetchAllWitnessObjects();
-    }
+    return () => {
+      cancelled = true;
+      if (typeof unsub === "function") unsub();
+    };
   }, [usr, currentNodeUrl, globalParameters, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 3. Fetch Account Objects (1.2.x) for all witnesses
   useEffect(() => {
-    if (usr && usr.chain && currentNodeUrl && allWitnesses.length > 0) {
-      async function fetchWitnessAccounts() {
-        const accountIds = allWitnesses.map((w) => w.witness_account);
-        const uniqueAccountIds = [...new Set(accountIds)];
-
-        const accountsStore = createObjectStore([
-          usr.chain,
-          JSON.stringify(uniqueAccountIds),
-          currentNodeUrl,
-        ]);
-
-        accountsStore.subscribe(({ data, error, loading: accLoading }) => {
-          if (data && !error && !accLoading) {
-            const accountsMap = data.reduce((acc, account) => {
-              if (account) {
-                acc[account.id] = account;
-              }
-              return acc;
-            }, {});
-            setWitnessAccounts(accountsMap);
-            // Only set loading to false when all data is fetched
-            if (globalParameters && dynamicGlobalParameters) {
-              setLoading(false);
-            }
-          } else if (error) {
-            console.error("Error fetching witness accounts:", error);
-            setLoading(false);
-          }
-        });
+    if (!(usr && usr.chain && currentNodeUrl && allWitnesses.length > 0)) {
+      if (
+        allWitnesses.length === 0 &&
+        globalParameters &&
+        dynamicGlobalParameters
+      ) {
+        // Stop loading if there are no witnesses to fetch accounts for, but globals are loaded
+        setLoading(false);
       }
-
-      fetchWitnessAccounts();
-    } else if (
-      allWitnesses.length === 0 &&
-      globalParameters &&
-      dynamicGlobalParameters
-    ) {
-      // Stop loading if there are no witnesses to fetch accounts for, but globals are loaded
-      setLoading(false);
+      return;
     }
+    let cancelled = false;
+    const accountIds = allWitnesses.map((w) => w.witness_account);
+    const uniqueAccountIds = [...new Set(accountIds)];
+
+    const accountsStore = createObjectStore([
+      usr.chain,
+      JSON.stringify(uniqueAccountIds),
+      currentNodeUrl,
+    ]);
+
+    const unsub = accountsStore.subscribe(({ data, error, loading: accLoading }) => {
+      if (cancelled) return;
+      if (data && !error && !accLoading) {
+        const accountsMap = data.reduce((acc, account) => {
+          if (account) {
+            acc[account.id] = account;
+          }
+          return acc;
+        }, {});
+        setWitnessAccounts(accountsMap);
+        // Only set loading to false when all data is fetched
+        if (globalParameters && dynamicGlobalParameters) {
+          setLoading(false);
+        }
+      } else if (error) {
+        if (import.meta.env?.DEV) console.error("Error fetching witness accounts:", error);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      if (typeof unsub === "function") unsub();
+    };
   }, [
     usr,
     currentNodeUrl,

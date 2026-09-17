@@ -290,7 +290,7 @@ export default function AccountSearch(properties) {
   const searchHistory = useMemo(() => {
     if (!searchHistoryStore) return [];
     const raw = searchHistoryStore[chain] ?? [];
-    return raw.sort((a, b) => b.lastUsed - a.lastUsed);
+    return [...raw].sort((a, b) => b.lastUsed - a.lastUsed);
   }, [searchHistoryStore, chain]);
 
   const filteredFavourites = useMemo(() => {

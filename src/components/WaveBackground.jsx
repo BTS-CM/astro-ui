@@ -5,7 +5,7 @@ import { $waveSettings } from "@/stores/visuals.ts";
 const VIEWBOX_WIDTH = 2000;
 const VIEWBOX_HEIGHT = 600;
 const SEGMENTS = 32;
-const KEYFRAME_COUNT = 16;
+const KEYFRAME_COUNT = 8;
 const PHASE_STEP = (2 * Math.PI) / KEYFRAME_COUNT;
 
 // Intentionally static (theming carve-out): these are user-selected visual
@@ -171,8 +171,8 @@ export default function WaveBackground({ className = "", overrideSettings = null
   } = settings;
 
   const safeWaveCount = Number.isFinite(Number(waveCount))
-    ? Math.max(3, Math.min(15, Math.round(Number(waveCount))))
-    : 10;
+    ? Math.max(3, Math.min(8, Math.round(Number(waveCount))))
+    : 8;
   const safeWaveSpeed = Number.isFinite(Number(waveSpeed))
     ? Math.max(0.3, Math.min(2, Number(waveSpeed)))
     : 1.0;
@@ -208,7 +208,7 @@ export default function WaveBackground({ className = "", overrideSettings = null
     >
       <defs>
         {colors.map(([c1, c2], i) => (
-          <linearGradient key={i} id={`waveGrad${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient key={`waveGrad-${i}`} id={`waveGrad${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={c1} stopOpacity="0.95" />
             <stop offset="100%" stopColor={c2} stopOpacity="0.95" />
           </linearGradient>

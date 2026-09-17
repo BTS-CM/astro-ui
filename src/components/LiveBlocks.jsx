@@ -263,7 +263,7 @@ export default function LiveBlocks(properties) {
 
   const activities = useMemo(() => {
     if (!recentBlocks || !recentBlocks.length) return [];
-    return recentBlocks
+    return [...recentBlocks]
       .sort(
         (a, b) =>
           parseBtsTime(b.timestamp).getTime() -

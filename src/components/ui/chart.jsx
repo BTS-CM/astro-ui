@@ -49,6 +49,11 @@ const ChartStyle = ({
   id,
   config
 }) => {
+  const isSafeColor = (v) =>
+    typeof v === "string" &&
+    (/^#[0-9a-fA-F]{3,8}$/.test(v.trim()) ||
+      /^hsl\(.+\)$/.test(v.trim()) ||
+      /^var\(--.+\)$/.test(v.trim()));
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
 
   if (!colorConfig.length) {
@@ -63,9 +68,10 @@ const ChartStyle = ({
 ${prefix} [data-chart=${id}] {
 ${colorConfig
 .map(([key, itemConfig]) => {
-const color =
+const raw =
   itemConfig.theme?.[theme] ||
   itemConfig.color
+const color = isSafeColor(raw) ? raw : null
 return color ? `  --color-${key}: ${color};` : null
 })
 .join("\n")}

@@ -41,6 +41,13 @@ import { $currentNodeUrl } from "@/stores/node.ts";
 import { Card } from "@/components/ui/card";
 
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import {
   Field,
   FieldGroup,
   FieldLabel,
@@ -225,35 +232,38 @@ export default function CreditOfferEditor(properties) {
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 0);
-      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+      const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
       setFee(finalFee);
     }
   }, [globalParams]);
 
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
+  const assetIdSet = useMemo(() => new Set((assets || []).map((x) => x.id)), [assets]);
   useEffect(() => {
-    async function fetchUserBalances() {
-      if (usr && usr.id) {
-        const userBalancesStore = createUserBalancesStore([
-          usr.chain,
-          usr.id,
-          currentNodeUrl || "",
-        ]);
+    if (!(usr && usr.id)) return;
+    let cancelled = false;
+    const userBalancesStore = createUserBalancesStore([
+      usr.chain,
+      usr.id,
+      currentNodeUrl || "",
+    ]);
 
-        userBalancesStore.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id),
-            );
-            setBalances(filteredData);
-          }
-        });
+    const unsub = userBalancesStore.subscribe(({ data, error, loading }) => {
+      if (cancelled) return;
+      if (data && !error && !loading) {
+        const filteredData = data.filter((balance) =>
+          assetIdSet.has(balance.asset_id),
+        );
+        setBalances(filteredData);
       }
-    }
+    });
 
-    fetchUserBalances();
-  }, [usr, balanceCounter]);
+    return () => {
+      cancelled = true;
+      if (typeof unsub === "function") unsub();
+    };
+  }, [usr, currentNodeUrl, assetIdSet, balanceCounter]);
 
   const [foundAsset, setFoundAsset] = useState();
   const found = useMemo(() => {
@@ -285,7 +295,7 @@ export default function CreditOfferEditor(properties) {
     } else {
       setFoundAssetBalance(0);
     }
-  }, [foundAsset]);
+  }, [foundAsset, balances]);
 
   const handleCollateralAssetSelect = useCallback(
     (symbol) => {
@@ -365,8 +375,8 @@ export default function CreditOfferEditor(properties) {
   const [offerID, setOfferID] = useState();
   useEffect(() => {
     async function parseUrlParams() {
-      if (window.location.search) {
-        const urlSearchParams = new URLSearchParams(window.location.search);
+      if (typeof window === "undefined" || !window.location.search) return;
+      const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         const _id = params && params.id ? params.id : null;
         const _assetSymbol =
@@ -376,7 +386,9 @@ export default function CreditOfferEditor(properties) {
 
         if (_id && _id.length) {
           if (!_id.includes("1.21.")) {
-            console.log("Invalid credit offer url parameter 2");
+            if (import.meta.env?.DEV) {
+              console.warn("Invalid credit offer url parameter");
+            }
             return;
           }
           setOfferID(_id);
@@ -385,7 +397,6 @@ export default function CreditOfferEditor(properties) {
         if (!_id && _assetSymbol && _assetSymbol.length) {
           setSelectedAsset(_assetSymbol.toUpperCase());
         }
-      }
     }
 
     parseUrlParams();
@@ -541,6 +552,7 @@ export default function CreditOfferEditor(properties) {
 
   const [chunkIndex, setChunkIndex] = useState(0);
   useEffect(() => {
+    let cancelled = false;
     let unsub;
 
     if (
@@ -558,30 +570,30 @@ export default function CreditOfferEditor(properties) {
         currentNodeUrl || "",
       ]);
       unsub = usernameDataStore.subscribe(({ data }) => {
+        if (cancelled) return;
         if (data && !data.error && !data.loading) {
-          setAllowedAccounts(
-            allowedAccounts.concat(
-              data.map((x, i) => {
-                return {
-                  name: x.name,
-                  id: x.id,
-                  amount: humanReadableFloat(
-                    _identityBatch[i].amount,
-                    foundAsset.precision,
-                  ),
-                };
-              }),
+          const mapped = data.map((x, i) => ({
+            name: x.name,
+            id: x.id,
+            amount: humanReadableFloat(
+              _identityBatch[i].amount,
+              foundAsset.precision,
             ),
-          );
+          }));
+          setAllowedAccounts((prev) => [...(prev || []), ...mapped]);
+          setChunkIndex((prevIndex) => prevIndex + 1);
+        } else if (data && data.error) {
+          // advance so a failed chunk can't wedge the loader in a resub loop
           setChunkIndex((prevIndex) => prevIndex + 1);
         }
       });
     }
 
     return () => {
+      cancelled = true;
       if (unsub) unsub();
     };
-  }, [identityChunks, chunkIndex]);
+  }, [identityChunks, chunkIndex, usr, currentNodeUrl, foundAsset]);
 
   const [transactionJSON, setTransactionJSON] = useState();
   useEffect(() => {
@@ -1415,23 +1427,34 @@ export default function CreditOfferEditor(properties) {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] p-4 mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Zap className="h-3.5 w-3.5 dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]" />
-                  <span className="text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]">
-                    {t("CreditOfferEditor:networkFee")}
+              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.05)] px-4 py-2.5 mb-4">
+                <div className="flex w-full items-center justify-between gap-2">
+                  <span className="flex min-w-0 items-center gap-2">
+                    <Zap className="h-3.5 w-3.5 shrink-0 dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]" />
+                    <span className="truncate text-[10px] font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.8)] text-[hsl(var(--accent-1-fg))]">
+                      {t("CreditOfferEditor:networkFee")}
+                    </span>
                   </span>
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          aria-label={usr.id === usr.referrer ? t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * fee }) : undefined}
+                          className="ml-auto shrink-0 whitespace-nowrap text-right font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] cursor-default"
+                        >
+                          {fee ? fee.toFixed(5) : "0.00000"}
+                          <span className="text-muted-foreground"> BTS</span>
+                        </button>
+                      </TooltipTrigger>
+                      {usr.id === usr.referrer ? (
+                        <TooltipContent side="top" className="max-w-[240px]">
+                          {t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * fee })}
+                        </TooltipContent>
+                      ) : null}
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
-                <div className="flex items-center gap-1 font-mono text-sm tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
-                  <Zap className="h-3.5 w-3.5" strokeWidth={2.5} />
-                  {fee ? fee.toFixed(5) : "0.00000"}
-                  <span className="text-muted-foreground">BTS</span>
-                </div>
-                {usr.id === usr.referrer && (
-                  <p className="text-[10px] text-muted-foreground mt-1">
-                    {t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * fee })}
-                  </p>
-                )}
               </div>
 
               <Button

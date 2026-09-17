@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { Coins, ShieldAlert, AlertTriangle, Repeat, FileSignature, ChevronDown } from "lucide-react";
+import { Coins, ShieldAlert, AlertTriangle, Repeat, FileSignature, ChevronDown, User, Wallet, HandCoins, Lock, Percent, Receipt, Zap, Info } from "lucide-react";
 
 import {
   Empty,
@@ -26,7 +26,6 @@ import {
   FieldGroup,
   FieldLabel,
   FieldContent,
-  FieldDescription,
   FieldError,
 } from "@/components/ui/field";
 
@@ -76,6 +75,14 @@ import {
 } from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import { Avatar } from "./Avatar.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function autoRepayBadgeLabel(t, value) {
   if (value === 0) return t("CreditOffer:cardContent.noAutoRepayment");
@@ -432,26 +439,147 @@ const CreditDealsCommonRow = memo(function CreditDealsCommonRow({ style, res, ty
             ) : null}
             {openRepay ? (
               <Dialog open={openRepay} onOpenChange={(open) => setOpenRepay(open)}>
-                <DialogContent className="sm:max-w-[900px] bg-card">
-                  <DialogHeader>
-                    <DialogTitle>{t("CreditDeals:dialogTitle", { id: res.id })}</DialogTitle>
-                    <DialogDescription>{t("CreditDeals:description")}</DialogDescription>
-                    <form onSubmit={form.handleSubmit(() => setShowDialog(true))} className="gaps-5">
-                      <FieldGroup>
-                        <Field><FieldLabel htmlFor={`account-${idSuffix}`}>{t("CreditDeals:account")}</FieldLabel><FieldContent><Input id={`account-${idSuffix}`} disabled readOnly placeholder="Bitshares account" className="mb-3 mt-3" value={`${usr.username} (${usr.id})`} /></FieldContent></Field>
-                        <Field><FieldLabel htmlFor={`balance-${idSuffix}`}>{t("CreditDeals:balance", { symbol: debtAsset.symbol })}</FieldLabel><FieldContent><Input id={`balance-${idSuffix}`} disabled readOnly className="mb-3 mt-3" value={`${debtAssetBalance} ${debtAsset.symbol}`} /></FieldContent></Field>
-                        <Controller control={form.control} name="repayAmount" defaultValue="" render={({ field }) => (
-                          <Field><FieldLabel htmlFor={`repay-${idSuffix}`}><div className="grid grid-cols-2 gap-2 mt-2"><div className="col-span-1">{t("CreditDeals:repayAmount", { symbol: debtAsset.symbol })}</div><div className="col-span-1 text-right">{t("CreditDeals:remainingDebt", { amount: borrowedAmount, symbol: debtAsset.symbol })}</div></div></FieldLabel><FieldDescription>{t("CreditDeals:repayDesc")}</FieldDescription><FieldContent><Input id={`repay-${idSuffix}`} className="mb-3" value={field.value ?? ""} placeholder={borrowedAmount} onChange={(e) => { const input = e.target.value; const regex = assetAmountRegex(debtAsset); if (regex.test(input)) { setInputValue(input); field.onChange(input); } }} /></FieldContent></Field>
-                        )} />
-                        <Field><FieldLabel htmlFor={`collateral-${idSuffix}`}><div className="grid grid-cols-2 gap-2 mt-2"><div className="col-span-1">{t("CreditDeals:redeemCollateral")}</div><div className="col-span-1 text-right">{t("CreditDeals:remainingCollateral", { amount: collateralAmount, symbol: collateralAsset.symbol })}</div></div></FieldLabel><FieldDescription>{t("CreditDeals:collateralRedemption", { symbol: collateralAsset.symbol })}</FieldDescription><FieldContent><Input id={`collateral-${idSuffix}`} value={redeemCollateral && collateralAmount ? `${redeemCollateral ?? "?"} ${collateralAsset.symbol} (${((redeemCollateral / collateralAmount) * 100).toFixed(2)}%)` : "0"} disabled readOnly className="mb-3" /></FieldContent></Field>
-                        {finalRepayAmount ? (<Field><FieldLabel htmlFor={`loanfee-${idSuffix}`}><div className="mt-2">{t("CreditDeals:loanLabel")}</div></FieldLabel><FieldDescription>{t("CreditDeals:loanDesc")}</FieldDescription><FieldContent><Input id={`loanfee-${idSuffix}`} disabled placeholder="0" className="mb-3 mt-3" value={`${loanFee} (${debtAsset.symbol}) (${res.fee_rate / 10000}% fee)`} /></FieldContent></Field>) : null}
-                        {finalRepayAmount ? (<Field><FieldLabel htmlFor={`final-${idSuffix}`}><div className="mt-2">{t("CreditDeals:finalPaymentLabel")}</div></FieldLabel><FieldDescription>{t("CreditDeals:finalPaymentDesc", { symbol: collateralAsset.symbol })}</FieldDescription><FieldContent><Input id={`final-${idSuffix}`} disabled placeholder="0" className="mb-3 mt-3" value={`${finalRepayment} (${debtAsset.symbol}) (debt + ${res.fee_rate / 10000}% fee)`} />{debtAssetBalance < finalRepayment ? (<FieldError>{t("CreditDeals:finalPaymentWarning", { symbol: debtAsset.symbol })}</FieldError>) : null}</FieldContent></Field>) : null}
-                        <Field><FieldLabel htmlFor={`networkfee-${idSuffix}`}><div className="mt-2">{t("CreditDeals:networkFee")}</div></FieldLabel><FieldDescription>{t("CreditDeals:networkFeeDesc")}</FieldDescription><FieldContent><Input id={`networkfee-${idSuffix}`} disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />{usr.id === usr.referrer ? (<FieldError>{t("CreditDeals:rebate", { fee: fee * 0.8, chain: usr.chain === "bitshares" ? "BTS" : "TEST" })}</FieldError>) : null}</FieldContent></Field>
-                        {!redeemCollateral || !finalRepayAmount || debtAssetBalance < finalRepayment ? (<Button className="mt-5 mb-3 bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-md shadow-[color:hsl(var(--accent-1)/0.2)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] hover:brightness-110 hover:shadow-lg hover:shadow-[color:hsl(var(--accent-1)/0.5)] hover:-translate-y-px active:translate-y-0 active:scale-95 transition-all duration-200 cursor-pointer" variant="outline" disabled type="submit">{t("CreditDeals:submit")}</Button>) : (<Button className="mt-5 mb-3 bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-md shadow-[color:hsl(var(--accent-1)/0.2)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] hover:brightness-110 hover:shadow-lg hover:shadow-[color:hsl(var(--accent-1)/0.5)] hover:-translate-y-px active:translate-y-0 active:scale-95 transition-all duration-200 cursor-pointer" variant="outline" type="submit">{t("CreditDeals:submit")}</Button>)}
-                      </FieldGroup>
-                    </form>
-                    {showDialog ? (<DeepLinkDialog operationNames={["credit_deal_repay"]} username={usr.username} usrChain={usr.chain} userID={usr.id} dismissCallback={setShowDialog} key={`Repaying${finalRepayAmount}${debtAsset.symbol}toclaimback${collateralAsset.symbol}`} headerText={t("CreditDeals:deepLink", { finalRepayAmount: finalRepayAmount, debtAsset: debtAsset.symbol, collateralAsset: collateralAsset.symbol })} trxJSON={[{ account: usr.id, deal_id: res.id, repay_amount: { amount: blockchainFloat(finalRepayAmount, debtAsset.precision), asset_id: debtAsset.id }, credit_fee: { amount: blockchainFloat(loanFee, debtAsset.precision), asset_id: debtAsset.id }, extensions: [] }]} />) : null}
+                <DialogContent
+                  className="sm:max-w-[520px] max-h-[85vh] flex flex-col gap-0 overflow-hidden border-border bg-card p-0"
+                  onOpenAutoFocus={(e) => {
+                    // Radix focuses the first focusable element on open, which would be
+                    // an info-button and pop its tooltip. Focus the repay input instead.
+                    e.preventDefault();
+                    document.getElementById(`repay-${idSuffix}`)?.focus({ preventScroll: true });
+                  }}
+                >
+                  <DialogHeader className="shrink-0 space-y-1 border-b border-border/60 px-5 pb-3 pt-4 text-left">
+                    <DialogTitle className="text-base font-semibold text-foreground">{t("CreditDeals:dialogTitle", { id: (res.id || "").replace("1.22.", "") })}</DialogTitle>
+                    <DialogDescription className="text-xs text-muted-foreground">{t("CreditDeals:description")}</DialogDescription>
                   </DialogHeader>
+                  <ScrollArea className="min-h-0 flex-1">
+                    <form onSubmit={form.handleSubmit(() => setShowDialog(true))} className="px-5 py-4">
+                      <TooltipProvider delayDuration={200}>
+                      <FieldGroup className="gap-3">
+                        <Field className="gap-1.5">
+                          <FieldLabel htmlFor={`account-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                            <span className="flex w-full items-center gap-1.5">
+                              <User className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                              <span>{t("CreditDeals:account")}</span>
+                            </span>
+                          </FieldLabel>
+                          <FieldContent>
+                            <div className="flex items-center gap-2.5">
+                              <Avatar size={32} name={usr.username} extra={usr.id} />
+                              <Input id={`account-${idSuffix}`} disabled readOnly className="h-8 bg-muted/30 text-xs text-muted-foreground" value={`${usr.username} (${usr.id})`} />
+                            </div>
+                          </FieldContent>
+                        </Field>
+                        <Field className="gap-1.5">
+                          <FieldLabel htmlFor={`balance-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                            <span className="flex w-full items-center gap-1.5">
+                              <Wallet className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                              <span className="truncate">{t("CreditDeals:balance", { symbol: debtAsset.symbol })}</span>
+                            </span>
+                          </FieldLabel>
+                          <FieldContent><Input id={`balance-${idSuffix}`} disabled readOnly className="h-8 bg-muted/30 text-xs text-muted-foreground" value={`${debtAssetBalance} ${debtAsset.symbol}`} /></FieldContent>
+                        </Field>
+                        <Controller control={form.control} name="repayAmount" defaultValue="" render={({ field }) => (
+                          <Field className="gap-1.5">
+                            <FieldLabel htmlFor={`repay-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                              <span className="flex w-full items-baseline justify-between gap-2">
+                                <span className="flex min-w-0 items-center gap-1.5">
+                                  <HandCoins className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                                  <span className="truncate">{t("CreditDeals:repayAmount", { symbol: debtAsset.symbol })}</span>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <button type="button" aria-label={t("CreditDeals:repayDesc")} className="shrink-0 rounded text-muted-foreground hover:text-foreground">
+                                        <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                      </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top" className="max-w-[240px]">{t("CreditDeals:repayDesc")}</TooltipContent>
+                                  </Tooltip>
+                                </span>
+                                <span className="ml-auto shrink-0 whitespace-nowrap text-right font-mono text-[11px] font-normal tabular-nums text-muted-foreground">{t("CreditDeals:remainingDebt", { amount: borrowedAmount, symbol: debtAsset.symbol })}</span>
+                              </span>
+                            </FieldLabel>
+                            <FieldContent><Input id={`repay-${idSuffix}`} className="h-8 text-sm" value={field.value ?? ""} placeholder={String(borrowedAmount)} max={borrowedAmount} inputMode="decimal" onChange={(e) => { const input = e.target.value; const regex = assetAmountRegex(debtAsset); if (!regex.test(input)) return; let next = input; const num = parseFloat(input); if (input !== "" && Number.isFinite(num) && num > borrowedAmount) { next = String(borrowedAmount); } setInputValue(next); field.onChange(next); }} /></FieldContent>
+                          </Field>
+                        )} />
+                        <Field className="gap-1.5">
+                          <FieldLabel htmlFor={`collateral-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                            <span className="flex w-full items-baseline justify-between gap-2">
+                              <span className="flex min-w-0 items-center gap-1.5">
+                                <Lock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                                <span className="truncate">{t("CreditDeals:redeemCollateral")}</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" aria-label={t("CreditDeals:collateralRedemption", { symbol: collateralAsset.symbol })} className="shrink-0 rounded text-muted-foreground hover:text-foreground">
+                                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="max-w-[240px]">{t("CreditDeals:collateralRedemption", { symbol: collateralAsset.symbol })}</TooltipContent>
+                                </Tooltip>
+                              </span>
+                              <span className="ml-auto shrink-0 whitespace-nowrap text-right font-mono text-[11px] font-normal tabular-nums text-muted-foreground">{t("CreditDeals:remainingCollateral", { amount: collateralAmount, symbol: collateralAsset.symbol })}</span>
+                            </span>
+                          </FieldLabel>
+                          <FieldContent><Input id={`collateral-${idSuffix}`} value={redeemCollateral && collateralAmount ? `${redeemCollateral ?? "?"} ${collateralAsset.symbol} (${((redeemCollateral / collateralAmount) * 100).toFixed(2)}%)` : "0"} disabled readOnly className="h-8 bg-muted/30 text-xs text-muted-foreground" /></FieldContent>
+                        </Field>
+                        {finalRepayAmount ? (<Field className="gap-1.5">
+                          <FieldLabel htmlFor={`loanfee-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                            <span className="flex w-full items-center gap-1.5">
+                              <Percent className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                              <span className="truncate">{t("CreditDeals:loanLabel")}</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" aria-label={t("CreditDeals:loanDesc")} className="shrink-0 rounded text-muted-foreground hover:text-foreground">
+                                    <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="max-w-[240px]">{t("CreditDeals:loanDesc")}</TooltipContent>
+                              </Tooltip>
+                            </span>
+                          </FieldLabel>
+                          <FieldContent><Input id={`loanfee-${idSuffix}`} disabled placeholder="0" className="h-8 bg-muted/30 text-xs text-muted-foreground" value={`${loanFee} (${debtAsset.symbol}) (${res.fee_rate / 10000}% fee)`} /></FieldContent>
+                        </Field>) : null}
+                        {finalRepayAmount ? (<Field className="gap-1.5">
+                          <FieldLabel htmlFor={`final-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                            <span className="flex w-full items-center gap-1.5">
+                              <Receipt className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                              <span className="truncate">{t("CreditDeals:finalPaymentLabel")}</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" aria-label={t("CreditDeals:finalPaymentDesc", { symbol: collateralAsset.symbol })} className="shrink-0 rounded text-muted-foreground hover:text-foreground">
+                                    <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="max-w-[240px]">{t("CreditDeals:finalPaymentDesc", { symbol: collateralAsset.symbol })}</TooltipContent>
+                              </Tooltip>
+                            </span>
+                          </FieldLabel>
+                          <FieldContent><Input id={`final-${idSuffix}`} disabled placeholder="0" className="h-8 bg-muted/30 text-xs text-muted-foreground" value={`${finalRepayment} (${debtAsset.symbol}) (debt + ${res.fee_rate / 10000}% fee)`} />{debtAssetBalance < finalRepayment ? (<FieldError className="text-xs">{t("CreditDeals:finalPaymentWarning", { symbol: debtAsset.symbol })}</FieldError>) : null}</FieldContent>
+                        </Field>) : null}
+                        <Field className="gap-1.5">
+                          <FieldLabel htmlFor={`networkfee-${idSuffix}`} className="block w-full text-xs font-medium text-foreground">
+                            <span className="flex w-full items-center gap-1.5">
+                              <Zap className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                              <span className="truncate">{t("CreditDeals:networkFee")}</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" aria-label={t("CreditDeals:networkFeeDesc")} className="shrink-0 rounded text-muted-foreground hover:text-foreground">
+                                    <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="max-w-[240px]">{t("CreditDeals:networkFeeDesc")}</TooltipContent>
+                              </Tooltip>
+                            </span>
+                          </FieldLabel>
+                          <FieldContent><Input id={`networkfee-${idSuffix}`} disabled placeholder={`${fee} BTS`} className="h-8 bg-muted/30 text-xs text-muted-foreground" />{usr.id === usr.referrer ? (<p className="pt-1 text-[11px] text-muted-foreground">{t("CreditDeals:rebate", { fee: fee * 0.8, chain: usr.chain === "bitshares" ? "BTS" : "TEST" })}</p>) : null}</FieldContent>
+                        </Field>
+                      </FieldGroup>
+                      </TooltipProvider>
+                      <div className="sticky bottom-0 -mx-5 mt-4 border-t border-border/60 bg-card/95 px-5 pb-4 pt-3 backdrop-blur">
+                        {!redeemCollateral || !finalRepayAmount || debtAssetBalance < finalRepayment ? (<Button className="w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-md shadow-[color:hsl(var(--accent-1)/0.2)] hover:brightness-110 disabled:opacity-50" variant="outline" disabled type="submit">{t("CreditDeals:submit")}</Button>) : (<Button className="w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-md shadow-[color:hsl(var(--accent-1)/0.2)] hover:brightness-110" variant="outline" type="submit">{t("CreditDeals:submit")}</Button>)}
+                      </div>
+                    </form>
+                  </ScrollArea>
+                    {showDialog ? (<DeepLinkDialog operationNames={["credit_deal_repay"]} username={usr.username} usrChain={usr.chain} userID={usr.id} dismissCallback={setShowDialog} key={`Repaying${finalRepayAmount}${debtAsset.symbol}toclaimback${collateralAsset.symbol}`} headerText={t("CreditDeals:deepLink", { finalRepayAmount: finalRepayAmount, debtAsset: debtAsset.symbol, collateralAsset: collateralAsset.symbol })} trxJSON={[{ account: usr.id, deal_id: res.id, repay_amount: { amount: blockchainFloat(finalRepayAmount, debtAsset.precision), asset_id: debtAsset.id }, credit_fee: { amount: blockchainFloat(loanFee, debtAsset.precision), asset_id: debtAsset.id }, extensions: [] }]} />) : null}
                 </DialogContent>
               </Dialog>
             ) : null}
@@ -558,7 +686,7 @@ export default function CreditDeals(properties) {
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 73);
-      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+      const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

@@ -473,7 +473,7 @@ function avg_point_lines(chunks) {
   for (let i = 0; i < avg_lines.length; i++) {
     const currentLine = avg_lines[i];
     const currentChosenTickets = lineTickets(currentLine);
-    chosenTickets = [...chosenTickets, ...currentChosenTickets];
+    chosenTickets.push(...currentChosenTickets);
   }
   return {
     tickets: chosenTickets,
@@ -597,7 +597,7 @@ function bouncing_ball(initialChunks) {
   for (let i = 0; i < pathOfBall.length; i++) {
     const currentLine = pathOfBall[i];
     const currentChosenTickets = lineTickets(currentLine);
-    chosenTickets = [...chosenTickets, ...currentChosenTickets];
+    chosenTickets.push(...currentChosenTickets);
   }
   return {
     tickets: chosenTickets,

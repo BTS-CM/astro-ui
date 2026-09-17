@@ -200,7 +200,7 @@ export default function AccountLists(properties) {
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 7); // operation: account_whitelist
-      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+      const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

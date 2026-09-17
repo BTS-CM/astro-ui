@@ -6,12 +6,11 @@
  * @returns {*} The value of the property, or the default value if the property is not found.
  */
 const get = (obj, path, defaultValue = undefined) => {
-  const result = path
-    .split(".")
-    .reduce(
-      (res, key) => (res !== null && res !== undefined ? res[key] : res),
-      obj
-    );
+  const parts = Array.isArray(path) ? path : path.split(".");
+  const result = parts.reduce(
+    (res, key) => (res !== null && res !== undefined ? res[key] : res),
+    obj
+  );
   return result !== undefined && result !== obj ? result : defaultValue;
 };
 
@@ -21,8 +20,10 @@ const get = (obj, path, defaultValue = undefined) => {
  * @returns {String}
  */
 async function extractObjects(operationObject) {
-  let accountsToFetch = [];
-  let assetsToFetch = [];
+  const seenAccounts = new Set();
+  const seenAssets = new Set();
+  const accountsToFetch = [];
+  const assetsToFetch = [];
 
   const idKeys = [
     "account_id_type",
@@ -44,7 +45,6 @@ async function extractObjects(operationObject) {
     "issue_to_account",
     "payer",
     "publisher",
-    "fee_paying_account",
     "authorized_account",
     "withdraw_from_account",
     "withdraw_to_account",
@@ -110,14 +110,16 @@ async function extractObjects(operationObject) {
 
   for (let k = 0; k < idKeys.length; k++) {
     const id = get(operationObject, idKeys[k]);
-    if (id && typeof id === "string" && !accountsToFetch.includes(id)) {
+    if (id && typeof id === "string" && !seenAccounts.has(id)) {
+      seenAccounts.add(id);
       accountsToFetch.push(id);
     }
   }
 
   for (let z = 0; z < assetKeys.length; z++) {
     const id = get(operationObject, assetKeys[z]);
-    if (id && !assetsToFetch.includes(id)) {
+    if (id && !seenAssets.has(id)) {
+      seenAssets.add(id);
       assetsToFetch.push(id);
     }
   }

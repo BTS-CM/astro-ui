@@ -14,13 +14,20 @@ function blockchainFloat(satoshis, precision) {
  * @param {String} text
  */
 function copyToClipboard(text) {
+  if (typeof navigator === "undefined" || !navigator.clipboard?.writeText) {
+    return;
+  }
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      console.log("Text copied to clipboard");
+      if (import.meta.env?.DEV) {
+        console.log("Text copied to clipboard");
+      }
     })
     .catch((error) => {
-      console.error("Error copying text to clipboard:", error);
+      if (import.meta.env?.DEV) {
+        console.error("Error copying text to clipboard:", error);
+      }
     });
 }
 
@@ -202,7 +209,21 @@ function assetAmountRegex(asset) {
   return new RegExp(`^[0-9]*(?:\\.[0-9]{0,${asset.precision}})?$`);
 }
 
+/**
+ * Split an array into chunks of the given size (pure, keeps tail).
+ * Single canonical implementation — use everywhere instead of local forks.
+ */
+function chunkArray(arr, size) {
+  if (!Array.isArray(arr) || !(size > 0)) return [];
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) {
+    out.push(arr.slice(i, i + size));
+  }
+  return out;
+}
+
 export {
+  chunkArray,
   debounce,
   blockchainFloat,
   copyToClipboard,
@@ -214,4 +235,6 @@ export {
   getPermissions,
   isInvertedMarket,
   assetAmountRegex,
+  permission_flags,
+  uia_permission_mask,
 };

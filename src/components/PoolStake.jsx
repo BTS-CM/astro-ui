@@ -228,7 +228,7 @@ export default function PoolStake(properties) {
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 61);
-      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+      const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
       setFee(finalFee);
     }
   }, [globalParams]);
@@ -237,7 +237,7 @@ export default function PoolStake(properties) {
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x.id === 62);
-      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
+      const finalFee = humanReadableFloat(foundFee?.data?.fee ?? 0, 5);
       setUnstakeFee(finalFee);
     }
   }, [globalParams]);

@@ -350,7 +350,9 @@ export default function PayInvoice(properties) {
         const q = sp.get("id");
         return q ? String(q) : "";
       }
-    } catch (_) {}
+    } catch (e) {
+      if (import.meta.env?.DEV) console.debug("Failed to parse invoice id param", e);
+    }
     return "";
   }, []);
 

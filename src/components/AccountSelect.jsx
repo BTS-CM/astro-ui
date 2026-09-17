@@ -230,10 +230,11 @@ const AccountSelectRow = React.memo(function AccountSelectRow({
 }) {
   const user = filteredUsers[index];
   if (!user) return null;
+  const fallbackPath = typeof window !== "undefined" ? window.location.pathname : "/";
   return (
     <div style={style} className="pr-1">
       {usr && chain !== usr.chain ? (
-        <a href={window.location.pathname} className="block">
+        <a href={fallbackPath} className="block">
           <AccountCard
             user={user}
             onClick={() =>
@@ -272,10 +273,11 @@ const AccountSelectFavouriteRow = React.memo(function AccountSelectFavouriteRow(
   const favUser = favouriteUsers[index];
   if (!favUser) return null;
   const user = { username: favUser.name, id: favUser.id };
+  const favFallbackPath = typeof window !== "undefined" ? window.location.pathname : "/";
   return (
     <div style={style} className="pr-1">
       {usr && chain !== usr.chain ? (
-        <a href={window.location.pathname} className="block">
+        <a href={favFallbackPath} className="block">
           <AccountCard
             user={user}
             onClick={() =>
@@ -554,7 +556,7 @@ export default function AccountSelect(properties) {
           </div>
 
           {usr && chain !== usr.chain ? (
-            <a href={window.location.pathname} className="block">
+            <a href={typeof window !== "undefined" ? window.location.pathname : "/"} className="block">
               <AccountCard
                 user={{ username: searchResponse.name, id: searchResponse.id }}
                 onClick={() =>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useSyncExternalStore, lazy, Suspense } from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo, lazy, Suspense } from "react";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -284,7 +284,7 @@ export default function PageHeader(properties) {
     () => true,
   );
 
-  useStore($customTheme);
+  useStore($customTheme); // re-render header when active theme changes
   const { resolvedTheme } = useTheme();
   const [domIsDark, setDomIsDark] = React.useState(() => typeof document !== "undefined" && document.documentElement.classList.contains("dark"));
   React.useEffect(() => {
@@ -299,7 +299,7 @@ export default function PageHeader(properties) {
   const activeTheme = getThemeForPage(page || "index");
   const brand = resolveBrand(activeTheme);
 
-  const NAV_SECTIONS = [
+  const NAV_SECTIONS = useMemo(() => [
     {
       id: "exchanging",
       label: "PageHeader:exchangingFundsHeading",
@@ -464,7 +464,9 @@ export default function PageHeader(properties) {
         { slug: "page_themes", title: "Home:page_themes.title", description: "Home:page_themes.subtitle", href: "/page_themes.html" },
       ],
     },
-  ];
+    ],
+    []
+  );
 
   const [currentPath, setCurrentPath] = useState(
     typeof window !== "undefined" ? window.location.pathname : "",

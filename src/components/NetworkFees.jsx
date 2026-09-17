@@ -465,7 +465,7 @@ export default function NetworkFees() {
                   >
                     {headings.map((heading, index) => (
                       <span
-                        key={index}
+                        key={heading}
                         className={
                           index > 1
                             ? `text-right rounded px-1 -mx-1 ${

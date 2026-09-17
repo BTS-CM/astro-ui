@@ -162,7 +162,8 @@ async function beautifyOperation(
 
 const RecentActivityRow = memo(function RecentActivityRow({ index, style, activity, opRowsById, buildingOps, t, usr, currentNodeUrl }) {
   const activityItem = activity[index];
-  const expirationDate = new Date(activityItem.block_data.block_time);
+  if (!activityItem) return null;
+  const expirationDate = new Date(activityItem.block_data?.block_time);
   const now = new Date();
   const timeDiff = now - expirationDate;
   const minutes = Math.floor((timeDiff / 1000 / 60) % 60);
@@ -176,17 +177,17 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
 
   const opKey = useMemo(() => {
     const entry = Object.entries(ChainTypes.operations).find(
-      ([, v]) => v === activityItem.operation_type
+      ([, v]) => v === activityItem?.operation_type
     );
     return entry ? entry[0] : "";
-  }, [activityItem.operation_type]);
+  }, [activityItem?.operation_type]);
 
   const opMethod = useMemo(() => {
     const found = (operationTypes || []).find(
-      (o) => o.id === activityItem.operation_type
+      (o) => o.id === activityItem?.operation_type
     );
     return found?.method || null;
-  }, [activityItem.operation_type]);
+  }, [activityItem?.operation_type]);
 
   const feeDisplay = useMemo(() => {
     const fee = activityItem?.operation_history?.op_object?.fee;
@@ -202,10 +203,19 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
     return `${value} ${symbol}`;
   }, [activityItem, usr]);
 
+  const opJsonText = useMemo(
+    () => JSON.stringify(activityItem?.operation_history?.op_object ?? null, null, 2),
+    [activityItem]
+  );
+  const fullJsonText = useMemo(
+    () => JSON.stringify(activityItem ?? null, null, 2),
+    [activityItem]
+  );
+
   const beautificationMethod = opMethod || opKey;
 
-  const opId = activityItem.account_history.operation_id;
-  const bulkRows = opRowsById[opId] || [];
+  const opId = activityItem.account_history?.operation_id;
+  const bulkRows = (opId != null && opRowsById[opId]) || [];
 
   const [aboutOpen, setAboutOpen] = useState(false);
   const [aboutRows, setAboutRows] = useState(null);
@@ -315,6 +325,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
 
   const sanitizeAndDecode = (input) => {
     if (input === null || input === undefined) return "";
+    if (typeof document === "undefined") return String(input).slice(0, 2000);
     try {
       const str = String(input);
       const sanitized = DOMPurify.sanitize(str, {
@@ -322,10 +333,10 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
         ALLOWED_ATTR: [],
       });
       const textarea = document.createElement("textarea");
-      textarea.innerHTML = sanitized;
+      textarea.textContent = sanitized;
       return textarea.value;
     } catch (e) {
-      return String(input);
+      return "";
     }
   };
 
@@ -344,7 +355,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                 <Badge variant="default" className="cursor-pointer">
                   {opMethod
                     ? t(`Activity:${opMethod}.title`)
-                    : opTypes[activityItem.operation_type.toString()]}
+                    : opTypes[activityItem?.operation_type?.toString()]}
                 </Badge>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[560px] bg-card">
@@ -361,9 +372,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                     <ScrollArea className="h-72 rounded-md border p-3">
                       {buildingOps &&
                       !(
-                        opRowsById[
-                          activityItem.account_history.operation_id
-                        ] || []
+                        opRowsById[activityItem.account_history?.operation_id] || []
                       ).length ? (
                         <div className="flex items-center gap-3">
                           <Spinner />
@@ -371,16 +380,16 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                         </div>
                       ) : (
                           opRowsById[
-                            activityItem.account_history.operation_id
+                            activityItem.account_history?.operation_id
                           ] || []
                         ).length ? (
                         <div className="space-y-1">
                           {(
                             opRowsById[
-                              activityItem.account_history.operation_id
+                              activityItem.account_history?.operation_id
                             ] || []
                           ).map((row, i) => (
-                            <div key={i} className="text-sm">
+                            <div key={`${opId}-${row.key}-${i}`} className="text-sm">
                               {sanitizeAndDecode(
                                 t(
                                   `Activity:${beautificationMethod}.rows.${row.key}`,
@@ -418,7 +427,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                 <Badge variant="default" className="cursor-pointer">
                   {opMethod
                     ? t(`Activity:${opMethod}.title`)
-                    : opTypes[activityItem.operation_type.toString()]}
+                    : opTypes[activityItem?.operation_type?.toString()]}
                 </Badge>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[560px] bg-card">
@@ -435,9 +444,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                     <ScrollArea className="h-72 rounded-md border p-3">
                       {buildingOps &&
                       !(
-                        opRowsById[
-                          activityItem.account_history.operation_id
-                        ] || []
+                        opRowsById[activityItem.account_history?.operation_id] || []
                       ).length ? (
                         <div className="flex items-center gap-3">
                           <Spinner />
@@ -445,16 +452,16 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                         </div>
                       ) : (
                           opRowsById[
-                            activityItem.account_history.operation_id
+                            activityItem.account_history?.operation_id
                           ] || []
                         ).length ? (
                         <div className="space-y-1">
                           {(
                             opRowsById[
-                              activityItem.account_history.operation_id
+                              activityItem.account_history?.operation_id
                             ] || []
                           ).map((row, i) => (
-                            <div key={i} className="text-sm">
+                            <div key={`${opId}-${row.key}-${i}`} className="text-sm">
                               {sanitizeAndDecode(
                                 t(
                                   `Activity:${beautificationMethod}.rows.${row.key}`,
@@ -478,7 +485,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
 
           <div className="font-mono text-xs truncate mt-2">
             <span className="text-foreground">
-              {activityItem.account_history.operation_id}
+              {activityItem.account_history?.operation_id}
             </span>
           </div>
 
@@ -507,7 +514,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                 <Badge variant="default" className="cursor-pointer">
                   {opMethod
                     ? t(`Activity:${opMethod}.title`)
-                    : opTypes[activityItem.operation_type.toString()]}
+                    : opTypes[activityItem?.operation_type?.toString()]}
                 </Badge>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[560px] bg-card">
@@ -524,9 +531,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                     <ScrollArea className="h-72 rounded-md border p-3">
                       {buildingOps &&
                       !(
-                        opRowsById[
-                          activityItem.account_history.operation_id
-                        ] || []
+                        opRowsById[activityItem.account_history?.operation_id] || []
                       ).length ? (
                         <div className="flex items-center gap-3">
                           <Spinner />
@@ -534,16 +539,16 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                         </div>
                       ) : (
                           opRowsById[
-                            activityItem.account_history.operation_id
+                            activityItem.account_history?.operation_id
                           ] || []
                         ).length ? (
                         <div className="space-y-1">
                           {(
                             opRowsById[
-                              activityItem.account_history.operation_id
+                              activityItem.account_history?.operation_id
                             ] || []
                           ).map((row, i) => (
-                            <div key={i} className="text-sm">
+                            <div key={`${opId}-${row.key}-${i}`} className="text-sm">
                               {sanitizeAndDecode(
                                 t(
                                   `Activity:${beautificationMethod}.rows.${row.key}`,
@@ -567,7 +572,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
 
           <div className="font-mono text-xs truncate mt-2">
             <span className="text-foreground">
-              {activityItem.account_history.operation_id}
+              {activityItem.account_history?.operation_id}
             </span>
           </div>
 
@@ -628,24 +633,12 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                 <div className="grid grid-cols-1">
                   <div className="col-span-1">
                     <ScrollArea className="h-72 rounded-md border">
-                      <pre>
-                        {JSON.stringify(
-                          activityItem.operation_history.op_object,
-                          null,
-                          2
-                        )}
-                      </pre>
+                      <pre>{opJsonText}</pre>
                     </ScrollArea>
 
                     <Button
                       onClick={() => {
-                        copyToClipboard(
-                          JSON.stringify(
-                            activityItem.operation_history.op_object,
-                            null,
-                            4
-                          )
-                        );
+                        copyToClipboard(opJsonText);
                       }}
                       className="mt-2"
                     >
@@ -673,13 +666,11 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
                 <div className="grid grid-cols-1">
                   <div className="col-span-1">
                     <ScrollArea className="h-72 rounded-md border">
-                      <pre>{JSON.stringify(activityItem, null, 2)}</pre>
+                      <pre>{fullJsonText}</pre>
                     </ScrollArea>
                     <Button
                       onClick={() => {
-                        copyToClipboard(
-                          JSON.stringify(activityItem, null, 4)
-                        );
+                        copyToClipboard(fullJsonText);
                       }}
                       className="mt-2"
                     >
@@ -861,9 +852,9 @@ export default function PortfolioRecentActivity() {
 
         const entries = await Promise.all(
           activity.map(async (item) => {
-            const operationObject = item.operation_history.op_object;
+            const operationObject = item.operation_history?.op_object;
             const operationType = item.operation_type;
-            const opId = item.account_history.operation_id;
+            const opId = item.account_history?.operation_id;
 
             try {
               const rows = await beautifyOperation(

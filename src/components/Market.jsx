@@ -335,13 +335,12 @@ export default function Market(properties) {
 
   const sparklineData = useMemo(() => {
     if (!publicMarketHistory || publicMarketHistory.length < 2) return [];
-    const sorted = [...publicMarketHistory].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-    const recent = sorted.slice(-40);
-    return recent.map((trade) => ({
-      value: parseFloat(trade.price),
-      label: getTimeSince(trade.date),
+    const withTime = publicMarketHistory.map((t) => ({ t, ts: new Date(t.date).getTime() || 0 }));
+    withTime.sort((a, b) => a.ts - b.ts);
+    const recent = withTime.slice(-40);
+    return recent.map(({ t }) => ({
+      value: Number.parseFloat(t.price) || 0,
+      label: getTimeSince(t.date),
     }));
   }, [publicMarketHistory]);
 
@@ -358,24 +357,28 @@ export default function Market(properties) {
 
     if (buyOrders && buyOrders.length) {
       stats.buyOrderCount = buyOrders.length;
-      stats.totalBuyDepth = buyOrders.reduce(
-        (acc, order) => acc + parseFloat(order.base),
-        0
-      );
-      stats.largestBuyWall = Math.max(
-        ...buyOrders.map((order) => parseFloat(order.base))
-      );
+      let buyDepth = 0;
+      let buyWall = 0;
+      for (let i = 0; i < buyOrders.length; i++) {
+        const v = parseFloat(buyOrders[i].base) || 0;
+        buyDepth += v;
+        if (v > buyWall) buyWall = v;
+      }
+      stats.totalBuyDepth = buyDepth;
+      stats.largestBuyWall = buyWall;
     }
 
     if (sellOrders && sellOrders.length) {
       stats.sellOrderCount = sellOrders.length;
-      stats.totalSellDepth = sellOrders.reduce(
-        (acc, order) => acc + parseFloat(order.base),
-        0
-      );
-      stats.largestSellWall = Math.max(
-        ...sellOrders.map((order) => parseFloat(order.base))
-      );
+      let sellDepth = 0;
+      let sellWall = 0;
+      for (let i = 0; i < sellOrders.length; i++) {
+        const v = parseFloat(sellOrders[i].base) || 0;
+        sellDepth += v;
+        if (v > sellWall) sellWall = v;
+      }
+      stats.totalSellDepth = sellDepth;
+      stats.largestSellWall = sellWall;
     }
 
     return stats;
@@ -393,20 +396,27 @@ export default function Market(properties) {
     };
 
     if (publicMarketHistory && publicMarketHistory.length) {
-      const buyTrades = publicMarketHistory.filter((x) => x.type === "buy");
-      const sellTrades = publicMarketHistory.filter((x) => x.type === "sell");
+      let buyCount = 0;
+      let sellCount = 0;
+      let buyVol = 0;
+      let sellVol = 0;
+      for (let i = 0; i < publicMarketHistory.length; i++) {
+        const trade = publicMarketHistory[i];
+        const amt = parseFloat(trade.amount) || 0;
+        if (trade.type === "buy") {
+          buyCount += 1;
+          buyVol += amt;
+        } else if (trade.type === "sell") {
+          sellCount += 1;
+          sellVol += amt;
+        }
+      }
 
-      stats.completedBuyTrades = buyTrades.length;
-      stats.completedSellTrades = sellTrades.length;
+      stats.completedBuyTrades = buyCount;
+      stats.completedSellTrades = sellCount;
 
-      stats.totalBuyVolume = buyTrades.reduce(
-        (acc, trade) => acc + parseFloat(trade.amount),
-        0
-      );
-      stats.totalSellVolume = sellTrades.reduce(
-        (acc, trade) => acc + parseFloat(trade.amount),
-        0
-      );
+      stats.totalBuyVolume = buyVol;
+      stats.totalSellVolume = sellVol;
 
       stats.avgBuyTradeSize =
         stats.completedBuyTrades > 0
