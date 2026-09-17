@@ -8,7 +8,6 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  HoverCardPortal,
 } from "@/components/ui/hover-card";
 
 interface Props {
@@ -46,7 +45,6 @@ export default function AssetPermission({
     return (
       <HoverCard>
         <HoverCardTrigger>{children}</HoverCardTrigger>
-        <HoverCardPortal>
           <HoverCardContent className={"w-80 mt-1 bg-popover text-popover-foreground border-border z-[9999]"} align="start">
             <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
               {t("AssetCommon:about")}: {id}
@@ -55,7 +53,6 @@ export default function AssetPermission({
               {alreadyDisabled || !permission ? disabledInfo : enabledInfo}
             </p>
           </HoverCardContent>
-        </HoverCardPortal>
       </HoverCard>
     );
   };

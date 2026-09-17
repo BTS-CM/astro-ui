@@ -193,3 +193,5 @@ dist
 /bitsharesjs_reference_code
 /btsjsws_reference_code
 /analysis
+/src/ui-old
+/.tmp-fetch
