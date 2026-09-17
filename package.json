@@ -1,7 +1,7 @@
 {
   "name": "bitshares_astro_ui",
   "productName": "Bitshares Astro UI",
-  "version": "0.5.52",
+  "version": "0.6.30",
   "main": "app/background.js",
   "homepage": "https://github.com/bts-cm/astro-ui",
   "repository": "github:bts-cm/astro-ui",

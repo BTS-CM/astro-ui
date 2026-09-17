@@ -833,35 +833,158 @@ if (currentOS === "win32" || currentOS === "linux") {
     .whenReady()
     .then(() => {
       protocol.handle("file", async (req) => {
-        const { pathname } = new URL(req.url);
+        let pathname;
+        try {
+          pathname = decodeURIComponent(new URL(req.url).pathname);
+        } catch {
+          pathname = new URL(req.url).pathname;
+        }
         if (!pathname) {
-          return;
+          return new Response(null, { status: 400 });
         }
 
-        let fullPath =
+        // Resolve astroDist independently of process.cwd() in dev, so
+        // file:///pagefind/pagefind-entry.json maps to <app>/astroDist/...
+        // In packaged builds astroDist ships as extraResources.
+        const baseDir =
           process.env.NODE_ENV === "development"
-            ? path.join("astroDist", pathname)
-            : path.join(process.resourcesPath, "astroDist", pathname);
+            ? path.join(app.getAppPath(), "astroDist")
+            : path.join(process.resourcesPath, "astroDist");
+
+        const rel = pathname.replace(/^\/+/, "");
+        let fullPath = path.join(baseDir, rel);
 
         if (pathname === "/") {
-          fullPath = path.join(fullPath, "index.html");
+          fullPath = path.join(baseDir, "index.html");
         }
 
-        if (fullPath.includes("..") || fullPath.includes("~")) {
-          return; // Prevent directory traversal attacks
+        // Keep the original traversal protection, but anchored to baseDir
+        // so it cannot accidentally pass/fail on unrelated path segments.
+        const normBase = path.normalize(baseDir + path.sep);
+        const normFull = path.normalize(fullPath);
+        if (
+          normFull !== path.normalize(baseDir) &&
+          !normFull.startsWith(normBase)
+        ) {
+          return new Response(null, { status: 403 });
+        }
+        if (fullPath.includes("~")) {
+          return new Response(null, { status: 403 });
         }
 
-        let _res;
-        try {
-          _res = await readFile(fullPath);
-        } catch (error) {
-          console.log({ error });
+        // Candidate fallbacks are additive only: exact path is tried first,
+        // so every route that works today resolves identically. The extra
+        // candidates only turn a former empty-200 miss (EISDIR/ENOENT) into
+        // a real file when it exists (e.g. trailing-slash doc URLs from
+        // `build.format: 'file'` output, extensionless routes).
+        const candidates = [fullPath];
+        if (pathname.endsWith("/")) {
+          candidates.push(path.join(fullPath, "index.html"));
+        }
+        if (!path.extname(fullPath)) {
+          candidates.push(`${fullPath}.html`);
         }
 
-        const mimeType = mime.lookup(fullPath) || "application/octet-stream";
+        let fileBuf;
+        let resolvedPath = candidates[0];
+        let lastError;
+        for (const cand of candidates) {
+          try {
+            fileBuf = await readFile(cand);
+            resolvedPath = cand;
+            lastError = undefined;
+            break;
+          } catch (error) {
+            lastError = error;
+          }
+        }
 
-        return new Response(_res, {
-          headers: { "content-type": mimeType },
+        if (lastError || fileBuf === undefined) {
+          // file:// base is host-polluted (`file://index.html` from
+          // loadURL): Pagefind/_astro requests arrive nested, e.g.
+          // `/docs/index.html/pagefind/pagefind-entry.json` instead of
+          // `/pagefind/pagefind-entry.json`. Exact path above misses with
+          // ENOENT, so re-anchor known absolute asset roots as a
+          // miss-only fallback. Working routes already returned above and
+          // are unaffected.
+          let reqHost = "";
+          try {
+            reqHost = new URL(req.url).host || "";
+          } catch {
+            reqHost = "";
+          }
+          const assetRoots = ["/pagefind/", "/_astro/"];
+          let resolvedVia = null;
+          for (const root of assetRoots) {
+            const idx = pathname.lastIndexOf(root);
+            if (idx < 0) continue;
+            const suffix = pathname.slice(idx);
+            const suffixPath = path.join(
+              baseDir,
+              suffix.replace(/^\/+/, "")
+            );
+            const normSuffix = path.normalize(suffixPath);
+            if (
+              normSuffix !== path.normalize(baseDir) &&
+              !normSuffix.startsWith(normBase)
+            ) {
+              continue;
+            }
+            if (suffixPath.includes("~")) continue;
+            try {
+              fileBuf = await readFile(suffixPath);
+              resolvedPath = suffixPath;
+              lastError = undefined;
+              resolvedVia = `suffix-fallback:${root}`;
+              break;
+            } catch (error) {
+              lastError = error;
+            }
+          }
+          if (lastError || fileBuf === undefined) {
+            // Previously this returned `new Response(undefined)` with an
+            // implicit 200, so Pagefind's `.json()` threw
+            // "Unexpected end of JSON input" on what was really a 404/EISDIR.
+            // Return an honest 404 so DevTools + Pagefind report the miss.
+            console.log({
+              fileProtocolMiss: req.url,
+              host: reqHost,
+              pathname,
+              fullPath,
+              resolvedVia,
+              error: String(
+                (lastError && lastError.message) || lastError || "not found"
+              ),
+            });
+            return new Response(null, { status: 404 });
+          }
+        }
+
+        let mimeType =
+          mime.lookup(resolvedPath) || "application/octet-stream";
+        // Pagefind ships its wasm as `wasm.<lang>.pagefind`, which
+        // mime-types doesn't know. Serve it as wasm so the search worker
+        // can instantiate it instead of erroring to the main-thread
+        // fallback. Other `.pf_*` chunks correctly stay octet-stream.
+        if (resolvedPath.endsWith(".pagefind")) {
+          mimeType = "application/wasm";
+        }
+
+        // Copy out of Node's Buffer pool: passing the Buffer directly can
+        // surface a mis-sized ArrayBuffer to the Response body.
+        const body = new Uint8Array(
+          fileBuf.buffer.slice(
+            fileBuf.byteOffset,
+            fileBuf.byteOffset + fileBuf.byteLength
+          )
+        );
+
+        return new Response(body, {
+          status: 200,
+          headers: {
+            "content-type": mimeType,
+            "content-length": String(body.byteLength),
+          },
         });
       });
     })
@@ -871,35 +994,158 @@ if (currentOS === "win32" || currentOS === "linux") {
     .whenReady()
     .then(() => {
       protocol.handle("file", async (req) => {
-        const { pathname } = new URL(req.url);
+        let pathname;
+        try {
+          pathname = decodeURIComponent(new URL(req.url).pathname);
+        } catch {
+          pathname = new URL(req.url).pathname;
+        }
         if (!pathname) {
-          return;
+          return new Response(null, { status: 400 });
         }
 
-        let fullPath =
+        // Resolve astroDist independently of process.cwd() in dev, so
+        // file:///pagefind/pagefind-entry.json maps to <app>/astroDist/...
+        // In packaged builds astroDist ships as extraResources.
+        const baseDir =
           process.env.NODE_ENV === "development"
-            ? path.join("astroDist", pathname)
-            : path.join(process.resourcesPath, "astroDist", pathname);
+            ? path.join(app.getAppPath(), "astroDist")
+            : path.join(process.resourcesPath, "astroDist");
+
+        const rel = pathname.replace(/^\/+/, "");
+        let fullPath = path.join(baseDir, rel);
 
         if (pathname === "/") {
-          fullPath = path.join(fullPath, "index.html");
+          fullPath = path.join(baseDir, "index.html");
         }
 
-        if (fullPath.includes("..") || fullPath.includes("~")) {
-          return; // Prevent directory traversal attacks
+        // Keep the original traversal protection, but anchored to baseDir
+        // so it cannot accidentally pass/fail on unrelated path segments.
+        const normBase = path.normalize(baseDir + path.sep);
+        const normFull = path.normalize(fullPath);
+        if (
+          normFull !== path.normalize(baseDir) &&
+          !normFull.startsWith(normBase)
+        ) {
+          return new Response(null, { status: 403 });
+        }
+        if (fullPath.includes("~")) {
+          return new Response(null, { status: 403 });
         }
 
-        let _res;
-        try {
-          _res = await readFile(fullPath);
-        } catch (error) {
-          console.log({ error });
+        // Candidate fallbacks are additive only: exact path is tried first,
+        // so every route that works today resolves identically. The extra
+        // candidates only turn a former empty-200 miss (EISDIR/ENOENT) into
+        // a real file when it exists (e.g. trailing-slash doc URLs from
+        // `build.format: 'file'` output, extensionless routes).
+        const candidates = [fullPath];
+        if (pathname.endsWith("/")) {
+          candidates.push(path.join(fullPath, "index.html"));
+        }
+        if (!path.extname(fullPath)) {
+          candidates.push(`${fullPath}.html`);
         }
 
-        const mimeType = mime.lookup(fullPath) || "application/octet-stream";
+        let fileBuf;
+        let resolvedPath = candidates[0];
+        let lastError;
+        for (const cand of candidates) {
+          try {
+            fileBuf = await readFile(cand);
+            resolvedPath = cand;
+            lastError = undefined;
+            break;
+          } catch (error) {
+            lastError = error;
+          }
+        }
 
-        return new Response(_res, {
-          headers: { "content-type": mimeType },
+        if (lastError || fileBuf === undefined) {
+          // file:// base is host-polluted (`file://index.html` from
+          // loadURL): Pagefind/_astro requests arrive nested, e.g.
+          // `/docs/index.html/pagefind/pagefind-entry.json` instead of
+          // `/pagefind/pagefind-entry.json`. Exact path above misses with
+          // ENOENT, so re-anchor known absolute asset roots as a
+          // miss-only fallback. Working routes already returned above and
+          // are unaffected.
+          let reqHost = "";
+          try {
+            reqHost = new URL(req.url).host || "";
+          } catch {
+            reqHost = "";
+          }
+          const assetRoots = ["/pagefind/", "/_astro/"];
+          let resolvedVia = null;
+          for (const root of assetRoots) {
+            const idx = pathname.lastIndexOf(root);
+            if (idx < 0) continue;
+            const suffix = pathname.slice(idx);
+            const suffixPath = path.join(
+              baseDir,
+              suffix.replace(/^\/+/, "")
+            );
+            const normSuffix = path.normalize(suffixPath);
+            if (
+              normSuffix !== path.normalize(baseDir) &&
+              !normSuffix.startsWith(normBase)
+            ) {
+              continue;
+            }
+            if (suffixPath.includes("~")) continue;
+            try {
+              fileBuf = await readFile(suffixPath);
+              resolvedPath = suffixPath;
+              lastError = undefined;
+              resolvedVia = `suffix-fallback:${root}`;
+              break;
+            } catch (error) {
+              lastError = error;
+            }
+          }
+          if (lastError || fileBuf === undefined) {
+            // Previously this returned `new Response(undefined)` with an
+            // implicit 200, so Pagefind's `.json()` threw
+            // "Unexpected end of JSON input" on what was really a 404/EISDIR.
+            // Return an honest 404 so DevTools + Pagefind report the miss.
+            console.log({
+              fileProtocolMiss: req.url,
+              host: reqHost,
+              pathname,
+              fullPath,
+              resolvedVia,
+              error: String(
+                (lastError && lastError.message) || lastError || "not found"
+              ),
+            });
+            return new Response(null, { status: 404 });
+          }
+        }
+
+        let mimeType =
+          mime.lookup(resolvedPath) || "application/octet-stream";
+        // Pagefind ships its wasm as `wasm.<lang>.pagefind`, which
+        // mime-types doesn't know. Serve it as wasm so the search worker
+        // can instantiate it instead of erroring to the main-thread
+        // fallback. Other `.pf_*` chunks correctly stay octet-stream.
+        if (resolvedPath.endsWith(".pagefind")) {
+          mimeType = "application/wasm";
+        }
+
+        // Copy out of Node's Buffer pool: passing the Buffer directly can
+        // surface a mis-sized ArrayBuffer to the Response body.
+        const body = new Uint8Array(
+          fileBuf.buffer.slice(
+            fileBuf.byteOffset,
+            fileBuf.byteOffset + fileBuf.byteLength
+          )
+        );
+
+        return new Response(body, {
+          status: 200,
+          headers: {
+            "content-type": mimeType,
+            "content-length": String(body.byteLength),
+          },
         });
       });
     })
