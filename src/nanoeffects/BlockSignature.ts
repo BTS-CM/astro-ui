@@ -24,35 +24,46 @@ async function getBlockSignature(
   blockNumber: number | string,
   specificNode?: string | null,
 ) {
-  return new Promise((resolve, reject) => {
-    const node = specificNode
-      ? specificNode
-      : (chains as any)[chain].nodeList[0].url;
+  const node = specificNode
+    ? specificNode
+    : (chains as any)[chain].nodeList[0].url;
 
-    let currentAPI;
-    Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-      console.log({ error }),
-    )
-      .then((api: any) => {
-        currentAPI = api;
-        return api
-          .db_api()
-          .exec("get_block", [parseInt(blockNumber as string, 10)]);
-      })
-      .then((block: any) => {
-        currentAPI.close();
-        if (!block || !block.witness_signature) {
-          reject(new Error("Block signature not found"));
-          return;
-        }
-        resolve(block.witness_signature);
-      })
-      .catch((error: Error) => {
-        if (currentAPI) currentAPI.close();
-        console.log({ error });
-        reject(error);
-      });
-  });
+  let currentAPI: any;
+  try {
+    // NOTE: Apis.instance() is synchronous (returns the shared singleton,
+    // not a Promise), so `.then()` on its result throws
+    // "I.instance(...).then is not a function". `await` works on both
+    // plain values and Promises, matching every other nanoeffect.
+    currentAPI = await Apis.instance(
+      node,
+      true,
+      4000,
+      { enableDatabase: true },
+      (error: Error) => console.log({ error }),
+    );
+  } catch (error) {
+    console.log({ error });
+    throw error;
+  }
+
+  try {
+    const block = await currentAPI
+      .db_api()
+      .exec("get_block", [parseInt(blockNumber as string, 10)]);
+    if (!block || !block.witness_signature) {
+      throw new Error("Block signature not found");
+    }
+    return block.witness_signature;
+  } catch (error) {
+    console.log({ error });
+    throw error;
+  } finally {
+    try {
+      currentAPI.close();
+    } catch {
+      // ignore release errors
+    }
+  }
 }
 
 /**

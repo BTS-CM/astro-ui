@@ -1,4 +1,6 @@
 {
+  "pageTitle": "Preferiti",
+  "pageDescription": "I tuoi asset, coppie di mercato e account preferiti in un unico posto.",
   "assetsHeader": "Risorse preferite",
   "addAsset": "Aggiungi risorsa",
   "issuer": "Emittente: {{issuer}}",
@@ -18,11 +20,19 @@
   "selectBase": "Seleziona Base",
   "selectQuote": "Seleziona Preventivo",
   "trade": "Commercio",
+  "marketActions": "Azioni mercato",
+  "dexLimitOrders": "Ordini limite DEX",
+  "instantTrading": "Trading istantaneo",
+  "simpleSwap": "Scambio semplice",
   "pairsEmptyTitle": "Nessuna coppia di mercato preferita",
   "pairsEmptyDescription": "Crea una coppia come BTS_CNY e apparirà qui per un accesso rapido.",
   "savePair": "Salva coppia",
   "clear": "Chiaro",
   "transfer": "Trasferire",
   "timedTransfer": "Trasferimento a tempo",
+  "withdrawPermission": "Autorizzazione al prelievo",
+  "htlcTransfer": "Trasferimento HTLC",
+  "actions": "Azioni",
+  "assetActions": "Azioni asset",
   "vestAssets": "Vestire le risorse"
 }

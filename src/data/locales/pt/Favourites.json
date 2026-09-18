@@ -1,4 +1,6 @@
 {
+  "pageTitle": "Favoritos",
+  "pageDescription": "Os seus ativos, pares de mercado e contas favoritos num só lugar.",
   "assetsHeader": "Seus favoritos",
   "issuer": "Emissor: {{issuer}}",
   "remove": "Remover",
@@ -17,12 +19,20 @@
   "selectBase": "Selecione Base",
   "selectQuote": "Selecione Cotação",
   "trade": "Troca",
+  "marketActions": "Ações de mercado",
+  "dexLimitOrders": "Ordens limite DEX",
+  "instantTrading": "Negociação instantânea",
+  "simpleSwap": "Troca simples",
   "pairsEmptyTitle": "Nenhum par de mercado favorito",
   "pairsEmptyDescription": "Crie um par como BTS_CNY e ele aparecerá aqui para acesso rápido.",
   "savePair": "Salvar par",
   "clear": "Claro",
   "transfer": "Transferir",
   "timedTransfer": "Transferência Cronometrada",
+  "withdrawPermission": "Permissão de levantamento",
+  "htlcTransfer": "Transferência HTLC",
+  "actions": "Ações",
+  "assetActions": "Ações do ativo",
   "vestAssets": "Ativos de colete",
   "addAsset": "Adicionar ativo"
 }

@@ -45,6 +45,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   ArrowLeftRight,
@@ -103,24 +110,158 @@ function RemoveButton({ onClick, label }) {
   );
 }
 
-function ActionPill({ href, icon: Icon, children, accent = "slate" }) {
-  const palette = {
-    slate: "border-border text-foreground/70 hover:bg-accent/60 hover:text-accent-foreground",
-    emerald: "border-[hsl(var(--accent-success)/0.3)] text-[hsl(var(--accent-success-fg))] hover:bg-[hsl(var(--accent-success)/0.1)]",
-  }[accent];
-
+function UserActionsSelect({ userName, t }) {
+  const encodedName = encodeURIComponent(userName);
+  // Radix drives mouse hover via data-highlighted (the base SelectItem only
+  // styles focus:), so style it explicitly for hover/keyboard highlight.
+  const userActionItemCls =
+    "cursor-pointer transition-colors data-[highlighted]:bg-[hsl(var(--accent-success)/0.12)] data-[highlighted]:text-[hsl(var(--accent-success-fg))]";
   return (
-    <a href={href} className="no-underline">
-      <Button
-        type="button"
-        variant="outline"
+    <Select
+      onValueChange={(href) => {
+        if (href) {
+          window.location.href = href;
+        }
+      }}
+    >
+      <SelectTrigger
         size="sm"
-        className={`h-8 gap-1.5 px-3 rounded-full border ${palette}`}
+        className="rounded-full border-[hsl(var(--accent-success)/0.3)] text-[hsl(var(--accent-success-fg))] hover:bg-[hsl(var(--accent-success)/0.1)]"
       >
-        <Icon className="h-3.5 w-3.5" />
-        <span>{children}</span>
-      </Button>
-    </a>
+        <SelectValue placeholder={t("Favourites:actions")} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem
+          value={`/transfer.html?to=${encodedName}`}
+          className={userActionItemCls}
+        >
+          {t("Favourites:transfer")}
+        </SelectItem>
+        <SelectItem
+          value={`/timed_transfer.html?to=${encodedName}`}
+          className={userActionItemCls}
+        >
+          {t("Favourites:timedTransfer")}
+        </SelectItem>
+        <SelectItem
+          value={`/withdraw_permissions.html?to=${encodedName}`}
+          className={userActionItemCls}
+        >
+          {t("Favourites:withdrawPermission")}
+        </SelectItem>
+        <SelectItem
+          value={`/htlc.html?to=${encodedName}`}
+          className={userActionItemCls}
+        >
+          {t("Favourites:htlcTransfer")}
+        </SelectItem>
+        <SelectItem
+          value={`/create_vesting.html?to=${encodedName}`}
+          className={userActionItemCls}
+        >
+          {t("Favourites:vestAssets")}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  );
+}
+
+function AssetActionsSelect({ item, isSmartCoin, t }) {
+  const encodedSymbol = encodeURIComponent(item.symbol);
+  const tradeHref = `/dex.html?market=${item.symbol}_${item.symbol === "BTS" ? "HONEST.USD" : "BTS"}`;
+  const assetActionItemCls =
+    "cursor-pointer transition-colors data-[highlighted]:bg-[hsl(var(--accent-success)/0.12)] data-[highlighted]:text-[hsl(var(--accent-success-fg))]";
+  return (
+    <Select
+      onValueChange={(href) => {
+        if (href) {
+          window.location.href = href;
+        }
+      }}
+    >
+      <SelectTrigger
+        size="sm"
+        className="rounded-full border-[hsl(var(--accent-success)/0.3)] text-[hsl(var(--accent-success-fg))] hover:bg-[hsl(var(--accent-success)/0.1)]"
+      >
+        <SelectValue placeholder={t("Favourites:assetActions")} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={tradeHref} className={assetActionItemCls}>
+          {t("IssuedAssets:proceedToTrade")}
+        </SelectItem>
+        <SelectItem
+          value={`/borrow.html?tab=searchOffers&searchTab=borrow&searchText=${encodedSymbol}`}
+          className={assetActionItemCls}
+        >
+          {t("IssuedAssets:creditBorrow")}
+        </SelectItem>
+        <SelectItem
+          value={`/lend.html?asset=${encodedSymbol}`}
+          className={assetActionItemCls}
+        >
+          {t("IssuedAssets:creditLend")}
+        </SelectItem>
+        {isSmartCoin ? (
+          <SelectItem
+            value={`/smartcoin.html?id=${item.id}`}
+            className={assetActionItemCls}
+          >
+            {t("IssuedAssets:proceedToBorrow")}
+          </SelectItem>
+        ) : null}
+        {isSmartCoin ? (
+          <SelectItem
+            value={`/publish_feed.html?id=${item.id}`}
+            className={assetActionItemCls}
+          >
+            {t("IssuedAssets:publishFeed")}
+          </SelectItem>
+        ) : null}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function PairActionsSelect({ pair, poolId, t }) {
+  const pairActionItemCls =
+    "cursor-pointer transition-colors data-[highlighted]:bg-[hsl(var(--accent-success)/0.12)] data-[highlighted]:text-[hsl(var(--accent-success-fg))]";
+  return (
+    <Select
+      onValueChange={(href) => {
+        if (href) {
+          window.location.href = href;
+        }
+      }}
+    >
+      <SelectTrigger
+        size="sm"
+        className="rounded-full border-[hsl(var(--accent-success)/0.3)] text-[hsl(var(--accent-success-fg))] hover:bg-[hsl(var(--accent-success)/0.1)]"
+      >
+        <SelectValue placeholder={t("Favourites:marketActions")} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem
+          value={`/dex.html?market=${pair}`}
+          className={pairActionItemCls}
+        >
+          {t("Favourites:dexLimitOrders")}
+        </SelectItem>
+        <SelectItem
+          value={`/instant_trade.html?market=${pair}`}
+          className={pairActionItemCls}
+        >
+          {t("Favourites:instantTrading")}
+        </SelectItem>
+        {poolId ? (
+          <SelectItem
+            value={`/swap.html?pool=${poolId}`}
+            className={pairActionItemCls}
+          >
+            {t("Favourites:simpleSwap")}
+          </SelectItem>
+        ) : null}
+      </SelectContent>
+    </Select>
   );
 }
 
@@ -170,8 +311,6 @@ const FavouriteAssetRow = React.memo(function FavouriteAssetRow({
       ? bitassetData.find((data) => data.id === fullAsset.bitasset_data_id)
       : null;
 
-  const tradeHref = `/dex.html?market=${item.symbol}_${item.symbol === "BTS" ? "HONEST.USD" : "BTS"}`;
-
   const isPredictionMarket = !!relevantBitassetData?.is_prediction_market;
   const isSmartCoin = !!relevantBitassetData || !!fullAsset?.bitasset_data_id;
   const inPool = poolSymbols?.has(item.symbol) ?? false;
@@ -179,16 +318,16 @@ const FavouriteAssetRow = React.memo(function FavouriteAssetRow({
   const renderCard = (layout) => {
     const isStacked = layout === "stacked";
     const cardCls = isStacked
-      ? "mb-3 group bg-card/60 border border-[hsl(var(--accent-1)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:border-l-[hsl(var(--accent-1)/0.6)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all rounded-xl block md:hidden"
-      : "mb-3 group bg-card/60 border border-[hsl(var(--accent-1)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:border-l-[hsl(var(--accent-1)/0.6)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all rounded-xl hidden md:block";
+      ? "mb-0 h-full overflow-hidden group justify-center bg-card/60 border border-[hsl(var(--accent-1)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:border-l-[hsl(var(--accent-1)/0.6)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all rounded-xl flex md:hidden py-0 gap-0"
+      : "mb-0 h-full overflow-hidden group justify-center bg-card/60 border border-[hsl(var(--accent-1)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:border-l-[hsl(var(--accent-1)/0.6)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all rounded-xl hidden md:flex py-0 gap-0";
     const headerCls = isStacked
-      ? "px-4 py-4"
-      : "px-4 py-4 flex flex-row items-center justify-between gap-3";
+      ? "px-4 py-2"
+      : "px-4 py-2 flex flex-row items-center justify-between gap-3";
 
     return (
       <Card className={cardCls}>
         <CardHeader className={headerCls}>
-          <div className="space-y-1 min-w-0">
+          <div className="space-y-0.5 min-w-0">
             <CardTitle className="text-base text-foreground truncate flex items-center gap-1.5">
               <Star className="h-3.5 w-3.5 shrink-0 fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" />
               <span className="font-semibold">{item.symbol}</span>
@@ -234,13 +373,11 @@ const FavouriteAssetRow = React.memo(function FavouriteAssetRow({
           <div
             className={
               isStacked
-                ? "mt-3 flex items-center gap-2 flex-wrap"
+                ? "mt-2 flex items-center gap-2 flex-wrap"
                 : "flex items-center gap-2 flex-shrink-0"
             }
           >
-            <ActionPill href={tradeHref} icon={ArrowLeftRight} accent="emerald">
-              {t("IssuedAssets:proceedToTrade")}
-            </ActionPill>
+            <AssetActionsSelect item={item} isSmartCoin={isSmartCoin} t={t} />
 
             {showIssuerActions && assetDetails ? (
               <AssetIssuerActions
@@ -271,7 +408,7 @@ const FavouriteAssetRow = React.memo(function FavouriteAssetRow({
   };
 
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
+    <div style={{ ...style, padding: "0 10px 10px 0", overflow: "hidden" }}>
       {renderCard("stacked")}
       {renderCard("row")}
     </div>
@@ -284,27 +421,23 @@ const FavouritePairRowMobile = React.memo(function FavouritePairRowMobile({
   chainPairs,
   _chain,
   t,
+  poolByPair,
 }) {
   const pair = chainPairs[index];
   if (!pair) return null;
+  const poolId = poolByPair?.get(pair) ?? null;
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-3 group bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl">
-        <CardHeader className="px-4 py-4">
-          <div className="space-y-1">
+    <div style={{ ...style, padding: "0 10px 10px 0", overflow: "hidden" }}>
+      <Card className="mb-0 h-full overflow-hidden group justify-center bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl py-0 gap-0">
+        <CardHeader className="px-4 py-2">
+          <div className="space-y-0.5">
             <CardTitle className="text-base text-foreground font-semibold flex items-center gap-1.5 min-w-0">
               <Star className="h-3.5 w-3.5 shrink-0 fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" />
               <span className="truncate">{pair}</span>
             </CardTitle>
           </div>
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <ActionPill
-              href={`/dex.html?market=${pair}`}
-              icon={ArrowLeftRight}
-              accent="emerald"
-            >
-              {t("Favourites:trade")}
-            </ActionPill>
+          <div className="mt-2 flex items-center gap-2 flex-wrap">
+            <PairActionsSelect pair={pair} poolId={poolId} t={t} />
             <div className="ml-auto">
               <RemoveButton
                 onClick={() => removeFavouritePair(_chain, pair)}
@@ -324,27 +457,23 @@ const FavouritePairRowDesktop = React.memo(function FavouritePairRowDesktop({
   chainPairs,
   _chain,
   t,
+  poolByPair,
 }) {
   const pair = chainPairs[index];
   if (!pair) return null;
+  const poolId = poolByPair?.get(pair) ?? null;
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-3 group bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl">
-        <CardHeader className="px-4 py-4 flex flex-row items-center justify-between gap-3">
-          <div className="space-y-1">
+    <div style={{ ...style, padding: "0 10px 10px 0", overflow: "hidden" }}>
+      <Card className="mb-0 h-full overflow-hidden group justify-center bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl py-0 gap-0">
+        <CardHeader className="px-4 py-2 flex flex-row items-center justify-between gap-3">
+          <div className="space-y-0.5">
             <CardTitle className="text-base text-foreground font-semibold flex items-center gap-1.5 min-w-0">
               <Star className="h-3.5 w-3.5 shrink-0 fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" />
               <span className="truncate">{pair}</span>
             </CardTitle>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <ActionPill
-              href={`/dex.html?market=${pair}`}
-              icon={ArrowLeftRight}
-              accent="emerald"
-            >
-              {t("Favourites:trade")}
-            </ActionPill>
+            <PairActionsSelect pair={pair} poolId={poolId} t={t} />
             <div className="ml-1">
               <RemoveButton
                 onClick={() => removeFavouritePair(_chain, pair)}
@@ -364,14 +493,15 @@ const FavouriteUserRowMobile = React.memo(function FavouriteUserRowMobile({
   favouriteUsers,
   _chain,
   t,
+  currentUser,
 }) {
   const user = favouriteUsers[_chain][index];
   if (!user) return null;
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-3 group bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl">
-        <CardHeader className="px-4 py-4">
-          <div className="space-y-1 min-w-0">
+    <div style={{ ...style, padding: "0 10px 10px 0", overflow: "hidden" }}>
+      <Card className="mb-0 h-full overflow-hidden group justify-center bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl py-0 gap-0">
+        <CardHeader className="px-4 py-2">
+          <div className="space-y-0.5 min-w-0">
               <CardTitle className="text-base text-foreground truncate flex items-center gap-1.5">
                 <Star className="h-3.5 w-3.5 shrink-0 fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" />
                 <span className="font-semibold">{user.name}</span>
@@ -380,14 +510,10 @@ const FavouriteUserRowMobile = React.memo(function FavouriteUserRowMobile({
               </span>
             </CardTitle>
           </div>
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <ActionPill
-              href={`/transfer.html?to=${encodeURIComponent(user.name)}`}
-              icon={Send}
-              accent="emerald"
-            >
-              {t("Favourites:transfer")}
-            </ActionPill>
+          <div className="mt-2 flex items-center gap-2 flex-wrap">
+            {currentUser?.id !== user.id ? (
+              <UserActionsSelect userName={user.name} t={t} />
+            ) : null}
             <div className="ml-auto">
               <RemoveButton
                 onClick={() => removeFavouriteUser(_chain, user)}
@@ -407,14 +533,15 @@ const FavouriteUserRowDesktop = React.memo(function FavouriteUserRowDesktop({
   favouriteUsers,
   _chain,
   t,
+  currentUser,
 }) {
   const user = favouriteUsers[_chain][index];
   if (!user) return null;
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-3 group bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl">
-        <CardHeader className="px-4 py-4 flex flex-row items-center justify-between gap-3">
-          <div className="space-y-1 min-w-0">
+    <div style={{ ...style, padding: "0 10px 10px 0", overflow: "hidden" }}>
+      <Card className="mb-0 h-full overflow-hidden group justify-center bg-card/60 border border-[hsl(var(--accent-2)/0.15)] border-l-2 border-l-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:border-l-[hsl(var(--accent-2)/0.6)] hover:bg-[hsl(var(--accent-2)/0.03)] hover:shadow-md transition-all rounded-xl py-0 gap-0">
+        <CardHeader className="px-4 py-2 flex flex-row items-center justify-between gap-3">
+          <div className="space-y-0.5 min-w-0">
               <CardTitle className="text-base text-foreground truncate flex items-center gap-1.5">
                 <Star className="h-3.5 w-3.5 shrink-0 fill-[hsl(var(--accent-warning))] text-[hsl(var(--accent-warning-fg))]" />
                 <span className="font-semibold">{user.name}</span>
@@ -424,13 +551,9 @@ const FavouriteUserRowDesktop = React.memo(function FavouriteUserRowDesktop({
             </CardTitle>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <ActionPill
-              href={`/transfer.html?to=${encodeURIComponent(user.name)}`}
-              icon={Send}
-              accent="emerald"
-            >
-              {t("Favourites:transfer")}
-            </ActionPill>
+            {currentUser?.id !== user.id ? (
+              <UserActionsSelect userName={user.name} t={t} />
+            ) : null}
             <div className="ml-1">
               <RemoveButton
                 onClick={() => removeFavouriteUser(_chain, user)}
@@ -684,6 +807,24 @@ export default function Favourites(properties) {
     return set;
   }, [_chain, _poolsBTS, _poolsTEST]);
 
+  // Map "BASE_QUOTE" (either direction) to the liquidity pool id, if any.
+  const poolByPair = useMemo(() => {
+    const pools = _chain !== "bitshares" ? _poolsTEST : _poolsBTS;
+    const map = new Map();
+    if (Array.isArray(pools)) {
+      for (const pool of pools) {
+        if (!pool?.id || !pool?.asset_a_symbol || !pool?.asset_b_symbol) {
+          continue;
+        }
+        const a = pool.asset_a_symbol;
+        const b = pool.asset_b_symbol;
+        if (!map.has(`${a}_${b}`)) map.set(`${a}_${b}`, pool.id);
+        if (!map.has(`${b}_${a}`)) map.set(`${b}_${a}`, pool.id);
+      }
+    }
+    return map;
+  }, [_chain, _poolsBTS, _poolsTEST]);
+
   const assetRowProps = useMemo(
     () => ({
       chainFavourites,
@@ -717,12 +858,12 @@ export default function Favourites(properties) {
     ]
   );
   const pairRowProps = useMemo(
-    () => ({ chainPairs, _chain, t }),
-    [chainPairs, _chain, t]
+    () => ({ chainPairs, _chain, t, poolByPair }),
+    [chainPairs, _chain, t, poolByPair]
   );
   const userRowProps = useMemo(
-    () => ({ favouriteUsers, _chain, t }),
-    [favouriteUsers, _chain, t]
+    () => ({ favouriteUsers, _chain, t, currentUser }),
+    [favouriteUsers, _chain, t, currentUser]
   );
 
   return (
@@ -748,45 +889,27 @@ export default function Favourites(properties) {
             </span>
             <div>
               <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
-                {t("Favourites:assetsHeader")}
+                {t("Favourites:pageTitle")}
               </h2>
               <p className="text-xs text-muted-foreground/70 mt-0.5">
-                {t("Favourites:assetsEmptyDescription")}
+                {t("Favourites:pageDescription")}
               </p>
-            </div>
-            <div className="ml-auto flex items-center gap-1.5">
-              {chainFavourites && chainFavourites.length ? (
-                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
-                  {chainFavourites.length}
-                </span>
-              ) : null}
-              {chainPairs && chainPairs.length ? (
-                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-2-fg))]">
-                  {chainPairs.length}
-                </span>
-              ) : null}
-              {favouriteUsers && (favouriteUsers[_chain] ?? []).length ? (
-                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-3)/0.3)] bg-[hsl(var(--accent-3)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-3-fg))]">
-                  {(favouriteUsers[_chain] ?? []).length}
-                </span>
-              ) : null}
             </div>
           </div>
         </div>
       </Card>
       <Card className="rounded-xl overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
-        <CardHeader className="px-5 py-4 flex flex-row items-center justify-between">
+        <CardHeader className="px-4 py-2 flex flex-row items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.25)] flex items-center justify-center">
               <Star className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
             </div>
-            <div>
+            <div className="flex items-center gap-2">
               <CardTitle className="text-xl font-bold tracking-tight text-foreground">
                 {t("Favourites:assetsHeader")}
               </CardTitle>
               {chainFavourites && chainFavourites.length ? (
-                <span className="mt-1 inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
+                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
                   {chainFavourites.length}
                 </span>
               ) : null}
@@ -809,9 +932,9 @@ export default function Favourites(properties) {
             />
           </div>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="px-4 pb-4 pt-2">
           {chainFavourites && chainFavourites.length ? (
-            <>
+            <div className="mt-1 rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.04)] px-3 pt-3">
               {loading ? (
                 <div className="space-y-2 mt-1" aria-busy="true" aria-live="polite">
                   {[0, 1, 2].map((i) => (
@@ -832,7 +955,7 @@ export default function Favourites(properties) {
                     <List
                       rowComponent={FavouriteAssetRow}
                       rowCount={chainFavourites.length}
-                      rowHeight={128}
+                      rowHeight={120}
                       height={420}
                       width="100%"
                       rowProps={assetRowProps}
@@ -842,7 +965,7 @@ export default function Favourites(properties) {
                     <List
                       rowComponent={FavouriteAssetRow}
                       rowCount={chainFavourites.length}
-                      rowHeight={96}
+                      rowHeight={84}
                       height={420}
                       width="100%"
                       rowProps={assetRowProps}
@@ -850,9 +973,9 @@ export default function Favourites(properties) {
                   </div>
                 </>
               )}
-            </>
+            </div>
           ) : (
-            <Empty className="mt-2 border border-[hsl(var(--accent-1)/0.2)] rounded-xl bg-[hsl(var(--accent-1)/0.04)]">
+            <Empty className="mt-1 border border-[hsl(var(--accent-1)/0.2)] rounded-xl bg-[hsl(var(--accent-1)/0.04)]">
               <EmptyHeader>
                 <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-1)/0.15)] text-[hsl(var(--accent-1-fg))]"><Star className="w-6 h-6" /></EmptyMedia>
                 <EmptyTitle className="text-foreground/80">{t("Favourites:assetsEmptyTitle")}</EmptyTitle>
@@ -866,18 +989,17 @@ export default function Favourites(properties) {
       </Card>
 
       <Card className="rounded-xl overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
-        <CardHeader className="px-5 py-4 flex flex-row items-center justify-between">
+        <CardHeader className="px-4 py-2 flex flex-row items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-lg bg-[hsl(var(--accent-2)/0.15)] border border-[hsl(var(--accent-2)/0.25)] flex items-center justify-center">
               <ArrowLeftRight className="h-4 w-4 text-[hsl(var(--accent-2-fg))]" />
             </div>
-            <div>
+            <div className="flex items-center gap-2">
               <CardTitle className="text-xl font-bold tracking-tight text-foreground">
                 {t("Favourites:pairsHeader")}
               </CardTitle>
               {chainPairs && chainPairs.length ? (
-                <span className="mt-1 inline-flex items-center rounded-full border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-2-fg))]">
+                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-2-fg))]">
                   {chainPairs.length}
                 </span>
               ) : null}
@@ -900,7 +1022,7 @@ export default function Favourites(properties) {
                   {t("Favourites:addPairDialogDescription")}
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3">
                 <AssetDropDown
                   assetSymbol={pairBaseSelection}
                   assetData={null}
@@ -934,19 +1056,7 @@ export default function Favourites(properties) {
                   triggerVariant="outline"
                 />
               </div>
-              <div className="mt-4 flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                  <span className="mr-3">
-                    {t("Favourites:selectBase")}:
-                    <strong className="ml-1">{pairBaseSelection || "—"}</strong>
-                  </span>
-                  <span>
-                    {t("Favourites:selectQuote")}:
-                    <strong className="ml-1">
-                      {pairQuoteSelection || "—"}
-                    </strong>
-                  </span>
-                </div>
+              <div className="mt-4 flex items-center justify-end">
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -983,14 +1093,14 @@ export default function Favourites(properties) {
             </DialogContent>
           </Dialog>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="px-4 pb-4 pt-2">
           {chainPairs && chainPairs.length ? (
-            <>
+            <div className="mt-1 rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-[hsl(var(--accent-2)/0.04)] px-3 pt-3">
               <div className="w-full h-[420px] block md:hidden">
                 <List
                   rowComponent={FavouritePairRowMobile}
                   rowCount={chainPairs.length}
-                  rowHeight={120}
+                  rowHeight={100}
                   height={420}
                   width="100%"
                   rowProps={pairRowProps}
@@ -1001,15 +1111,15 @@ export default function Favourites(properties) {
                 <List
                   rowComponent={FavouritePairRowDesktop}
                   rowCount={chainPairs.length}
-                  rowHeight={88}
+                  rowHeight={68}
                   height={420}
                   width="100%"
-                  rowProps={pairRowProps}
-                />
-              </div>
-            </>
-          ) : (
-            <Empty className="mt-2 border border-[hsl(var(--accent-2)/0.2)] rounded-xl bg-[hsl(var(--accent-2)/0.04)]">
+                      rowProps={pairRowProps}
+                    />
+                  </div>
+                </div>
+              ) : (
+            <Empty className="mt-1 border border-[hsl(var(--accent-2)/0.2)] rounded-xl bg-[hsl(var(--accent-2)/0.04)]">
               <EmptyHeader>
                 <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-2)/0.15)] text-[hsl(var(--accent-2-fg))]"><ArrowLeftRight className="w-6 h-6" /></EmptyMedia>
                 <EmptyTitle className="text-foreground/80">{t("Favourites:pairsEmptyTitle")}</EmptyTitle>
@@ -1023,18 +1133,17 @@ export default function Favourites(properties) {
       </Card>
 
       <Card className="rounded-xl overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-3))]" />
-        <CardHeader className="px-5 py-4 flex flex-row items-center justify-between">
+        <CardHeader className="px-4 py-2 flex flex-row items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-lg bg-[hsl(var(--accent-2)/0.15)] border border-[hsl(var(--accent-2)/0.25)] flex items-center justify-center">
               <Send className="h-4 w-4 text-[hsl(var(--accent-2-fg))]" />
             </div>
-            <div>
+            <div className="flex items-center gap-2">
               <CardTitle className="text-xl font-bold tracking-tight text-foreground">
                 {t("Favourites:usersHeader")}
               </CardTitle>
               {favouriteUsers && (favouriteUsers[_chain] ?? []).length ? (
-                <span className="mt-1 inline-flex items-center rounded-full border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-2-fg))]">
+                <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-2-fg))]">
                   {(favouriteUsers[_chain] ?? []).length}
                 </span>
               ) : null}
@@ -1065,14 +1174,14 @@ export default function Favourites(properties) {
             </DialogContent>
           </Dialog>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="px-4 pb-4 pt-2">
           {favouriteUsers && (favouriteUsers[_chain] ?? []).length ? (
-            <>
+            <div className="mt-1 rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-[hsl(var(--accent-2)/0.04)] px-3 pt-3">
               <div className="w-full h-[420px] block md:hidden">
                 <List
                   rowComponent={FavouriteUserRowMobile}
                   rowCount={favouriteUsers[_chain].length}
-                  rowHeight={120}
+                  rowHeight={100}
                   height={420}
                   width="100%"
                   rowProps={userRowProps}
@@ -1083,15 +1192,15 @@ export default function Favourites(properties) {
                 <List
                   rowComponent={FavouriteUserRowDesktop}
                   rowCount={favouriteUsers[_chain].length}
-                  rowHeight={88}
+                  rowHeight={68}
                   height={420}
                   width="100%"
-                  rowProps={userRowProps}
-                />
-              </div>
-            </>
-          ) : (
-            <Empty className="mt-2 border border-[hsl(var(--accent-2)/0.2)] rounded-xl bg-[hsl(var(--accent-2)/0.04)]">
+                      rowProps={userRowProps}
+                    />
+                  </div>
+                </div>
+              ) : (
+            <Empty className="mt-1 border border-[hsl(var(--accent-2)/0.2)] rounded-xl bg-[hsl(var(--accent-2)/0.04)]">
               <EmptyHeader>
                 <EmptyMedia variant="icon" className="bg-[hsl(var(--accent-2)/0.15)] text-[hsl(var(--accent-2-fg))]"><Send className="w-6 h-6" /></EmptyMedia>
                 <EmptyTitle className="text-foreground/80">{t("Favourites:usersEmptyTitle")}</EmptyTitle>

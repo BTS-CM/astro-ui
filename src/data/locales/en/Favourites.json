@@ -1,4 +1,6 @@
 {
+  "pageTitle": "Favourites",
+  "pageDescription": "Your favourite assets, market pairs and accounts in one place.",
   "assetsHeader": "Favourite Assets",
   "addAsset": "Add Asset",
   "issuer": "Issuer: {{issuer}}",
@@ -18,11 +20,19 @@
   "selectBase": "Select Base",
   "selectQuote": "Select Quote",
   "trade": "Trade",
+  "marketActions": "Market Actions",
+  "dexLimitOrders": "DEX limit orders",
+  "instantTrading": "Instant trading",
+  "simpleSwap": "Simple asset swap",
   "pairsEmptyTitle": "No favourite market pairs",
   "pairsEmptyDescription": "Create a pair like BTS_CNY and it will appear here for quick access.",
   "savePair": "Save Pair",
   "clear": "Clear",
   "transfer": "Transfer",
   "timedTransfer": "Timed Transfer",
+  "withdrawPermission": "Withdraw Permission",
+  "htlcTransfer": "HTLC Transfer",
+  "actions": "Actions",
+  "assetActions": "Asset Actions",
   "vestAssets": "Vest Assets"
 }

@@ -1,4 +1,6 @@
 {
+  "pageTitle": "รายการโปรด",
+  "pageDescription": "สินทรัพย์ คู่ตลาด และบัญชีโปรดของคุณในที่เดียว",
   "assetsHeader": "รายการโปรดของคุณ",
   "issuer": "ผู้ออก: {{issuer}}",
   "remove": "ลบ",
@@ -17,12 +19,20 @@
   "selectBase": "เลือกฐาน",
   "selectQuote": "เลือกใบเสนอราคา",
   "trade": "ซื้อขาย",
+  "marketActions": "การดำเนินการตลาด",
+  "dexLimitOrders": "คำสั่งลิมิต DEX",
+  "instantTrading": "การเทรดทันที",
+  "simpleSwap": "การสลับสินทรัพย์แบบง่าย",
   "pairsEmptyTitle": "ไม่มีคู่ตลาดที่ชื่นชอบ",
   "pairsEmptyDescription": "สร้างคู่สกุลเงินเช่น BTS_CNY และจะปรากฏที่นี่เพื่อให้เข้าถึงได้อย่างรวดเร็ว",
   "savePair": "บันทึกคู่",
   "clear": "ชัดเจน",
   "transfer": "โอนย้าย",
   "timedTransfer": "การโอนแบบกำหนดเวลา",
+  "withdrawPermission": "สิทธิ์การถอน",
+  "htlcTransfer": "การโอน HTLC",
+  "actions": "การดำเนินการ",
+  "assetActions": "การดำเนินการสินทรัพย์",
   "vestAssets": "ทรัพย์สินเสื้อกั๊ก",
   "addAsset": "เพิ่มสินทรัพย์"
 }

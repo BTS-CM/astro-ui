@@ -39,6 +39,7 @@ import { useStore } from "@nanostores/react";
 import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { humanReadableFloat, blockchainFloat } from "@/lib/common";
+import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createWithdrawPermissionsStore } from "@/nanoeffects/WithdrawPermissions.ts";
@@ -441,6 +442,7 @@ export default function WithdrawPermissions(properties) {
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [createPrefillTarget, setCreatePrefillTarget] = useState(null);
 
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -495,6 +497,24 @@ export default function WithdrawPermissions(properties) {
       setFee(finalFee);
     }
   }, [globalParams]);
+
+  // Prefill the withdraw-to account from URL query (?to=<name>) and open the create dialog
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!usr || !usr.chain) return;
+    const params = new URLSearchParams(window.location.search);
+    const toName = params.get("to");
+    if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
+      accountSearch(usr.chain, toName, currentNodeUrl || null)
+        .then((acct) => {
+          if (acct && acct.id && acct.name) {
+            setCreatePrefillTarget({ id: acct.id, name: acct.name });
+            setShowCreateDialog(true);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [usr, currentNodeUrl]);
 
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
@@ -604,6 +624,24 @@ export default function WithdrawPermissions(properties) {
   const payingRowProps = useMemo(() => ({ payerWithdrawalPermissions, assets, accounts, t, onEdit: editDialogData }), [payerWithdrawalPermissions, assets, accounts, t, editDialogData]);
   const receivingRowProps = useMemo(() => ({ receivingWithdrawalPermissions, assets, t, usr }), [receivingWithdrawalPermissions, assets, t, usr]);
 
+  // Shared create-permission dialog (rendered in the outbound section).
+  // The key forces a remount once the ?to= prefill resolves so the dialog
+  // picks up the prefilled target account.
+  const createWithdrawPermissionDialog = (
+    <WithdrawDialog
+      key={createPrefillTarget ? `create-${createPrefillTarget.id}` : "create"}
+      usr={usr}
+      assets={assets}
+      marketSearch={marketSearch}
+      balances={balances}
+      globalParams={globalParams}
+      showDialog={showCreateDialog}
+      setShowDialog={setShowCreateDialog}
+      mode="create"
+      _targetUser={createPrefillTarget}
+    />
+  );
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4 lg:1/2">
@@ -653,22 +691,27 @@ export default function WithdrawPermissions(properties) {
 
               {payerWithdrawalPermissions &&
               payerWithdrawalPermissions.length ? (
-                <div className="col-span-9">
-                  <div className="w-full h-[400px]">
-                    <List
-                      height={400}
-                      width="100%"
-                      rowHeight={35}
-                      rowComponent={MemoPayingWithdrawPermissionRow}
-                      rowCount={
-                        payerWithdrawalPermissions
-                          ? payerWithdrawalPermissions.length
-                          : 0
-                      }
-                      rowProps={payingRowProps}
-                    />
+                <>
+                  <div className="col-span-9">
+                    <div className="w-full h-[400px]">
+                      <List
+                        height={400}
+                        width="100%"
+                        rowHeight={35}
+                        rowComponent={MemoPayingWithdrawPermissionRow}
+                        rowCount={
+                          payerWithdrawalPermissions
+                            ? payerWithdrawalPermissions.length
+                            : 0
+                        }
+                        rowProps={payingRowProps}
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div className="col-span-3">
+                    {createWithdrawPermissionDialog}
+                  </div>
+                </>
               ) : (
                 <>
                   <div className="col-span-12">
@@ -687,16 +730,7 @@ export default function WithdrawPermissions(properties) {
                         </EmptyDescription>
                       </EmptyHeader>
                       <EmptyContent>
-                        <WithdrawDialog
-                          usr={usr}
-                          assets={assets}
-                          marketSearch={marketSearch}
-                          balances={balances}
-                          globalParams={globalParams}
-                          showDialog={showCreateDialog}
-                          setShowDialog={setShowCreateDialog}
-                          mode="create"
-                        />
+                        {createWithdrawPermissionDialog}
                       </EmptyContent>
                     </Empty>
                   </div>

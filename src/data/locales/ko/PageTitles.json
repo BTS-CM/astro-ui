@@ -31,7 +31,7 @@
         "/custom_pool_tracker": "사용자 지정 풀 트래커",
         "/dex": "Bitshares 탈중앙화 암호화폐 거래소 - 지정가 주문 페이지",
         "/deals": "Bitshares 크레딧 거래 목록",
-        "/favourites": "즐겨찾는 자산",
+        "/favourites": "즐겨찾기",
         "/featured": "추천 Bitshares 마켓 - 거래량 상위 페어 목록",
         "/governance": "Bitshares 거버넌스 작업",
         "/htlc": "Bitshares 해시 타임락 계약(HTLC)",

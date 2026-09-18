@@ -1,4 +1,6 @@
 {
+  "pageTitle": "즐겨찾기",
+  "pageDescription": "즐겨찾는 자산, 시장 쌍 및 계정을 한 곳에서.",
   "assetsHeader": "즐겨찾기",
   "issuer": "발행자: {{issuer}}",
   "remove": "제거하다",
@@ -17,12 +19,20 @@
   "selectBase": "베이스 선택",
   "selectQuote": "견적 선택",
   "trade": "거래",
+  "marketActions": "시장 작업",
+  "dexLimitOrders": "DEX 지정가 주문",
+  "instantTrading": "즉시 거래",
+  "simpleSwap": "간편 스왑",
   "pairsEmptyTitle": "선호하는 시장쌍 없음",
   "pairsEmptyDescription": "BTS_CNY와 같은 쌍을 생성하면 빠른 액세스를 위해 여기에 표시됩니다.",
   "savePair": "쌍 저장",
   "clear": "분명한",
   "transfer": "옮기다",
   "timedTransfer": "정기 환승",
+  "withdrawPermission": "출금 권한",
+  "htlcTransfer": "HTLC 전송",
+  "actions": "작업",
+  "assetActions": "자산 작업",
   "vestAssets": "조끼 자산",
   "addAsset": "자산 추가"
 }

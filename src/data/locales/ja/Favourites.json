@@ -1,4 +1,6 @@
 {
+  "pageTitle": "お気に入り",
+  "pageDescription": "お気に入りの資産、市場ペア、アカウントを一か所で。",
   "assetsHeader": "お気に入り",
   "issuer": "発行者: {{issuer}}",
   "remove": "取り除く",
@@ -17,12 +19,20 @@
   "selectBase": "ベースの選択",
   "selectQuote": "見積を選択",
   "trade": "貿易",
+  "marketActions": "市場操作",
+  "dexLimitOrders": "DEX指値注文",
+  "instantTrading": "インスタント取引",
+  "simpleSwap": "シンプル交換",
   "pairsEmptyTitle": "お気に入りの市場ペアはありません",
   "pairsEmptyDescription": "BTS_CNY のようなペアを作成すると、簡単にアクセスできるようにここに表示されます。",
   "savePair": "ペアの保存",
   "clear": "クリア",
   "transfer": "移行",
   "timedTransfer": "時間指定転送",
+  "withdrawPermission": "出金許可",
+  "htlcTransfer": "HTLC転送",
+  "actions": "アクション",
+  "assetActions": "アセット操作",
   "vestAssets": "ベスト資産",
   "addAsset": "アセットを追加"
 }

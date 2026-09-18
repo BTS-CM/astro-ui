@@ -1,4 +1,6 @@
 {
+  "pageTitle": "Favoritter",
+  "pageDescription": "Dine foretrukne aktiver, markedspar og konti samlet ét sted.",
   "assetsHeader": "Yndlingsaktiver",
   "addAsset": "Tilføj aktiv",
   "issuer": "Udsteder: {{issuer}}",
@@ -18,11 +20,19 @@
   "selectBase": "Vælg Base",
   "selectQuote": "Vælg Citat",
   "trade": "Handle",
+  "marketActions": "Markedsaktioner",
+  "dexLimitOrders": "DEX limitordrer",
+  "instantTrading": "Øjeblikkelig handel",
+  "simpleSwap": "Simpel aktivbytte",
   "pairsEmptyTitle": "Ingen favoritmarkedspar",
   "pairsEmptyDescription": "Opret et par som BTS_CNY, og det vises her for hurtig adgang.",
   "savePair": "Gem par",
   "clear": "Klar",
   "transfer": "Overførsel",
   "timedTransfer": "Tidsbestemt overførsel",
+  "withdrawPermission": "Hævetilladelse",
+  "htlcTransfer": "HTLC-overførsel",
+  "actions": "Handlinger",
+  "assetActions": "Aktivhandlinger",
   "vestAssets": "Vest Aktiver"
 }

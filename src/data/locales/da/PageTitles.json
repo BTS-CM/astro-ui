@@ -31,7 +31,7 @@
         "/custom_pool_tracker": "Tracker for brugerdefinerede puljer",
         "/dex": "Bitshares decentraliseret kryptovalutabørs - limitordre-side",
         "/deals": "Bitshares lister over kreditaftaler",
-        "/favourites": "Dine foretrukne aktiver",
+        "/favourites": "Dine favoritter",
         "/featured": "Fremhævede Bitshares-markeder - liste over de mest handlede markedspar",
         "/governance": "Bitshares styringshandlinger",
         "/htlc": "Bitshares hash-tidslåste kontrakter (HTLC)",

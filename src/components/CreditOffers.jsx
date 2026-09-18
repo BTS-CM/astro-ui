@@ -149,7 +149,7 @@ const CreditOffersRow = memo(function CreditOffersRow({ index, style, offers, as
 });
 import { useTranslation } from "react-i18next";
 import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
-import { Coins, FileText, ShieldAlert, Eye } from "lucide-react";
+import { Coins, FileText, ShieldAlert, Eye, EyeOff } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -297,7 +297,7 @@ export default function CreditOffers(properties) {
                       : t("CreditBorrow:card.showExpired")
                   }
                 >
-                  <Eye className="h-4 w-4" />
+                  {showExpired ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                 </Button>
               </div>
             </div>

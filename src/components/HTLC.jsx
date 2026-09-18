@@ -44,6 +44,7 @@ import { createHTLCStore } from "@/nanoeffects/HTLC.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { humanReadableFloat, blockchainFloat } from "@/lib/common";
+import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import HtlcCreateDialog from "./HtlcCreateDialog.jsx";
 
@@ -457,6 +458,25 @@ export default function Htlc(properties) {
   );
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [prefillTarget, setPrefillTarget] = useState(null);
+
+  // Prefill HTLC recipient from URL query (?to=<name>) and open the create dialog
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!usr || !usr.chain) return;
+    const params = new URLSearchParams(window.location.search);
+    const toName = params.get("to");
+    if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
+      accountSearch(usr.chain, toName, currentNodeUrl || null)
+        .then((acct) => {
+          if (acct && acct.id && acct.name) {
+            setPrefillTarget({ id: acct.id, name: acct.name });
+            setShowCreateDialog(true);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [usr, currentNodeUrl]);
 
   const {
     _marketSearchBTS,
@@ -715,6 +735,7 @@ export default function Htlc(properties) {
             globalParams={globalParams}
             showDialog={showCreateDialog}
             setShowDialog={setShowCreateDialog}
+            _targetUser={prefillTarget}
           />
         ) : null}
       </div>

@@ -687,11 +687,10 @@ export default function CreditOffer(properties) {
           {!error ? (
             <div className="md:grid md:grid-cols-[minmax(0,1fr)_360px] md:gap-4 md:items-start">
             <div className="min-w-0 grid grid-cols-1 gap-4 content-start">
-            <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-1)/0.2)] min-w-0">
+            <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-1)/0.2)] min-w-0 pt-4">
               <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] blur-3xl" />
               <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-2)/0.2)] to-[hsl(var(--accent-1)/0.2)] blur-3xl" />
-              <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-2)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
-              <CardHeader className="pb-1">
+              <CardHeader className="pb-1 pt-0">
                 <CardTitle className="text-lg bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent flex items-center gap-2">
                   <Landmark className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
                   {creditOfferOwner

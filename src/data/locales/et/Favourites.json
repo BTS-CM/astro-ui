@@ -1,4 +1,6 @@
 {
+  "pageTitle": "Lemmikud",
+  "pageDescription": "Sinu lemmikvarad, turupaarid ja kontod ühes kohas.",
   "assetsHeader": "Lemmikvarad",
   "addAsset": "Lisa vara",
   "issuer": "Väljaandja: {{issuer}}",
@@ -18,11 +20,19 @@
   "selectBase": "Valige Base",
   "selectQuote": "Valige Hinnapakkumine",
   "trade": "Kaubandus",
+  "marketActions": "Turutegevused",
+  "dexLimitOrders": "DEX limiitorderid",
+  "instantTrading": "Kiirkauplemine",
+  "simpleSwap": "Lihtne varavahetus",
   "pairsEmptyTitle": "Lemmikturupaarid puuduvad",
   "pairsEmptyDescription": "Looge paar nagu BTS_CNY ja see kuvatakse siin kiireks juurdepääsuks.",
   "savePair": "Salvesta paar",
   "clear": "Selge",
   "transfer": "Ülekanne",
   "timedTransfer": "Ajastatud ülekanne",
+  "withdrawPermission": "Väljamakseluba",
+  "htlcTransfer": "HTLC ülekanne",
+  "actions": "Tegevused",
+  "assetActions": "Vara tegevused",
   "vestAssets": "Vesti varad"
 }

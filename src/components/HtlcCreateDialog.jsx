@@ -113,14 +113,21 @@ function FieldInfoTip({ text }) {
 }
 
 export default function HtlcCreateDialog(properties) {
-  const { usr, assets, marketSearch, globalParams, showDialog, setShowDialog } =
-    properties;
+  const {
+    usr,
+    assets,
+    marketSearch,
+    globalParams,
+    showDialog,
+    setShowDialog,
+    _targetUser,
+  } = properties;
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm();
   const currentNodeUrl = useStore($currentNodeUrl);
 
-  const [toAccount, setToAccount] = useState(null);
+  const [toAccount, setToAccount] = useState(_targetUser ?? null);
   const [selectedAssetSymbol, setSelectedAssetSymbol] = useState(null);
   const [amount, setAmount] = useState(0);
   const [preimage, setPreimage] = useState("");
@@ -131,6 +138,14 @@ export default function HtlcCreateDialog(properties) {
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
   const [showDeeplinkDialog, setShowDeeplinkDialog] = useState(false);
+
+  // Apply a prefilled recipient (e.g. via ?to=<name>) once it resolves.
+  // Never clobber an account the user has already picked themselves.
+  useEffect(() => {
+    if (_targetUser && !toAccount) {
+      setToAccount(_targetUser);
+    }
+  }, [_targetUser]);
 
   const _chain = usr?.chain ?? "bitshares";
 

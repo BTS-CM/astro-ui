@@ -31,7 +31,7 @@
         "/custom_pool_tracker": "Rastreador de pools personalizados",
         "/dex": "Corretora descentralizada de criptomoedas Bitshares - página de ordem limite",
         "/deals": "Listagens de acordos de crédito do Bitshares",
-        "/favourites": "Seus ativos favoritos",
+        "/favourites": "Seus favoritos",
         "/featured": "Mercados Bitshares em destaque - lista dos pares mais negociados",
         "/governance": "Ações de governança do Bitshares",
         "/htlc": "Contratos com bloqueio temporal por hash (HTLC) do Bitshares",

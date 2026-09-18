@@ -50,8 +50,8 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
   const isFav = favouriteSet ? favouriteSet.has(res.owner_account) : (favouriteUsers || []).some((u) => u.id === res.owner_account);
   const isBlocked = blockSet ? blockSet.has(res.owner_account) : (chainUserBlockList || []).some((u) => u.id === res.owner_account);
   return (
-    <div style={{ ...style, padding: "0 8px 6px 8px" }} key={`acard-${res.id}`}>
-      <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all py-0 gap-0">
+    <div style={{ ...style, padding: "0 8px 10px 8px", overflow: "hidden" }} key={`acard-${res.id}`}>
+      <Card className="h-full overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all py-0 gap-0">
         <div className="p-2">
           <div className="flex items-center justify-between gap-2 mb-1">
             <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -106,7 +106,7 @@ const CreditBorrowCommonRow = memo(function CreditBorrowCommonRow({ style, res, 
           <div className="flex flex-col md:flex-row gap-2 mb-1.5">
             <div className="w-full md:w-1/2 rounded-lg border border-border/60 bg-card/40 px-2 py-1">
               <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-0.5">{t("CreditBorrow:common.accepting")}</div>
-              <div className="font-mono text-xs tabular-nums text-foreground/85 leading-snug break-words">
+              <div className="font-mono text-xs tabular-nums text-foreground/85 leading-snug break-words min-h-[2.75em] max-h-[2.75em] overflow-hidden">
                 {visibleCollateral ? (<>
                   {visibleCollateral.map((x, idx) => { const a = assetBySymbol ? assetBySymbol.get(x) : assets.find((y) => y.symbol === x); const hasBal = a && (balanceSet ? balanceSet.has(a.id) : balanceAssetIDs && balanceAssetIDs.includes(a.id)); return (<span key={`${x}-${idx}`} className={cn("inline", hasBal ? "font-semibold text-foreground" : "text-muted-foreground/60")}>{x}{idx < visibleCollateral.length - 1 || hiddenCollateralCount > 0 ? ", " : ""}</span>); })}
                   {hiddenCollateralCount > 0 && (
@@ -980,7 +980,7 @@ export default function CreditBorrow(properties) {
                       <List
                         rowComponent={CreditBorrowOfferRow}
                         rowCount={displayedOffers.length}
-                        rowHeight={isDesktop ? 155 : 210}
+                        rowHeight={isDesktop ? 172 : 235}
                         rowProps={offerRowProps}
                         height={600}
                         width="100%"
@@ -1014,7 +1014,7 @@ export default function CreditBorrow(properties) {
                       <List
                         rowComponent={CreditBorrowBalanceRow}
                         rowCount={displayedCompatibleOffers.length}
-                        rowHeight={isDesktop ? 155 : 210}
+                        rowHeight={isDesktop ? 172 : 235}
                         rowProps={balanceRowProps}
                         height={600}
                         width="100%"
@@ -1096,7 +1096,7 @@ export default function CreditBorrow(properties) {
                           <List
                             rowComponent={CreditBorrowSearchRow}
                             rowCount={displayedSearchResult.length}
-                            rowHeight={isDesktop ? 155 : 210}
+                            rowHeight={isDesktop ? 172 : 235}
                             rowProps={searchRowProps}
                             height={600}
                             width="100%"
