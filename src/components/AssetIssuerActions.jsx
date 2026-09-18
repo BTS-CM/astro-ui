@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
   MagnifyingGlassIcon,
-  AvatarIcon,
   CheckIcon,
-  FaceIcon,
 } from "@radix-ui/react-icons";
 import { List } from "react-window";
 import { useStore } from "@nanostores/react";
@@ -42,8 +40,6 @@ import { Input } from "@/components/ui/input";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { $userStorage } from "@/stores/users.ts";
-import { $favouriteUsers } from "@/stores/favourites.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
 
@@ -101,11 +97,6 @@ function isPositiveAmount(value) {
   const num = Number(value);
   return !Number.isNaN(num) && num > 0;
 }
-
-const mapContacts = (contacts, chain) => {
-  if (!contacts || !contacts.length) return [];
-  return contacts.filter((user) => user.chain === chain);
-};
 
 function parseDescription(description) {
   if (!description) return { raw: "", parsed: null };
@@ -263,16 +254,6 @@ function AssetIssuerActions(props) {
   } = props;
 
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
-
-  const storedUsers = useStore($userStorage);
-  const favouriteUsersStore = useStore($favouriteUsers);
-
-  // Hoisted above all early returns: hooks must run unconditionally
-  // (React #300 "Rendered fewer hooks than expected" on account switch).
-  const favouriteUsersByChain = useMemo(() => {
-    if (!favouriteUsersStore) return [];
-    return favouriteUsersStore[chain] ?? [];
-  }, [favouriteUsersStore, chain]);
 
   const [dynamicData, setDynamicData] = useState(dynamicAssetData ?? null);
   const [bitassetDetails, setBitassetDetails] = useState(bitassetData ?? null);
@@ -475,12 +456,6 @@ function AssetIssuerActions(props) {
     }
   }, [asset?.bitasset_data_id, chain, node?.url, bitassetData]);
 
-  const contacts = useMemo(() => {
-    if (!storedUsers) return [];
-    const all = storedUsers.users ?? [];
-    return mapContacts(all, chain);
-  }, [storedUsers, chain]);
-
   const { raw: rawDescription } = useMemo(
     () => parseDescription(asset?.options?.description),
     [asset?.options?.description]
@@ -551,8 +526,6 @@ function AssetIssuerActions(props) {
   const [issueAmount, setIssueAmount] = useState("");
   const [issueTarget, setIssueTarget] = useState(null);
   const [issueSearchOpen, setIssueSearchOpen] = useState(false);
-  const [issueContactsOpen, setIssueContactsOpen] = useState(false);
-  const [issueFavouritesOpen, setIssueFavouritesOpen] = useState(false);
   const [issueDeeplinkOpen, setIssueDeeplinkOpen] = useState(false);
 
   const [reserveAssetOpen, setReserveAssetOpen] = useState(false);
@@ -562,10 +535,6 @@ function AssetIssuerActions(props) {
   const [updateIssuerOpen, setUpdateIssuerOpen] = useState(false);
   const [updateIssuerTarget, setUpdateIssuerTarget] = useState(null);
   const [updateIssuerSearchOpen, setUpdateIssuerSearchOpen] = useState(false);
-  const [updateIssuerContactsOpen, setUpdateIssuerContactsOpen] =
-    useState(false);
-  const [updateIssuerFavouritesOpen, setUpdateIssuerFavouritesOpen] =
-    useState(false);
   const [updateIssuerDeeplinkOpen, setUpdateIssuerDeeplinkOpen] =
     useState(false);
 
@@ -580,8 +549,6 @@ function AssetIssuerActions(props) {
   const [overrideLoading, setOverrideLoading] = useState(false);
   const [overrideError, setOverrideError] = useState("");
   const [overrideSearchOpen, setOverrideSearchOpen] = useState(false);
-  const [overrideFavouritesOpen, setOverrideFavouritesOpen] = useState(false);
-  const [overrideContactsOpen, setOverrideContactsOpen] = useState(false);
 
   // keep a simple derived id for existing logic
   useEffect(() => {
@@ -683,40 +650,6 @@ function AssetIssuerActions(props) {
   if (isPrediction || issuerActionsDisabled) {
     return null;
   }
-
-  const renderContacts = (onSelect) => {
-    if (!contacts.length) {
-      return (
-        <p className="text-sm text-muted-foreground">
-          {t("IssuedAssets:noUsers")}
-        </p>
-      );
-    }
-
-    return (
-      <div className="w-full max-h-[420px] overflow-auto space-y-2">
-        {contacts.map((user) => (
-          <button
-            key={user.id}
-            type="button"
-            className="flex w-full items-center gap-3 rounded-lg border border-border bg-card px-3 py-2 text-left hover:bg-accent"
-            onClick={() => onSelect(user)}
-          >
-            <Avatar
-              size={36}
-              name={user.username}
-              extra="Target"
-              expression={{ eye: "normal", mouth: "open" }}
-              colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-            />
-            <span className="text-sm font-medium text-foreground">
-              {user.username} ({user.id})
-            </span>
-          </button>
-        ))}
-      </div>
-    );
-  };
 
   const dropdownItems = [];
 
@@ -934,40 +867,6 @@ function AssetIssuerActions(props) {
   if (!dropdownItems.length) {
     return null;
   }
-
-  const renderFavourites = (onSelect) => {
-    if (!favouriteUsersByChain.length) {
-      return (
-        <p className="text-sm text-muted-foreground">
-          {t("Favourites:usersEmptyDescription")}
-        </p>
-      );
-    }
-
-    return (
-      <div className="w-full max-h-[420px] overflow-auto space-y-2">
-        {favouriteUsersByChain.map((user) => (
-          <button
-            key={user.id}
-            type="button"
-            className="flex w-full items-center gap-3 rounded-lg border border-border bg-card px-3 py-2 text-left hover:bg-accent"
-            onClick={() => onSelect(user)}
-          >
-            <Avatar
-              size={36}
-              name={user.name}
-              extra="Favourite"
-              expression={{ eye: "normal", mouth: "open" }}
-              colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-            />
-            <span className="text-sm font-medium text-foreground">
-              {user.name} ({user.id})
-            </span>
-          </button>
-        ))}
-      </div>
-    );
-  };
 
   return (
     <>
@@ -1450,7 +1349,7 @@ function AssetIssuerActions(props) {
                   </Av>
                 )}
               </div>
-              <div className="col-span-4">
+              <div className="col-span-6">
                 <Input
                   disabled
                   placeholder={
@@ -1461,7 +1360,7 @@ function AssetIssuerActions(props) {
                   className="mb-1 mt-1"
                 />
               </div>
-              <div className="col-span-3 flex gap-2">
+              <div className="col-span-1 flex gap-2">
                 <Dialog
                   open={issueSearchOpen}
                   onOpenChange={setIssueSearchOpen}
@@ -1487,50 +1386,6 @@ function AssetIssuerActions(props) {
                         setIssueSearchOpen(false);
                       }}
                     />
-                  </DialogContent>
-                </Dialog>
-                <Dialog
-                  open={issueFavouritesOpen}
-                  onOpenChange={setIssueFavouritesOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="mt-1">
-                      <FaceIcon />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[375px] bg-card">
-                    <DialogHeader>
-                      <DialogTitle>{t("Favourites:usersHeader")}</DialogTitle>
-                      <DialogDescription>
-                        {t("Favourites:usersEmptyDescription")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    {renderFavourites((user) => {
-                      setIssueTarget({ name: user.name, id: user.id });
-                      setIssueFavouritesOpen(false);
-                    })}
-                  </DialogContent>
-                </Dialog>
-                <Dialog
-                  open={issueContactsOpen}
-                  onOpenChange={setIssueContactsOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="mt-1">
-                      <AvatarIcon />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[375px] bg-card">
-                    <DialogHeader>
-                      <DialogTitle>{t("IssuedAssets:contactList")}</DialogTitle>
-                      <DialogDescription>
-                        {t("IssuedAssets:contactListInfo")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    {renderContacts((user) => {
-                      setIssueTarget({ name: user.username, id: user.id });
-                      setIssueContactsOpen(false);
-                    })}
                   </DialogContent>
                 </Dialog>
               </div>
@@ -1889,7 +1744,7 @@ function AssetIssuerActions(props) {
                     </Av>
                   )}
                 </div>
-                <div className="col-span-4">
+                <div className="col-span-6">
                   <Input
                     disabled
                     placeholder={
@@ -1900,7 +1755,7 @@ function AssetIssuerActions(props) {
                     className="mb-1 mt-1"
                   />
                 </div>
-                <div className="col-span-3 flex gap-2">
+                <div className="col-span-1 flex gap-2">
                   <Dialog
                     open={updateIssuerSearchOpen}
                     onOpenChange={setUpdateIssuerSearchOpen}
@@ -1933,55 +1788,6 @@ function AssetIssuerActions(props) {
                         }}
                         skipCheck={false}
                       />
-                    </DialogContent>
-                  </Dialog>
-                  <Dialog
-                    open={updateIssuerFavouritesOpen}
-                    onOpenChange={setUpdateIssuerFavouritesOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="mt-1">
-                        <FaceIcon />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[375px] bg-card">
-                      <DialogHeader>
-                        <DialogTitle>{t("Favourites:usersHeader")}</DialogTitle>
-                        <DialogDescription>
-                          {t("Favourites:usersEmptyDescription")}
-                        </DialogDescription>
-                      </DialogHeader>
-                      {renderFavourites((user) => {
-                        setUpdateIssuerTarget({ name: user.name, id: user.id });
-                        setUpdateIssuerFavouritesOpen(false);
-                      })}
-                    </DialogContent>
-                  </Dialog>
-                  <Dialog
-                    open={updateIssuerContactsOpen}
-                    onOpenChange={setUpdateIssuerContactsOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="mt-1">
-                        <AvatarIcon />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[375px] bg-card">
-                      <DialogHeader>
-                        <DialogTitle>
-                          {t("IssuedAssets:contactList")}
-                        </DialogTitle>
-                        <DialogDescription>
-                          {t("IssuedAssets:contactListInfo")}
-                        </DialogDescription>
-                      </DialogHeader>
-                      {renderContacts((user) => {
-                        setUpdateIssuerTarget({
-                          name: user.username,
-                          id: user.id,
-                        });
-                        setUpdateIssuerContactsOpen(false);
-                      })}
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -2073,7 +1879,7 @@ function AssetIssuerActions(props) {
                   </Av>
                 )}
               </div>
-              <div className="col-span-4">
+              <div className="col-span-6">
                 <Input
                   disabled
                   placeholder={
@@ -2084,7 +1890,7 @@ function AssetIssuerActions(props) {
                   className="mb-1 mt-1"
                 />
               </div>
-              <div className="col-span-3 flex gap-2">
+              <div className="col-span-1 flex gap-2">
                 <Dialog
                   open={overrideSearchOpen}
                   onOpenChange={setOverrideSearchOpen}
@@ -2113,52 +1919,6 @@ function AssetIssuerActions(props) {
                         setOverrideSearchOpen(false);
                       }}
                     />
-                  </DialogContent>
-                </Dialog>
-
-                <Dialog
-                  open={overrideFavouritesOpen}
-                  onOpenChange={setOverrideFavouritesOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="mt-1">
-                      <FaceIcon />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[375px] bg-card">
-                    <DialogHeader>
-                      <DialogTitle>{t("Favourites:usersHeader")}</DialogTitle>
-                      <DialogDescription>
-                        {t("Favourites:usersEmptyDescription")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    {renderFavourites((user) => {
-                      setOverrideTarget({ name: user.name, id: user.id });
-                      setOverrideFavouritesOpen(false);
-                    })}
-                  </DialogContent>
-                </Dialog>
-
-                <Dialog
-                  open={overrideContactsOpen}
-                  onOpenChange={setOverrideContactsOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="mt-1">
-                      <AvatarIcon />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[375px] bg-card">
-                    <DialogHeader>
-                      <DialogTitle>{t("IssuedAssets:contactList")}</DialogTitle>
-                      <DialogDescription>
-                        {t("IssuedAssets:contactListInfo")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    {renderContacts((user) => {
-                      setOverrideTarget({ name: user.username, id: user.id });
-                      setOverrideContactsOpen(false);
-                    })}
                   </DialogContent>
                 </Dialog>
               </div>

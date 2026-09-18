@@ -58,6 +58,7 @@ import {
   getFlagBooleans,
 } from "@/lib/common.js";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 const CARD_SHELL =
   "relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6),inset_0_1px_0_0_rgba(255,255,255,0.04)]";
@@ -167,6 +168,8 @@ export default function BlindTransfers({
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]
   );
+
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain !== "bitshares") return _assetsTEST || [];

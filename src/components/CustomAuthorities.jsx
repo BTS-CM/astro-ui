@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 
 import { createUserCustomAuthoritiesStore } from "@/nanoeffects/UserCustomAuthorities.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import AccountSearch from "@/components/AccountSearch.jsx";
@@ -138,6 +139,8 @@ export default function CustomAuthorities() {
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]
   );
+
+  useInitCache(_chain ?? "bitshares", []);
 
   const [authorities, setAuthorities] = useState();
   const [loading, setLoading] = useState(false);

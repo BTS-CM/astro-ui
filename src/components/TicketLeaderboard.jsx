@@ -42,6 +42,7 @@ import { humanReadableFloat } from "@/lib/common.js";
 import { $currentNodeUrl } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { createTicketsStore } from "@/nanoeffects/Tickets.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { getObjects } from "@/nanoeffects/src/common";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 
@@ -58,6 +59,8 @@ export default function TicketLeaderboard() {
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]
   );
+
+  useInitCache(chain ?? "bitshares", []);
   const assetSymbol = useMemo(
     () =>
       chain === "bitshares"

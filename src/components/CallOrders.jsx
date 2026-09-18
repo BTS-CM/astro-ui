@@ -53,6 +53,7 @@ import { List } from "react-window";
 
 import { createUserCallOrdersStore } from "@/nanoeffects/UserCallOrders.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { humanReadableFloat } from "@/lib/common";
@@ -273,6 +274,8 @@ export default function CallOrders({
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]
   );
+
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (!_chain || (!_assetsBTS && !_assetsTEST)) return [];

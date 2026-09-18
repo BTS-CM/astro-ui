@@ -82,6 +82,8 @@ export default function WorkerCreate(properties) {
     return "bitshares";
   }, [usr]);
 
+  useInitCache(_chain ?? "bitshares", []);
+
   const form = useForm({
     defaultValues: {
       workerName: "",

@@ -8,6 +8,8 @@ import {
   setVisualSetting,
   resetVisualSettings,
 } from "@/stores/visuals.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $userStorage } from "@/stores/users.ts";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -150,6 +152,8 @@ function SettingRow({ label, description, children }) {  return (
 
 export default function ConfigureVisuals() {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
+  // Rehydrate the header user on cold load, using the last used chain
+  useInitCache($userStorage.get().lastAccount?.[0]?.chain ?? "bitshares", []);
   const settings = useStore($visualSettings);
 
   const {

@@ -28,6 +28,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNodeUrl } from "@/stores/node.ts";
 
 import { createFeesStore } from "@/nanoeffects/Fees.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 import { opTypes } from "@/lib/opTypes.js";
@@ -266,6 +267,9 @@ export default function NetworkFees() {
   const currentNodeUrl = useStore($currentNodeUrl);
 
   const chain = usr && usr.chain ? usr.chain : "bitshares";
+
+  useInitCache(chain ?? "bitshares", []);
+
   const symbol = chain === "bitshares" ? "BTS" : "TEST";
   const nodeUrl = currentNodeUrl || "";
 

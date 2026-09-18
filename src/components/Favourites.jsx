@@ -84,6 +84,7 @@ import AssetIssuerActions from "@/components/AssetIssuerActions.jsx";
 import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { cn } from "@/lib/utils";
 
 function RemoveButton({ onClick, label }) {
@@ -595,6 +596,8 @@ export default function Favourites(properties) {
     if (currentUser && currentUser.chain) return currentUser.chain;
     return "bitshares";
   }, [currentUser]);
+
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

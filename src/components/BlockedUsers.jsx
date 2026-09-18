@@ -58,6 +58,7 @@ import {
 } from "@/stores/forum.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import AccountSearch from "@/components/AccountSearch.jsx";
 
@@ -189,6 +190,8 @@ export default function BlockedUsers() {
     if (currentUser && currentUser.chain) return currentUser.chain;
     return "bitshares";
   }, [currentUser]);
+
+  useInitCache(_chain ?? "bitshares", []);
 
   const committeeCount = useMemo(() => {
     if (!blocklist || !blocklist.users) return 0;

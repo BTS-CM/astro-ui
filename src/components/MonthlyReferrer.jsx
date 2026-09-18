@@ -18,6 +18,7 @@ import { humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import { getObjects } from "@/nanoeffects/src/common";
 
 import { createTopDonatorsStore } from "@/nanoeffects/TopDonators.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
@@ -54,6 +55,8 @@ export default function MonthlyReferrer() {
 
   const isTestnet = Boolean(usr && usr.chain && usr.chain !== "bitshares");
   const isLTM = Boolean(usr && usr.id === usr.referrer);
+
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   const [refreshCounter, setRefreshCounter] = useState(0);
   const [donors, setDonors] = useState([]);

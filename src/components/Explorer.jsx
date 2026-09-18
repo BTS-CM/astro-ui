@@ -47,6 +47,7 @@ import {
   fetchBlockByNumber,
   fetchTransactionByHash,
 } from "@/nanoeffects/Explorer.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 function JSONDialog({ open, onOpenChange, title, subtitle, jsonData, favControl }) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -128,6 +129,8 @@ export default function Explorer() {
   const favUsers = useStore($favouriteUsers);
   const favAssets = useStore($favouriteAssets);
   const chain = usr && usr.chain ? usr.chain : "bitshares";
+
+  useInitCache(chain ?? "bitshares", []);
 
   // per-section inputs
   const [accountInput, setAccountInput] = useState("");

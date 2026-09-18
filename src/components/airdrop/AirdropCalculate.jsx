@@ -66,6 +66,7 @@ import {
 import { getBlockSignature } from "@/nanoeffects/BlockSignature.ts";
 import { getCurrentBlock } from "@/nanoeffects/CurrentBlock.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { getTickets as fetchTickets } from "@/nanoeffects/Tickets.ts";
 import { getMaxObjectIDs } from "@/nanoeffects/MaxObjectID.ts";
 import { getCallOrderHolders } from "@/nanoeffects/CallOrderHolders.ts";
@@ -380,6 +381,9 @@ export default function AirdropCalculate(props) {
   const currentNode = useStore($currentNode);
 
   const chain = usr && usr.chain ? usr.chain : "bitshares";
+
+  useInitCache(chain ?? "bitshares", []);
+
   const assets = chain === "bitshares" ? _assetsBTS : _assetsTEST;
   const marketSearch = chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
   const globalParams = chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;

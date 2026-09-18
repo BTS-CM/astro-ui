@@ -73,6 +73,7 @@ import {
 import { $inventoryStorage } from "@/stores/inventory";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { $currentUser } from "@/stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -414,6 +415,8 @@ export default function InvoiceStorage() {
     $currentUser.get,
     () => true
   );
+
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   const generatedStore = useStore($generatedInvoiceStorage);
   const receivedStore = useStore($receivedInvoiceStorage);

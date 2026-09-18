@@ -10,6 +10,8 @@ import {
   getThemeForPage,
 } from "@/stores/customTheme.ts";
 import { THEMABLE_PAGES } from "@/lib/pages.js";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $userStorage } from "@/stores/users.ts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -58,6 +60,8 @@ const SECTION_ORDER = [
 
 export default function PageThemes() {
   const { t } = useTranslation();
+  // Rehydrate the header user on cold load, using the last used chain
+  useInitCache($userStorage.get().lastAccount?.[0]?.chain ?? "bitshares", []);
   const state = useStore($customTheme);
   const themes = state.themes || {};
   const activeTheme = getThemeForPage("page_themes");

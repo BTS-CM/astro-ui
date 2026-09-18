@@ -44,6 +44,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNodeUrl } from "@/stores/node.ts";
 import ChainTypes from "@/bts/chain/ChainTypes.js";
 import { createUserTicketsStore } from "@/nanoeffects/UserTickets.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
@@ -64,6 +65,8 @@ export default function CreateTicket() {
     () => (usr && usr.chain ? usr.chain : "bitshares"),
     [usr]
   );
+
+  useInitCache(chain ?? "bitshares", []);
 
   // UI state
   const [lockType, setLockType] = useState("lock_180_days");

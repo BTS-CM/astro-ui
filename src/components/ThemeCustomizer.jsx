@@ -47,6 +47,8 @@ import {
   hexToHsv,
 } from "@/lib/tailwindPalette.js";
 import { THEMABLE_PAGES } from "@/lib/pages.js";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $userStorage } from "@/stores/users.ts";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -806,6 +808,8 @@ function ColorItemRow({ index, style, colorItems, selectedColor, onSelect }) {
 
 export default function ThemeCustomizer() {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
+  // Rehydrate the header user on cold load, using the last used chain
+  useInitCache($userStorage.get().lastAccount?.[0]?.chain ?? "bitshares", []);
   const state = useStore($customTheme);
   const draftTheme = useStore($draftTheme);
   const [accentPage, setAccentPage] = React.useState(THEMABLE_PAGES[0]?.slug || "index");
