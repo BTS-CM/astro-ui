@@ -302,6 +302,7 @@ export default function SameTFunds(properties) {
     const [newFeeRate, setNewFeeRate] = useState(feeRate);
     const [updateDialog, setUpdateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
+    const [useBalanceTooltipOpen, setUseBalanceTooltipOpen] = useState(false);
 
     const foundBalance =
       usrBalances && usrBalances.length
@@ -314,18 +315,35 @@ export default function SameTFunds(properties) {
         : 0;
 
     const deltaAmount = useMemo(() => {
-      const difference = Math.abs(newAmount - balance);
-      if (newAmount < balance) {
-        return -difference;
-      } else {
-        return difference;
-      }
-    }, [newAmount, balance]);
+      const target = parseFloat(newAmount) || 0;
+      const raw = target - balance;
+      return parseFloat(raw.toFixed(asset ? asset.precision : 5));
+    }, [newAmount, balance, asset]);
+
+    const requiredTopUp = Math.max(0, deltaAmount);
+    // Compare in blockchain (integer) units so float artifacts can't cause
+    // a false "insufficient" verdict — this matches what the chain charges.
+    const isInsufficientFunds =
+      asset && foundBalance
+        ? blockchainFloat(requiredTopUp, asset.precision) >
+          foundBalance.amount
+        : requiredTopUp > humanReadableAssetBalance;
 
     const isOwner = usr.id === fund.owner_account;
 
     const UpdateDialog = (
-      <Dialog open={updatePrompt} onOpenChange={setUpdatePrompt}>
+      <Dialog
+        open={updatePrompt}
+        onOpenChange={(open) => {
+          setUpdatePrompt(open);
+          if (open) {
+            setNewAmount(balance);
+            setNewFeeRate(feeRate);
+          } else {
+            setUseBalanceTooltipOpen(false);
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <button
             type="button"
@@ -357,14 +375,25 @@ export default function SameTFunds(properties) {
                   type="header"
                 />
                 <TooltipProvider delayDuration={200}>
-                  <Tooltip>
+                  <Tooltip open={useBalanceTooltipOpen}>
                     <TooltipTrigger asChild>
                       <Button
                         variant="outline"
                         size="sm"
                         className="h-7 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] hover:bg-[hsl(var(--accent-1)/0.2)] text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]"
+                        onMouseEnter={() => setUseBalanceTooltipOpen(true)}
+                        onMouseLeave={() => setUseBalanceTooltipOpen(false)}
+                        onFocus={(e) => e.preventDefault()}
                         onClick={() => {
-                          setNewAmount(humanReadableAssetBalance ? humanReadableAssetBalance : 0);
+                          const maxTopUp = asset
+                            ? parseFloat(
+                                (
+                                  balance + humanReadableAssetBalance
+                                ).toFixed(asset.precision)
+                              )
+                            : balance + humanReadableAssetBalance;
+                          setNewAmount(maxTopUp);
+                          setUseBalanceTooltipOpen(false);
                         }}
                       >
                         <Wallet className="h-3 w-3 mr-1" />
@@ -399,6 +428,23 @@ export default function SameTFunds(properties) {
                   {asset ? asset.symbol : "???"}
                 </Badge>
               </div>
+              {deltaAmount !== 0 ? (
+                <p
+                  className={
+                    deltaAmount > 0
+                      ? "text-xs font-mono tabular-nums text-emerald-600 dark:text-emerald-400"
+                      : "text-xs font-mono tabular-nums text-muted-foreground"
+                  }
+                >
+                  {deltaAmount > 0 ? "+" : ""}
+                  {parseFloat(
+                    deltaAmount.toFixed(asset ? asset.precision : 5)
+                  ).toLocaleString(undefined, {
+                    maximumFractionDigits: asset ? asset.precision : 5,
+                  })}{" "}
+                  {assetName}
+                </p>
+              ) : null}
             </div>
 
             <div className="rounded-xl border border-border/60 bg-card/40 p-4 space-y-3">
@@ -431,12 +477,13 @@ export default function SameTFunds(properties) {
             <div className="flex items-center gap-3 pt-2">
               <button
                 onClick={() => setUpdateDialog(true)}
-                className="inline-flex items-center justify-center gap-1.5 h-10 px-6 rounded-xl text-sm font-medium bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_4px_16px_-4px_rgba(244,63,94,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(244,63,94,0.7)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-1))] transition-all"
+                disabled={isInsufficientFunds}
+                className="inline-flex items-center justify-center gap-1.5 h-10 px-6 rounded-xl text-sm font-medium bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-1))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_4px_16px_-4px_rgba(244,63,94,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(244,63,94,0.7)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-1))] transition-all disabled:pointer-events-none disabled:opacity-50"
               >
                 <RefreshCw className="h-4 w-4" />
                 {t("SameTFunds:update")}
               </button>
-              {newAmount > humanReadableAssetBalance ? (
+              {isInsufficientFunds ? (
                 <Badge variant="destructive" className="gap-1.5">
                   <ExclamationTriangleIcon />
                   {t("Common:insufficient_funds")}
@@ -632,9 +679,18 @@ export default function SameTFunds(properties) {
   const [createAmount, setCreateAmount] = useState(0);
   const [createFeeRate, setCreateFeeRate] = useState(0);
   const [createDialog, setCreateDialog] = useState(false);
+  const [createBalanceTooltipOpen, setCreateBalanceTooltipOpen] = useState(false);
 
   const CreateFundDialog = (
-    <Dialog open={createPrompt} onOpenChange={setCreatePrompt}>
+    <Dialog
+      open={createPrompt}
+      onOpenChange={(open) => {
+        setCreatePrompt(open);
+        if (!open) {
+          setCreateBalanceTooltipOpen(false);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <button
           type="button"
@@ -728,11 +784,17 @@ export default function SameTFunds(properties) {
                 className="!bg-card/40 border-border text-foreground"
               />
               <TooltipProvider delayDuration={200}>
-                <Tooltip>
+                <Tooltip open={createBalanceTooltipOpen}>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      onClick={() => setCreateAmount(lendingAssetBalance ?? 0)}
+                      onMouseEnter={() => setCreateBalanceTooltipOpen(true)}
+                      onMouseLeave={() => setCreateBalanceTooltipOpen(false)}
+                      onFocus={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setCreateAmount(lendingAssetBalance ?? 0);
+                        setCreateBalanceTooltipOpen(false);
+                      }}
                       className="inline-flex items-center justify-center gap-1 h-9 px-3 rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] text-[10px] font-semibold uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)] hover:border-[hsl(var(--accent-1)/0.5)] transition-colors"
                     >
                       <Wallet className="h-3 w-3" />
