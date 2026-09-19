@@ -117,8 +117,8 @@ function PayingWithdrawPermissionRow({ index, style, payerWithdrawalPermissions,
     ).toFixed(withdrawAsset.precision);
 
     return (
-      <div style={style}>
-        <div className="m-2 rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.06)] transition-all px-4 py-3">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }}>
+        <div className="mx-2 rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.06)] transition-all px-4 py-3">
           <div className="grid grid-cols-1 text-sm gap-2">
             <div className="grid grid-cols-2 gap-2">
               <div className="flex items-center gap-2">
@@ -308,8 +308,8 @@ function ReceivingWithdrawPermissionRow({ index, style, receivingWithdrawalPermi
     const [openClaimDialog, setOpenClaimDialog] = useState(false);
 
     return (
-      <div style={style}>
-        <div className="m-2 rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-2)/0.04)] to-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:bg-[hsl(var(--accent-2)/0.06)] transition-all px-4 py-3">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }}>
+        <div className="mx-2 rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-2)/0.04)] to-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:bg-[hsl(var(--accent-2)/0.06)] transition-all px-4 py-3">
           <div className="grid grid-cols-1 text-sm gap-2">
             <div className="grid grid-cols-2 gap-2">
               <div className="flex items-center gap-2">
@@ -697,7 +697,7 @@ export default function WithdrawPermissions(properties) {
                       <List
                         height={400}
                         width="100%"
-                        rowHeight={35}
+                        rowHeight={270}
                         rowComponent={MemoPayingWithdrawPermissionRow}
                         rowCount={
                           payerWithdrawalPermissions
@@ -752,7 +752,7 @@ export default function WithdrawPermissions(properties) {
                     <List
                       height={400}
                       width="100%"
-                      rowHeight={35}
+                      rowHeight={270}
                       rowComponent={MemoReceivingWithdrawPermissionRow}
                       rowCount={
                         receivingWithdrawalPermissions

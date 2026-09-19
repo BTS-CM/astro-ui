@@ -5,12 +5,9 @@ import { BookOpen, BarChart3, AlertTriangle, Radio } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -37,24 +34,24 @@ export function OrderBookCard({
         <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.6)] to-transparent" />
         <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
         <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl" />
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] flex-shrink-0">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
               <BookOpen className="h-4 w-4" strokeWidth={2.25} />
             </span>
-            <CardHeader className="p-0">
-              <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-semibold text-foreground tracking-tight">
                 {parsedAsset && parsedCollateralAsset
                   ? t("Smartcoin:orderBookForAssets", {
                       asset1: parsedAsset.s,
                       asset2: parsedCollateralAsset.s,
                     })
                   : t("Smartcoin:orderBookLoading")}
-              </CardTitle>
-              <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
+              </h3>
+              <p className="text-[10px] text-muted-foreground/60 mt-0.5">
                 {t("Smartcoin:orderBookNote")}
-              </CardDescription>
-            </CardHeader>
+              </p>
+            </div>
           </div>
           <a
             href={
@@ -76,7 +73,7 @@ export function OrderBookCard({
               className={cn(
                 "flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all inline-flex items-center justify-center gap-1.5",
                 activeOrderTab === "buy"
-                  ? "bg-gradient-to-r from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-8px_rgba(99,102,241,0.6)]"
+                  ? "bg-gradient-to-r from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-8px_rgba(99,102,241,0.6)]"
                   : "text-muted-foreground hover:text-accent-foreground/90 hover:bg-accent/40 border border-transparent"
               )}
             >
@@ -88,7 +85,7 @@ export function OrderBookCard({
               className={cn(
                 "flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all inline-flex items-center justify-center gap-1.5",
                 activeOrderTab === "sell"
-                  ? "bg-gradient-to-r from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-8px_rgba(99,102,241,0.6)]"
+                  ? "bg-gradient-to-r from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-8px_rgba(99,102,241,0.6)]"
                   : "text-muted-foreground hover:text-accent-foreground/90 hover:bg-accent/40 border border-transparent"
               )}
             >
@@ -124,10 +121,17 @@ export function OrderBookCard({
                 </div>
               </>
             ) : null}
-            {buyOrders && !buyOrders.length
-              ? t("Smartcoin:noBuyOrdersFound")
-              : null}
-            {!buyOrders ? t("Smartcoin:loading") : null}
+            {buyOrders && !buyOrders.length ? (
+              <p className="rounded-lg border border-dashed border-border/60 px-4 py-5 text-center text-sm text-muted-foreground">
+                {t("Smartcoin:noBuyOrdersFound")}
+              </p>
+            ) : null}
+            {!buyOrders ? (
+              <div className="space-y-2 py-2">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+            ) : null}
           </TabsContent>
           <TabsContent value="sell">
             {sellOrders && sellOrders.length ? (
@@ -158,10 +162,17 @@ export function OrderBookCard({
                 </div>
               </>
             ) : null}
-            {sellOrders && !sellOrders.length
-              ? t("Smartcoin:noSellOrdersFound")
-              : null}
-            {!sellOrders ? t("Smartcoin:loading") : null}
+            {sellOrders && !sellOrders.length ? (
+              <p className="rounded-lg border border-dashed border-border/60 px-4 py-5 text-center text-sm text-muted-foreground">
+                {t("Smartcoin:noSellOrdersFound")}
+              </p>
+            ) : null}
+            {!sellOrders ? (
+              <div className="space-y-2 py-2">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+            ) : null}
           </TabsContent>
         </Tabs>
       </Card>
@@ -184,22 +195,22 @@ export function CallOrdersCard({
         <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
         <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl" />
         <div className="flex items-center gap-3 mb-4">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] flex-shrink-0">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
             <BarChart3 className="h-4 w-4" strokeWidth={2.25} />
           </span>
-          <CardHeader className="p-0">
-            <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-sm font-semibold text-foreground tracking-tight">
               {parsedAsset && parsedCollateralAsset
                 ? t("Smartcoin:callOrdersForAssets", {
                     asset1: parsedAsset.s,
                     asset2: parsedCollateralAsset.s,
                   })
                 : t("Smartcoin:callOrdersLoading")}
-            </CardTitle>
-            <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
+            </h3>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">
               {t("Smartcoin:checkMarginPositions")}
-            </CardDescription>
-          </CardHeader>
+            </p>
+          </div>
         </div>
         {assetCallOrders && assetCallOrders.length ? (
           <>
@@ -234,10 +245,17 @@ export function CallOrdersCard({
             </div>
           </>
         ) : null}
-        {assetCallOrders && !assetCallOrders.length
-          ? t("Smartcoin:noCallOrdersFound")
-          : null}
-        {!assetCallOrders ? t("Smartcoin:loading") : null}
+        {assetCallOrders && !assetCallOrders.length ? (
+          <p className="rounded-lg border border-dashed border-border/60 px-4 py-5 text-center text-sm text-muted-foreground">
+            {t("Smartcoin:noCallOrdersFound")}
+          </p>
+        ) : null}
+        {!assetCallOrders ? (
+          <div className="space-y-2 py-2">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        ) : null}
       </Card>
     </div>
   );
@@ -254,26 +272,26 @@ export function SettleOrdersCard({
     <div className="grid grid-cols-1 mt-5">
       <Card className="rounded-xl border border-[hsl(var(--accent-warning)/0.15)] bg-card/60 p-4">
         <div className="flex items-center gap-3 mb-4">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-warning)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-warning)/0.2)] to-[hsl(var(--accent-warning)/0.2)] dark:text-[hsl(var(--accent-warning-gradFg))] text-[hsl(var(--accent-warning-gradFg))] flex-shrink-0">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-warning)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-warning)/0.2)] to-[hsl(var(--accent-warning)/0.2)] text-[hsl(var(--accent-warning-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-warning)/0.4)] flex-shrink-0">
             <AlertTriangle className="h-4 w-4" strokeWidth={2.25} />
           </span>
-          <CardHeader className="p-0">
-            <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-sm font-semibold text-foreground tracking-tight">
               {parsedAsset && parsedCollateralAsset
                 ? t("Smartcoin:settleOrdersForAssets", {
                     asset1: parsedAsset.s,
                     asset2: parsedCollateralAsset.s,
                   })
                 : t("Smartcoin:settleOrdersLoading")}
-            </CardTitle>
-            <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
+            </h3>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">
               {t("Smartcoin:checkSettleOrders")}
-            </CardDescription>
-          </CardHeader>
+            </p>
+          </div>
         </div>
         {assetSettleOrders && assetSettleOrders.length ? (
           <>
-            <div className="grid grid-cols-6 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+            <div className="grid grid-cols-3 md:grid-cols-6 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
               <div className="col-span-1">{t("Smartcoin:owner")}</div>
               <div className="col-span-1">{t("Smartcoin:balance2")}</div>
               <div className="col-span-1">
@@ -294,10 +312,17 @@ export function SettleOrdersCard({
             </div>
           </>
         ) : null}
-        {assetSettleOrders && !assetSettleOrders.length
-          ? t("Smartcoin:noSettleOrdersFound")
-          : null}
-        {!assetSettleOrders ? t("Smartcoin:loading") : null}
+        {assetSettleOrders && !assetSettleOrders.length ? (
+          <p className="rounded-lg border border-dashed border-border/60 px-4 py-5 text-center text-sm text-muted-foreground">
+            {t("Smartcoin:noSettleOrdersFound")}
+          </p>
+        ) : null}
+        {!assetSettleOrders ? (
+          <div className="space-y-2 py-2">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        ) : null}
       </Card>
     </div>
   );
@@ -317,25 +342,25 @@ export function PriceFeedsCard({
         <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
         <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl" />
         <div className="flex items-center gap-3 mb-4">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] flex-shrink-0">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
             <Radio className="h-4 w-4" strokeWidth={2.25} />
           </span>
-          <CardHeader className="p-0">
-            <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-sm font-semibold text-foreground tracking-tight">
               {parsedAsset && parsedCollateralAsset
                 ? t("Smartcoin:priceFeedsForAsset", { asset: parsedAsset.s })
                 : t("Smartcoin:priceFeedsLoading")}
-            </CardTitle>
-            <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
+            </h3>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">
               {t("Smartcoin:checkLatestPriceFeeds")}
-            </CardDescription>
-          </CardHeader>
+            </p>
+          </div>
         </div>
         {finalBitasset && finalBitasset.feeds ? (
           <>
-            <div className="grid grid-cols-11 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
-              <div className="col-span-2">{t("Smartcoin:user")}</div>
-              <div className="col-span-2">{t("Smartcoin:date")}</div>
+            <div className="grid grid-cols-7 md:grid-cols-11 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+              <div className="hidden md:block col-span-2">{t("Smartcoin:user")}</div>
+              <div className="hidden md:block col-span-2">{t("Smartcoin:date")}</div>
               <div className="col-span-2">{t("Smartcoin:cer")}</div>
               <div className="col-span-2">
                 {t("Smartcoin:settlement")}
@@ -360,10 +385,17 @@ export function PriceFeedsCard({
             </div>
           </>
         ) : null}
-        {finalBitasset && !finalBitasset.feeds.length
-          ? t("Smartcoin:noSmartcoinFeedsFound")
-          : null}
-        {!finalBitasset ? t("Smartcoin:loading") : null}
+        {finalBitasset && !finalBitasset.feeds.length ? (
+          <p className="rounded-lg border border-dashed border-border/60 px-4 py-5 text-center text-sm text-muted-foreground">
+            {t("Smartcoin:noSmartcoinFeedsFound")}
+          </p>
+        ) : null}
+        {!finalBitasset ? (
+          <div className="space-y-2 py-2">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        ) : null}
       </Card>
     </div>
   );

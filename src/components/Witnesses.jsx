@@ -89,8 +89,8 @@ const LightWitnessRow = React.memo(function LightWitnessRow({
   const accountName = account ? account.name : "unknown";
 
   return (
-    <div style={style} key={`vote${currentVote}`}>
-      <Card className={`mb-1 relative overflow-hidden ${isActive ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`vote${currentVote}`}>
+      <Card className={`relative overflow-hidden py-0 gap-0 h-full justify-center ${isActive ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
         <CardContent className="p-3 text-sm">
           <div className="col-span-3 flex items-center">
             <Avatar
@@ -149,10 +149,10 @@ const WitnessRow = React.memo(function WitnessRow({
   );
 
   return (
-    <div style={style} key={witness.id}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={witness.id}>
       <Dialog>
         <DialogTrigger asChild>
-          <Card className={`mb-1 relative overflow-hidden ${witness.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
+          <Card className={`relative overflow-hidden py-0 gap-0 h-full justify-center ${witness.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
             <CardContent className="p-3 text-sm">
               <div className="grid grid-cols-12 gap-2 items-center">
                 <div className="col-span-4 md:col-span-3 flex items-center">
@@ -547,7 +547,7 @@ export default function Witnesses(properties) {
       <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-1)/0.2)]">
         <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-2)/0.2)] to-[hsl(var(--accent-1)/0.2)] blur-3xl" />
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-2)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-2)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
         <CardHeader className="pb-0">
           <CardTitle className="text-lg bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent flex items-center gap-2">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">

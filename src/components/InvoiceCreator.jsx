@@ -114,12 +114,12 @@ function InvoiceChosenRow({ index, style, selectedItems, t, onViewDetails, onRem
     if (!it) return null;
 
     return (
-      <div style={style} className="px-2">
-        <Card>
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2">
+        <Card className="py-0 gap-0 h-full overflow-hidden justify-center">
           <CardContent className="pt-1 pb-1">
             <div className="grid grid-cols-12 items-center gap-2 text-sm">
               <div
-                className="col-span-5 truncate mt-1"
+                className="col-span-5 truncate"
                 title={`${it.name} full details`}
               >
                 <Button
@@ -132,7 +132,7 @@ function InvoiceChosenRow({ index, style, selectedItems, t, onViewDetails, onRem
                 </Button>
               </div>
               <div
-                className="col-span-2 text-center mt-1"
+                className="col-span-2 text-center"
                 title={t("InvoiceCreator:selectedItems.row.quantityTitle", {
                   quantity: it.quantity,
                 })}
@@ -140,7 +140,7 @@ function InvoiceChosenRow({ index, style, selectedItems, t, onViewDetails, onRem
                 {it.quantity}
               </div>
               <div
-                className="col-span-4 text-center pr-2 mt-1"
+                className="col-span-4 text-center pr-2"
                 title={t("InvoiceCreator:selectedItems.row.totalsTitle")}
               >
                 <Dialog>
@@ -179,7 +179,7 @@ function InvoiceChosenRow({ index, style, selectedItems, t, onViewDetails, onRem
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="col-span-1 text-right mt-1">
+              <div className="col-span-1 text-right">
                 <Button
                   size="icon"
                   variant="ghost"
@@ -208,19 +208,20 @@ function InvoiceSelectableRow({ index, style, selectableItems, onSelect }) {
       : "";
 
     return (
-      <div style={style} className="px-2 cursor-pointer hover:bg-card">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2 cursor-pointer hover:bg-card">
         <Card
+          className="py-0 gap-0 h-full overflow-hidden justify-center"
           onClick={() => onSelect(it)}
         >
           <CardContent className="pt-0 pb-0">
             <div className="grid grid-cols-12 items-center gap-2 py-2 text-sm">
-              <div className="col-span-6 truncate mt-1" title={it.name}>
+              <div className="col-span-6 truncate" title={it.name}>
                 {it.name}
               </div>
-              <div className="col-span-3 text-center mt-1" title="In stock">
+              <div className="col-span-3 text-center" title="In stock">
                 {it.quantity ?? 0}
               </div>
-              <div className="col-span-3 text-right pr-2 mt-1" title="Price">
+              <div className="col-span-3 text-right pr-2" title="Price">
                 {priceLabel}
               </div>
             </div>

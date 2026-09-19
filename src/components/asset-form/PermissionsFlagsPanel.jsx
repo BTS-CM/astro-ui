@@ -27,57 +27,61 @@ export default function PermissionsFlagsPanel({
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   return (
-    <div className="col-span-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
+    <div className="col-span-2 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+        <div className="space-y-1.5">
           <HoverInfo
             content={t("AssetCommon:permissions.header_content")}
             header={t("AssetCommon:permissions.header")}
             type="header"
           />
-          {permissions.map((p) => (
-            <AssetPermission
-              key={p.id}
-              alreadyDisabled={p.alreadyDisabled}
-              forceDisabled={p.forceDisabled}
-              id={p.id}
-              allowedText={t(`AssetCommon:permissions.${p.id}.about`)}
-              enabledInfo={t(`AssetCommon:permissions.${p.id}.enabledInfo`)}
-              disabledText={t(`AssetCommon:permissions.${p.id}.about`)}
-              disabledInfo={t(`AssetCommon:permissions.${p.id}.disabledInfo`)}
-              permission={p.perm}
-              setPermission={p.setPerm}
-              flag={p.flag}
-              setFlag={p.setFlag}
-            />
-          ))}
+          <div className="space-y-1 pt-1">
+            {permissions.map((p) => (
+              <AssetPermission
+                key={p.id}
+                alreadyDisabled={p.alreadyDisabled}
+                forceDisabled={p.forceDisabled}
+                id={p.id}
+                allowedText={t(`AssetCommon:permissions.${p.id}.about`)}
+                enabledInfo={t(`AssetCommon:permissions.${p.id}.enabledInfo`)}
+                disabledText={t(`AssetCommon:permissions.${p.id}.about`)}
+                disabledInfo={t(`AssetCommon:permissions.${p.id}.disabledInfo`)}
+                permission={p.perm}
+                setPermission={p.setPerm}
+                flag={p.flag}
+                setFlag={p.setFlag}
+              />
+            ))}
+          </div>
         </div>
 
-        <div>
+        <div className="space-y-1.5">
           <HoverInfo
             content={t("AssetCommon:flags.header_content")}
             header={t("AssetCommon:flags.header")}
             type="header"
           />
-          {flags.map((f) => (
-            <AssetFlag
-              key={f.id}
-              alreadyDisabled={f.alreadyDisabled}
-              id={f.id}
-              allowedText={t(`AssetCommon:flags.${f.key || f.id}.about`)}
-              enabledInfo={t(`AssetCommon:flags.${f.key || f.id}.enabledInfo`)}
-              disabledText={t(`AssetCommon:flags.${f.key || f.id}.about`)}
-              disabledInfo={t(`AssetCommon:flags.${f.key || f.id}.disabledInfo`)}
-              permission={f.permission}
-              flag={f.flag}
-              setFlag={f.setFlag}
-            />
-          ))}
+          <div className="space-y-1 pt-1">
+            {flags.map((f) => (
+              <AssetFlag
+                key={f.id}
+                alreadyDisabled={f.alreadyDisabled}
+                id={f.id}
+                allowedText={t(`AssetCommon:flags.${f.key || f.id}.about`)}
+                enabledInfo={t(`AssetCommon:flags.${f.key || f.id}.enabledInfo`)}
+                disabledText={t(`AssetCommon:flags.${f.key || f.id}.about`)}
+                disabledInfo={t(`AssetCommon:flags.${f.key || f.id}.disabledInfo`)}
+                permission={f.permission}
+                flag={f.flag}
+                setFlag={f.setFlag}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
       {issuerPermissions !== undefined && flagsValue !== undefined && (
-        <div className="mt-3 text-sm text-muted-foreground">
+        <div className="text-sm leading-relaxed text-muted-foreground">
           <span className="font-mono">
             Issuer Permissions: {issuerPermissions}
           </span>
@@ -98,7 +102,7 @@ export default function PermissionsFlagsPanel({
         </div>
       )}
 
-      <Separator className="my-4 mt-5" />
+      <Separator className="mt-2 mb-1" />
     </div>
   );
 }

@@ -207,13 +207,15 @@
       "enabled": "Erweiterung „Zulässige Märkte“ aktiviert",
       "enabledInfo": "Die folgenden Märkte sind für den Handel mit diesem Vermögenswert zugelassen.",
       "disabled": "Erweiterung „Zulässige Märkte“ aktivieren?",
-      "disabledInfo": "Sie können die Märkte, auf denen dieser Vermögenswert gehandelt werden darf, auf eine Reihe vorab genehmigter Märkte beschränken."
+      "disabledInfo": "Sie können die Märkte, auf denen dieser Vermögenswert gehandelt werden darf, auf eine Reihe vorab genehmigter Märkte beschränken.",
+      "emptyHint": "Noch keine Märkte genehmigt – verwenden Sie die obige Asset-Auswahl, um Märkte zu genehmigen. Assets, die bereits auf der Sperrliste stehen, können hier nicht ausgewählt werden."
     },
     "banned_markets": {
       "enabled": "Erweiterung für verbotene Märkte aktiviert",
       "enabledInfo": "Auf den folgenden Märkten ist der Handel mit diesem Vermögenswert verboten.",
       "disabled": "Die Erweiterung für verbotene Märkte aktivieren?",
-      "disabledInfo": "Mit dieser Funktion können Sie bestimmte Markthandelspaare sperren und so verhindern, dass Ihre Vermögenswerte auf unerwünschten Märkten gehandelt werden."
+      "disabledInfo": "Mit dieser Funktion können Sie bestimmte Markthandelspaare sperren und so verhindern, dass Ihre Vermögenswerte auf unerwünschten Märkten gehandelt werden.",
+      "emptyHint": "Noch keine Märkte gesperrt – verwenden Sie die obige Asset-Auswahl, um Märkte zu sperren. Assets, die bereits auf der Zulassungsliste stehen, können hier nicht ausgewählt werden."
     },
     "skipCER": {
       "enabled": "Berechnung des Kernwechselkurses wird übersprungen",

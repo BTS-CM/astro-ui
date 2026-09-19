@@ -69,7 +69,7 @@ export default function NFTSection({
   const mediaRowProps = useMemo(() => ({ nftMedia, setNFTMedia }), [nftMedia, setNFTMedia]);
 
   return (
-    <div className="col-span-2 grid grid-cols-1 md:grid-cols-2">
+    <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
       {!hideToggle && (
         <>
           <HoverInfo
@@ -99,13 +99,12 @@ export default function NFTSection({
       )}
       {enabledNFT ? (
         <>
-          <div className="col-span-2 mb-3">
+          <div className="col-span-2 mb-6 space-y-4">
             <Label>
               {t("AssetCommon:nft.currentIPFSFiles", {
                 count: nftMedia.length,
               })}
             </Label>
-            <br />
             <Label>{t("AssetCommon:nft.supportedFiletypes")}</Label>
             <br />
             <Dialog
@@ -417,131 +416,149 @@ export default function NFTSection({
               </DialogContent>
             </Dialog>
           </div>
-          <div className="col-span-2 mb-2">
+          <div className="col-span-2 mb-6 space-y-5">
             <HoverInfo
               content={t("AssetCommon:nft.header_content")}
               header={t("AssetCommon:nft.header")}
               type="header"
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="col-span-1">
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTTitleContent")}
-                  header={t("AssetCommon:nft.NFTTitleHeader")}
-                />
-                <Input
-                  placeholder={t("AssetCommon:nft.TitlePlaceholder")}
-                  value={title}
-                  type="text"
-                  onInput={(e) => setTitle(e.currentTarget.value)}
-                />
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTArtistContent")}
-                  header={t("AssetCommon:nft.NFTArtistHeader")}
-                />
-                <Input
-                  placeholder={t("AssetCommon:nft.ArtistPlaceholder")}
-                  value={artist}
-                  type="text"
-                  onInput={(e) => setArtist(e.currentTarget.value)}
-                />
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTNarrativeContent")}
-                  header={t("AssetCommon:nft.NFTNarrativeHeader")}
-                />
-                <Input
-                  placeholder={t(
-                    "AssetCommon:nft.NarrativePlaceholder"
-                  )}
-                  value={narrative}
-                  type="text"
-                  onInput={(e) => setNarrative(e.currentTarget.value)}
-                />
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTTagsContent")}
-                  header={t("AssetCommon:nft.NFTTagsHeader")}
-                />
-                <Input
-                  placeholder={t("AssetCommon:nft.TagsPlaceholder")}
-                  value={tags}
-                  type="text"
-                  onInput={(e) => setTags(e.currentTarget.value)}
-                />
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTTypeContent")}
-                  header={t("AssetCommon:nft.NFTTypeHeader")}
-                />
-                <Input
-                  placeholder={t("AssetCommon:nft.TypePlaceholder")}
-                  value={type}
-                  type="text"
-                  onInput={(e) => setType(e.currentTarget.value)}
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="col-span-1 space-y-5">
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTTitleContent")}
+                    header={t("AssetCommon:nft.NFTTitleHeader")}
+                  />
+                  <Input
+                    placeholder={t("AssetCommon:nft.TitlePlaceholder")}
+                    value={title}
+                    type="text"
+                    onInput={(e) => setTitle(e.currentTarget.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTArtistContent")}
+                    header={t("AssetCommon:nft.NFTArtistHeader")}
+                  />
+                  <Input
+                    placeholder={t("AssetCommon:nft.ArtistPlaceholder")}
+                    value={artist}
+                    type="text"
+                    onInput={(e) => setArtist(e.currentTarget.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTNarrativeContent")}
+                    header={t("AssetCommon:nft.NFTNarrativeHeader")}
+                  />
+                  <Input
+                    placeholder={t(
+                      "AssetCommon:nft.NarrativePlaceholder"
+                    )}
+                    value={narrative}
+                    type="text"
+                    onInput={(e) => setNarrative(e.currentTarget.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTTagsContent")}
+                    header={t("AssetCommon:nft.NFTTagsHeader")}
+                  />
+                  <Input
+                    placeholder={t("AssetCommon:nft.TagsPlaceholder")}
+                    value={tags}
+                    type="text"
+                    onInput={(e) => setTags(e.currentTarget.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTTypeContent")}
+                    header={t("AssetCommon:nft.NFTTypeHeader")}
+                  />
+                  <Input
+                    placeholder={t("AssetCommon:nft.TypePlaceholder")}
+                    value={type}
+                    type="text"
+                    onInput={(e) => setType(e.currentTarget.value)}
+                  />
+                </div>
               </div>
-              <div className="col-span-1">
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTAttestationContent")}
-                  header={t("AssetCommon:nft.NFTAttestationHeader")}
-                />
-                <Input
-                  placeholder={t(
-                    "AssetCommon:nft.AttestationPlaceholder"
-                  )}
-                  value={attestation}
-                  type="text"
-                  onInput={(e) =>
-                    setAttestation(e.currentTarget.value)
-                  }
-                />
-                <HoverInfo
-                  content={t(
-                    "AssetCommon:nft.NFTAcknowledgementsContent"
-                  )}
-                  header={t(
-                    "AssetCommon:nft.NFTAcknowledgementsHeader"
-                  )}
-                />
-                <Input
-                  placeholder={t(
-                    "AssetCommon:nft.AcknowledgementsPlaceholder"
-                  )}
-                  value={acknowledgements}
-                  type="text"
-                  onInput={(e) =>
-                    setAcknowledgements(e.currentTarget.value)
-                  }
-                />
-                <HoverInfo
-                  content={t(
-                    "AssetCommon:nft.NFTHolderLicenseContent"
-                  )}
-                  header={t("AssetCommon:nft.NFTHolderLicenseHeader")}
-                />
-                <Input
-                  placeholder={t(
-                    "AssetCommon:nft.HolderLicensePlaceholder"
-                  )}
-                  value={holderLicense}
-                  type="text"
-                  onInput={(e) =>
-                    setHolderLicense(e.currentTarget.value)
-                  }
-                />
-                <HoverInfo
-                  content={t("AssetCommon:nft.NFTLicenseContent")}
-                  header={t("AssetCommon:nft.NFTLicenseHeader")}
-                />
-                <Input
-                  placeholder={t(
-                    "AssetCommon:nft.LicensePlaceholder"
-                  )}
-                  value={license}
-                  type="text"
-                  onInput={(e) => setLicense(e.currentTarget.value)}
-                />
+              <div className="col-span-1 space-y-5">
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTAttestationContent")}
+                    header={t("AssetCommon:nft.NFTAttestationHeader")}
+                  />
+                  <Input
+                    placeholder={t(
+                      "AssetCommon:nft.AttestationPlaceholder"
+                    )}
+                    value={attestation}
+                    type="text"
+                    onInput={(e) =>
+                      setAttestation(e.currentTarget.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t(
+                      "AssetCommon:nft.NFTAcknowledgementsContent"
+                    )}
+                    header={t(
+                      "AssetCommon:nft.NFTAcknowledgementsHeader"
+                    )}
+                  />
+                  <Input
+                    placeholder={t(
+                      "AssetCommon:nft.AcknowledgementsPlaceholder"
+                    )}
+                    value={acknowledgements}
+                    type="text"
+                    onInput={(e) =>
+                      setAcknowledgements(e.currentTarget.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t(
+                      "AssetCommon:nft.NFTHolderLicenseContent"
+                    )}
+                    header={t("AssetCommon:nft.NFTHolderLicenseHeader")}
+                  />
+                  <Input
+                    placeholder={t(
+                      "AssetCommon:nft.HolderLicensePlaceholder"
+                    )}
+                    value={holderLicense}
+                    type="text"
+                    onInput={(e) =>
+                      setHolderLicense(e.currentTarget.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <HoverInfo
+                    content={t("AssetCommon:nft.NFTLicenseContent")}
+                    header={t("AssetCommon:nft.NFTLicenseHeader")}
+                  />
+                  <Input
+                    placeholder={t(
+                      "AssetCommon:nft.LicensePlaceholder"
+                    )}
+                    value={license}
+                    type="text"
+                    onInput={(e) => setLicense(e.currentTarget.value)}
+                  />
+                </div>
               </div>
             </div>
-            <Separator className="my-4 mt-5" />
+            <Separator className="mt-6 mb-1" />
           </div>
         </>
       ) : null}

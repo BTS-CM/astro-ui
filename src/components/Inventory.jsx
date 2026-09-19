@@ -225,40 +225,40 @@ export default function Inventory(properties) {
     }
 
     return (
-      <div style={style} key={it.id ?? it.barcode} className="px-2">
-        <Card className="min-h-[50px] rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
-          <div className="grid grid-cols-11 text-center text-sm">
-            <div className="mt-3" title={it.name}>
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={it.id ?? it.barcode} className="px-2">
+        <Card className="min-h-[50px] rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all py-0 gap-0 h-full overflow-hidden justify-center">
+          <div className="grid grid-cols-11 items-center text-center text-sm">
+            <div title={it.name}>
               {_name}
             </div>
-            <div className="mt-3" title={it.description}>
+            <div title={it.description}>
               {_description}
             </div>
-            <div className="mt-3" title={it.category}>
+            <div title={it.category}>
               {_category}
             </div>
-            <div className="mt-3" title={it.quantity}>
+            <div title={it.quantity}>
               {it.quantity ?? 0}
             </div>
-            <div className="mt-3" title={it.reorderLevel}>
+            <div title={it.reorderLevel}>
               {it.reorderLevel ?? 0}
             </div>
-            <div className="mt-3" title={it.location}>
+            <div title={it.location}>
               {_location}
             </div>
-            <div className="mt-3" title={it.supplier}>
+            <div title={it.supplier}>
               {_supplier}
             </div>
-            <div className="mt-3" title={it.unitPrice}>
+            <div title={it.unitPrice}>
               {it.unitPrice ?? ""}
             </div>
-            <div className="mt-3" title={it.unit}>
+            <div title={it.unit}>
               {it.unit ?? ""}
             </div>
             <div>
               <Dialog>
                 <DialogTrigger>
-                  <Button variant="outline" className="hover:bg-accent mt-1">
+                  <Button variant="outline" className="hover:bg-accent">
                     {`${it.prices.length} ${t("Inventory:prices")}`}
                   </Button>
                 </DialogTrigger>
@@ -392,18 +392,18 @@ export default function Inventory(properties) {
     }
 
     return (
-      <div style={style} key={it.id ?? it.barcode} className="px-2">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={it.id ?? it.barcode} className="px-2">
         <Dialog>
           <DialogTrigger asChild>
-            <Card className="min-h-[50px] rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all cursor-pointer">
-              <div className="grid grid-cols-3 text-center text-sm">
-                <div className="mt-3" title={it.name}>
+            <Card className="min-h-[50px] rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all cursor-pointer py-0 gap-0 h-full overflow-hidden justify-center">
+              <div className="grid grid-cols-3 items-center text-center text-sm">
+                <div title={it.name}>
                   {_name}
                 </div>
-                <div className="mt-3" title={it.description}>
+                <div title={it.description}>
                   {_description}
                 </div>
-                <div className="mt-3" title={it.quantity}>
+                <div title={it.quantity}>
                   {it.quantity ?? 0}
                 </div>
               </div>
@@ -595,7 +595,7 @@ export default function Inventory(properties) {
     if (!row) return null;
 
     return (
-      <div style={style} className="px-0">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-0">
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-5">
             <Input

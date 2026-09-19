@@ -192,12 +192,12 @@ const CallOrderRow = memo(function CallOrderRow({
   const nearCall = mcr > 0 && health !== "danger" && ratio / mcr < 1.1;
 
   return (
-    <div style={{ ...style, paddingRight: "10px", paddingBottom: "6px" }}>
+    <div style={{ ...style, paddingRight: "10px", paddingBottom: "6px", overflow: "hidden" }}>
       <button
         type="button"
         onClick={() => onSelect(position)}
         className={cn(
-          "group w-full text-left rounded-2xl border border-l-2 bg-gradient-to-br transition-all",
+          "group h-full w-full text-left rounded-2xl border border-l-2 bg-gradient-to-br transition-all",
           healthPanel,
           healthRail,
           nearCall && "ring-1 ring-[hsl(var(--accent-warning)/0.3)]"

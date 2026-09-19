@@ -236,7 +236,7 @@ const ForumTopicRow = React.memo(function ForumTopicRow({
     topDonorTitle,
   });
   return (
-    <div style={{ ...style, paddingBottom: "8px" }}>
+    <div style={{ ...style, paddingBottom: "8px", overflow: "hidden" }}>
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-11 min-w-0">
           <Item

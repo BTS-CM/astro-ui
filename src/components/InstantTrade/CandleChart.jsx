@@ -233,7 +233,7 @@ function IndicatorRow({ index, style, indicators, enabledSet, toggle, t }) {
   const checked = enabledSet.has(item.type);
   const paneKey = item.pane === "overlay" ? "Charts:overlay_pane" : "Charts:separate_pane";
   return (
-    <div style={style} className="flex items-center gap-3 px-3 py-2 border-b border-border/40 hover:bg-accent/30">
+    <div style={{ ...style, overflow: "hidden" }} className="flex items-center gap-3 px-3 py-2 border-b border-border/40 hover:bg-accent/30">
       <Checkbox
         id={`ind-${item.type}`}
         checked={checked}

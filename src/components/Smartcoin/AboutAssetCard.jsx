@@ -15,14 +15,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import CardRow from "@/components/common/CardRow.jsx";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 
 export default function AboutAssetCard({
@@ -39,18 +42,19 @@ export default function AboutAssetCard({
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   return (
-    <Card className="mt-2 relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 shadow-lg shadow-[color:hsl(var(--accent-1)/0.1)]">
+    <Card className="mt-2 relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 shadow-lg shadow-[color:hsl(var(--accent-1)/0.1)] h-full">
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.6)] to-transparent" />
       <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
       <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl" />
       <CardContent className="relative p-5">
-        <CardHeader className="flex flex-row items-center justify-between mb-4 p-0">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] flex-shrink-0">
+        <div className="flex flex-row items-center justify-between gap-3 mb-4 p-0">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
               <Info className="h-4 w-4" strokeWidth={2.25} />
             </span>
-            <div>
-              <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-sm font-semibold text-foreground tracking-tight min-w-0 flex-1">
                 {type === "debt"
                   ? t("Smartcoin:aboutAsset", {
                       assetType:
@@ -64,12 +68,24 @@ export default function AboutAssetCard({
                       asset: assetInfo.s,
                       id: assetInfo.id,
                     })}
-              </CardTitle>
-              <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
-                {type === "debt"
-                  ? t("Smartcoin:researchBeforeBorrow", { asset: assetInfo.s })
-                  : t("Smartcoin:researchBeforeBacking", { asset: assetInfo.s })}
-              </CardDescription>
+              </h3>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-flex shrink-0 cursor-help">
+                        <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[260px]">
+                      <p>
+                        {type === "debt"
+                          ? t("Smartcoin:researchBeforeBorrow", { asset: assetInfo.s })
+                          : t("Smartcoin:researchBeforeBacking", { asset: assetInfo.s })}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
           </div>
           <Dialog>
@@ -102,7 +118,7 @@ export default function AboutAssetCard({
               </div>
             </DialogContent>
           </Dialog>
-        </CardHeader>
+        </div>
         <div className="text-xs font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.7)] text-[hsl(var(--accent-1-fg)/0.8)] mb-1">
           {t("Smartcoin:generalAssetInfo")}
         </div>
@@ -487,7 +503,7 @@ export default function AboutAssetCard({
         {assetInfoFlags && assetInfoFlags.length ? (
           assetInfoFlags
         ) : (
-          <span className="text-sm">{t("Smartcoin:noFlagsEnabled")}</span>
+          <span className="text-sm text-muted-foreground">{t("Smartcoin:noFlagsEnabled")}</span>
         )}
         <br />
         <div className="text-xs font-medium uppercase tracking-wider dark:text-[hsl(var(--accent-1-fg)/0.7)] text-[hsl(var(--accent-1-fg)/0.8)] mb-1 mt-3">
@@ -496,7 +512,7 @@ export default function AboutAssetCard({
         {assetPermissions && assetPermissions.length ? (
           assetPermissions
         ) : (
-          <span className="text-sm">{t("Smartcoin:noPermissionsEnabled")}</span>
+          <span className="text-sm text-muted-foreground">{t("Smartcoin:noPermissionsEnabled")}</span>
         )}
       </CardContent>
     </Card>

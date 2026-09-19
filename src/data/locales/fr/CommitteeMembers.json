@@ -13,5 +13,8 @@
   "loading": "Données du comité de chargement ...",
   "votesFor": "{{name}}Les votes du comité",
   "descriptionVotes": "Voir les votes du comité exprimés par ce membre du comité.",
-  "coreTokenBalance": "Équilibre des actifs de base"
+  "coreTokenBalance": "Équilibre des actifs de base",
+  "paramsBannerTitle": "Les membres du comité contrôlent les propriétés globales du réseau",
+  "paramsBannerDescription": "Découvrez ce qu'ils sont chargés de configurer.",
+  "paramsBannerCta": "Voir les paramètres globaux"
 }

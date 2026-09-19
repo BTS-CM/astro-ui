@@ -74,8 +74,8 @@ const WitnessRow = memo(function WitnessRow({
   if (!witness) return null;
 
   return (
-    <div style={style} key={witness.id}>
-      <div className={`mb-1 relative overflow-hidden rounded-xl border ${witness.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={witness.id}>
+      <div className={`relative overflow-hidden rounded-xl border ${witness.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
         <div className="p-3 text-sm">
           <div className="grid grid-cols-4 gap-2 items-center">
             <div className="flex items-center">
@@ -154,8 +154,8 @@ const CommitteeRow = memo(function CommitteeRow({
   if (!member) return null;
 
   return (
-    <div style={style} key={member.id}>
-      <div className={`mb-1 relative overflow-hidden rounded-xl border ${member.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={member.id}>
+      <div className={`relative overflow-hidden rounded-xl border ${member.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-1)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
         <div className="p-3 text-sm">
           <div className="grid grid-cols-4 gap-2 items-center">
             <div className="flex items-center">
@@ -237,8 +237,8 @@ const WorkerRow = memo(function WorkerRow({
   const end = formatDate(worker.work_end_date);
 
   return (
-    <div style={style} key={worker.id}>
-      <div className={`mb-1 relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={worker.id}>
+      <div className={`relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] transition-all duration-300`}>
         <div className="p-3 text-sm">
           <div className="grid grid-cols-8 md:grid-cols-12 gap-2 items-center">
             <div>
@@ -862,7 +862,7 @@ export default function Witnesses(properties) {
       <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-1)/0.2)]">
         <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-2)/0.2)] to-[hsl(var(--accent-1)/0.2)] blur-3xl" />
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-2)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-2)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
         <CardHeader className="pb-0">
           <CardTitle className="text-lg bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent flex items-center gap-2">
             <Vote className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
@@ -1051,7 +1051,7 @@ export default function Witnesses(properties) {
       <Card className="mt-5 w-full md:w-1/2 mx-auto relative overflow-hidden border-[hsl(var(--accent-2)/0.15)] bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-2)/0.1)]">
         <div className="pointer-events-none absolute -top-20 -left-20 h-40 w-40 rounded-full bg-gradient-to-br from-[hsl(var(--accent-2)/0.2)] to-[hsl(var(--accent-3)/0.2)] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-gradient-to-br from-[hsl(var(--accent-3)/0.2)] to-[hsl(var(--accent-2)/0.2)] blur-3xl" />
-        <div className="h-0.5 w-full bg-gradient-to-r from-[hsl(var(--accent-2)/0.5)] via-[hsl(var(--accent-3)/0.5)] to-[hsl(var(--accent-2)/0.5)]" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-[hsl(var(--accent-2)/0.5)] via-[hsl(var(--accent-3)/0.5)] to-[hsl(var(--accent-2)/0.5)]" />
         <Empty className="mt-5">
           <EmptyHeader>
             <EmptyMedia variant="icon"><Ticket className="h-10 w-10 text-[hsl(var(--accent-2-fg))]" /></EmptyMedia>

@@ -13,5 +13,8 @@
   "loading": "Dati del comitato di caricamento ...",
   "votesFor": "{{name}}voti del comitato",
   "descriptionVotes": "Visualizza i voti del comitato espressi da questo membro del comitato.",
-  "coreTokenBalance": "Bilancia delle attività fondamentali"
+  "coreTokenBalance": "Bilancia delle attività fondamentali",
+  "paramsBannerTitle": "I membri del comitato controllano le proprietà globali della rete",
+  "paramsBannerDescription": "Scopri di cosa sono responsabili della configurazione.",
+  "paramsBannerCta": "Visualizza parametri globali"
 }

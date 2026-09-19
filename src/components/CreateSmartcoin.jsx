@@ -11,7 +11,6 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
@@ -80,7 +79,7 @@ const STEP_COLORS = {
 function SectionHeader({ icon: Icon, title, description, step, optional, right }) {
   const colors = STEP_COLORS[step] || STEP_COLORS[1];
   return (
-    <div className="flex items-start gap-3 border-b border-border px-6 py-4">
+    <div className="flex items-start gap-4 border-b border-border px-6 sm:px-8 py-5">
       <div className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1 " + colors.icon}>
         <Icon className="h-4 w-4" />
       </div>
@@ -396,6 +395,8 @@ export default function CreateSmartcoin(properties) {
 
   // NFT info
   const [enabledNFT, setEnabledNFT] = useState(false);
+  // Market fee extensions (optional card)
+  const [enabledMarketFees, setEnabledMarketFees] = useState(false);
   const [acknowledgements, setAcknowledgements] = useState("");
   const [artist, setArtist] = useState("");
   const [attestation, setAttestation] = useState("");
@@ -1113,6 +1114,16 @@ export default function CreateSmartcoin(properties) {
             setTakerFee(_existingAssetExtensions.taker_fee_percent / 100);
           }
 
+          // Detect if market fee extensions should be enabled based on existing flags/markets
+          if (
+            _flags.charge_market_fee ||
+            _flags.white_list ||
+            (propsAsset.options.whitelist_markets && propsAsset.options.whitelist_markets.length > 0) ||
+            (propsAsset.options.blacklist_markets && propsAsset.options.blacklist_markets.length > 0)
+          ) {
+            setEnabledMarketFees(true);
+          }
+
           if (
             _existingAssetExtensions.hasOwnProperty("skip_core_exchange_rate")
           ) {
@@ -1176,21 +1187,16 @@ export default function CreateSmartcoin(properties) {
               description={t("AssetCommon:asset_details.title_content")}
               step={1}
             />
-            <CardContent className="p-6">
-              {!editing ? (
-                    <HoverInfo
-                      content={t("AssetCommon:asset_details.title_content")}
-                      header={t("AssetCommon:asset_details.title")}
-                      type="header"
-                    />
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
+            <CardContent className="p-6 sm:p-8">
+              <div className="space-y-8">
+              {editing && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                       <HoverInfo
                         content={t("AssetCommon:asset_details.title_content")}
                         header={t("AssetCommon:asset_details.title")}
                         type="header"
                       />
-                      <div className="text-right mb-1">
+                      <div className="text-right">
                         {!hasEditedAssetOptions ? (
                           <Button
                             variant="outline"
@@ -1212,9 +1218,9 @@ export default function CreateSmartcoin(properties) {
                   )}
 
                   {!editing || (editing && hasEditedAssetOptions) ? (
-                    <span>
-                      <div className={`grid grid-cols-1 md:grid-cols-3 gap-5`}>
-                        <div>
+                    <span className="block space-y-8">
+                      <div className={`grid grid-cols-1 md:grid-cols-3 gap-6`}>
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:asset_details.symbol.header_content"
@@ -1234,7 +1240,7 @@ export default function CreateSmartcoin(properties) {
                                 const value = e.currentTarget.value;
                                 const regex = /^[a-zA-Z0-9]*\.?[a-zA-Z0-9]*$/;
                                 if (regex.test(value)) {
-                                  setSymbol(value);
+                                  setSymbol(value.toUpperCase());
                                 }
                               }}
                               maxLength={16}
@@ -1250,7 +1256,7 @@ export default function CreateSmartcoin(properties) {
                           )}
                         </div>
 
-                        <div>
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:asset_details.max_supply.header_content"
@@ -1285,7 +1291,7 @@ export default function CreateSmartcoin(properties) {
                             />
                           )}
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:asset_details.precision.header_content"
@@ -1348,27 +1354,29 @@ export default function CreateSmartcoin(properties) {
                         </div>
                       </div>
 
-                      <HoverInfo
-                        content={t(
-                          "AssetCommon:asset_details.description.header_content"
-                        )}
-                        header={t(
-                          "AssetCommon:asset_details.description.header"
-                        )}
-                      />
-                      <Textarea
-                        placeholder={t(
-                          "AssetCommon:asset_details.description.placeholder"
-                        )}
-                        value={desc}
-                        onInput={(e) => {
-                          setDesc(e.currentTarget.value);
-                        }}
-                        className="mt-1"
-                      />
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t(
+                            "AssetCommon:asset_details.description.header_content"
+                          )}
+                          header={t(
+                            "AssetCommon:asset_details.description.header"
+                          )}
+                        />
+                        <Textarea
+                          placeholder={t(
+                            "AssetCommon:asset_details.description.placeholder"
+                          )}
+                          value={desc}
+                          onInput={(e) => {
+                            setDesc(e.currentTarget.value);
+                          }}
+                          className="min-h-28"
+                        />
+                      </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-3">
-                        <div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:asset_details.shortName.header_content"
@@ -1398,7 +1406,7 @@ export default function CreateSmartcoin(properties) {
                             />
                           )}
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:asset_details.preferredMarket.header_content"
@@ -1407,7 +1415,7 @@ export default function CreateSmartcoin(properties) {
                               "AssetCommon:asset_details.preferredMarket.header"
                             )}
                           />
-                          <div className="grid grid-cols-2 gap-3 mt-1">
+                          <div className="grid grid-cols-2 gap-3">
                             <Input placeholder={market} disabled type="text" />
                             <AssetDropDown
                               assetSymbol={""}
@@ -1423,8 +1431,8 @@ export default function CreateSmartcoin(properties) {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-3">
-                        <div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:cer.quote_asset_amount.header_content"
@@ -1453,7 +1461,7 @@ export default function CreateSmartcoin(properties) {
                             />
                           )}
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:cer.base_asset_amount.header_content",
@@ -1485,7 +1493,7 @@ export default function CreateSmartcoin(properties) {
                             />
                           )}
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <HoverInfo
                             content={t(
                               "AssetCommon:cer.calculated_cer_price.header_content"
@@ -1495,9 +1503,12 @@ export default function CreateSmartcoin(properties) {
                             )}
                           />
                           <Input
-                            placeholder={`${(
-                              cerQuoteAmount / cerBaseAmount
-                            ).toFixed(precision)} ${
+                            placeholder={`${
+                              Number(cerBaseAmount) > 0 &&
+                              isFinite(cerQuoteAmount / cerBaseAmount)
+                                ? (cerQuoteAmount / cerBaseAmount).toFixed(precision)
+                                : "—"
+                            } ${
                               usr.chain === "bitshares" ? "BTS" : "TEST"
                             }`}
                             type="text"
@@ -1530,22 +1541,6 @@ export default function CreateSmartcoin(properties) {
                           />
                         </div>
                       ) : null}
-
-                      <MarketFilteringSection
-                        allowedMarketsEnabled={allowedMarketsEnabled}
-                        setAllowedMarketsEnabled={setAllowedMarketsEnabled}
-                        allowedMarkets={allowedMarkets}
-                        setAllowedMarkets={setAllowedMarkets}
-                        bannedMarketsEnabled={bannedMarketsEnabled}
-                        setBannedMarketsEnabled={setBannedMarketsEnabled}
-                        bannedMarkets={bannedMarkets}
-                        setBannedMarkets={setBannedMarkets}
-                        assets={assets}
-                        marketSearch={marketSearch}
-                        usr={usr}
-                        balances={balances}
-                      />
-                      <Separator className="my-4 mt-5" />
 
                       <PermissionsFlagsPanel
                         permissions={[
@@ -1584,53 +1579,88 @@ export default function CreateSmartcoin(properties) {
                         existingAssetData={existingAssetData}
                       />
 
-                  {(!editing || (editing && hasEditedAssetOptions)) ? (
-                    <ExtensionsSection
-                      flagChargeMarketFee={flagChargeMarketFee}
-                      commission={commission}
-                      setCommission={setCommission}
-                      maxCommission={maxCommission}
-                      setMaxCommission={setMaxCommission}
-                      enabledReferrerReward={enabledReferrerReward}
-                      setEnabledReferrerReward={setEnabledReferrerReward}
-                      referrerReward={referrerReward}
-                      setReferrerReward={setReferrerReward}
-                      enabledFeeSharingWhitelist={enabledFeeSharingWhitelist}
-                      setEnabledFeeSharingWhitelist={setEnabledFeeSharingWhitelist}
-                      feeSharingWhitelist={feeSharingWhitelist}
-                      setFeeSharingWhitelist={setFeeSharingWhitelist}
-                      whitelistMarketFeeSharingDialogOpen={whitelistMarketFeeSharingDialogOpen}
-                      setWhitelistMarketFeeSharingDialogOpen={setWhitelistMarketFeeSharingDialogOpen}
-                      enabledTakerFee={enabledTakerFee}
-                      setEnabledTakerFee={setEnabledTakerFee}
-                      takerFee={takerFee}
-                      setTakerFee={setTakerFee}
-                      debouncedPercent={debouncedPercent}
-                      debouncedMax={debouncedMax}
-                      usr={usr}
-                    />
-                  ) : null}
+                      <AuthorityListsSection
+                        flagWhiteList={flagWhiteList}
+                        whitelistAuthorities={whitelistAuthorities}
+                        setWhitelistAuthorities={setWhitelistAuthorities}
+                        blacklistAuthorities={blacklistAuthorities}
+                        setBlacklistAuthorities={setBlacklistAuthorities}
+                        whitelistAuthorityDialogOpen={whitelistAuthorityDialogOpen}
+                        setWhitelistAuthorityDialogOpen={setWhitelistAuthorityDialogOpen}
+                        blacklistAuthorityDialogOpen={blacklistAuthorityDialogOpen}
+                        setBlacklistAuthorityDialogOpen={setBlacklistAuthorityDialogOpen}
+                        usr={usr}
+                      />
 
-                  {(!editing || (editing && hasEditedAssetOptions)) ? (
-                    <AuthorityListsSection
-                      flagWhiteList={flagWhiteList}
-                      whitelistAuthorities={whitelistAuthorities}
-                      setWhitelistAuthorities={setWhitelistAuthorities}
-                      blacklistAuthorities={blacklistAuthorities}
-                      setBlacklistAuthorities={setBlacklistAuthorities}
-                      whitelistAuthorityDialogOpen={whitelistAuthorityDialogOpen}
-                      setWhitelistAuthorityDialogOpen={setWhitelistAuthorityDialogOpen}
-                      blacklistAuthorityDialogOpen={blacklistAuthorityDialogOpen}
-                      setBlacklistAuthorityDialogOpen={setBlacklistAuthorityDialogOpen}
-                      usr={usr}
-                    />
-                  ) : null}
-
-                    </span>
-                  ) : null}
-
-                  <Separator className="my-4 mt-5 mb-2" />
+                  </span>
+                ) : null}
+              </div>
             </CardContent>
+          </Card>
+
+          <Card
+            className={
+              "overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20 transition-colors " +
+              (enabledMarketFees ? "ring-1 ring-[hsl(var(--accent-1)/0.3)]" : "")
+            }
+          >
+            <SectionHeader
+              icon={Settings}
+              title={t("AssetCommon:extensions.header")}
+              description={t("AssetCommon:extensions.header_content")}
+              step={2}
+              optional
+              right={
+                <Switch
+                  checked={enabledMarketFees}
+                  onCheckedChange={setEnabledMarketFees}
+                  className="mt-1 shrink-0 data-[state=checked]:bg-[hsl(var(--accent-1))] data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-white/[0.12] [&>span]:bg-white"
+                />
+              }
+            />
+            {enabledMarketFees && (!editing || (editing && hasEditedAssetOptions)) && (
+              <CardContent className="space-y-6 p-6 sm:p-8">
+                <MarketFilteringSection
+                  allowedMarketsEnabled={allowedMarketsEnabled}
+                  setAllowedMarketsEnabled={setAllowedMarketsEnabled}
+                  allowedMarkets={allowedMarkets}
+                  setAllowedMarkets={setAllowedMarkets}
+                  bannedMarketsEnabled={bannedMarketsEnabled}
+                  setBannedMarketsEnabled={setBannedMarketsEnabled}
+                  bannedMarkets={bannedMarkets}
+                  setBannedMarkets={setBannedMarkets}
+                  assets={assets}
+                  marketSearch={marketSearch}
+                  usr={usr}
+                  balances={balances}
+                />
+
+                <ExtensionsSection
+                  flagChargeMarketFee={flagChargeMarketFee}
+                  commission={commission}
+                  setCommission={setCommission}
+                  maxCommission={maxCommission}
+                  setMaxCommission={setMaxCommission}
+                  enabledReferrerReward={enabledReferrerReward}
+                  setEnabledReferrerReward={setEnabledReferrerReward}
+                  referrerReward={referrerReward}
+                  setReferrerReward={setReferrerReward}
+                  enabledFeeSharingWhitelist={enabledFeeSharingWhitelist}
+                  setEnabledFeeSharingWhitelist={setEnabledFeeSharingWhitelist}
+                  feeSharingWhitelist={feeSharingWhitelist}
+                  setFeeSharingWhitelist={setFeeSharingWhitelist}
+                  whitelistMarketFeeSharingDialogOpen={whitelistMarketFeeSharingDialogOpen}
+                  setWhitelistMarketFeeSharingDialogOpen={setWhitelistMarketFeeSharingDialogOpen}
+                  enabledTakerFee={enabledTakerFee}
+                  setEnabledTakerFee={setEnabledTakerFee}
+                  takerFee={takerFee}
+                  setTakerFee={setTakerFee}
+                  debouncedPercent={debouncedPercent}
+                  debouncedMax={debouncedMax}
+                  usr={usr}
+                />
+              </CardContent>
+            )}
           </Card>
 
           <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
@@ -1638,9 +1668,9 @@ export default function CreateSmartcoin(properties) {
               icon={Layers}
               title={t("CreateSmartcoin:title.header")}
               description={t("CreateSmartcoin:title.header_content")}
-              step={2}
+              step={3}
             />
-            <CardContent className="p-6">
+            <CardContent className="p-6 sm:p-8">
               <SmartcoinOptionsSection
                   editing={editing}
                   hasEditedBitassetOptions={hasEditedBitassetOptions}
@@ -1686,16 +1716,31 @@ export default function CreateSmartcoin(properties) {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
+          <Card
+            className={
+              "overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20 transition-colors " +
+              (enabledNFT ? "ring-1 ring-[hsl(var(--accent-warning)/0.3)]" : "")
+            }
+          >
             <SectionHeader
               icon={Image}
               title={t("AssetCommon:nft.main_header")}
               description={t("AssetCommon:nft.main_header_content")}
-              step={3}
+              step={4}
+              optional
+              right={
+                <Switch
+                  checked={enabledNFT}
+                  onCheckedChange={setEnabledNFT}
+                  className="mt-1 shrink-0 data-[state=checked]:bg-[hsl(var(--accent-warning))] data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-white/[0.12] [&>span]:bg-white"
+                />
+              }
             />
-            <CardContent className="p-6">
+            {enabledNFT && (
+            <CardContent className="p-6 sm:p-8">
               <NFTSection
                   enabledNFT={enabledNFT}
+                  hideToggle
                   setEnabledNFT={setEnabledNFT}
                   nftMedia={nftMedia}
                   setNFTMedia={setNFTMedia}
@@ -1723,10 +1768,11 @@ export default function CreateSmartcoin(properties) {
                   setLicense={setLicense}
                 />
             </CardContent>
+            )}
           </Card>
 
           <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
-            <CardContent className="p-6">
+            <CardContent className="p-6 sm:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-muted-foreground">
                   {t("CreateSmartcoin:card.description")}

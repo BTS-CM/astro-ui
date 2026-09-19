@@ -159,11 +159,11 @@ function AssetIssuerPriceFeedRow({ index, style, bitassetData, collateralAsset, 
 
     return (
       <div
-        style={{ ...style }}
+        style={{ ...style, paddingBottom: 8, overflow: "hidden" }}
         key={`priceFeedRow-${hexID}`}
         onClick={() => onSelect(index)}
       >
-        <Card className="ml-2 mr-2">
+        <Card className="ml-2 mr-2 py-0 gap-0 h-full overflow-hidden justify-center">
           <div className="flex items-center">
             {index === priceFeederIndex ? (
               <div className="ml-5">
@@ -196,8 +196,8 @@ function AssetIssuerPriceFeederRow({ index, style, priceFeedPublishers, onRemove
     }
 
     return (
-      <div style={{ ...style }} key={`acard-${res.id}`}>
-        <Card className="ml-2 mr-2 mt-1">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${res.id}`}>
+        <Card className="ml-2 mr-2 py-0 gap-0 h-full overflow-hidden justify-center">
           <CardHeader className="pb-3 pt-3">
             <span className="flex items-center w-full">
               <span className="flex-shrink-0">

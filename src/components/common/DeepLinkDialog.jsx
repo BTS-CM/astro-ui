@@ -438,7 +438,7 @@ const [qrECL, setQRECL] = useState("M");
         dismissCallback(open);
       }}
     >
-      <DialogContent className="sm:max-w-[800px] bg-card">
+      <DialogContent className="sm:max-w-[800px] bg-card max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {!deeplink ? (
@@ -533,13 +533,15 @@ const [qrECL, setQRECL] = useState("M");
                     </span>
                     <Textarea
                       value={JSON.stringify(operationNames, null, 4)}
-                      className="min-h-[125px]"
+                      className="h-[125px] max-h-[125px] overflow-y-auto [field-sizing:fixed]"
+                      style={{ fieldSizing: "fixed" }}
                       id="trxJSON"
                       readOnly
                     />
                     <Textarea
                       value={JSON.stringify(trxJSON, null, 4)}
-                      className="min-h-[250px]"
+                      className="h-[250px] max-h-[35vh] overflow-y-auto [field-sizing:fixed]"
+                      style={{ fieldSizing: "fixed" }}
                       id="trxJSON"
                       readOnly
                     />

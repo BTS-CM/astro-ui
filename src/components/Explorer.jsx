@@ -104,8 +104,8 @@ function JSONDialog({ open, onOpenChange, title, subtitle, jsonData, favControl 
 
 function SectionCard({ icon: Icon, accent, title, description, children }) {
   return (
-    <Card className="overflow-hidden border-border bg-card/60 backdrop-blur">
-      <div className={`h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-${accent}))] to-[hsl(var(--accent-${accent}))]`} />
+    <Card className="relative overflow-hidden border-border bg-card/60 backdrop-blur">
+      <div aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-${accent}))] to-[hsl(var(--accent-${accent}))]`} />
       <CardHeader className="pb-3">
         <div className="flex items-start gap-3">
           <span className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-[hsl(var(--accent-${accent})/0.15)] border-[hsl(var(--accent-${accent})/0.25)]`}>

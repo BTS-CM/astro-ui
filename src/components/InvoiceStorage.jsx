@@ -142,36 +142,36 @@ function InvoiceStorageRow({ index, style, decodedInvoices, viewMode, generatedM
     }, []);
 
     return (
-      <div style={style} className="px-2">
-        <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2">
+        <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all py-0 gap-0 h-full overflow-hidden justify-center">
           <CardContent className="pt-2 pb-2">
-            <div className="grid grid-cols-4 lg:grid-cols-12 gap-2 text-sm">
+            <div className="grid grid-cols-4 lg:grid-cols-12 items-center gap-2 text-sm">
               <div
-                className="col-span-1 lg:col-span-2 truncate mt-1"
+                className="col-span-1 lg:col-span-2 truncate"
                 title={inv.recipientId || ""}
               >
                 {inv.recipientId}
               </div>
               <div
-                className="hidden lg:block col-span-1 truncate mt-1"
+                className="hidden lg:block col-span-1 truncate"
                 title={inv.recipientName || ""}
               >
                 {inv.recipientName || ""}
               </div>
               <div
-                className="col-span-1 truncate mt-1"
+                className="col-span-1 truncate"
                 title={inv.identifier || ""}
               >
                 {inv.identifier || ""}
               </div>
               <div
-                className="hidden lg:block col-span-2 truncate mt-1"
+                className="hidden lg:block col-span-2 truncate"
                 title={inv.note || ""}
               >
                 {notePreview}
               </div>
               <div
-                className="hidden lg:block col-span-1 pr-1 mt-1 text-muted-foreground"
+                className="hidden lg:block col-span-1 pr-1 text-muted-foreground"
                 title={
                   inv.timestamp ? new Date(inv.timestamp).toLocaleString() : ""
                 }
@@ -179,13 +179,13 @@ function InvoiceStorageRow({ index, style, decodedInvoices, viewMode, generatedM
                 {ts}
               </div>
               <div
-                className="hidden lg:block col-span-1 mt-1"
+                className="hidden lg:block col-span-1"
                 title={t("InvoiceStorage:headers.itemQty")}
               >
                 {itemCount}
               </div>
               <div
-                className="col-span-1 mt-1"
+                className="col-span-1"
                 title={
                   viewMode === "generated"
                     ? t("InvoiceStorage:headers.status")
@@ -293,7 +293,7 @@ function InvoiceStorageRow({ index, style, decodedInvoices, viewMode, generatedM
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="hidden lg:flex col-span-3 gap-2 mt-1">
+              <div className="hidden lg:flex col-span-3 gap-2">
                 <Button
                   size="sm"
                   variant="outline"
@@ -384,17 +384,17 @@ function InvoiceStorageDetailRow({ index, style, detailsInvoice, viewMode, onSel
     const it = sourceItems[index];
     if (!it) return null;
     return (
-      <div style={style} className="px-2">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2">
         <Card
-          className="cursor-pointer hover:bg-card"
+          className="cursor-pointer hover:bg-card py-0 gap-0 h-full overflow-hidden justify-center"
           onClick={() => onSelectItem(it)}
         >
           <CardContent className="pt-1 pb-1">
             <div className="grid grid-cols-12 items-center gap-2 text-sm">
-              <div className="col-span-8 truncate mt-1">
+              <div className="col-span-8 truncate">
                 {it.name}
               </div>
-              <div className="col-span-4 text-center mt-1">
+              <div className="col-span-4 text-center">
                 <Badge variant="outline">
                   {it.quantity}
                 </Badge>
@@ -663,7 +663,7 @@ export default function InvoiceStorage() {
                       width="100%"
                       rowComponent={MemoInvoiceStorageRow}
                       rowCount={decodedInvoices.length}
-                      rowHeight={55}
+                      rowHeight={64}
                       rowProps={invoiceRowProps}
                     />
                   </div>

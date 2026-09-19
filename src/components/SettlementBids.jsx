@@ -158,7 +158,7 @@ function SettlementBidRow({ index, style, rows, t }) {
   const issuerName = issuer?.name && issuer.name !== issuer.id ? issuer.name : null;
 
   const inner = (
-    <div className="p-4">
+    <div className="p-4 md:p-3">
       <div className="flex items-center gap-3 min-w-0">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border flex-shrink-0 border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.12)] to-[hsl(var(--accent-1)/0.04)]">
                 <Gavel className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" strokeWidth={2.25} />
@@ -204,8 +204,11 @@ function SettlementBidRow({ index, style, rows, t }) {
   );
 
   return (
-    <div style={{ ...style }} key={`sfund-${bitasset.asset_id}`}>
-      <Card className="mx-2 mb-1.5 rounded-xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.03)] to-transparent hover:border-[hsl(var(--accent-1)/0.25)] hover:bg-[hsl(var(--accent-1)/0.05)] transition-all cursor-pointer">
+    <div
+      style={{ ...style, padding: "0 0 10px 0", overflow: "hidden" }}
+      key={`sfund-${bitasset.asset_id}`}
+    >
+      <Card className="mx-2 mb-0 h-full overflow-hidden justify-center rounded-xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.03)] to-transparent hover:border-[hsl(var(--accent-1)/0.25)] hover:bg-[hsl(var(--accent-1)/0.05)] transition-all cursor-pointer py-0 gap-0">
         <a
           href={`/settlement.html?id=${bitasset.asset_id}`}
           className="block"
@@ -468,7 +471,7 @@ export default function SettlementBids() {
     []
   );
   const getDesktopRowHeight = useCallback(
-    (index, props) => (props.rows[index]?.biddingDisabled ? 124 : 92),
+    (index, props) => (props.rows[index]?.biddingDisabled ? 148 : 112),
     []
   );
 

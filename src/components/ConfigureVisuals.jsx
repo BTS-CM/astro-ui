@@ -187,25 +187,13 @@ export default function ConfigureVisuals() {
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
       <div className="grid grid-cols-1 gap-3">
-        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-3)/0.1)] blur-3xl"
-          />
-          <div className="relative p-5 sm:p-6">
+        <Card className="overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm gap-0">
+          <div className="border-b border-border p-5 sm:p-6">
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-3)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-3)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
                 <Palette className="h-4.5 w-4.5" strokeWidth={2.25} />
               </span>
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
                   {t("Visuals:pageTitle")}
                 </h2>
@@ -215,10 +203,7 @@ export default function ConfigureVisuals() {
               </div>
             </div>
           </div>
-        </Card>
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-3))]" />
-          <CardContent className="space-y-1 pt-3">
+          <CardContent className="space-y-1 pt-5">
             <SettingRow
               label={t("Visuals:waveCount")}
               description={t("Visuals:waveCountDesc")}

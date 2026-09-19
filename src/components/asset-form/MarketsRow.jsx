@@ -16,25 +16,24 @@ export const AllowedMarketsRow = React.memo(({ index, style, items, assets, mark
   const issuer = marketSearch.find((x) => x.id === res);
 
   return (
-    <div style={{ ...style }} key={`acard-${res}`}>
-      <Card className="ml-2 mr-2 mt-1">
-        <CardHeader className="pb-3 pt-3">
-          <span className="grid grid-cols-12">
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${res}`}>
+      <Card className="ml-2 mr-2 py-0 gap-0 h-full overflow-hidden justify-center">
+        <CardHeader className="px-4 py-2.5">
+          <span className="grid grid-cols-12 items-center gap-2">
             <span className="col-span-11">
-              <div className="">
+              <div className="leading-relaxed">
                 {currentAsset
                   ? `${currentAsset.symbol} (${currentAsset.id})`
                   : res}
               </div>
-              <div className="text-sm">
+              <div className="text-sm text-muted-foreground">
                 {t("Smartcoins:createdBy")}{" "}
                 {issuer && issuer.u ? issuer.u : currentAsset.issuer}
               </div>
             </span>
-            <span className="col-span-1">
+            <span className="col-span-1 flex items-center justify-center">
               <Button
                 variant="outline"
-                className="mr-2 mt-2"
                 onClick={(e) => {
                   e.preventDefault();
                   onRemove(res);
@@ -59,25 +58,24 @@ export const BannedMarketsRow = React.memo(({ index, style, items, assets, marke
   const issuer = marketSearch.find((x) => x.id === res);
 
   return (
-    <div style={{ ...style }} key={`acard-${res}`}>
-      <Card className="ml-2 mr-2 mt-1">
-        <CardHeader className="pb-3 pt-3">
-          <span className="grid grid-cols-12">
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${res}`}>
+      <Card className="ml-2 mr-2 py-0 gap-0 h-full overflow-hidden justify-center">
+        <CardHeader className="px-4 py-2.5">
+          <span className="grid grid-cols-12 items-center gap-2">
             <span className="col-span-11">
-              <div className="">
+              <div className="leading-relaxed">
                 {currentAsset
                   ? `${currentAsset.symbol} (${currentAsset.id})`
                   : res}
               </div>
-              <div className="text-sm">
+              <div className="text-sm text-muted-foreground">
                 {t("Smartcoins:createdBy")}{" "}
                 {issuer && issuer.u ? issuer.u : currentAsset.issuer}
               </div>
             </span>
-            <span className="col-span-1">
+            <span className="col-span-1 flex items-center justify-center">
               <Button
                 variant="outline"
-                className="mr-2 mt-2"
                 onClick={(e) => {
                   e.preventDefault();
                   onRemove(res);

@@ -207,13 +207,15 @@
       "enabled": "Estensione dei mercati consentiti abilitata",
       "enabledInfo": "I seguenti mercati sono autorizzati a negoziare questo asset.",
       "disabled": "Abilitare l'estensione dei mercati consentiti?",
-      "disabledInfo": "Puoi limitare i mercati a cui è consentito scambiare questo asset a una serie di mercati pre-approvati."
+      "disabledInfo": "Puoi limitare i mercati a cui è consentito scambiare questo asset a una serie di mercati pre-approvati.",
+      "emptyHint": "Nessun mercato ancora approvato: usa il selettore di asset qui sopra per approvare i mercati. Gli asset già presenti nell'elenco dei vietati non possono essere selezionati qui."
     },
     "banned_markets": {
       "enabled": "Estensione dei mercati vietati abilitata",
       "enabledInfo": "Ai seguenti mercati è vietato negoziare questo asset.",
       "disabled": "Abilitare l'estensione dei mercati vietati?",
-      "disabledInfo": "Questa funzione ti consente di vietare specifiche coppie di trading di mercato, consentendoti di evitare il trading di asset su mercati indesiderati."
+      "disabledInfo": "Questa funzione ti consente di vietare specifiche coppie di trading di mercato, consentendoti di evitare il trading di asset su mercati indesiderati.",
+      "emptyHint": "Nessun mercato ancora vietato: usa il selettore di asset qui sopra per vietare i mercati. Gli asset già presenti nell'elenco dei consentiti non possono essere selezionati qui."
     },
     "skipCER": {
       "enabled": "Saltare il calcolo del tasso di cambio principale",

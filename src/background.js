@@ -818,8 +818,6 @@ const createWindow = async () => {
   });
 };
 
-app.disableHardwareAcceleration();
-
 const currentOS = os.platform();
 if (currentOS === "win32" || currentOS === "linux") {
   // windows + linux setup phase

@@ -146,8 +146,8 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
   );
 
   return (
-    <div style={{ ...style, marginBottom: "8px" }}>
-      <Card className="bg-card/60 border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all">
+    <div style={{ ...style, paddingBottom: "10px", overflow: "hidden" }}>
+      <Card className="py-0 gap-0 h-full overflow-hidden justify-center bg-card/60 border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all">
         <div className="grid grid-cols-6">
           <div className="col-span-4 md:col-span-2 text-left">
             <CardHeader className="pt-3 pb-3">
@@ -367,25 +367,13 @@ export default function PortfolioBalances({
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
       <div className="grid grid-cols-1 mt-5 gap-3">
-        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl"
-          />
-          <div className="relative p-5 sm:p-6">
+        <Card className="overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 gap-0">
+          <div className="border-b border-border p-5 sm:p-6">
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
                 <Wallet className="h-4.5 w-4.5" strokeWidth={2.25} />
               </span>
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
                   {t("PortfolioTabs:accountBalances", { username: usr?.username })}
                 </h2>
@@ -394,16 +382,13 @@ export default function PortfolioBalances({
                 </p>
               </div>
               {sortedUserBalances && sortedUserBalances.length ? (
-                <span className="ml-auto inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
+                <span className="ml-auto inline-flex shrink-0 items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
                   {sortedUserBalances.length}
                 </span>
               ) : null}
             </div>
           </div>
-        </Card>
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3 pt-5">
             <div className="grid grid-cols-3 gap-3 mt-2">
                 <Button
                   onClick={() => handleSortClick("default")}

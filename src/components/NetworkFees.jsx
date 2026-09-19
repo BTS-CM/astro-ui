@@ -7,9 +7,6 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
 import {
@@ -22,7 +19,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 
-import { Coins, Info, ReceiptText } from "lucide-react";
+import { Info, ReceiptText } from "lucide-react";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNodeUrl } from "@/stores/node.ts";
@@ -96,7 +93,7 @@ function DesktopRow({ index, style, rows, symbol, ltmFactor }) {
   if (!row) return null;
 
   return (
-    <div style={style}>
+    <div style={{ ...style, overflow: "hidden" }}>
       <div className={`h-full flex flex-col justify-center px-4 py-2 border border-transparent border-l-2 hover:border-border/60 hover:bg-[hsl(var(--accent-1)/0.04)] rounded-lg ${index % 2 === 1 ? "bg-[hsl(var(--accent-1)/0.02)]" : "bg-card/40"}`}>
         <div className={DESKTOP_GRID}>
           <Badge
@@ -381,18 +378,14 @@ export default function NetworkFees() {
   return (
     <div className="container mx-auto mt-5 mb-10 max-w-6xl text-foreground">
       <div className="grid grid-cols-1 gap-3">
-        {/* Page header card */}
-        <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-1)/0.2)]">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
-          />
-          <div className="relative p-5 sm:p-6">
+        {/* Fee schedule list */}
+        <Card className="overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm gap-0">
+          <div className="border-b border-border p-5 sm:p-6">
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
                 <ReceiptText className="h-4.5 w-4.5" strokeWidth={2.25} />
               </span>
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
                   {t("NetworkFees:title", "Network Fees")}
                 </h2>
@@ -405,27 +398,14 @@ export default function NetworkFees() {
               </div>
             </div>
           </div>
-        </Card>
-
-        {/* Fee schedule list */}
-        <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
-                <Coins className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
-              </span>
-              {t("NetworkFees:scheduleTitle", "Operation fee schedule")}
-            </CardTitle>
-            <CardDescription className="ml-11">
+          <CardContent className="space-y-3 pt-5">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {t(
                 "NetworkFees:scheduleDescription",
                 "Hover an operation to see what it does. Fees are shown in {{symbol}}.",
                 { symbol }
               )}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
+            </p>
             {!loading && !error && feeSchedule ? (
               <div className="flex items-start gap-2 rounded-xl border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] p-3">
                 <Info className="h-4 w-4 mt-0.5 shrink-0 text-[hsl(var(--accent-1-fg))]" />

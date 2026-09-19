@@ -22,7 +22,7 @@ const CreditOffersCommonRow = memo(function CreditOffersCommonRow({ style, res, 
     usr && usr.id === res.owner_account && (isExpired || !hasOngoingDeals);
   const validityHours = hoursTillExpiration(res.auto_disable_time);
   return (
-    <div style={{ ...style }} key={`acard-${res.id}`}>
+    <div style={{ ...style, paddingBottom: 10, overflow: "hidden" }} key={`acard-${res.id}`}>
       <div className="ml-2 mr-2 relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-md shadow-[color:hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[color:hsl(var(--accent-1)/0.15)] transition-all duration-300">
         <div className="p-3 pb-1">
           <div className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export default function CreditOffers(properties) {
                     <List
                       rowComponent={CreditOffersRow}
                       rowCount={offers.length}
-                      rowHeight={225}
+                      rowHeight={245}
                       rowProps={creditOffersRowProps}
                       height={500}
                       width="100%"

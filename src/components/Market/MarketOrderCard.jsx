@@ -73,7 +73,7 @@ const MarketOrderRow = React.memo(function MarketOrderRow({ index, style, market
         };
 
     return (
-      <div style={style}>
+      <div style={{ ...style, overflow: "hidden" }}>
         <Dialog key={`${cardType}Dialog${index}`}>
           <DialogTrigger asChild>
             <button
@@ -316,7 +316,7 @@ export default function MarketOrderCard(properties) {
                 width="100%"
                 rowComponent={MarketOrderRow}
                 rowCount={marketOrders.length}
-                rowHeight={28}
+                rowHeight={32}
                 rowProps={rowProps}
               />
             </div>

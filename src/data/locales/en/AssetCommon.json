@@ -207,13 +207,15 @@
       "enabled": "Allowed markets extension enabled",
       "enabledInfo": "The following markets are approved to trade this asset.",
       "disabled": "Enable the allowed markets extension?",
-      "disabledInfo": "You can limit the markets that are allowed to trade this asset to a set of pre-approved markets."
+      "disabledInfo": "You can limit the markets that are allowed to trade this asset to a set of pre-approved markets.",
+      "emptyHint": "No markets approved yet — use the asset picker above to approve markets. Assets already on the banned list cannot be picked here."
     },
     "banned_markets": {
       "enabled": "Banned markets extension enabled",
       "enabledInfo": "The following markets are banned from trading this asset.",
       "disabled": "Enable the banned markets extension?",
-      "disabledInfo": "This feature enables you to ban specific market trading pairs, enabling you to help avoid your asset trading on undesired markets."
+      "disabledInfo": "This feature enables you to ban specific market trading pairs, enabling you to help avoid your asset trading on undesired markets.",
+      "emptyHint": "No markets banned yet — use the asset picker above to ban markets. Assets already on the allowed list cannot be picked here."
     },
     "skipCER": {
       "enabled": "Skipping Core Exchange Rate calculation",

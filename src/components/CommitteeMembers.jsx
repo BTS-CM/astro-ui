@@ -11,8 +11,9 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
-import { Users, ArrowUpDown } from "lucide-react";
+import { Users, ArrowUpDown, SlidersHorizontal, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 import {
   Dialog,
@@ -63,8 +64,8 @@ const LightMemberRow = React.memo(function LightMemberRow({
   const accountName = account ? account.name : "unknown";
 
   return (
-    <div style={style} key={`vote${currentVote}`}>
-      <Card className={`mb-1 relative overflow-hidden rounded-xl border ${isActive ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-2)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-2)/0.25)] transition-all duration-300`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`vote${currentVote}`}>
+      <Card className={`relative overflow-hidden py-0 gap-0 h-full justify-center rounded-xl border ${isActive ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-2)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-2)/0.25)] transition-all duration-300`}>
       <div className="p-3 text-sm">
         <div className="col-span-3 flex items-center">
           <Avatar
@@ -114,10 +115,10 @@ const CommitteeRow = React.memo(function CommitteeRow({
   );
 
   return (
-    <div style={style} key={member.id}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={member.id}>
       <Dialog>
         <DialogTrigger asChild>
-          <Card className={`mb-1 relative overflow-hidden rounded-xl border ${member.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-2)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-2)/0.25)] transition-all duration-300`}>
+          <Card className={`relative overflow-hidden py-0 gap-0 h-full justify-center rounded-xl border ${member.active ? "border-[hsl(var(--accent-success)/0.2)] bg-[hsl(var(--accent-success)/0.05)]" : "border-[hsl(var(--accent-2)/0.15)] bg-card/60"} backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-2)/0.25)] transition-all duration-300`}>
             <div className="p-3 text-sm">
               <div className="grid grid-cols-3 gap-2 items-center">
                 <div className="flex items-center">
@@ -390,7 +391,7 @@ export default function CommitteeMembers(properties) {
       <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-2)/0.2)]">
         <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-2)/0.2)] to-[hsl(var(--accent-3)/0.2)] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-3)/0.2)] to-[hsl(var(--accent-2)/0.2)] blur-3xl" />
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-2)/0.7)] via-[hsl(var(--accent-3)/0.7)] to-[hsl(var(--accent-2)/0.7)]" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-2)/0.7)] via-[hsl(var(--accent-3)/0.7)] to-[hsl(var(--accent-2)/0.7)]" />
         {/* content */}
         <CardHeader className="pb-0">
           <CardTitle className="text-lg bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] bg-clip-text text-transparent flex items-center gap-2">
@@ -453,6 +454,35 @@ export default function CommitteeMembers(properties) {
               </div>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="relative overflow-hidden mt-3 border-[hsl(var(--accent-2)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-2)/0.12)] via-[hsl(var(--accent-3)/0.06)] to-transparent shadow-lg shadow-[color:hsl(var(--accent-2)/0.15)]">
+        <div aria-hidden="true" className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-3)/0.2)] blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.2)] blur-3xl" />
+        <CardContent className="relative flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div className="flex items-start gap-3 min-w-0">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-2)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-2)/0.3)] to-[hsl(var(--accent-3)/0.3)] text-[hsl(var(--accent-2-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-2)/0.4)]">
+              <SlidersHorizontal className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-foreground">
+                {t("CommitteeMembers:paramsBannerTitle")}
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+                {t("CommitteeMembers:paramsBannerDescription")}
+              </p>
+            </div>
+          </div>
+          <Button
+            asChild
+            className="shrink-0 bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] text-white shadow-[0_8px_28px_-12px_hsl(var(--accent-2)/0.7)] hover:shadow-[0_12px_36px_-12px_hsl(var(--accent-2)/0.9)] transition-all"
+          >
+            <a href="/committee_parameters.html">
+              {t("CommitteeMembers:paramsBannerCta")}
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </a>
+          </Button>
         </CardContent>
       </Card>
     </div>

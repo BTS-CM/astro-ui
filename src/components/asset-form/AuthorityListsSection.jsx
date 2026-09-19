@@ -56,27 +56,27 @@ export default function AuthorityListsSection({
   if (!flagWhiteList) return null;
 
   return (
-    <>
-      <div className="col-span-2 mb-3">
+    <div className="space-y-8">
+      <div className="col-span-2 space-y-4">
         <HoverInfo
           content={t("AssetCommon:whitelist.header_content")}
           header={t("AssetCommon:whitelist.header")}
           type="header"
         />
-        <div className="grid grid-cols-12 mt-1">
-          <span className="col-span-9 border border-border rounded">
+        <div className="grid grid-cols-12 gap-3">
+          <span className="col-span-9 rounded-xl border border-border/60 bg-card/40 p-4">
             <div className="w-full h-[300px]">
               <List
                 height={300}
                 width="100%"
                 rowComponent={WhitelistAuthorityRow}
                 rowCount={whitelistAuthorities.length}
-                rowHeight={100}
+                rowHeight={75}
                 rowProps={whitelistRowProps}
               />
             </div>
           </span>
-          <span className="col-span-3 ml-3 text-center">
+          <span className="col-span-3 text-center">
             <Dialog
               open={whitelistAuthorityDialogOpen}
               onOpenChange={(open) => {
@@ -84,7 +84,7 @@ export default function AuthorityListsSection({
               }}
             >
               <DialogTrigger asChild>
-                <Button variant="outline" className="ml-3 mt-1">
+                <Button variant="outline">
                   ➕ {t("CreditOfferEditor:addUser")}
                 </Button>
               </DialogTrigger>
@@ -132,14 +132,14 @@ export default function AuthorityListsSection({
         </div>
       </div>
 
-      <div className="col-span-2 mb-3">
+      <div className="col-span-2 space-y-4">
         <HoverInfo
           content={t("AssetCommon:blacklist.header_content")}
           header={t("AssetCommon:blacklist.header")}
           type="header"
         />
-        <div className="grid grid-cols-12 mt-1">
-          <span className="col-span-9 border border-border rounded">
+        <div className="grid grid-cols-12 gap-3">
+          <span className="col-span-9 rounded-xl border border-border/60 bg-card/40 p-4">
             <div className="w-full h-[300px]">
               <List
                 height={300}
@@ -151,7 +151,7 @@ export default function AuthorityListsSection({
               />
             </div>
           </span>
-          <span className="col-span-3 ml-3 text-center">
+          <span className="col-span-3 text-center">
             <Dialog
               open={blacklistAuthorityDialogOpen}
               onOpenChange={(open) => {
@@ -159,7 +159,7 @@ export default function AuthorityListsSection({
               }}
             >
               <DialogTrigger asChild>
-                <Button variant="outline" className="ml-3 mt-1">
+                <Button variant="outline">
                   ➕ {t("CreditOfferEditor:addUser")}
                 </Button>
               </DialogTrigger>
@@ -206,6 +206,6 @@ export default function AuthorityListsSection({
           </span>
         </div>
       </div>
-    </>
+    </div>
   );
 }

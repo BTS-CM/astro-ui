@@ -55,7 +55,7 @@ const SmartcoinCard = memo(function SmartcoinCard({ style, row, t }) {
   }
 
   return (
-    <div style={{ ...style }} key={`acard-${row.asset_id}`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${row.asset_id}`}>
       <div className="ml-2 mr-2 overflow-hidden rounded-xl border border-border bg-card/60 backdrop-blur-sm shadow-[0_0_20px_-5px] shadow-[color:hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[0_0_25px_-5px] shadow-[color:hsl(var(--accent-1)/0.15)] transition-all duration-300">
         <div className="h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.4)] to-transparent" />
         <div className="p-4">
@@ -1026,7 +1026,7 @@ export default function Smartcoins(properties) {
                           <List
                             rowComponent={BitassetRow}
                             rowCount={modeFilteredBitassetData.length}
-                            rowHeight={130}
+                            rowHeight={152}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                         <div className="block md:hidden">
@@ -1088,7 +1088,7 @@ export default function Smartcoins(properties) {
                           <List
                             rowComponent={BitassetRow}
                             rowCount={modeFilteredBitassetData.length}
-                            rowHeight={130}
+                            rowHeight={152}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                         <div className="block md:hidden">
@@ -1156,7 +1156,7 @@ export default function Smartcoins(properties) {
                                 ? modeFilteredBitassetData.length
                                 : 0
                             }
-                            rowHeight={130}
+                            rowHeight={152}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                         <div className="block md:hidden">
@@ -1263,7 +1263,7 @@ export default function Smartcoins(properties) {
                               <List
                                 rowComponent={BitassetRow}
                                 rowCount={searchRows.length}
-                                rowHeight={130}
+                                rowHeight={152}
                                 rowProps={searchRowProps} height={600} width="100%" />
                             </div>
                             <div className="block md:hidden">

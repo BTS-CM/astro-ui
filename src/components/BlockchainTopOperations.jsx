@@ -121,8 +121,8 @@ const Row = ({ index, style, operations, t, data }) => {
     : op.fallbackName;
   return (
     <div
-      style={style}
-      className="grid grid-cols-[3rem_1fr_6rem_5rem] items-center gap-2 rounded-lg border border-border/60 px-3 py-2 mb-1 transition-colors hover:border-[hsl(var(--accent-success)/0.5)] hover:bg-[hsl(var(--accent-success)/0.04)]"
+      style={{ ...style, paddingBottom: 4, overflow: "hidden" }}
+      className="grid grid-cols-[3rem_1fr_6rem_5rem] items-center gap-2 rounded-lg border border-border/60 px-3 py-2 transition-colors hover:border-[hsl(var(--accent-success)/0.5)] hover:bg-[hsl(var(--accent-success)/0.04)]"
     >
       <span className="font-mono text-sm text-muted-foreground">
         {op.type}
@@ -310,7 +310,7 @@ export default function BlockchainTopOperations() {
                   <List
                     rowComponent={Row}
                     rowCount={operations.length}
-                    rowHeight={42}
+                    rowHeight={48}
                     style={{ height: 500, width: "100%" }}
                     rowProps={{ operations, t }}
                   />

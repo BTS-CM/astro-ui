@@ -67,7 +67,7 @@ function VestingRow({ index, style, chosenVestingData, assets, t, onClaim }) {
   const policy = res.balance_type === "cashback" ? res.policy[1] : null;
 
   return (
-    <div style={{ ...style }} key={`acard-${res.id}`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${res.id}`}>
       <div className="m-2 rounded-2xl border border-[hsl(var(--accent-1)/0.25)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.07)] to-[hsl(var(--accent-1)/0.02)] hover:border-[hsl(var(--accent-1)/0.5)] hover:shadow-[0_0_24px_-6px_hsl(var(--accent-1)/0.35)] transition-all px-4 py-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export default function Vesting(properties) {
     return () => window.removeEventListener("resize", update);
   }, []);
   const vestingRowHeight =
-    vestingType === "cashback" ? (isMobileRows ? 320 : 224) : 120;
+    vestingType === "cashback" ? (isMobileRows ? 320 : 224) : 136;
 
   return (
     <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4 lg:1/2">

@@ -96,8 +96,8 @@ const BlockedUserRow = React.memo(function BlockedUserRow({
   const item = chainUserBlockList[index];
   if (!item) return null;
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-2 bg-card/60 border border-border hover:bg-[hsl(var(--accent-danger)/0.04)] hover:border-[hsl(var(--accent-danger)/0.25)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-danger)/0.4)]">
+    <div style={{ ...style, paddingRight: "10px", paddingBottom: 8, overflow: "hidden" }}>
+      <Card className="bg-card/60 py-0 gap-0 h-full justify-center border border-border hover:bg-[hsl(var(--accent-danger)/0.04)] hover:border-[hsl(var(--accent-danger)/0.25)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-danger)/0.4)]">
         <CardHeader className="px-4 py-3 flex flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-danger)/0.3)] bg-[hsl(var(--accent-danger)/0.1)]">
@@ -134,8 +134,8 @@ const HiddenTopicRow = React.memo(function HiddenTopicRow({
   const item = chainHiddenTopics[index];
   if (!item) return null;
   return (
-    <div style={{ ...style, paddingRight: "10px" }}>
-      <Card className="mb-2 bg-card/60 border border-border hover:bg-[hsl(var(--accent-2)/0.04)] hover:border-[hsl(var(--accent-2)/0.25)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)]">
+    <div style={{ ...style, paddingRight: "10px", paddingBottom: 8, overflow: "hidden" }}>
+      <Card className="bg-card/60 py-0 gap-0 h-full justify-center border border-border hover:bg-[hsl(var(--accent-2)/0.04)] hover:border-[hsl(var(--accent-2)/0.25)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)]">
         <CardHeader className="px-4 py-3 flex flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)]">
@@ -268,19 +268,16 @@ export default function BlockedUsers() {
         </Card>
 
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
               <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(var(--accent-1)/0.15)] flex-shrink-0">
                 <ShieldOff className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
               </span>
               {t("Blocklist:committeeHeader")}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5 ml-11">
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[hsl(var(--accent-1-fg))]">
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-xs text-[hsl(var(--accent-1-fg))]">
                 {t("Blocklist:committeeCount", { count: committeeCount })}
               </span>
-            </p>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -290,7 +287,6 @@ export default function BlockedUsers() {
         </Card>
 
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-danger))]" />
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
@@ -299,14 +295,10 @@ export default function BlockedUsers() {
                     <Ban className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
                   </span>
                   {t("Blocklist:usersHeader")}
+                  <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-xs text-[hsl(var(--accent-1-fg))]">
+                    {chainUserBlockList ? chainUserBlockList.length : 0}
+                  </span>
                 </CardTitle>
-                {chainUserBlockList && chainUserBlockList.length ? (
-                  <p className="mt-0.5 ml-11">
-                    <span className="inline-flex items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-xs text-[hsl(var(--accent-1-fg))]">
-                      {chainUserBlockList.length}
-                    </span>
-                  </p>
-                ) : null}
               </div>
               <Dialog
                 open={addDialogOpen}
@@ -344,7 +336,7 @@ export default function BlockedUsers() {
           </CardHeader>
           <CardContent>
             {chainUserBlockList && chainUserBlockList.length ? (
-              <>
+              <div className="rounded-xl border border-[hsl(var(--accent-danger)/0.25)] bg-[hsl(var(--accent-danger)/0.04)] p-3 sm:p-4">
                 <div className="w-full h-[420px] block md:hidden">
                   <List
                     rowComponent={BlockedUserRow}
@@ -365,7 +357,7 @@ export default function BlockedUsers() {
                     rowProps={blockedRowProps}
                   />
                 </div>
-              </>
+              </div>
             ) : (
               <Empty className="mt-2 border border-[hsl(var(--accent-danger)/0.25)] rounded-xl bg-[hsl(var(--accent-danger)/0.04)]">
                 <EmptyHeader>
@@ -383,7 +375,6 @@ export default function BlockedUsers() {
         </Card>
 
         <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
@@ -413,15 +404,17 @@ export default function BlockedUsers() {
           </CardHeader>
           <CardContent>
             {chainHiddenTopics && chainHiddenTopics.length ? (
-              <div className="w-full h-[320px]">
-                <List
-                  rowComponent={HiddenTopicRow}
-                  rowCount={chainHiddenTopics.length}
-                  rowHeight={72}
-                  height={320}
-                  width="100%"
-                  rowProps={hiddenRowProps}
-                />
+              <div className="rounded-xl border border-border/60 bg-accent/20 p-3 sm:p-4">
+                <div className="w-full h-[320px]">
+                  <List
+                    rowComponent={HiddenTopicRow}
+                    rowCount={chainHiddenTopics.length}
+                    rowHeight={72}
+                    height={320}
+                    width="100%"
+                    rowProps={hiddenRowProps}
+                  />
+                </div>
               </div>
             ) : (
               <Empty className="mt-2 border border-border/60 rounded-xl bg-accent/20">

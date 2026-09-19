@@ -58,7 +58,7 @@ export default function AssetFlag({
   };
 
   return (
-    <span className="grid grid-cols-12 items-center gap-2 pl-3">
+    <span className="grid grid-cols-12 items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent/30">
       <span>
         {alreadyDisabled || !permission ? (
           <Checkbox
@@ -83,9 +83,9 @@ export default function AssetFlag({
       <span className="col-span-10">
         <MakeHover>
           {alreadyDisabled ? (
-            <Label htmlFor={id}>{permission || disabledText}</Label>
+            <Label htmlFor={id} className="leading-relaxed">{permission || disabledText}</Label>
           ) : (
-            <Label htmlFor={id}>{flag ? allowedText : disabledText}</Label>
+            <Label htmlFor={id} className="leading-relaxed">{flag ? allowedText : disabledText}</Label>
           )}
         </MakeHover>
       </span>

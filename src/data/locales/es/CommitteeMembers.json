@@ -13,5 +13,8 @@
   "loading": "Carga de datos del comité ...",
   "votesFor": "{{name}}Votos del comité",
   "descriptionVotes": "Ver los votos del comité emitidos por este miembro del comité.",
-  "coreTokenBalance": "Saldo de activos del núcleo"
+  "coreTokenBalance": "Saldo de activos del núcleo",
+  "paramsBannerTitle": "Los miembros del comité controlan las propiedades globales de la red",
+  "paramsBannerDescription": "Mira lo que están encargados de configurar.",
+  "paramsBannerCta": "Ver parámetros globales"
 }

@@ -185,7 +185,7 @@ export default function MonthlyReferrer() {
     const name = acc && acc.name ? acc.name : d.id;
     const amount = humanReadableFloat(d.totalAmount, btsPrecision);
     return (
-      <div style={style} className="px-1 pb-1">
+      <div style={{ ...style, overflow: "hidden" }} className="px-1 pb-1">
         <div
           className={cn(
             "flex h-full items-center gap-2 rounded-lg border px-3",

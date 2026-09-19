@@ -652,15 +652,10 @@ export default function UIA(properties) {
               description={t("AssetCommon:asset_details.title_content")}
               step={1}
             />
-            <CardContent className="p-6">
-                  <HoverInfo
-                    content={t("AssetCommon:asset_details.title_content")}
-                    header={t("AssetCommon:asset_details.title")}
-                    type="header"
-                  />
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
+            <CardContent className="p-6 sm:p-8">
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
                       <HoverInfo
                         content={t(
                           "AssetCommon:asset_details.symbol.header_content"
@@ -678,7 +673,7 @@ export default function UIA(properties) {
                             const value = e.currentTarget.value;
                             const regex = /^[a-zA-Z0-9]*\.?[a-zA-Z0-9]*$/;
                             if (regex.test(value)) {
-                              setSymbol(value);
+                              setSymbol(value.toUpperCase());
                             }
                           }}
                           maxLength={16}
@@ -694,7 +689,7 @@ export default function UIA(properties) {
                       )}
                     </div>
 
-                    <div>
+                    <div className="space-y-2">
                       <HoverInfo
                         content={t(
                           "AssetCommon:asset_details.max_supply.header_content"
@@ -720,7 +715,7 @@ export default function UIA(properties) {
                         className="mt-1"
                       />
                     </div>
-                    <div>
+                    <div className="space-y-2">
                       <HoverInfo
                         content={t(
                           "AssetCommon:asset_details.precision.header_content"
@@ -757,6 +752,7 @@ export default function UIA(properties) {
                     </div>
                   </div>
 
+                <div className="space-y-2">
                   <HoverInfo
                     content={t(
                       "AssetCommon:asset_details.description.header_content"
@@ -769,113 +765,118 @@ export default function UIA(properties) {
                     )}
                     value={desc}
                     onInput={(e) => setDesc(e.currentTarget.value)}
-                    className="mt-1"
+                    className="min-h-28"
                   />
+                </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-3">
-                    <div>
-                      <HoverInfo
-                        content={t(
-                          "AssetCommon:asset_details.shortName.header_content"
-                        )}
-                        header={t("AssetCommon:asset_details.shortName.header")}
-                      />
-                      <Input
-                        placeholder={t(
-                          "AssetCommon:asset_details.shortName.placeholder"
-                        )}
-                        value={shortName}
-                        type="text"
-                        onInput={(e) => setShortName(e.currentTarget.value)}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <HoverInfo
-                        content={t(
-                          "AssetCommon:asset_details.preferredMarket.header_content"
-                        )}
-                        header={t(
-                          "AssetCommon:asset_details.preferredMarket.header"
-                        )}
-                      />
-                      <div className="grid grid-cols-2 gap-3 mt-1">
-                        <Input placeholder={market} disabled type="text" />
-                        <AssetDropDown
-                          assetSymbol={""}
-                          assetData={null}
-                          storeCallback={setMarket}
-                          otherAsset={null}
-                          marketSearch={marketSearch}
-                          type={"backing"}
-                          chain={usr && usr.chain ? usr.chain : "bitshares"}
-                          balances={balances}
-                        />
-                      </div>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <HoverInfo
+                      content={t(
+                        "AssetCommon:asset_details.shortName.header_content"
+                      )}
+                      header={t("AssetCommon:asset_details.shortName.header")}
+                    />
+                    <Input
+                      placeholder={t(
+                        "AssetCommon:asset_details.shortName.placeholder"
+                      )}
+                      value={shortName}
+                      type="text"
+                      onInput={(e) => setShortName(e.currentTarget.value)}
+                      className="mt-1"
+                    />
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-3">
-                    <div>
-                      <HoverInfo
-                        content={t(
-                          "AssetCommon:cer.quote_asset_amount.header_content"
-                        )}
-                        header={t("AssetCommon:cer.quote_asset_amount.header")}
-                      />
-                      <Input
-                        placeholder={0}
-                        value={cerQuoteAmount}
-                        type="number"
-                        min="0"
-                        onInput={(e) => {
-                          setCerQuoteAmount(e.currentTarget.value);
-                        }}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <HoverInfo
-                        content={t(
-                          "AssetCommon:cer.base_asset_amount.header_content",
-                          {
-                            symbol: "BTS",
-                          }
-                        )}
-                        header={t("AssetCommon:cer.base_asset_amount.header")}
-                      />
-                      <Input
-                        placeholder={0}
-                        value={cerBaseAmount}
-                        type="number"
-                        min="0"
-                        onInput={(e) => {
-                          setCerBaseAmount(e.currentTarget.value);
-                        }}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <HoverInfo
-                        content={t(
-                          "AssetCommon:cer.calculated_cer_price.header_content"
-                        )}
-                        header={t(
-                          "AssetCommon:cer.calculated_cer_price.header"
-                        )}
-                      />
-                      <Input
-                        placeholder={`${(
-                          cerQuoteAmount / cerBaseAmount
-                        ).toFixed(precision)} ${
-                          usr.chain === "bitshares" ? "BTS" : "TEST"
-                        }`}
-                        type="text"
-                        className="mt-1"
-                        disabled
+                  <div className="space-y-2">
+                    <HoverInfo
+                      content={t(
+                        "AssetCommon:asset_details.preferredMarket.header_content"
+                      )}
+                      header={t(
+                        "AssetCommon:asset_details.preferredMarket.header"
+                      )}
+                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input placeholder={market} disabled type="text" />
+                      <AssetDropDown
+                        assetSymbol={""}
+                        assetData={null}
+                        storeCallback={setMarket}
+                        otherAsset={null}
+                        marketSearch={marketSearch}
+                        type={"backing"}
+                        chain={usr && usr.chain ? usr.chain : "bitshares"}
+                        balances={balances}
                       />
                     </div>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <HoverInfo
+                      content={t(
+                        "AssetCommon:cer.quote_asset_amount.header_content"
+                      )}
+                      header={t("AssetCommon:cer.quote_asset_amount.header")}
+                    />
+                    <Input
+                      placeholder={0}
+                      value={cerQuoteAmount}
+                      type="number"
+                      min="0"
+                      onInput={(e) => {
+                        setCerQuoteAmount(e.currentTarget.value);
+                      }}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <HoverInfo
+                      content={t(
+                        "AssetCommon:cer.base_asset_amount.header_content",
+                        {
+                          symbol: "BTS",
+                        }
+                      )}
+                      header={t("AssetCommon:cer.base_asset_amount.header")}
+                    />
+                    <Input
+                      placeholder={0}
+                      value={cerBaseAmount}
+                      type="number"
+                      min="0"
+                      onInput={(e) => {
+                        setCerBaseAmount(e.currentTarget.value);
+                      }}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <HoverInfo
+                      content={t(
+                        "AssetCommon:cer.calculated_cer_price.header_content"
+                      )}
+                      header={t(
+                        "AssetCommon:cer.calculated_cer_price.header"
+                      )}
+                    />
+                    <Input
+                      placeholder={`${
+                        Number(cerBaseAmount) > 0 &&
+                        isFinite(cerQuoteAmount / cerBaseAmount)
+                          ? (cerQuoteAmount / cerBaseAmount).toFixed(precision)
+                          : "—"
+                      } ${
+                        usr.chain === "bitshares" ? "BTS" : "TEST"
+                      }`}
+                      type="text"
+                      className="mt-1"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -886,7 +887,7 @@ export default function UIA(properties) {
               description={t("AssetCommon:permissions.header_content")}
               step={2}
             />
-            <CardContent className="p-6">
+            <CardContent className="space-y-6 p-6 sm:p-8">
                  <PermissionsFlagsPanel
                    permissions={[
                      { id: "charge_market_fee", alreadyDisabled: permanentlyDisabledCMF, perm: permChargeMarketFee, setPerm: setPermChargeMarketFee, flag: flagChargeMarketFee, setFlag: setFlagChargeMarketFee },
@@ -904,6 +905,18 @@ export default function UIA(properties) {
                     ]}
                    issuerPermissions={issuer_permissions}
                    flagsValue={flags}
+                 />
+                 <AuthorityListsSection
+                   flagWhiteList={flagWhiteList}
+                   whitelistAuthorities={whitelistAuthorities}
+                   setWhitelistAuthorities={setWhitelistAuthorities}
+                   blacklistAuthorities={blacklistAuthorities}
+                   setBlacklistAuthorities={setBlacklistAuthorities}
+                   whitelistAuthorityDialogOpen={whitelistAuthorityDialogOpen}
+                   setWhitelistAuthorityDialogOpen={setWhitelistAuthorityDialogOpen}
+                   blacklistAuthorityDialogOpen={blacklistAuthorityDialogOpen}
+                   setBlacklistAuthorityDialogOpen={setBlacklistAuthorityDialogOpen}
+                   usr={usr}
                  />
             </CardContent>
           </Card>
@@ -929,7 +942,7 @@ export default function UIA(properties) {
               }
             />
             {enabledExtensions && (
-              <CardContent className="space-y-6 p-6">
+              <CardContent className="space-y-6 p-6 sm:p-8">
                 <MarketFilteringSection
                   allowedMarketsEnabled={allowedMarketsEnabled}
                   setAllowedMarketsEnabled={setAllowedMarketsEnabled}
@@ -969,19 +982,6 @@ export default function UIA(properties) {
                   debouncedMax={debouncedMax}
                   usr={usr}
                 />
-
-                <AuthorityListsSection
-                  flagWhiteList={flagWhiteList}
-                  whitelistAuthorities={whitelistAuthorities}
-                  setWhitelistAuthorities={setWhitelistAuthorities}
-                  blacklistAuthorities={blacklistAuthorities}
-                  setBlacklistAuthorities={setBlacklistAuthorities}
-                  whitelistAuthorityDialogOpen={whitelistAuthorityDialogOpen}
-                  setWhitelistAuthorityDialogOpen={setWhitelistAuthorityDialogOpen}
-                  blacklistAuthorityDialogOpen={blacklistAuthorityDialogOpen}
-                  setBlacklistAuthorityDialogOpen={setBlacklistAuthorityDialogOpen}
-                  usr={usr}
-                />
               </CardContent>
             )}
           </Card>
@@ -1007,7 +1007,7 @@ export default function UIA(properties) {
               }
             />
             {enabledNFT && (
-              <CardContent className="p-6">
+              <CardContent className="p-6 sm:p-8">
                    <NFTSection
                      enabledNFT={enabledNFT}
                      hideToggle
@@ -1042,7 +1042,7 @@ export default function UIA(properties) {
           </Card>
 
           <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
-            <CardContent className="p-6">
+            <CardContent className="p-6 sm:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
                 <Button
                   className="h-10 px-8 bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))] hover:from-[hsl(var(--accent-2))] hover:to-[hsl(var(--accent-3))] text-white dark:text-white shadow-md shadow-[color:hsl(var(--accent-2)/0.30)]"

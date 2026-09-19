@@ -133,7 +133,7 @@ function SettlementBidRow({ index, style, collateralBids, parsedCollateralAsset,
         _bid?.bidder ||
         "—";
       return (
-        <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
+        <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px", overflow: "hidden" }}>
           <div className="h-full flex items-center gap-2 px-3 rounded-xl border border-transparent text-sm text-muted-foreground">
             {onViewBid && _bid ? (
               <button
@@ -172,7 +172,7 @@ function SettlementBidRow({ index, style, collateralBids, parsedCollateralAsset,
       _bid?.bidder ||
       "—";
     return (
-        <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
+        <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px", overflow: "hidden" }}>
         <div className="h-full flex items-center gap-2 px-3 rounded-xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.03)] to-transparent hover:border-[hsl(var(--accent-1)/0.25)] hover:bg-[hsl(var(--accent-1)/0.05)] transition-all text-sm">
           <div className="flex-1 truncate flex items-center gap-1.5 min-w-0">
             <button

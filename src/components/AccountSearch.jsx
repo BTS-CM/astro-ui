@@ -193,7 +193,7 @@ const AccountSearchFavouriteRow = React.memo(function AccountSearchFavouriteRow(
   if (!favUser) return null;
   const user = { username: favUser.name, id: favUser.id };
   return (
-    <div style={style} className="pr-1">
+    <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} className="pr-1">
       <AccountCard
         user={user}
         onClick={() =>
@@ -219,7 +219,7 @@ const AccountSearchHistoryRow = React.memo(function AccountSearchHistoryRow({
   if (!historyEntry) return null;
   const user = { username: historyEntry.name, id: historyEntry.id };
   return (
-    <div style={style} className="pr-1">
+    <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} className="pr-1">
       <AccountCard
         user={user}
         onClick={() =>
@@ -572,7 +572,7 @@ export default function AccountSearch(properties) {
               <List
                 rowComponent={AccountSearchFavouriteRow}
                 rowCount={filteredFavourites.length}
-                rowHeight={72}
+                rowHeight={80}
                 height={340}
                 width="100%"
                 rowProps={favouriteRowProps}
@@ -637,7 +637,7 @@ export default function AccountSearch(properties) {
               <List
                 rowComponent={AccountSearchHistoryRow}
                 rowCount={filteredHistory.length}
-                rowHeight={72}
+                rowHeight={80}
                 height={340}
                 width="100%"
                 rowProps={historyRowProps}

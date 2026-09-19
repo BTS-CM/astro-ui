@@ -59,7 +59,7 @@ export default function AssetPermission({
 
   if (alreadyDisabled) {
     return (
-      <span className="grid grid-cols-12 items-center gap-2 pl-3">
+      <span className="grid grid-cols-12 items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent/30">
         <span>
           <Checkbox
             checked={false}
@@ -69,7 +69,7 @@ export default function AssetPermission({
         </span>
         <span className="col-span-10">
           <MakeHover>
-            <Label htmlFor={id}>{permission || disabledText}</Label>
+            <Label htmlFor={id} className="leading-relaxed">{permission || disabledText}</Label>
           </MakeHover>
         </span>
         <MakeHover>
@@ -80,7 +80,7 @@ export default function AssetPermission({
   }
 
   return (
-    <span className="grid grid-cols-12 items-center gap-2 pl-3">
+    <span className="grid grid-cols-12 items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-accent/30">
       <span>
         <Checkbox
           onClick={(e) => {
@@ -97,7 +97,7 @@ export default function AssetPermission({
       </span>
       <span className="col-span-10">
         <MakeHover>
-          <Label htmlFor={id}>{permission ? allowedText : disabledText}</Label>
+          <Label htmlFor={id} className="leading-relaxed">{permission ? allowedText : disabledText}</Label>
         </MakeHover>
       </span>
       <MakeHover>

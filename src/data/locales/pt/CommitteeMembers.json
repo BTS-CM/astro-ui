@@ -13,5 +13,8 @@
   "loading": "Dados do comitê de carregamento ...",
   "votesFor": "{{name}}Os votos do comitê",
   "descriptionVotes": "Ver os votos do comitê expressos por esse membro do comitê.",
-  "coreTokenBalance": "Equilíbrio de ativos central"
+  "coreTokenBalance": "Equilíbrio de ativos central",
+  "paramsBannerTitle": "Os membros do comitê controlam as propriedades globais da rede",
+  "paramsBannerDescription": "Veja pelo que eles são responsáveis por configurar.",
+  "paramsBannerCta": "Ver parâmetros globais"
 }

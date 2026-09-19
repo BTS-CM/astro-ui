@@ -394,7 +394,7 @@ export default function Smartcoin(properties) {
       return Object.keys(obj).map((key) => (
         <HoverCard key={`${key}_debtFlags`}>
           <HoverCardTrigger>
-            <Badge className="mr-2">{key}</Badge>
+            <Badge className="mr-2 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] font-mono text-[11px] font-normal text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.15)] transition-colors">{key}</Badge>
           </HoverCardTrigger>
           <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
             {tips[key]}
@@ -410,7 +410,7 @@ export default function Smartcoin(properties) {
       return Object.keys(obj).map((key) => (
         <HoverCard key={`${key}_collateralFlags`}>
           <HoverCardTrigger>
-            <Badge className="mr-2">{key}</Badge>
+            <Badge className="mr-2 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] font-mono text-[11px] font-normal text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.15)] transition-colors">{key}</Badge>
           </HoverCardTrigger>
           <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
             {tips[key]}
@@ -426,7 +426,7 @@ export default function Smartcoin(properties) {
       return Object.keys(obj).map((key) => (
         <HoverCard key={`${key}_debtPermissions`}>
           <HoverCardTrigger>
-            <Badge className="mr-2">{key}</Badge>
+            <Badge className="mr-2 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] font-mono text-[11px] font-normal text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.15)] transition-colors">{key}</Badge>
           </HoverCardTrigger>
           <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
             {tips[key]}
@@ -444,7 +444,7 @@ export default function Smartcoin(properties) {
       return Object.keys(obj).map((key) => (
         <HoverCard key={`${key}_collateralPermissions`}>
           <HoverCardTrigger>
-            <Badge className="mr-2">{key}</Badge>
+            <Badge className="mr-2 border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.08)] font-mono text-[11px] font-normal text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.15)] transition-colors">{key}</Badge>
           </HoverCardTrigger>
           <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
             {tips[key]}

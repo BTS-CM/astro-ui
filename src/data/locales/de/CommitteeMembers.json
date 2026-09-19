@@ -13,5 +13,8 @@
   "loading": "Daten des Ladeausschusses ... Daten ...",
   "votesFor": "{{name}}'S Committee stimmt",
   "descriptionVotes": "Sehen Sie sich die von diesem Ausschussmitglied abgegebenen Ausschussstimmen an.",
-  "coreTokenBalance": "Kernvermögen"
+  "coreTokenBalance": "Kernvermögen",
+  "paramsBannerTitle": "Komiteemitglieder steuern globale Netzwerkeigenschaften",
+  "paramsBannerDescription": "Sehen Sie sich an, wofür sie zuständig sind.",
+  "paramsBannerCta": "Globale Parameter ansehen"
 }

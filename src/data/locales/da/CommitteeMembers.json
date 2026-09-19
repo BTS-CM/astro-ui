@@ -13,5 +13,8 @@
   "loading": "Indlæsningsudvalgsdata ...",
   "votesFor": "{{name}}Udvalget stemmer",
   "descriptionVotes": "Se udvalgets stemmer afgivet af dette udvalgsmedlem.",
-  "coreTokenBalance": "Kerneaktivbalance"
+  "coreTokenBalance": "Kerneaktivbalance",
+  "paramsBannerTitle": "Udvalgsmedlemmer styrer globale netværksegenskaber",
+  "paramsBannerDescription": "Se, hvad de er ansvarlige for at konfigurere.",
+  "paramsBannerCta": "Se globale parametre"
 }

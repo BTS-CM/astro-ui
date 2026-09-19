@@ -232,7 +232,7 @@ const AccountSelectRow = React.memo(function AccountSelectRow({
   if (!user) return null;
   const fallbackPath = typeof window !== "undefined" ? window.location.pathname : "/";
   return (
-    <div style={style} className="pr-1">
+    <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} className="pr-1">
       {usr && chain !== usr.chain ? (
         <a href={fallbackPath} className="block">
           <AccountCard
@@ -275,7 +275,7 @@ const AccountSelectFavouriteRow = React.memo(function AccountSelectFavouriteRow(
   const user = { username: favUser.name, id: favUser.id };
   const favFallbackPath = typeof window !== "undefined" ? window.location.pathname : "/";
   return (
-    <div style={style} className="pr-1">
+    <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} className="pr-1">
       {usr && chain !== usr.chain ? (
         <a href={favFallbackPath} className="block">
           <AccountCard
@@ -612,7 +612,7 @@ export default function AccountSelect(properties) {
               <List
                 rowComponent={AccountSelectRow}
                 rowCount={filteredUsers.length}
-                rowHeight={72}
+                rowHeight={80}
                 height={340}
                 width="100%"
                 rowProps={existingRowProps}
@@ -661,7 +661,7 @@ export default function AccountSelect(properties) {
               <List
                 rowComponent={AccountSelectFavouriteRow}
                 rowCount={favouriteUsers.length}
-                rowHeight={72}
+                rowHeight={80}
                 height={340}
                 width="100%"
                 rowProps={favouritesRowProps}

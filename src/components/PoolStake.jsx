@@ -872,7 +872,7 @@ export default function PoolStake(properties) {
 
     return (
       <div
-        style={style}
+        style={{ ...style, overflow: "hidden" }}
         className={`grid grid-cols-12 hover:bg-[hsl(var(--accent-1)/0.06)] hover:border-[hsl(var(--accent-1)/0.2)] p-1 cursor-pointer transition-colors ${
           pool === _pool.id ? "bg-[hsl(var(--accent-1)/0.25)] border-[hsl(var(--accent-1)/0.4)]" : ""
         }`}

@@ -207,13 +207,15 @@
       "enabled": "Extension des marchés autorisés activée",
       "enabledInfo": "Les marchés suivants sont autorisés à négocier cet actif.",
       "disabled": "Activer l'extension des marchés autorisés ?",
-      "disabledInfo": "Vous pouvez limiter les marchés autorisés à négocier cet actif à un ensemble de marchés pré-approuvés."
+      "disabledInfo": "Vous pouvez limiter les marchés autorisés à négocier cet actif à un ensemble de marchés pré-approuvés.",
+      "emptyHint": "Aucun marché approuvé pour le moment — utilisez le sélecteur d'actifs ci-dessus pour approuver des marchés. Les actifs déjà présents dans la liste des marchés interdits ne peuvent pas être sélectionnés ici."
     },
     "banned_markets": {
       "enabled": "Extension des marchés interdits activée",
       "enabledInfo": "Les marchés suivants sont interdits de négocier cet actif.",
       "disabled": "Activer l'extension des marchés interdits ?",
-      "disabledInfo": "Cette fonctionnalité vous permet d'interdire des paires de négociation de marché spécifiques, vous permettant ainsi d'éviter que vos actifs ne soient négociés sur des marchés indésirables."
+      "disabledInfo": "Cette fonctionnalité vous permet d'interdire des paires de négociation de marché spécifiques, vous permettant ainsi d'éviter que vos actifs ne soient négociés sur des marchés indésirables.",
+      "emptyHint": "Aucun marché interdit pour le moment — utilisez le sélecteur d'actifs ci-dessus pour interdire des marchés. Les actifs déjà présents dans la liste des marchés autorisés ne peuvent pas être sélectionnés ici."
     },
     "skipCER": {
       "enabled": "Ignorer le calcul du taux de change de base",

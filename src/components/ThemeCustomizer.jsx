@@ -374,8 +374,8 @@ function AuditPanel({ theme, accentPage, t }) {
   const grade = failures === 0 ? "A" : hardFails === 0 ? "B" : "F";
 
   return (
-    <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-      <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-success))] to-[hsl(var(--accent-info))]" />
+    <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-success))] to-[hsl(var(--accent-info))]" />
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(var(--accent-success)/0.15)]">
@@ -482,8 +482,8 @@ function MatrixPanel({ theme, accentPage, t }) {
   };
 
   return (
-    <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-      <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
+    <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(var(--accent-2)/0.15)]">
@@ -543,8 +543,8 @@ function DarkVariantsPanel({ theme, accentPage, canEdit, onPickDark, onResetDark
     })),
   ];
   return (
-    <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-      <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-3))] to-[hsl(var(--accent-1))]" />
+    <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-3))] to-[hsl(var(--accent-1))]" />
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(var(--accent-3)/0.15)]">
@@ -737,7 +737,7 @@ function ThemeRow({ index, style, themes, activeId, draftTheme, onSelect, t }) {
   const th = themes[index];
   const active = th.id === activeId;
   return (
-    <div style={style} className="px-1 py-0.5">
+    <div style={{ ...style, overflow: "hidden" }} className="px-1 py-0.5">
       <button
         type="button"
         onClick={() => onSelect(th)}
@@ -774,13 +774,13 @@ function ColorItemRow({ index, style, colorItems, selectedColor, onSelect }) {
   const item = colorItems[index];
   if (item.type === "header") {
     return (
-      <div style={style} className="flex items-end px-3 pb-1 bg-[hsl(var(--accent-1)/0.05)]">
+      <div style={{ ...style, overflow: "hidden" }} className="flex items-end px-3 pb-1 bg-[hsl(var(--accent-1)/0.05)]">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{item.category}</span>
       </div>
     );
   }
   return (
-    <div style={style}>
+    <div style={{ ...style, overflow: "hidden" }}>
       <button
         type="button"
         onClick={() => onSelect(index)}
@@ -1116,8 +1116,8 @@ export default function ThemeCustomizer() {
         </div>
       </Card>
       {/* Row 1: Themes */}
-      <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
+      <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))]" />
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(var(--accent-1)/0.15)]">
@@ -1246,8 +1246,8 @@ export default function ThemeCustomizer() {
 
 
       {/* Row 2: Theme customizer */}
-      <Card className="bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
-        <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
+      <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm">
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-2))] to-[hsl(var(--accent-3))]" />
         <CardHeader className="pb-3">
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <div>

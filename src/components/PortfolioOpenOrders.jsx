@@ -256,9 +256,12 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
   return (
     <div style={{ ...style, paddingRight: "10px", paddingBottom: "4px" }}>
       {/* Mobile: stacked card */}
-      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] block md:hidden py-2 gap-0">
+      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] hover:shadow-[0_0_28px_-10px_hsl(var(--accent-1)/0.5)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] block md:hidden py-2 gap-0">
         <CardContent className="px-3 py-2 space-y-1.5">
           <div className="flex items-center gap-2">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)]">
+              <ArrowLeftRight className="h-3.5 w-3.5 text-[hsl(var(--accent-1-fg))]" />
+            </span>
             <span className="text-sm font-semibold truncate min-w-0">
               <span className="text-muted-foreground font-normal">{t("PortfolioTabs:trading")} </span>
               <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{readableBaseAmount} {sellAsset?.symbol ?? "?"}</span>
@@ -270,8 +273,11 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
             <div className="text-sm font-semibold dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
               {priceDisplay}
             </div>
-            <div className="text-[10px] text-muted-foreground">
+            <div className="text-[10px] text-muted-foreground font-mono tabular-nums">
               {buyAsset?.symbol}/{sellAsset?.symbol}
+            </div>
+            <div className="text-[10px] text-muted-foreground/60 font-mono tabular-nums truncate">
+              #{orderId}
             </div>
             <TooltipProvider delayDuration={300}>
               <Tooltip>
@@ -318,10 +324,13 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
       </Card>
 
       {/* Desktop: two-row layout */}
-      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] hidden md:block py-2 gap-0">
+      <Card className="group bg-card/60 border border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] hover:shadow-[0_0_28px_-10px_hsl(var(--accent-1)/0.5)] transition-all rounded-xl border-l-2 border-l-[hsl(var(--accent-2)/0.4)] hidden md:block py-2 gap-0">
         <CardContent className="px-3 py-1.5">
           <div className="grid grid-cols-12 gap-4 items-center">
-            <div className="col-span-10 flex items-center gap-2 min-w-0">
+            <div className="col-span-10 flex items-center gap-2.5 min-w-0">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)]">
+                <ArrowLeftRight className="h-3.5 w-3.5 text-[hsl(var(--accent-1-fg))]" />
+              </span>
               <span className="text-sm font-semibold truncate min-w-0">
                 <span className="text-muted-foreground font-normal">{t("PortfolioTabs:trading")} </span>
                 <span className="font-mono tabular-nums dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{readableBaseAmount} {sellAsset?.symbol ?? "?"}</span>
@@ -348,7 +357,8 @@ const OpenOrdersRow = memo(function OpenOrdersRow({ index, style, sortedOpenOrde
           <div className="flex items-center justify-between gap-3 mt-1">
             <div className="min-w-0 text-sm whitespace-nowrap truncate">
               <span className="font-mono tabular-nums font-semibold dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">{priceDisplay}</span>
-              <span className="text-muted-foreground"> {buyAsset?.symbol}/{sellAsset?.symbol}</span>
+              <span className="text-muted-foreground font-mono tabular-nums text-xs"> {buyAsset?.symbol}/{sellAsset?.symbol}</span>
+              <span className="ml-2 text-[11px] text-muted-foreground/60 font-mono tabular-nums">#{orderId}</span>
             </div>
             <div className="flex items-center gap-1 shrink-0">
               <OrderJsonDialog order={order} orderId={orderId} t={t}>

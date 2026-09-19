@@ -20,9 +20,9 @@ export default function HoverInfo({ header, content, type }: HoverInfoProps) {
     <HoverCard openDelay={200} closeDelay={100}>
       <HoverCardTrigger asChild>
         {!type ? (
-          <Label className="cursor-default">{header}</Label>
+          <Label className="mb-2 cursor-default leading-relaxed">{header}</Label>
         ) : (
-          <Label className="text-xl text-semibold cursor-default">{header}</Label>
+          <Label className="text-xl text-semibold mb-3 cursor-default leading-snug">{header}</Label>
         )}
       </HoverCardTrigger>
       <HoverCardContent

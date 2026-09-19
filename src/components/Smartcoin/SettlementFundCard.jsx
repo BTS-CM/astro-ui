@@ -6,9 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 
 export function GlobalSettlementCard({
@@ -31,23 +28,23 @@ export function GlobalSettlementCard({
         <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-danger)/0.08)] blur-3xl" />
         <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
         <CardContent className="relative p-5">
-          <CardHeader className="flex flex-row items-center gap-3 mb-4 p-0">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-danger)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-danger)/0.2)] to-[hsl(var(--accent-1)/0.2)] dark:text-[hsl(var(--accent-danger-gradFg))] text-[hsl(var(--accent-danger-gradFg))] flex-shrink-0">
+          <div className="flex flex-row items-center gap-3 mb-4 p-0">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-danger)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-danger)/0.2)] to-[hsl(var(--accent-1)/0.2)] text-[hsl(var(--accent-danger-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-danger)/0.4)] flex-shrink-0">
               <AlertTriangle className="h-4 w-4" strokeWidth={2.25} />
             </span>
-            <div>
-              <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-semibold text-foreground tracking-tight">
                 {t("Smartcoin:settlementFundTitle", {
                   symbol: finalAsset.symbol,
                 })}
-              </CardTitle>
-              <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
+              </h3>
+              <p className="text-[10px] text-muted-foreground/60 mt-0.5">
                 {t("Smartcoin:settlementFundDescription")}
                 <br />
                 {t("Smartcoin:borrowingUnavailable")}
-              </CardDescription>
+              </p>
             </div>
-          </CardHeader>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
             <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
@@ -125,23 +122,23 @@ export function IndividualSettlementCard({
         <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
         <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
         <CardContent className="relative p-5">
-          <CardHeader className="flex flex-row items-center gap-3 mb-4 p-0">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-1)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] flex-shrink-0">
+          <div className="flex flex-row items-center gap-3 mb-4 p-0">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-1)/0.2)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
               <AlertTriangle className="h-4 w-4" strokeWidth={2.25} />
             </span>
-            <div>
-              <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-semibold text-foreground tracking-tight">
                 {t("Smartcoin:individualSettlementFund", {
                   symbol: finalAsset.symbol,
                 })}
-              </CardTitle>
-              <CardDescription className="text-[10px] text-muted-foreground/60 mt-0.5">
+              </h3>
+              <p className="text-[10px] text-muted-foreground/60 mt-0.5">
                 {t("Smartcoin:individualSettlementFundDescription")}
                 <br />
                 {t("Smartcoin:fundsCanBeBidOn")}
-              </CardDescription>
+              </p>
             </div>
-          </CardHeader>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
             <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">

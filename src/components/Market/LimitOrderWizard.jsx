@@ -167,7 +167,7 @@ const LimitOrderRow = React.memo(function LimitOrderRow({ index, style, marketLi
         : 0;
 
     return (
-      <div style={style} key={`marketLimitOrder-${_order.id}`}>
+      <div style={{ ...style, overflow: "hidden" }} key={`marketLimitOrder-${_order.id}`}>
         <div
           className={cn(
             "group flex items-center gap-2 rounded-xl border transition-all px-3 py-2.5",

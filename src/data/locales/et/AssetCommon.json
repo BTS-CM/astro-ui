@@ -207,13 +207,15 @@
       "enabled": "Lubatud turgude laiendus on lubatud",
       "enabledInfo": "Selle varaga kauplemiseks on lubatud järgmised turud.",
       "disabled": "Kas lubada lubatud turgude laiendus?",
-      "disabledInfo": "Saate piirata turge, millel on lubatud selle varaga kaubelda, eelnevalt kinnitatud turgudega."
+      "disabledInfo": "Saate piirata turge, millel on lubatud selle varaga kaubelda, eelnevalt kinnitatud turgudega.",
+      "emptyHint": "Ühtegi turgu pole veel heaks kiidetud – kasutage turgude heakskiitmiseks ülalolevat varade valijat. Varasid, mis on juba keelatud nimekirjas, ei saa siin valida."
     },
     "banned_markets": {
       "enabled": "Keelatud turgude laiendus on lubatud",
       "enabledInfo": "Järgmistel turgudel on selle varaga kauplemine keelatud.",
       "disabled": "Kas lubada keelatud turgude laiendus?",
-      "disabledInfo": "See funktsioon võimaldab teil keelata teatud turukauplemispaarid, mis võimaldab teil vältida oma varadega kauplemist soovimatutel turgudel."
+      "disabledInfo": "See funktsioon võimaldab teil keelata teatud turukauplemispaarid, mis võimaldab teil vältida oma varadega kauplemist soovimatutel turgudel.",
+      "emptyHint": "Ühtegi turgu pole veel keelatud – kasutage turgude keelamiseks ülalolevat varade valijat. Varasid, mis on juba lubatud nimekirjas, ei saa siin valida."
     },
     "skipCER": {
       "enabled": "Põhivahetuskursi arvutamise vahelejätmine",

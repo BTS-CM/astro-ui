@@ -76,9 +76,9 @@ const NodeRow = memo(function NodeRow({ index, style, nodes, chain, updateNodes 
   }, [open, index, attempt, nodeUrl]);
 
   return (
-    <div style={{ ...style }} key={`acard-${index}`}>
-      <Card className={`ml-2 mr-2 border-[hsl(var(--accent-success)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-success)/0.25)] hover:bg-[hsl(var(--accent-success)/0.03)] transition-all ${index === 0 ? "!border-[hsl(var(--accent-success)/0.3)] !bg-[hsl(var(--accent-success)/0.05)]" : ""}`}>
-        <CardHeader className="pb-0 pt-0">
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${index}`}>
+      <Card className={`ml-2 mr-2 py-0 gap-0 h-full overflow-hidden justify-center border-[hsl(var(--accent-success)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-success)/0.25)] hover:bg-[hsl(var(--accent-success)/0.03)] transition-all ${index === 0 ? "!border-[hsl(var(--accent-success)/0.3)] !bg-[hsl(var(--accent-success)/0.05)]" : ""}`}>
+        <CardHeader className="pb-0 pt-0 gap-0 h-full content-center items-center">
           <CardTitle>
             <div className={`grid grid-cols-4 gap-2 items-center mt-0 pt-0`}>
               <div className="col-span-4 md:col-span-3 font-mono text-sm">
@@ -194,25 +194,15 @@ export default function Nodes(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4">
         <div className="grid grid-cols-1 gap-3">
-          <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-2xl shadow-[color:hsl(var(--accent-success)/0.20)]">
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-success)/0.7)] to-transparent"
-            />
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-success)/0.10)] blur-3xl"
-            />
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[hsl(var(--accent-1)/0.10)] blur-3xl"
-            />
-            <div className="relative p-5 sm:p-6">
+          <Card className="relative overflow-hidden rounded-2xl border border-[hsl(var(--accent-success)/0.15)] bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-success)/0.1)] gap-0">
+            <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-success)/0.15)] to-[hsl(var(--accent-1)/0.15)] blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-1)/0.15)] to-[hsl(var(--accent-success)/0.15)] blur-3xl" />
+            <div className="relative border-b border-border p-5 sm:p-6">
               <div className="flex items-center gap-3">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--accent-success)/0.40)] bg-gradient-to-br from-[hsl(var(--accent-success)/0.30)] to-[hsl(var(--accent-1)/0.30)] dark:text-[hsl(var(--accent-success-fg))] text-[hsl(var(--accent-success-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-success)/0.4)]">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-success)/0.40)] bg-gradient-to-br from-[hsl(var(--accent-success)/0.30)] to-[hsl(var(--accent-1)/0.30)] dark:text-[hsl(var(--accent-success-fg))] text-[hsl(var(--accent-success-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-success)/0.4)]">
                   <Server className="h-4.5 w-4.5" strokeWidth={2.25} />
                 </span>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
                     {t("Nodes:pageTitle")}
                   </h2>
@@ -222,13 +212,7 @@ export default function Nodes(properties) {
                 </div>
               </div>
             </div>
-          </Card>
-
-          <Card className="relative overflow-hidden rounded-2xl border border-[hsl(var(--accent-success)/0.15)] bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-success)/0.1)]">
-            <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-success)/0.15)] to-[hsl(var(--accent-1)/0.15)] blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-[hsl(var(--accent-1)/0.15)] to-[hsl(var(--accent-success)/0.15)] blur-3xl" />
-            <div className="h-0.5 w-full bg-gradient-to-r from-[hsl(var(--accent-success)/0.5)] via-[hsl(var(--accent-1)/0.5)] to-[hsl(var(--accent-success)/0.5)]" />
-            <CardHeader>
+            <CardHeader className="pt-5 pb-4">
               <CardTitle className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent flex items-center gap-2">
                 <Server className="h-5 w-5 text-[hsl(var(--accent-1-fg))]" />
                 {t("Nodes:cardTitle")}
@@ -245,7 +229,7 @@ export default function Nodes(properties) {
                     <List
                       rowComponent={NodeRow}
                       rowCount={nodes[usr.chain].length}
-                      rowHeight={50}
+                      rowHeight={64}
                       height={250}
                       width="100%"
                       rowProps={nodeRowProps}

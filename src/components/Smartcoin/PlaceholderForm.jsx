@@ -15,9 +15,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 
 export default function PlaceholderForm({ form, ratioValue }) {
@@ -29,19 +26,19 @@ export default function PlaceholderForm({ form, ratioValue }) {
       <span aria-hidden="true" className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.08)] blur-3xl" />
       <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.08)] blur-3xl" />
       <CardContent className="relative p-5 sm:p-6">
-        <CardHeader className="flex flex-row items-center gap-3 mb-4 space-y-0">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] dark:text-[hsl(var(--accent-1-gradFg))] text-[hsl(var(--accent-1-gradFg))] flex-shrink-0">
+        <div className="flex flex-row items-center gap-3 mb-4 space-y-0">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] flex-shrink-0">
             <Landmark className="h-4 w-4" strokeWidth={2.25} />
           </span>
-          <div>
-            <CardTitle className="text-base font-semibold text-foreground tracking-tight">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-base font-semibold text-foreground tracking-tight">
               {t("Smartcoin:collateralDebtPositionFormTitle")}
-            </CardTitle>
-            <CardDescription className="text-xs text-muted-foreground/70 mt-0.5">
+            </h3>
+            <p className="text-xs text-muted-foreground/70 mt-0.5">
               {t("Smartcoin:collateralDebtPositionFormDescription")}
-            </CardDescription>
+            </p>
           </div>
-        </CardHeader>
+        </div>
         <Form {...form}>
           <form>
             <FormField

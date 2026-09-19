@@ -112,7 +112,7 @@ function BarterFromRow({ index, style, fromAssets, onRemove, onEdit, t }) {
   if (!item) return null;
   const assetData = item.asset;
   return (
-    <div style={{ ...style, paddingBottom: 8 }} key={assetData.id}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={assetData.id}>
       <div className="h-full rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-[hsl(var(--accent-1)/0.04)] hover:bg-[hsl(var(--accent-1)/0.08)] transition-colors px-2 flex items-center">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center w-full">
           <Input
@@ -151,7 +151,7 @@ function BarterToRow({ index, style, toAssets, onRemove, onEdit, t }) {
   if (!item) return null;
   const assetData = item.asset;
   return (
-    <div style={{ ...style, paddingBottom: 8 }} key={assetData.id}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={assetData.id}>
       <div className="h-full rounded-xl border border-[hsl(var(--accent-2)/0.25)] bg-[hsl(var(--accent-2)/0.05)] hover:bg-[hsl(var(--accent-2)/0.09)] transition-colors px-2 flex items-center">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center w-full">
           <Input

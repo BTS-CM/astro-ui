@@ -13,5 +13,8 @@
   "loading": "読み込み委員会のデータ...",
   "votesFor": "{{name}}委員会の投票",
   "descriptionVotes": "この委員会のメンバーによる委員会の投票を見る。",
-  "coreTokenBalance": "コアアセットバランス"
+  "coreTokenBalance": "コアアセットバランス",
+  "paramsBannerTitle": "委員会のメンバーはグローバルネットワークのプロパティを管理します",
+  "paramsBannerDescription": "彼らが設定を担当している内容を確認してください。",
+  "paramsBannerCta": "グローバルパラメータを表示"
 }

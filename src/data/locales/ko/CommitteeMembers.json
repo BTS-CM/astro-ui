@@ -13,5 +13,8 @@
   "loading": "로딩위원회 데이터 ...",
   "votesFor": "{{name}}의위원회 투표",
   "descriptionVotes": "이위원회 위원이 주최 한위원회 투표를보십시오.",
-  "coreTokenBalance": "핵심 자산 균형"
+  "coreTokenBalance": "핵심 자산 균형",
+  "paramsBannerTitle": "위원회 위원은 글로벌 네트워크 속성을 관리합니다",
+  "paramsBannerDescription": "그들이 구성하는 것이 무엇인지 확인하십시오.",
+  "paramsBannerCta": "글로벌 매개변수 보기"
 }

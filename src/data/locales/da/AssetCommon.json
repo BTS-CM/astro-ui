@@ -207,13 +207,15 @@
             "enabled": "Tilladt markedsudvidelse aktiveret",
             "enabledInfo": "Følgende markeder er godkendt til at handle med dette aktiv.",
             "disabled": "Vil du aktivere den tilladte markedsudvidelse?",
-            "disabledInfo": "Du kan begrænse de markeder, der har tilladelse til at handle med dette aktiv, til et sæt forhåndsgodkendte markeder."
+            "disabledInfo": "Du kan begrænse de markeder, der har tilladelse til at handle med dette aktiv, til et sæt forhåndsgodkendte markeder.",
+          "emptyHint": "Ingen markeder godkendt endnu – brug aktivvælgeren ovenfor til at godkende markeder. Aktiver, der allerede er på listen over forbudte, kan ikke vælges her."
         },
         "banned_markets": {
             "enabled": "Udvidelse af forbudte markeder aktiveret",
             "enabledInfo": "Følgende markeder er forbudt at handle med dette aktiv.",
             "disabled": "Vil du aktivere udvidelsen af ​​forbudte markeder?",
-            "disabledInfo": "Denne funktion giver dig mulighed for at forbyde specifikke markedshandelspar, så du kan hjælpe med at undgå, at dine aktiver handles på uønskede markeder."
+            "disabledInfo": "Denne funktion giver dig mulighed for at forbyde specifikke markedshandelspar, så du kan hjælpe med at undgå, at dine aktiver handles på uønskede markeder.",
+          "emptyHint": "Ingen markeder forbudt endnu – brug aktivvælgeren ovenfor til at forbyde markeder. Aktiver, der allerede er på listen over tilladte, kan ikke vælges her."
         },
         "skipCER": {
             "enabled": "Springer beregning af kernevalutakurs over",

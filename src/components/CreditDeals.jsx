@@ -398,7 +398,7 @@ const CreditDealsCommonRow = memo(function CreditDealsCommonRow({ style, res, ty
   const idSuffix = useMemo(() => (res?.id || "id").toString().replace(/\./g, "-"), [res?.id]);
   if (!debtAsset || !collateralAsset) return null;
   return (
-    <div style={{ ...style }} key={`acard-${res.id}`}>
+    <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} key={`acard-${res.id}`}>
       <div className="ml-2 mr-2 relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-md shadow-[color:hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[color:hsl(var(--accent-1)/0.15)] transition-all duration-300 pb-2">
         <div className="p-3 pb-1">
           <div className="flex items-center justify-between gap-2">

@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import ExternalLink from "@/components/common/ExternalLink.jsx";
+import { Avatar } from "@/components/Avatar.tsx";
 
 import ChainTypes from "@/bts/chain/ChainTypes.js";
 import { humanReadableFloat } from "@/lib/common.js";
@@ -177,15 +178,26 @@ export default function TicketLeaderboard() {
     const name = acc && acc.name ? acc.name : r.id;
 
     return (
-      <div key={r.id} style={style}>
+      <div key={r.id} style={{ ...style, paddingBottom: 8, overflow: "hidden" }}>
         <Dialog>
           <DialogTrigger asChild>
-            <Card className="relative overflow-hidden border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[color:hsl(var(--accent-1)/0.1)] transition-all duration-300">
-              <div className="p-4">
-                <div className="grid grid-cols-3">
-                  <div className="text-xs lg:text-lg mt-5">{name}</div>
+              <Card className="relative overflow-hidden py-0 gap-0 h-full justify-center border-[hsl(var(--accent-1)/0.15)] bg-card/60 backdrop-blur-xl shadow-sm hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[color:hsl(var(--accent-1)/0.1)] transition-all duration-300">
+              <div className="px-4 py-3">
+                <div className="grid grid-cols-3 items-center gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="shrink-0">
+                      <Avatar
+                        size={32}
+                        name={name}
+                        extra="Ticket"
+                        expression={{ eye: "normal", mouth: "open" }}
+                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                      />
+                    </span>
+                    <span className="text-xs lg:text-lg truncate">{name}</span>
+                  </div>
 
-                  <div className="text-xs lg:text-lg mt-5 text-muted-foreground">
+                  <div className="text-xs lg:text-lg text-muted-foreground truncate">
                     {r.amount.toLocaleString(locale.get() || undefined, {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
@@ -193,7 +205,7 @@ export default function TicketLeaderboard() {
                     {assetSymbol}
                   </div>
 
-                  <div className="text-xs lg:text-lg mt-5 text-muted-foreground">
+                  <div className="text-xs lg:text-lg text-muted-foreground truncate">
                     {r.percent.toFixed(2)}%
                   </div>
                 </div>
@@ -274,7 +286,7 @@ export default function TicketLeaderboard() {
         <Card className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-[color:hsl(var(--accent-1)/0.2)]">
           <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl pointer-events-none" />
           <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl pointer-events-none" />
-          <div className="h-1 w-full bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-1)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
+          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[hsl(var(--accent-1)/0.7)] via-[hsl(var(--accent-1)/0.7)] to-[hsl(var(--accent-1)/0.7)]" />
           <CardHeader className="pb-1">
             <CardTitle className="text-lg bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-1))] bg-clip-text text-transparent flex items-center gap-2">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] border border-[hsl(var(--accent-1)/0.4)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
@@ -303,7 +315,7 @@ export default function TicketLeaderboard() {
               <List
                 rowComponent={LeaderboardRow}
                 rowCount={leaderboard.rows.length}
-                rowHeight={75}
+                rowHeight={88}
                 rowProps={{}}
                 height={320}
                 width="100%"

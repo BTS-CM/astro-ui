@@ -62,8 +62,8 @@ export default function SmartcoinOptionsSection({
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   return (
-    <>
-      <div className="col-span-2">
+    <div className="col-span-2 space-y-6">
+      <div className="col-span-2 space-y-4">
         {!editing ? (
           <HoverInfo
             content={t("CreateSmartcoin:title.header_content")}
@@ -71,7 +71,7 @@ export default function SmartcoinOptionsSection({
             type="header"
           />
         ) : (
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
             <HoverInfo
               content={t("CreateSmartcoin:title.header_content")}
               header={t("CreateSmartcoin:title.header")}
@@ -104,14 +104,15 @@ export default function SmartcoinOptionsSection({
       </div>
 
       {!editing || (editing && hasEditedBitassetOptions) ? (
-        <div className="col-span-2">
-          <HoverInfo
-            content={t(
-              "CreateSmartcoin:backing_asset.header_content"
-            )}
-            header={t("CreateSmartcoin:backing_asset.header")}
-          />
-          <div className="grid grid-cols-2 gap-2">
+        <div className="col-span-2 space-y-6">
+          <div className="space-y-2">
+            <HoverInfo
+              content={t(
+                "CreateSmartcoin:backing_asset.header_content"
+              )}
+              header={t("CreateSmartcoin:backing_asset.header")}
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               disabled
               value={
@@ -133,9 +134,10 @@ export default function SmartcoinOptionsSection({
                 balances={balances}
               />
             ) : null}
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-2">
               <HoverInfo
                 content={t(
                   "CreateSmartcoin:feed_lifetime.header_content"
@@ -153,7 +155,7 @@ export default function SmartcoinOptionsSection({
                 }}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <HoverInfo
                 content={t(
                   "CreateSmartcoin:minimum_feeds.header_content"
@@ -172,7 +174,7 @@ export default function SmartcoinOptionsSection({
                 }}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <HoverInfo
                 content={t(
                   "CreateSmartcoin:force_settlement_delay.header_content"
@@ -194,7 +196,7 @@ export default function SmartcoinOptionsSection({
                 }}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <HoverInfo
                 content={t(
                   "CreateSmartcoin:force_settlement_offset.header_content"
@@ -222,7 +224,7 @@ export default function SmartcoinOptionsSection({
                 }}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <HoverInfo
                 content={t(
                   "CreateSmartcoin:maximum_force_settlement_volume.header_content"
@@ -245,7 +247,7 @@ export default function SmartcoinOptionsSection({
               />
             </div>
             {!permDisableMCRUpdate ? (
-              <div className="col-span-2 w-1/2">
+              <div className="col-span-2 w-full sm:w-1/2 space-y-2">
                 <HoverInfo
                   content={t("CreateSmartcoin:mcr.header_content")}
                   header={t("CreateSmartcoin:mcr.header")}
@@ -269,7 +271,7 @@ export default function SmartcoinOptionsSection({
               </div>
             ) : null}
             {!permDisableICRUpdate ? (
-              <div className="col-span-2 w-1/2">
+              <div className="col-span-2 w-full sm:w-1/2 space-y-2">
                 <HoverInfo
                   content={t("CreateSmartcoin:icr.header_content")}
                   header={t("CreateSmartcoin:icr.header")}
@@ -293,7 +295,7 @@ export default function SmartcoinOptionsSection({
               </div>
             ) : null}
             {!permDisableMSSRUpdate ? (
-              <div className="col-span-2 w-1/2">
+              <div className="col-span-2 w-full sm:w-1/2 space-y-2">
                 <HoverInfo
                   content={t("CreateSmartcoin:mssr.header_content")}
                   header={t("CreateSmartcoin:mssr.header")}
@@ -317,7 +319,7 @@ export default function SmartcoinOptionsSection({
               </div>
             ) : null}
             {!permDisableBSRMUpdate ? (
-              <div className="col-span-2">
+              <div className="col-span-2 space-y-2">
                 <HoverInfo
                   content={t("CreateSmartcoin:bsrm.header_content")}
                   header={t("CreateSmartcoin:bsrm.header")}
@@ -329,7 +331,7 @@ export default function SmartcoinOptionsSection({
                   }}
                   value={bsrmStrategy}
                 >
-                  <SelectTrigger className="mb-1">
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-card">
@@ -352,7 +354,7 @@ export default function SmartcoinOptionsSection({
               </div>
             ) : null}
 
-            <span className="col-span-2 w-3/4">
+            <span className="col-span-2 w-full sm:w-3/4 space-y-4">
               <AssetFlag
                 alreadyDisabled={false}
                 id={"margin_call_fee_ratio"}
@@ -373,7 +375,7 @@ export default function SmartcoinOptionsSection({
                 setFlag={setMcfrExtensionEnabled}
               />
               {mcfrExtensionEnabled ? (
-                <div className="col-span-2">
+                <div className="space-y-2 rounded-xl border border-border/60 bg-card/40 p-4">
                   <HoverInfo
                     content={t(
                       "CreateSmartcoin:extensions.margin_call_fee_ratio.header_content"
@@ -402,7 +404,7 @@ export default function SmartcoinOptionsSection({
               ) : null}
             </span>
 
-            <span className="col-span-2 w-3/4">
+            <span className="col-span-2 w-full sm:w-3/4 space-y-4">
               <AssetFlag
                 alreadyDisabled={false}
                 id={"force_settle_fee"}
@@ -423,7 +425,7 @@ export default function SmartcoinOptionsSection({
                 setFlag={setFsfExtensionEnabled}
               />
               {fsfExtensionEnabled ? (
-                <div className="col-span-2">
+                <div className="space-y-2 rounded-xl border border-border/60 bg-card/40 p-4">
                   <HoverInfo
                     content={t(
                       "CreateSmartcoin:extensions.force_settle_fee.header_content"
@@ -453,9 +455,9 @@ export default function SmartcoinOptionsSection({
             </span>
           </div>
 
-          <Separator className="my-4 mt-5" />
+          <Separator className="mt-2 mb-1" />
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

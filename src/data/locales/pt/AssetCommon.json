@@ -207,13 +207,15 @@
       "enabled": "Extensão de mercados permitidos ativada",
       "enabledInfo": "Os seguintes mercados estão aprovados para negociar este ativo.",
       "disabled": "Ativar a extensão dos mercados permitidos?",
-      "disabledInfo": "Você pode limitar os mercados autorizados a negociar este ativo a um conjunto de mercados pré-aprovados."
+      "disabledInfo": "Você pode limitar os mercados autorizados a negociar este ativo a um conjunto de mercados pré-aprovados.",
+      "emptyHint": "Nenhum mercado aprovado ainda — use o seletor de ativos acima para aprovar mercados. Ativos que já estão na lista de banidos não podem ser selecionados aqui."
     },
     "banned_markets": {
       "enabled": "Extensão de mercados banidos ativada",
       "enabledInfo": "Os seguintes mercados estão proibidos de negociar este ativo.",
       "disabled": "Ativar a extensão dos mercados proibidos?",
-      "disabledInfo": "Este recurso permite proibir pares de negociação de mercado específicos, ajudando a evitar a negociação de seus ativos em mercados indesejados."
+      "disabledInfo": "Este recurso permite proibir pares de negociação de mercado específicos, ajudando a evitar a negociação de seus ativos em mercados indesejados.",
+      "emptyHint": "Nenhum mercado banido ainda — use o seletor de ativos acima para banir mercados. Ativos que já estão na lista de permitidos não podem ser selecionados aqui."
     },
     "skipCER": {
       "enabled": "Ignorando o cálculo da taxa de câmbio principal",

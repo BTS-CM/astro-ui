@@ -45,9 +45,62 @@ export default function MarketFilteringSection({
     [bannedMarkets, assets, marketSearch, handleBannedRemove]
   );
 
+  // Assets already on one list must not be selectable on the other.
+  // The picker matches against both symbol and id, so exclude both forms.
+  const allowedExclusions = useMemo(() => {
+    const symbols = allowedMarkets
+      .map((id) => assets.find((a) => a.id === id)?.symbol)
+      .filter(Boolean);
+    return [...allowedMarkets, ...symbols];
+  }, [allowedMarkets, assets]);
+  const bannedExclusions = useMemo(() => {
+    const symbols = bannedMarkets
+      .map((id) => assets.find((a) => a.id === id)?.symbol)
+      .filter(Boolean);
+    return [...bannedMarkets, ...symbols];
+  }, [bannedMarkets, assets]);
+
+  const handleAllowedAdd = useCallback(
+    (input) => {
+      const _foundAsset = assets.find(
+        (x) => x.symbol === input || x.id === input
+      );
+      if (!_foundAsset) {
+        return;
+      }
+      if (
+        allowedMarkets.includes(_foundAsset.id) ||
+        bannedMarkets.includes(_foundAsset.id)
+      ) {
+        return;
+      }
+      setAllowedMarkets([...allowedMarkets, _foundAsset.id]);
+    },
+    [assets, allowedMarkets, bannedMarkets, setAllowedMarkets]
+  );
+  const handleBannedAdd = useCallback(
+    (input) => {
+      const _foundAsset = assets.find(
+        (x) => x.symbol === input || x.id === input
+      );
+      if (!_foundAsset) {
+        return;
+      }
+      if (
+        bannedMarkets.includes(_foundAsset.id) ||
+        allowedMarkets.includes(_foundAsset.id)
+      ) {
+        return;
+      }
+      setBannedMarkets([...bannedMarkets, _foundAsset.id]);
+    },
+    [assets, bannedMarkets, allowedMarkets, setBannedMarkets]
+  );
+
   return (
-    <div className="col-span-2">
-      <div className="grid grid-cols-2 gap-5 mt-4">
+    <div className="col-span-2 space-y-6">
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
         <AssetFlag
           alreadyDisabled={false}
           id={"allowed_markets"}
@@ -71,21 +124,9 @@ export default function MarketFilteringSection({
           <AssetDropDown
             assetSymbol={""}
             assetData={null}
-            storeCallback={(input) => {
-              if (
-                !allowedMarkets.includes(input) &&
-                !bannedMarkets.includes(input)
-              ) {
-                const _foundAsset = assets.find(
-                  (x) => x.symbol === input
-                );
-                setAllowedMarkets([
-                  ...allowedMarkets,
-                  _foundAsset.id,
-                ]);
-              }
-            }}
+            storeCallback={handleAllowedAdd}
             otherAsset={null}
+            otherAssets={bannedExclusions}
             marketSearch={marketSearch}
             type={"backing"}
             chain={usr && usr.chain ? usr.chain : "bitshares"}
@@ -94,20 +135,28 @@ export default function MarketFilteringSection({
         ) : null}
       </div>
       {allowedMarketsEnabled ? (
-        <div className="mt-3 border border-border rounded">
-          <div className="w-full h-[300px]">
-            <List
-              height={300}
-              width="100%"
-              rowComponent={AllowedMarketsRow}
-              rowCount={allowedMarkets.length}
-              rowHeight={90}
-              rowProps={allowedRowProps}
-            />
+        allowedMarkets.length ? (
+          <div className="rounded-xl border border-border/60 bg-card/40 p-4">
+            <div className="w-full h-[300px]">
+              <List
+                height={300}
+                width="100%"
+                rowComponent={AllowedMarketsRow}
+                rowCount={allowedMarkets.length}
+                rowHeight={90}
+                rowProps={allowedRowProps}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="rounded-xl border border-dashed border-border/60 bg-card/40 px-4 py-5 text-sm leading-relaxed text-muted-foreground">
+            {t("AssetCommon:extensions.allowed_markets.emptyHint")}
+          </p>
+        )
       ) : null}
-      <div className="grid grid-cols-2 gap-5 mt-4">
+      </div>
+      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
         <AssetFlag
           alreadyDisabled={false}
           id={"banned_markets"}
@@ -131,21 +180,9 @@ export default function MarketFilteringSection({
           <AssetDropDown
             assetSymbol={""}
             assetData={null}
-            storeCallback={(input) => {
-              if (
-                !bannedMarkets.includes(input) &&
-                !allowedMarkets.includes(input)
-              ) {
-                const _foundAsset = assets.find(
-                  (x) => x.symbol === input
-                );
-                setBannedMarkets([
-                  ...bannedMarkets,
-                  _foundAsset.id,
-                ]);
-              }
-            }}
+            storeCallback={handleBannedAdd}
             otherAsset={null}
+            otherAssets={allowedExclusions}
             marketSearch={marketSearch}
             type={"backing"}
             chain={usr && usr.chain ? usr.chain : "bitshares"}
@@ -154,20 +191,27 @@ export default function MarketFilteringSection({
         ) : null}
       </div>
       {bannedMarketsEnabled ? (
-        <div className="mt-2 border border-border rounded">
-          <div className="w-full h-[300px]">
-            <List
-              height={300}
-              width="100%"
-              rowComponent={BannedMarketsRow}
-              rowCount={bannedMarkets.length}
-              rowHeight={90}
-              rowProps={bannedRowProps}
-            />
+        bannedMarkets.length ? (
+          <div className="rounded-xl border border-border/60 bg-card/40 p-4">
+            <div className="w-full h-[300px]">
+              <List
+                height={300}
+                width="100%"
+                rowComponent={BannedMarketsRow}
+                rowCount={bannedMarkets.length}
+                rowHeight={90}
+                rowProps={bannedRowProps}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="rounded-xl border border-dashed border-border/60 bg-card/40 px-4 py-5 text-sm leading-relaxed text-muted-foreground">
+            {t("AssetCommon:extensions.banned_markets.emptyHint")}
+          </p>
+        )
       ) : null}
-      <Separator className="my-4 mt-5" />
+      </div>
+      <Separator className="mt-2 mb-1" />
     </div>
   );
 }

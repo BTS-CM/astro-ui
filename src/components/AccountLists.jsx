@@ -82,7 +82,7 @@ const AccountRow = React.memo(function AccountRow({
   const [showRowDialog, setShowRowDialog] = useState(false);
 
   return (
-    <div style={style} className="px-2 py-1">
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2 py-1">
       <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-card/40 px-3 py-2.5 hover:border-[hsl(var(--accent-1)/0.2)] hover:bg-[hsl(var(--accent-1)/0.03)] transition-all group">
         <div className="flex-shrink-0">
           {account ? (
@@ -359,7 +359,7 @@ export default function AccountLists(properties) {
                   <List
                     rowComponent={AccountRow}
                     rowCount={whitelistedAccounts.length}
-                    rowHeight={56}
+                    rowHeight={72}
                     height={340}
                     width="100%"
                     rowProps={whitelistRowProps}
@@ -371,7 +371,7 @@ export default function AccountLists(properties) {
                   <List
                     rowComponent={AccountRow}
                     rowCount={blacklistedAccounts.length}
-                    rowHeight={56}
+                    rowHeight={72}
                     height={340}
                     width="100%"
                     rowProps={blacklistRowProps}

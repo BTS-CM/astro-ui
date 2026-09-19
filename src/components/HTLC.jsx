@@ -119,8 +119,8 @@ function SenderHtlcRow({ index, style, senderHtlcs, htlcAccounts, assets, t, usr
     const [showExtendDeeplink, setShowExtendDeeplink] = useState(false);
 
     return (
-      <div style={style}>
-        <div className="m-2 rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.06)] transition-all px-4 py-3">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }}>
+        <div className="mx-2 h-full rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.06)] transition-all px-4 py-3">
           <div className="grid grid-cols-6 gap-2 items-center text-sm">
             <div className="col-span-1 flex items-center gap-2">
               <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[hsl(var(--accent-1)/0.15)] border border-[hsl(var(--accent-1)/0.3)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
@@ -303,8 +303,8 @@ function ReceiverHtlcRow({ index, style, receiverHtlcs, htlcAccounts, assets, t,
     }, [preimageInput, hashAlgorithm]);
 
     return (
-      <div style={style}>
-        <div className="m-2 rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-2)/0.04)] to-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:bg-[hsl(var(--accent-2)/0.06)] transition-all px-4 py-3">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }}>
+        <div className="mx-2 h-full rounded-xl border border-[hsl(var(--accent-2)/0.2)] bg-gradient-to-r from-[hsl(var(--accent-2)/0.04)] to-transparent hover:border-[hsl(var(--accent-2)/0.3)] hover:bg-[hsl(var(--accent-2)/0.06)] transition-all px-4 py-3">
           <div className="grid grid-cols-6 gap-2 items-center text-sm">
             <div className="col-span-1 flex items-center gap-2">
               <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[hsl(var(--accent-2)/0.15)] border border-[hsl(var(--accent-2)/0.3)] dark:text-[hsl(var(--accent-2-fg))] text-[hsl(var(--accent-2-fg))]">

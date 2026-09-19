@@ -54,13 +54,13 @@ export function MarginPositionRow({ index, style, assetCallOrders, parsedCollate
       );
 
   return (
-    <div className="grid grid-cols-6 text-sm" style={style}>
-      <div className="col-span-1">
+    <div className="grid grid-cols-4 md:grid-cols-6 items-center gap-1 rounded-md px-1 font-mono tabular-nums text-[13px] hover:bg-accent/40 transition-colors" style={style}>
+      <div className="col-span-1 truncate">
         <span className="text-[hsl(var(--accent-1-fg))] dark:text-[hsl(var(--accent-1-fg))]">{res.borrower}</span>
       </div>
-      <div className="col-span-1">{collateralAmount}</div>
-      <div className="col-span-1">{debtAmount}</div>
-      <div className="col-span-1">{callPrice}</div>
+      <div className="col-span-1 truncate">{collateralAmount}</div>
+      <div className="col-span-1 truncate">{debtAmount}</div>
+      <div className="col-span-1 truncate">{callPrice}</div>
       <div className="hidden md:block col-span-1">{tcr}</div>
       <div className="hidden md:block col-span-1">{ratio}</div>
     </div>
@@ -86,13 +86,13 @@ export function OrderRow({ index, style, activeOrderTab, buyOrders, sellOrders, 
   }
 
   return (
-    <div className="grid grid-cols-4 text-sm" style={style}>
-      <div className="col-span-1">
+    <div className="grid grid-cols-4 items-center gap-1 rounded-md px-1 font-mono tabular-nums text-[13px] hover:bg-accent/40 transition-colors" style={style}>
+      <div className="col-span-1 truncate">
         {parseFloat(res.price).toFixed(precision)}
       </div>
-      <div className="col-span-1">{res.base}</div>
-      <div className="col-span-1">{res.quote}</div>
-      <div className="col-span-1">
+      <div className="col-span-1 truncate">{res.base}</div>
+      <div className="col-span-1 truncate">{res.quote}</div>
+      <div className="col-span-1 truncate">
         {reference
           .slice(0, index + 1)
           .map((x) => parseFloat(x.base))
@@ -106,10 +106,10 @@ export function OrderRow({ index, style, activeOrderTab, buyOrders, sellOrders, 
 export function SettlementRow({ index, style, assetSettleOrders }) {
   let res = assetSettleOrders[index];
   return (
-    <div className="grid grid-cols-3 text-sm" style={style}>
-      <div className="col-span-1">{res.account_id_type ?? ""}</div>
-      <div className="col-span-1">{res.asset ?? ""}</div>
-      <div className="col-span-1">{res.time_point_sec ?? ""}</div>
+    <div className="grid grid-cols-3 md:grid-cols-6 items-center gap-1 rounded-md px-1 font-mono tabular-nums text-[13px] hover:bg-accent/40 transition-colors" style={style}>
+      <div className="col-span-1 truncate">{res.account_id_type ?? ""}</div>
+      <div className="col-span-1 truncate">{res.asset ?? ""}</div>
+      <div className="col-span-1 truncate">{res.time_point_sec ?? ""}</div>
     </div>
   );
 }
@@ -143,18 +143,18 @@ export function PriceFeedRow({ index, style, finalBitasset, parsedAsset, parsedC
   ).toFixed(parsedCollateralAsset.p);
 
   return (
-    <div className="grid grid-cols-7 md:grid-cols-11 text-sm" style={style}>
-      <div className="hidden md:block col-span-2 mr-1">
+    <div className="grid grid-cols-7 md:grid-cols-11 items-center gap-1 rounded-md px-1 font-mono tabular-nums text-[13px] hover:bg-accent/40 transition-colors" style={style}>
+      <div className="hidden md:block col-span-2 mr-1 truncate">
         <span className="text-[hsl(var(--accent-1-fg))] dark:text-[hsl(var(--accent-1-fg))]">{userID}</span>
       </div>
-      <div className="hidden md:block col-span-2 ml-1">
+      <div className="hidden md:block col-span-2 ml-1 truncate">
         {timeAgo(date, t)}
       </div>
-      <div className="col-span-2">{coreExchangeRate}</div>
-      <div className="col-span-2">{feedPrice}</div>
-      <div className="col-span-1">{feedObj.initial_collateral_ratio}</div>
-      <div className="col-span-1">{feedObj.maintenance_collateral_ratio}</div>
-      <div className="col-span-1">{feedObj.maximum_short_squeeze_ratio}</div>
+      <div className="col-span-2 truncate">{coreExchangeRate}</div>
+      <div className="col-span-2 truncate">{feedPrice}</div>
+      <div className="col-span-1 truncate">{feedObj.initial_collateral_ratio}</div>
+      <div className="col-span-1 truncate">{feedObj.maintenance_collateral_ratio}</div>
+      <div className="col-span-1 truncate">{feedObj.maximum_short_squeeze_ratio}</div>
     </div>
   );
 }

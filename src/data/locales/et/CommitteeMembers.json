@@ -13,5 +13,8 @@
   "loading": "Laadimiskomisjoni andmed ...",
   "votesFor": "{{name}}Komitee hääletab",
   "descriptionVotes": "Vaadake selle komisjoni liikme poolt antud komisjoni hääli.",
-  "coreTokenBalance": "Põhivarade saldo"
+  "coreTokenBalance": "Põhivarade saldo",
+  "paramsBannerTitle": "Komitee liikmed kontrollivad globaalseid võrgu omadusi",
+  "paramsBannerDescription": "Vaadake, mille konfigureerimise eest nad vastutavad.",
+  "paramsBannerCta": "Vaata globaalseid parameetreid"
 }

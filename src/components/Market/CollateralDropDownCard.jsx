@@ -36,10 +36,10 @@ const CollateralRow = React.memo(function CollateralRow({ index, style, thisResu
     const res = thisResult[index];
     let _value = 0.0;
     return (
-      <div style={{ ...style, marginBottom: "10px", paddingRight: "10px" }}>
+      <div style={{ ...style, paddingBottom: "10px", paddingRight: "10px", overflow: "hidden" }}>
         <Popover>
           <PopoverTrigger asChild>
-            <Card key={`acard-${res.item.id}`} style={{ marginBottom: "2px" }}>
+            <Card key={`acard-${res.item.id}`} className="mb-0 py-0 gap-0 h-full overflow-hidden justify-center">
               <CardHeader className="p-3">
                 <CardTitle className="h-3">
                   {res.item.s} ({res.item.id})

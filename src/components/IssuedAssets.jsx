@@ -376,8 +376,8 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
     );
 
     return (
-      <div style={{ ...style }} key={`acard-${issuedAsset.id}`}>
-        <Card className="mx-2 mb-2 rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${issuedAsset.id}`}>
+        <Card className="mx-2 mb-0 py-0 gap-0 h-full overflow-hidden justify-center rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] hover:bg-[hsl(var(--accent-1)/0.03)] hover:shadow-md hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">

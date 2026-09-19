@@ -66,7 +66,9 @@ const PoolRow = memo(function PoolRow({ index, style, remainingPools, assets, se
   }
 
   return (
-    <div style={style} key={`poolNo${index}`}>
+    <div
+      style={{ ...style, overflow: "hidden" }}
+      key={`poolNo${index}`}>
       <Card
         className="py-0 gap-0"
         onClick={() => {
@@ -123,7 +125,9 @@ const ChosenPoolRow = memo(function ChosenPoolRow({ index, style, chosenPools, a
   }
 
   return (
-    <div style={style} key={`poolNo${index}`}>
+    <div
+      style={{ ...style, overflow: "hidden" }}
+      key={`poolNo${index}`}>
       <Card
         className="py-0 gap-0"
         onClick={() => {
@@ -178,9 +182,9 @@ const TrackerRow = memo(function TrackerRow({ index, style, trackers, _chain, po
 
   return (
     <div
-      style={style}
+      style={{ ...style, overflow: "hidden" }}
       key={`poolTrackerNo${index}`}
-      className="grid grid-cols-6 gap-2"
+      className="grid grid-cols-6 gap-2 items-center"
     >
       <div className="col-span-5">
         <a href={`/custom_pool_tracker.html?id=${_tracker.id}`}>
@@ -509,7 +513,7 @@ export default function CustomPoolOverview(properties) {
                     <List
                       rowComponent={TrackerRow}
                       rowCount={trackers[_chain].length}
-                      rowHeight={92}
+                      rowHeight={108}
                       height={200}
                       width="100%"
                       rowProps={trackerRowProps}

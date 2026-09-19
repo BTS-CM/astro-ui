@@ -65,10 +65,10 @@ const AssetRow = memo(function AssetRow({ index, style, eligibleAssets, selected
       : "0";
 
   return (
-    <div style={{ ...style }} key={`acard-${issuedAsset.id}`}>
+    <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${issuedAsset.id}`}>
       <Card
         className={cn(
-          "ml-2 mr-2 cursor-pointer transition-colors border-border hover:border-[hsl(var(--accent-1)/0.4)]",
+          "ml-2 mr-2 py-0 gap-0 h-full overflow-hidden justify-center cursor-pointer transition-colors border-border hover:border-[hsl(var(--accent-1)/0.4)]",
           selectedAsset && selectedAsset !== issuedAsset.id
             ? "bg-accent"
             : "",
@@ -443,7 +443,7 @@ export default function IssuedAssets(properties) {
   );
 
   const StepHeader = ({ icon: Icon, step, title, description, done }) => (
-    <div className="flex items-start gap-3 border-b border-border px-5 py-4 sm:px-6">
+    <div className="flex items-start gap-4 border-b border-border px-6 sm:px-8 py-5">
       <span
         className={cn(
           "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1",
@@ -524,7 +524,7 @@ export default function IssuedAssets(properties) {
                     : {editPoolId}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-5 sm:p-6 pt-0">
+                <CardContent className="p-6 sm:p-8 pt-0">
                   {editLoading ? (
                     <div className="text-center mt-2">
                       {t("CreatePool:loading_pool", {
@@ -540,9 +540,9 @@ export default function IssuedAssets(properties) {
                     </p>
                   ) : (
                     <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
-                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-4">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5">
                             {t("CreatePool:summary_pair")}
                           </div>
                           <div className="font-mono text-sm tabular-nums text-foreground/85 truncate">
@@ -551,8 +551,8 @@ export default function IssuedAssets(properties) {
                               : `${editPool.asset_a} / ${editPool.asset_b}`}
                           </div>
                         </div>
-                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
-                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-4">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5">
                             {t("CreatePool:summary_share_asset")}
                           </div>
                           <div className="font-mono text-sm tabular-nums text-foreground/85 truncate">
@@ -561,8 +561,8 @@ export default function IssuedAssets(properties) {
                               : editPool.share_asset}
                           </div>
                         </div>
-                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
-                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-4">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5">
                             {t("CreatePool:current_taker_fee", {
                               defaultValue: "Current taker fee",
                             })}
@@ -571,8 +571,8 @@ export default function IssuedAssets(properties) {
                             {`${originalTakerUnits / 100}%`}
                           </div>
                         </div>
-                        <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
-                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
+                        <div className="rounded-lg border border-border/60 bg-card/40 p-4">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5">
                             {t("CreatePool:current_withdrawal_fee", {
                               defaultValue: "Current withdrawal fee",
                             })}
@@ -608,7 +608,7 @@ export default function IssuedAssets(properties) {
                 description={t("CreatePool:step1_description")}
                 done={!!selectedAsset}
               />
-              <CardContent className="p-5 sm:p-6">
+              <CardContent className="p-6 sm:p-8">
                 {loading ? (
                   <div className="text-center mt-5">
                     {t("CreditBorrow:common.loading")}
@@ -640,7 +640,7 @@ export default function IssuedAssets(properties) {
                   </Empty>
                 ) : (
                   <>
-                    <h5 className="mb-2 text-center">
+                    <h5 className="mb-3 text-center">
                       {t("IssuedAssets:listingUIA", {
                         count: eligibleAssets.length,
                       })}
@@ -655,7 +655,7 @@ export default function IssuedAssets(properties) {
                         rowProps={assetRowProps}
                       />
                     </div>
-                    <p className="mt-3 text-xs text-muted-foreground/80 leading-relaxed">
+                    <p className="mt-4 text-xs text-muted-foreground/80 leading-relaxed">
                       {t("CreatePool:step1_max_supply_note")}
                     </p>
                   </>
@@ -670,14 +670,14 @@ export default function IssuedAssets(properties) {
                 description={t("CreatePool:step2_description")}
                 done={!!(assetA && assetB)}
               />
-              <CardContent className="p-5 sm:p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-3 items-stretch">
-                  <div>
+              <CardContent className="p-6 sm:p-8">
+                <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
+                  <div className="space-y-2">
                     <HoverInfo
                       header={t("CreatePool:assetA")}
                       content={t("CreatePool:assetA_description")}
                     />
-                    <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-2 mt-1">
+                    <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3">
                       <AssetDropDown
                         assetSymbol={assetA ?? ""}
                         assetData={assetAData}
@@ -709,12 +709,12 @@ export default function IssuedAssets(properties) {
                     </span>
                   </button>
 
-                  <div>
+                  <div className="space-y-2">
                     <HoverInfo
                       header={t("CreatePool:assetB")}
                       content={t("CreatePool:assetB_description")}
                     />
-                    <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-2 mt-1">
+                    <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3">
                       <AssetDropDown
                         assetSymbol={assetB ?? ""}
                         assetData={assetBData}
@@ -752,8 +752,8 @@ export default function IssuedAssets(properties) {
                 description={t("CreatePool:step3_description")}
                 done={isEditMode ? hasPoolChanges : !!(selectedAsset && assetA && assetB)}
               />
-              <CardContent className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4">
+              <CardContent className="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4 sm:p-5 space-y-3">
                   <HoverInfo
                     header={t("CreatePool:taker_fee_header")}
                     content={t("CreatePool:taker_fee_content")}
@@ -785,7 +785,7 @@ export default function IssuedAssets(properties) {
                     </p>
                   ) : null}
                 </div>
-                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-3 sm:p-4">
+                <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-transparent p-4 sm:p-5 space-y-3">
                   <HoverInfo
                     header={t("CreatePool:withdrawal_fee_header")}
                     content={t("CreatePool:withdrawal_fee_content")}
@@ -821,8 +821,8 @@ export default function IssuedAssets(properties) {
             </Card>
 
             {!isEditMode && selectedAsset && assetA && assetB && assetA !== assetB ? (
-              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-[hsl(var(--accent-1)/0.04)] p-4">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-[hsl(var(--accent-1)/0.04)] p-5 sm:p-6">
+                <div className="flex items-center gap-2 mb-3">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.15)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
                     <Layers className="h-3.5 w-3.5" strokeWidth={2.25} />
                   </span>
@@ -830,11 +830,11 @@ export default function IssuedAssets(properties) {
                     {t("CreatePool:summary_title")}
                   </h3>
                 </div>
-                <p className="text-xs text-muted-foreground mb-3">
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
                   {t("CreatePool:summary_ready")}
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-4">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
                       {t("CreatePool:summary_share_asset")}
                     </div>
@@ -848,7 +848,7 @@ export default function IssuedAssets(properties) {
                       </div>
                     ) : null}
                   </div>
-                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-4">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
                       {t("CreatePool:summary_pair")}
                     </div>
@@ -856,7 +856,7 @@ export default function IssuedAssets(properties) {
                       {`${assetA} / ${assetB}`}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-4">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
                       {t("CreatePool:summary_taker_fee")}
                     </div>
@@ -864,7 +864,7 @@ export default function IssuedAssets(properties) {
                       {`${takerFeePercent}%`}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-4">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
                       {t("CreatePool:summary_withdrawal_fee")}
                     </div>
@@ -877,8 +877,8 @@ export default function IssuedAssets(properties) {
             ) : null}
 
             {isEditMode && editPool && !editLoading && !editError ? (
-              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-[hsl(var(--accent-1)/0.04)] p-4">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="rounded-xl border border-[hsl(var(--accent-1)/0.2)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.06)] to-[hsl(var(--accent-1)/0.04)] p-5 sm:p-6">
+                <div className="flex items-center gap-2 mb-3">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.15)] dark:text-[hsl(var(--accent-1-fg))] text-[hsl(var(--accent-1-fg))]">
                     <Layers className="h-3.5 w-3.5" strokeWidth={2.25} />
                   </span>
@@ -886,14 +886,14 @@ export default function IssuedAssets(properties) {
                     {t("CreatePool:summary_title")}
                   </h3>
                 </div>
-                <p className="text-xs text-muted-foreground mb-3">
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
                   {t("CreatePool:summary_ready_update", {
                     defaultValue:
                       "Review the new fee configuration below before submitting.",
                   })}
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-4">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
                       {t("CreatePool:summary_taker_fee")}
                     </div>
@@ -901,7 +901,7 @@ export default function IssuedAssets(properties) {
                       {`${originalTakerUnits / 100}% → ${takerFeePercent}%`}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-border/60 bg-card/40 p-2.5">
+                  <div className="rounded-lg border border-border/60 bg-card/40 p-4">
                     <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1">
                       {t("CreatePool:summary_withdrawal_fee")}
                     </div>

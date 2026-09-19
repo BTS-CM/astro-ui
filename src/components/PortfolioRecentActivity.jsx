@@ -171,7 +171,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
   const days = Math.floor(timeDiff / 1000 / 60 / 60 / 24);
   const timeDiffString = `${days}d ${hours}h ${minutes}m`;
 
-  const rowStyle = { ...style };
+  const rowStyle = { ...style, paddingBottom: 8, overflow: "hidden" };
 
   const [opDialogOpen, setOpDialogOpen] = useState(false);
 
@@ -342,7 +342,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
 
   return (
     <div style={rowStyle} className="px-2">
-      <Card className="hover:bg-accent/50 md:hidden p-3">
+      <Card className="hover:bg-accent/50 md:hidden p-3 py-0 gap-0 h-full overflow-hidden justify-center">
         <div className="grid grid-cols-[2fr_1fr] items-start gap-2">
           <div className="truncate font-medium mt-2">
             <Dialog
@@ -414,7 +414,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
         </div>
       </Card>
 
-      <Card className="hover:bg-accent/50 hidden md:block lg:hidden">
+      <Card className="hover:bg-accent/50 hidden md:block lg:hidden py-0 gap-0 h-full overflow-hidden justify-center">
         <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
           <div className="truncate font-medium mt-2">
             <Dialog
@@ -501,7 +501,7 @@ const RecentActivityRow = memo(function RecentActivityRow({ index, style, activi
         </div>
       </Card>
 
-      <Card className="hover:bg-accent/50 hidden lg:block">
+      <Card className="hover:bg-accent/50 hidden lg:block py-0 gap-0 h-full overflow-hidden justify-center">
         <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
           <div className="truncate font-medium mt-2">
             <Dialog

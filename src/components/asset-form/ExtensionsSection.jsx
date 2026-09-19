@@ -57,19 +57,20 @@ export default function ExtensionsSection({
   if (!flagChargeMarketFee) return null;
 
   return (
-    <div className="col-span-2 mb-4">
-      <HoverInfo
-        content={t("AssetCommon:extensions.header_content")}
-        header={t("AssetCommon:extensions.header")}
-        type="header"
-      />
-      <div className="grid grid-cols-2 gap-5 mb-2">
-        <div>
-          <HoverInfo
-            content={t("AssetCommon:market_fee.header_content")}
-            header={t("AssetCommon:market_fee.header")}
-          />
-          <Input
+    <div className="col-span-2 space-y-6">
+      <div className="space-y-4">
+        <HoverInfo
+          content={t("AssetCommon:extensions.header_content")}
+          header={t("AssetCommon:extensions.header")}
+          type="header"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <HoverInfo
+              content={t("AssetCommon:market_fee.header_content")}
+              header={t("AssetCommon:market_fee.header")}
+            />
+            <Input
             value={commission}
             type="number"
             min="0"
@@ -84,7 +85,7 @@ export default function ExtensionsSection({
             }}
           />
         </div>
-        <div>
+        <div className="space-y-2">
           <HoverInfo
             content={t(
               "AssetCommon:max_market_fee.header_content"
@@ -128,7 +129,7 @@ export default function ExtensionsSection({
       />
 
       {enabledReferrerReward ? (
-        <>
+        <div className="space-y-2 rounded-xl border border-border/60 bg-card/40 p-4">
           <HoverInfo
             content={t(
               "AssetCommon:extensions.reward_percent.header_content"
@@ -153,7 +154,7 @@ export default function ExtensionsSection({
               );
             }}
           />
-        </>
+        </div>
       ) : null}
 
       <AssetFlag
@@ -177,7 +178,7 @@ export default function ExtensionsSection({
       />
 
       {enabledFeeSharingWhitelist ? (
-        <>
+        <div className="space-y-3 rounded-xl border border-border/60 bg-card/40 p-4">
           <HoverInfo
             content={t(
               "AssetCommon:extensions.whitelist_market_fee_sharing.header_content"
@@ -186,7 +187,7 @@ export default function ExtensionsSection({
               "AssetCommon:extensions.whitelist_market_fee_sharing.header"
             )}
           />
-          <div className="grid grid-cols-12 mt-1">
+          <div className="grid grid-cols-12 gap-3">
             <span className="col-span-9 border border-border rounded">
               <div className="w-full h-[300px]">
                 <List
@@ -194,12 +195,12 @@ export default function ExtensionsSection({
                   width="100%"
                   rowComponent={FeeSharingWhitelistRow}
                   rowCount={feeSharingWhitelist.length}
-                  rowHeight={100}
+                  rowHeight={75}
                   rowProps={feeSharingRowProps}
                 />
               </div>
             </span>
-            <span className="col-span-3 ml-3 text-center">
+            <span className="col-span-3 text-center">
               <Dialog
                 open={whitelistMarketFeeSharingDialogOpen}
                 onOpenChange={(open) => {
@@ -207,7 +208,7 @@ export default function ExtensionsSection({
                 }}
               >
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="ml-3 mt-1">
+                  <Button variant="outline">
                     ➕ {t("CreditOfferEditor:addUser")}
                   </Button>
                 </DialogTrigger>
@@ -253,7 +254,7 @@ export default function ExtensionsSection({
               </Dialog>
             </span>
           </div>
-        </>
+        </div>
       ) : null}
 
       <AssetFlag
@@ -277,7 +278,7 @@ export default function ExtensionsSection({
       />
 
       {enabledTakerFee ? (
-        <>
+        <div className="space-y-2 rounded-xl border border-border/60 bg-card/40 p-4">
           <HoverInfo
             content={t(
               "AssetCommon:extensions.taker_fee_percent.header_content"
@@ -304,8 +305,9 @@ export default function ExtensionsSection({
               );
             }}
           />
-        </>
+        </div>
       ) : null}
+      </div>
     </div>
   );
 }

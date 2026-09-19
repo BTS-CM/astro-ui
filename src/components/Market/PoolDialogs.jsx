@@ -52,7 +52,7 @@ function RowHyperlink({
             <p>{id}</p>
           </div>
           <div className="col-span-3">
-            <p>{share_asset_symbol}</p>
+            <p className="truncate">{share_asset_symbol}</p>
           </div>
           <div className="col-span-3">
             <p>{asset_a_symbol}</p>
@@ -83,7 +83,7 @@ const PoolRowA = React.memo(function PoolRowA({ index, style, pools, t }) {
     const pool = pools[index];
     const link = `/swap.html?pool=${pool.id}`;
     return (
-      <div style={style} key={`a_${pool.id}`} className="flex items-center justify-between gap-2">
+      <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} key={`a_${pool.id}`} className="flex items-center justify-between gap-2">
         <a href={link} className="flex-1">
           <RowHyperlink
             id={pool.id}
@@ -119,7 +119,7 @@ const PoolRowB = React.memo(function PoolRowB({ index, style, pools, t }) {
     const pool = pools[index];
     const link = `/swap.html?pool=${pool.id}`;
     return (
-      <div style={style} key={`b_${pool.id}`} className="flex items-center justify-between gap-2">
+      <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} key={`b_${pool.id}`} className="flex items-center justify-between gap-2">
         <a href={link} className="flex-1">
           <RowHyperlink
             id={pool.id}
@@ -155,7 +155,7 @@ const PoolRowMarket = React.memo(function PoolRowMarket({ index, style, pools, t
     const pool = pools[index];
     const link = `/swap.html?pool=${pool.id}`;
     return (
-      <div style={style} key={`m_${pool.id}`} className="flex items-center justify-between gap-2">
+      <div style={{ ...style, paddingBottom: 6, overflow: "hidden" }} key={`m_${pool.id}`} className="flex items-center justify-between gap-2">
         <a href={link} className="flex-1">
           <RowHyperlink
             id={pool.id}
@@ -371,7 +371,7 @@ export default function PoolDialogs(properties) {
                 width="100%"
                 rowComponent={PoolRow}
                 rowCount={poolArray.length}
-                rowHeight={35}
+                rowHeight={44}
                 rowProps={rowProps}
               />
             </div>

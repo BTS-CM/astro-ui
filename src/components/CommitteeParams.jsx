@@ -399,8 +399,8 @@ const SECTION_BAR = {
 };
 
 function SectionCard({ title, accent = 1, Icon, children }) {  return (
-    <Card className="overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20">
-      <div className={cn("h-1 w-full", SECTION_BAR[accent] ?? SECTION_BAR[1])} />
+    <Card className="relative overflow-hidden border-border bg-card/60 backdrop-blur-xl shadow-lg shadow-black/20 gap-0">
+      <div aria-hidden="true" className={cn("absolute inset-x-0 top-0 h-1", SECTION_BAR[accent] ?? SECTION_BAR[1])} />
       <CardHeader className="pb-2">
         <CardTitle className="text-base flex items-center gap-2">
           {Icon ? (

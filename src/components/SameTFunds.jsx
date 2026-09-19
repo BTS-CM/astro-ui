@@ -469,8 +469,8 @@ export default function SameTFunds(properties) {
     );
 
     return (
-      <div style={style} key={`sametfund-${view}-${fund.id}`}>
-        <div className="group relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:shadow-lg hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all mb-3">
+      <div style={{ ...style, paddingBottom: 10, overflow: "hidden" }} key={`sametfund-${view}-${fund.id}`}>
+        <div className="group relative overflow-hidden rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-transparent hover:border-[hsl(var(--accent-1)/0.3)] hover:shadow-lg hover:shadow-[color:hsl(var(--accent-1)/0.05)] transition-all">
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.4)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
@@ -830,7 +830,7 @@ export default function SameTFunds(properties) {
     }
 
     const MAX_VISIBLE_FUNDS = 7;
-    const DESKTOP_ROW_HEIGHT = 112;
+    const DESKTOP_ROW_HEIGHT = 136;
     const MOBILE_ROW_HEIGHT = 168;
 
     return (

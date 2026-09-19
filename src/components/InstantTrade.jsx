@@ -91,7 +91,7 @@ function InstantTradeRow({ index, style, buyOrders, buyOrderDetails, assetBData,
   const quote = order.quote ? parseFloat(order.quote) : 0;
   const totalBase = buyOrders.slice(0, index + 1).map((x) => parseFloat(x.base)).reduce((acc, curr) => acc + curr, 0).toFixed(assetBData?.precision ?? 5);
   return (
-    <div style={style}>
+    <div style={{ ...style, overflow: "hidden" }}>
       <div className="grid grid-cols-3 md:grid-cols-6 text-sm items-center border-b border-border/40 hover:bg-[hsl(var(--accent-1)/0.06)] hover:border-[hsl(var(--accent-1)/0.20)] transition-colors py-1.5 px-2">
         <div className="hidden md:block">
           <Dialog>

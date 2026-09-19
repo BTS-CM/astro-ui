@@ -92,7 +92,7 @@ const PoolRow = memo(function PoolRow({ index, style, remainingPools, assets, t 
   const withdrawalFee = pool.withdrawal_fee_percent / 100;
 
   return (
-    <div style={style} key={`poolNo${index}`}>
+    <div style={{ ...style, overflow: "hidden" }} key={`poolNo${index}`}>
       <Dialog>
         <DialogTrigger asChild>
           <button

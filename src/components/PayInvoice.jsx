@@ -124,8 +124,8 @@ function PayChosenRow({ index, style, selectedItems, t, itemPaymentMethods, onSe
       : "";
 
     return (
-      <div style={style} className="px-2">
-        <Card>
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2">
+        <Card className="py-0 gap-0 h-full overflow-hidden justify-center">
           <CardContent className="pt-1 pb-1">
             <div className="grid grid-cols-4 items-center gap-2 text-sm">
               <div
@@ -217,8 +217,8 @@ function PayFinalRow({ index, style, totalAssetAmounts, assets, balances, t }) {
     const requiredBalance = sufficientBalance ? 0 : totalAmount - balanceAmount;
 
     return (
-      <div style={style} className="px-2">
-        <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] transition-all">
+      <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} className="px-2">
+        <Card className="rounded-xl border border-[hsl(var(--accent-1)/0.15)] bg-card/60 hover:border-[hsl(var(--accent-1)/0.3)] transition-all py-0 gap-0 h-full overflow-hidden justify-center">
           <CardContent className="pt-1 pb-1">
             <div className="grid grid-cols-3 text-sm items-center">
               <div
@@ -648,7 +648,7 @@ export default function PayInvoice(properties) {
                                     width="100%"
                                     rowComponent={MemoPayChosenRow}
                                     rowCount={selectedItems.length}
-                                    rowHeight={55}
+                                    rowHeight={64}
                                     rowProps={chosenRowProps}
                                   />
                                 </div>
