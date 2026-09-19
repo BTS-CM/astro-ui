@@ -23,5 +23,8 @@
   "openInstantTrade": "Øjeblikkelig handel",
   "openInstantTradeDescription": "Byt øjeblikkeligt mod denne smartcoin",
   "openSmartcoin": "Smartcoin",
-  "openSmartcoinDescription": "Se og administrer denne smartcoins parametre"
+  "openSmartcoinDescription": "Se og administrer denne smartcoins parametre",
+  "sortHintAsc": "Sortér {{column}} stigende",
+  "sortHintDesc": "Sortér {{column}} faldende",
+  "sortHintClear": "Ryd sortering af {{column}}"
 }

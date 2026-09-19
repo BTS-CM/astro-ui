@@ -23,5 +23,8 @@
   "openInstantTrade": "Sofort-Trade",
   "openInstantTradeDescription": "Sofort gegen diesen Smartcoin tauschen",
   "openSmartcoin": "Smartcoin",
-  "openSmartcoinDescription": "Parameter dieses Smartcoins ansehen und verwalten"
+  "openSmartcoinDescription": "Parameter dieses Smartcoins ansehen und verwalten",
+  "sortHintAsc": "{{column}} aufsteigend sortieren",
+  "sortHintDesc": "{{column}} absteigend sortieren",
+  "sortHintClear": "{{column}}-Sortierung aufheben"
 }

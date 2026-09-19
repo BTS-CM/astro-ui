@@ -25,5 +25,8 @@
   "openSmartcoin": "Smartcoin",
   "openSmartcoinDescription": "Vaata ja halda selle smartcoin parameetreid",
   "callOrders": "Call-orderid",
-  "dialogDescription2": "{{symbol}} ({{assetId}})"
+  "dialogDescription2": "{{symbol}} ({{assetId}})",
+  "sortHintAsc": "Sordi {{column}} kasvavalt",
+  "sortHintDesc": "Sordi {{column}} kahanevalt",
+  "sortHintClear": "Tühjenda {{column}} sortimine"
 }

@@ -25,5 +25,8 @@
   "openSmartcoin": "Smartcoin",
   "openSmartcoinDescription": "Ver y gestionar los parámetros de este smartcoin",
   "callOrders": "Órdenes de call",
-  "dialogDescription2": "{{symbol}} ({{assetId}})"
+  "dialogDescription2": "{{symbol}} ({{assetId}})",
+  "sortHintAsc": "Ordenar {{column}} de forma ascendente",
+  "sortHintDesc": "Ordenar {{column}} de forma descendente",
+  "sortHintClear": "Quitar orden de {{column}}"
 }

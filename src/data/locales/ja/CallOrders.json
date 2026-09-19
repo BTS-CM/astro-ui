@@ -23,5 +23,8 @@
   "openInstantTrade": "インスタントトレード",
   "openInstantTradeDescription": "このスマートコインに対して即座にスワップする",
   "openSmartcoin": "Smartcoin",
-  "openSmartcoinDescription": "このスマートコインのパラメータを表示・管理する"
+  "openSmartcoinDescription": "このスマートコインのパラメータを表示・管理する",
+  "sortHintAsc": "{{column}}を昇順で並び替え",
+  "sortHintDesc": "{{column}}を降順で並び替え",
+  "sortHintClear": "{{column}}の並び替えをクリア"
 }

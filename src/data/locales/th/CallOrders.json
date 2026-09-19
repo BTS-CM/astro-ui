@@ -23,5 +23,8 @@
   "openInstantTrade": "ซื้อขายทันที",
   "openInstantTradeDescription": "สลับทันทีกับสมาร์ตคอยน์นี้",
   "openSmartcoin": "Smartcoin",
-  "openSmartcoinDescription": "ดูและจัดการพารามิเตอร์ของสมาร์ตคอยน์นี้"
+  "openSmartcoinDescription": "ดูและจัดการพารามิเตอร์ของสมาร์ตคอยน์นี้",
+  "sortHintAsc": "เรียง{{column}}จากน้อยไปมาก",
+  "sortHintDesc": "เรียง{{column}}จากมากไปน้อย",
+  "sortHintClear": "ล้างการเรียง{{column}}"
 }

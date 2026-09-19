@@ -23,5 +23,8 @@
   "openInstantTrade": "즉시 거래",
   "openInstantTradeDescription": "이 스마트코인에 대해 즉시 스왑",
   "openSmartcoin": "Smartcoin",
-  "openSmartcoinDescription": "이 스마트코인의 매개변수 보기 및 관리"
+  "openSmartcoinDescription": "이 스마트코인의 매개변수 보기 및 관리",
+  "sortHintAsc": "{{column}} 오름차순 정렬",
+  "sortHintDesc": "{{column}} 내림차순 정렬",
+  "sortHintClear": "{{column}} 정렬 해제"
 }

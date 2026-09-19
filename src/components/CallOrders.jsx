@@ -39,6 +39,8 @@ import {
 
 import {
   ArrowLeftRight,
+  ArrowUp,
+  ArrowDown,
   ChevronRight,
   Coins,
   ListOrdered,
@@ -255,6 +257,39 @@ const CallOrderRow = memo(function CallOrderRow({
   );
 });
 
+/**
+ * Clickable column header: cycles none -> asc -> desc -> none on click, with
+ * an up/down arrow shown while its column drives the sort. Keeps the same
+ * flex sizing as the row columns so headers stay aligned with row values.
+ */
+const SortHeaderButton = memo(function SortHeaderButton({
+  columnKey,
+  label,
+  sort,
+  onCycle,
+  title,
+}) {
+  const active = sort?.key === columnKey;
+  return (
+    <button
+      type="button"
+      onClick={() => onCycle(columnKey)}
+      title={title}
+      aria-label={title}
+      className="flex items-center gap-1 min-w-0 text-[10px] uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors cursor-pointer text-left bg-transparent border-0 p-0"
+      style={{ flex: "1 1 0" }}
+    >
+      <span className="truncate">{label}</span>
+      {active && sort.dir === "asc" ? (
+        <ArrowUp className="h-3 w-3 shrink-0" />
+      ) : null}
+      {active && sort.dir === "desc" ? (
+        <ArrowDown className="h-3 w-3 shrink-0" />
+      ) : null}
+    </button>
+  );
+});
+
 export default function CallOrders({
   _assetsBTS,
   _assetsTEST,
@@ -415,19 +450,29 @@ export default function CallOrders({
     }
   }, [usr, callOrderCounter]);
 
-  const sortedCallOrders = useMemo(() => {
+  // Default order (by debt asset id). Column sorts apply on top of this via
+  // the enriched numeric values below.
+  const baseCallOrders = useMemo(() => {
     if (!callOrders || !callOrders.length) return callOrders;
     return [...callOrders].sort((a, b) =>
       a.debt_asset < b.debt_asset ? -1 : a.debt_asset > b.debt_asset ? 1 : 0
     );
   }, [callOrders]);
 
-  const hasOrders = sortedCallOrders && sortedCallOrders.length > 0;
+  // Column sort driven by the clickable headers: none -> asc -> desc -> none.
+  const [sort, setSort] = useState(null);
+  const cycleSort = (key) => {
+    setSort((prev) => {
+      if (!prev || prev.key !== key) return { key, dir: "asc" };
+      if (prev.dir === "asc") return { key, dir: "desc" };
+      return null;
+    });
+  };
 
   // Enrich each position with formatted amounts, current CR and MCR.
   const enriched = useMemo(() => {
     const map = {};
-    for (const o of sortedCallOrders || []) {
+    for (const o of baseCallOrders || []) {
       const debtAsset = fullAssetMap[o.debt_asset];
       const collateralAsset = fullAssetMap[o.collateral_asset];
       const debtPrecision = debtAsset?.precision ?? 0;
@@ -475,7 +520,39 @@ export default function CallOrders({
       };
     }
     return map;
-  }, [sortedCallOrders, fullAssetMap, bitAssetMap]);
+  }, [baseCallOrders, fullAssetMap, bitAssetMap]);
+
+  // Final order: default, or by the active column's enriched numeric value.
+  // Unknown ratios (<= 0, shown as "—") always sink to the bottom.
+  const sortedCallOrders = useMemo(() => {
+    if (!baseCallOrders || !baseCallOrders.length || !sort) {
+      return baseCallOrders;
+    }
+    const dir = sort.dir === "asc" ? 1 : -1;
+    const field =
+      sort.key === "collateral"
+        ? "collateralAmount"
+        : sort.key === "debt"
+        ? "debtAmount"
+        : null;
+    return [...baseCallOrders].sort((a, b) => {
+      if (sort.key === "ratio") {
+        const av = Number(enriched?.[a.id]?.ratio) || 0;
+        const bv = Number(enriched?.[b.id]?.ratio) || 0;
+        const aUnknown = !(av > 0);
+        const bUnknown = !(bv > 0);
+        if (aUnknown && bUnknown) return 0;
+        if (aUnknown) return 1;
+        if (bUnknown) return -1;
+        return (av - bv) * dir;
+      }
+      const av = Number(enriched?.[a.id]?.[field]) || 0;
+      const bv = Number(enriched?.[b.id]?.[field]) || 0;
+      return (av - bv) * dir;
+    });
+  }, [baseCallOrders, enriched, sort]);
+
+  const hasOrders = sortedCallOrders && sortedCallOrders.length > 0;
 
   const selectedInfo = selected ? enriched?.[selected.id] : null;
   const selectedDebtAsset = selected ? fullAssetMap[selected.debt_asset] : null;
@@ -503,6 +580,18 @@ export default function CallOrders({
     () => ({ callOrders: sortedCallOrders, enriched, t, onSelect: setSelected }),
     [sortedCallOrders, enriched, t]
   );
+
+  // Tooltip / screen-reader text for the sortable headers: describes the
+  // next click action (sort ascending -> sort descending -> clear).
+  const sortTitle = (columnKey, label) => {
+    if (!sort || sort.key !== columnKey) {
+      return t("CallOrders:sortHintAsc", { column: label });
+    }
+    if (sort.dir === "asc") {
+      return t("CallOrders:sortHintDesc", { column: label });
+    }
+    return t("CallOrders:sortHintClear", { column: label });
+  };
 
   const dexHref = selected
     ? `/dex.html?market=${selectedCollateralSymbol}_${selectedSymbol}`
@@ -581,24 +670,27 @@ export default function CallOrders({
                     {t("CallOrders:assetHeader")}
                   </div>
                   <div className="flex items-center gap-2 text-left" style={{ flex: "1 1 50%" }}>
-                    <div
-                      className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                      style={{ flex: "1 1 0" }}
-                    >
-                      {t("CallOrders:collateralHeader")}
-                    </div>
-                    <div
-                      className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                      style={{ flex: "1 1 0" }}
-                    >
-                      {t("CallOrders:debtHeader")}
-                    </div>
-                    <div
-                      className="text-[10px] uppercase tracking-wide text-muted-foreground"
-                      style={{ flex: "1 1 0" }}
-                    >
-                      {t("CallOrders:ratioHeader")}
-                    </div>
+                    <SortHeaderButton
+                      columnKey="collateral"
+                      label={t("CallOrders:collateralHeader")}
+                      sort={sort}
+                      onCycle={cycleSort}
+                      title={sortTitle("collateral", t("CallOrders:collateralHeader"))}
+                    />
+                    <SortHeaderButton
+                      columnKey="debt"
+                      label={t("CallOrders:debtHeader")}
+                      sort={sort}
+                      onCycle={cycleSort}
+                      title={sortTitle("debt", t("CallOrders:debtHeader"))}
+                    />
+                    <SortHeaderButton
+                      columnKey="ratio"
+                      label={t("CallOrders:ratioHeader")}
+                      sort={sort}
+                      onCycle={cycleSort}
+                      title={sortTitle("ratio", t("CallOrders:ratioHeader"))}
+                    />
                     <div className="w-4 flex-shrink-0" />
                   </div>
                 </div>
