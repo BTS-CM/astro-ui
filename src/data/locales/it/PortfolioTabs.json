@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "Quantità di liquido: {{amount}}",
   "tradeButton": "Commercio",
+  "viewBalanceObject": "Visualizza oggetto saldo",
+  "balanceJsonDescription": "I dati grezzi della blockchain per questo saldo.",
   "json": "JSON",
   "jsonTitle": "Ordine limite {{orderId}} dati JSON",
   "jsonDescription": "I dati grezzi della blockchain per questo ordine limite.",

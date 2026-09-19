@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "Vedeliku kogus: {{amount}}",
   "tradeButton": "Kaubandus",
+  "viewBalanceObject": "Vaata saldo objekti",
+  "balanceJsonDescription": "Selle saldo töötlemata plokiahela andmed.",
   "json": "JSON",
   "jsonTitle": "Limiitorder {{orderId}} JSON-andmed",
   "jsonDescription": "Selle limiitorderi töötlemata plokiahela andmed.",

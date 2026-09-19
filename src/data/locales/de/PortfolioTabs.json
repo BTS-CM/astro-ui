@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "Flüssigkeitsmenge: {{amount}}",
   "tradeButton": "Handel",
+  "viewBalanceObject": "Balance-Objekt ansehen",
+  "balanceJsonDescription": "Die Roh-Blockchain-Daten für diesen Saldo.",
   "json": "JSON",
   "jsonTitle": "Limit-Order {{orderId}} JSON-Daten",
   "jsonDescription": "Die Roh-Blockchain-Daten für diese Limit-Order.",

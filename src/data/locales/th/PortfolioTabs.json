@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "ปริมาณของเหลว: {{amount}}",
   "tradeButton": "ซื้อขาย",
+  "viewBalanceObject": "ดูออบเจ็กต์ยอดคงเหลือ",
+  "balanceJsonDescription": "ข้อมูลบล็อกเชนดิบสำหรับยอดคงเหลือนี้",
   "json": "JSON",
   "jsonTitle": "ข้อมูล JSON คำสั่งลิมิต {{orderId}}",
   "jsonDescription": "ข้อมูลบล็อกเชนดิบสำหรับคำสั่งลิมิตนี้",

@@ -51,6 +51,7 @@ import { useAccountBalancesLive } from "@/hooks/useChainObjectsLive";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
 import AssetIssuerActions from "./AssetIssuerActions.jsx";
 import ForceSettleDialog from "./common/ForceSettleDialog.jsx";
+import ObjectJsonDialog from "./common/ObjectJsonDialog.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
@@ -63,7 +64,7 @@ import {
 
 import { humanReadableFloat } from "@/lib/common";
 
-function BalanceActionsSelect({ symbol, assetId, isSmartcoin, hasBalance, onForceSettle, t }) {
+function BalanceActionsSelect({ symbol, assetId, isSmartcoin, hasBalance, onForceSettle, onViewJson, t }) {
   const counterSymbol = symbol === "BTS" ? "HONEST.USD" : "BTS";
   const dexHref = `/dex.html?market=${symbol}_${counterSymbol}`;
   const instantTradeHref = `/instant_trade.html?market=${symbol}_${counterSymbol}`;
@@ -72,12 +73,21 @@ function BalanceActionsSelect({ symbol, assetId, isSmartcoin, hasBalance, onForc
 
   const itemCls =
     "cursor-pointer transition-colors data-[highlighted]:bg-[hsl(var(--accent-1)/0.12)] data-[highlighted]:text-[hsl(var(--accent-1-fg))]";
+  // Remount the Select after each choice so the trigger keeps showing the
+  // static "User Actions" placeholder instead of the last selected item.
+  const [resetKey, setResetKey] = useState(0);
   return (
     <Select
+      key={resetKey}
       onValueChange={(href) => {
         if (!href) return;
+        setResetKey((k) => k + 1);
         if (href === "__force_settle__") {
           if (onForceSettle) onForceSettle();
+          return;
+        }
+        if (href === "__view_json__") {
+          if (onViewJson) onViewJson();
           return;
         }
         window.location.href = href;
@@ -102,6 +112,9 @@ function BalanceActionsSelect({ symbol, assetId, isSmartcoin, hasBalance, onForc
         </SelectItem>
         <SelectItem value={transferHref} className={itemCls}>
           {t("PortfolioTabs:transferAction", { defaultValue: "Transfer" })}
+        </SelectItem>
+        <SelectItem value="__view_json__" className={itemCls}>
+          {t("PortfolioTabs:viewBalanceObject", { defaultValue: "View balance object" })}
         </SelectItem>
         {isSmartcoin ? (
           <>
@@ -226,6 +239,7 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
   }, [isIssuer, currentAsset.id, _chain]);
 
   const [showForceSettle, setShowForceSettle] = useState(false);
+  const [showBalanceJson, setShowBalanceJson] = useState(false);
 
   return (
     <div style={{ ...style, paddingBottom: "8px", paddingRight: "2px", overflow: "hidden" }}>
@@ -271,6 +285,7 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
                 isSmartcoin={isSmartcoin}
                 hasBalance={!isZeroBalance}
                 onForceSettle={() => setShowForceSettle(true)}
+                onViewJson={() => setShowBalanceJson(true)}
                 t={t}
               />
               {isIssuer && fullAsset ? (
@@ -302,6 +317,20 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
           username={usr?.username}
           assets={assets}
           nodeUrl={currentNode?.url || null}
+        />
+      ) : null}
+      {showBalanceJson ? (
+        <ObjectJsonDialog
+          open={showBalanceJson}
+          onClose={() => setShowBalanceJson(false)}
+          title={t("PortfolioTabs:assetTitle", {
+            symbol: currentAsset.symbol,
+            assetId: currentAsset.id,
+          })}
+          description={t("PortfolioTabs:balanceJsonDescription", {
+            defaultValue: "The raw blockchain data for this balance.",
+          })}
+          data={rowBalance}
         />
       ) : null}
     </div>
@@ -475,8 +504,16 @@ export default function PortfolioBalances({
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
       <div className="grid grid-cols-1 mt-5 gap-3">
-        <Card className="overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 gap-0">
-          <div className="border-b border-border p-5 sm:p-6">
+        <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 gap-0">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[hsl(var(--accent-1)/0.08)] via-[hsl(var(--accent-1)/0.02)] to-transparent"
+          />
+          <div className="relative border-b border-border p-5 sm:p-6">
             <div className="flex items-center gap-3">
               <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
                 <Wallet className="h-4.5 w-4.5" strokeWidth={2.25} />
@@ -489,11 +526,6 @@ export default function PortfolioBalances({
                   {t("PortfolioTabs:accountBalancesDescription")}
                 </p>
               </div>
-              {sortedUserBalances && sortedUserBalances.length ? (
-                <span className="ml-auto inline-flex shrink-0 items-center rounded-full border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.1)] px-2 py-0.5 font-mono tabular-nums text-[11px] text-[hsl(var(--accent-1-fg))]">
-                  {sortedUserBalances.length}
-                </span>
-              ) : null}
             </div>
           </div>
           <CardContent className="space-y-2 text-foreground/70">

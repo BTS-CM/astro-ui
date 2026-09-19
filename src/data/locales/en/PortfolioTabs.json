@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "Liquid amount: {{amount}}",
   "tradeButton": "Trade",
+  "viewBalanceObject": "View balance object",
+  "balanceJsonDescription": "The raw blockchain data for this balance.",
   "json": "JSON",
   "jsonTitle": "Limit order {{orderId}} JSON data",
   "jsonDescription": "The raw blockchain data for this limit order.",

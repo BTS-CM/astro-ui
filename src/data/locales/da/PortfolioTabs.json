@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "Væskemængde: {{amount}}",
   "tradeButton": "Handle",
+  "viewBalanceObject": "Se balanceobjekt",
+  "balanceJsonDescription": "De rå blockchain-data for denne saldo.",
   "json": "JSON",
   "jsonTitle": "Limitordre {{orderId}} JSON-data",
   "jsonDescription": "De rå blockchain-data for denne limitordre.",

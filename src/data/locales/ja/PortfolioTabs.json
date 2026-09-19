@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "液量： {{amount}}",
   "tradeButton": "貿易",
+  "viewBalanceObject": "残高オブジェクトを表示",
+  "balanceJsonDescription": "この残高の生ブロックチェーンデータ。",
   "json": "JSON",
   "jsonTitle": "指値注文 {{orderId}} JSONデータ",
   "jsonDescription": "この指値注文の生ブロックチェーンデータ。",

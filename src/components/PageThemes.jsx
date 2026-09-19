@@ -182,8 +182,16 @@ export default function PageThemes() {
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
       <div className="grid grid-cols-1 gap-3">
-      <Card className="overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm gap-0">
-        <div className="border-b border-border p-5 sm:p-6">
+      <Card className="relative overflow-hidden bg-card/60 border-border shadow-lg shadow-black/20 backdrop-blur-sm gap-0">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.7)] to-transparent"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[hsl(var(--accent-1)/0.08)] via-[hsl(var(--accent-1)/0.02)] to-transparent"
+        />
+        <div className="relative border-b border-border p-5 sm:p-6">
           <div className="flex items-center gap-3">
             <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.4)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.3)] to-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-1-fg))] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.4)]">
               <Layers className="h-4.5 w-4.5" strokeWidth={2.25} />

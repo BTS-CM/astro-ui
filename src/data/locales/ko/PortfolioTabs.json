@@ -2,6 +2,8 @@
   "assetTitle": "{{symbol}} ({{assetId}})",
   "liquidAmount": "액체량: {{amount}}",
   "tradeButton": "거래",
+  "viewBalanceObject": "잔액 객체 보기",
+  "balanceJsonDescription": "이 잔액에 대한 원시 블록체인 데이터입니다.",
   "json": "JSON",
   "jsonTitle": "지정가 주문 {{orderId}} JSON 데이터",
   "jsonDescription": "이 지정가 주문에 대한 원시 블록체인 데이터입니다.",
