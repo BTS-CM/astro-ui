@@ -5,6 +5,26 @@
     "noResults": "Aktiivseid krediidipakkumisi ei leitud.",
     "noResultsDesc": "Teil pole praegu aktiivseid krediidipakkumisi. ",
     "create": "Loo krediidipakkumine",
-    "acceptedCollateral": "Aktsepteeritud tagatis"
+    "acceptedCollateral": "Aktsepteeritud tagatis",
+    "filterLendingAsset": "Välja laenatav vara",
+    "filterCollateralAsset": "Tagatisvara",
+    "filterAll": "Kõik",
+    "sortLabel": "Sordi",
+    "sortNone": "Vaikejärjekord",
+    "sortIdAsc": "ID (kasvav)",
+    "sortIdDesc": "ID (kahanev)",
+    "sortAmountAsc": "Laenatud summa (väikseim enne)",
+    "sortAmountDesc": "Laenatud summa (suurim enne)",
+    "sortFeeAsc": "Tasusumma (väikseim enne)",
+    "sortFeeDesc": "Tasusumma (suurim enne)",
+    "sortRepayAsc": "Tagasimakse periood (lühim enne)",
+    "sortRepayDesc": "Tagasimakse periood (pikim enne)",
+    "sortValidityAsc": "Järelejäänud kehtivus (lühim enne)",
+    "sortValidityDesc": "Järelejäänud kehtivus (pikim enne)",
+    "clearFilters": "Tühjenda",
+    "noFilterMatch": "Ükski pakkumine ei vasta nendele filtritele.",
+    "offerSingular": "pakkumine",
+    "offerPlural": "pakkumised",
+    "ofFilter": "kokku {{count}}"
   }
 }

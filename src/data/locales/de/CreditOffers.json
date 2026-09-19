@@ -5,6 +5,26 @@
     "noResults": "Keine aktiven Kreditangebote gefunden.",
     "noResultsDesc": "Sie haben derzeit keine aktiven Kreditangebote. ",
     "create": "Kreditangebot erstellen",
-    "acceptedCollateral": "Akzeptierte Sicherheiten"
+    "acceptedCollateral": "Akzeptierte Sicherheiten",
+    "filterLendingAsset": "Verleih-Asset",
+    "filterCollateralAsset": "Sicherheiten-Asset",
+    "filterAll": "Alle",
+    "sortLabel": "Sortieren",
+    "sortNone": "Standardreihenfolge",
+    "sortIdAsc": "ID (aufsteigend)",
+    "sortIdDesc": "ID (absteigend)",
+    "sortAmountAsc": "Verliehener Betrag (niedrigste zuerst)",
+    "sortAmountDesc": "Verliehener Betrag (höchste zuerst)",
+    "sortFeeAsc": "Gebührbetrag (niedrigste zuerst)",
+    "sortFeeDesc": "Gebührbetrag (höchste zuerst)",
+    "sortRepayAsc": "Rückzahlungszeitraum (kürzeste zuerst)",
+    "sortRepayDesc": "Rückzahlungszeitraum (längste zuerst)",
+    "sortValidityAsc": "Verbleibende Gültigkeit (kürzeste zuerst)",
+    "sortValidityDesc": "Verbleibende Gültigkeit (längste zuerst)",
+    "clearFilters": "Zurücksetzen",
+    "noFilterMatch": "Keine Angebote entsprechen diesen Filtern.",
+    "offerSingular": "Angebot",
+    "offerPlural": "Angebote",
+    "ofFilter": "von {{count}}"
   }
 }

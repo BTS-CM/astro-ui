@@ -13,6 +13,26 @@
     "expired": "Offer no longer valid",
     "delete": "Delete offer",
     "more": "+{{count}} more",
-    "deleteHeader": "Deleting offer #{{offerID}}"
+    "deleteHeader": "Deleting offer #{{offerID}}",
+    "filterLendingAsset": "Lending asset",
+    "filterCollateralAsset": "Collateral asset",
+    "filterAll": "All",
+    "sortLabel": "Sort by",
+    "sortNone": "Default order",
+    "sortIdAsc": "ID (ascending)",
+    "sortIdDesc": "ID (descending)",
+    "sortAmountAsc": "Lending amount (lowest first)",
+    "sortAmountDesc": "Lending amount (highest first)",
+    "sortFeeAsc": "Fee amount (lowest first)",
+    "sortFeeDesc": "Fee amount (highest first)",
+    "sortRepayAsc": "Repay period (shortest first)",
+    "sortRepayDesc": "Repay period (longest first)",
+    "sortValidityAsc": "Remaining validity (shortest first)",
+    "sortValidityDesc": "Remaining validity (longest first)",
+    "clearFilters": "Clear",
+    "noFilterMatch": "No offers match these filters.",
+    "offerSingular": "offer",
+    "offerPlural": "offers",
+    "ofFilter": "of {{count}}"
   }
 }

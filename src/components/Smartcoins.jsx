@@ -11,7 +11,7 @@ import { List } from "react-window";
 import Fuse from "fuse.js";
 import { useStore } from "@nanostores/react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { User, Coins, Tag, Activity, CircleDollarSign, Gavel } from "lucide-react";
+import { User, Coins, Tag, Activity, CircleDollarSign, Gavel, Package, ShieldCheck } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -30,6 +30,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { debounce } from "@/lib/common.js";
 import { getFlagBooleans } from "@/lib/common.js";
@@ -89,11 +97,25 @@ const SmartcoinCard = memo(function SmartcoinCard({ style, row, t }) {
                 <span className="text-xs text-muted-foreground/40">({row.issuerId})</span>
               </div>
             ) : null}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <Coins className="h-3.5 w-3.5 text-[hsl(var(--accent-2-fg)/0.7)]" />
               <span>{t("Smartcoins:collateral")}:</span>
               <span className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent font-semibold">{row.collateral_symbol}</span>
               <span className="text-xs text-muted-foreground/40">({row.collateralId})</span>
+              {row.supplyHuman != null ? (
+                <>
+                  <Package className="h-3.5 w-3.5 text-[hsl(var(--accent-2-fg)/0.7)]" />
+                  <span>{t("Smartcoins:currentSupply")}:</span>
+                  <span className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent font-semibold">{row.supplyHuman} {row.offer_symbol}</span>
+                </>
+              ) : null}
+              {row.minCollateralHuman != null ? (
+                <>
+                  <ShieldCheck className="h-3.5 w-3.5 text-[hsl(var(--accent-2-fg)/0.7)]" />
+                  <span>{t("Smartcoins:minimumCollateral")}:</span>
+                  <span className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent font-semibold">{row.minCollateralHuman} {row.collateral_symbol}</span>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-1.5 mt-2">
@@ -168,6 +190,231 @@ const BitassetRow = memo(function BitassetRow({ index, style, rows, t }) {
   return <SmartcoinCard index={index} style={style} row={rows[index]} t={t} />;
 });
 
+function getBsrmMethod(bitasset) {
+  // Black swan recovery method: 0 global / 1 none / 2 individual-to-fund /
+  // 3 individual-to-order. Absent extension predates BSRM, behaves as 0.
+  // Works on both the trimmed snapshot (see smartcoins.astro) and full live objects.
+  const raw = bitasset?.options?.extensions?.black_swan_response_method;
+  const parsed = typeof raw === "number" ? raw : parseInt(raw ?? "0", 10);
+  return [0, 1, 2, 3].includes(parsed) ? parsed : 0;
+}
+
+function getDynamicSupplyRaw(dynamicEntry) {
+  if (!dynamicEntry) {
+    return null;
+  }
+  const parsed = parseInt(dynamicEntry.current_supply ?? "NaN", 10);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function getDynamicSupplyHuman(dynamicEntry, precision) {
+  const raw = getDynamicSupplyRaw(dynamicEntry);
+  if (raw == null) {
+    return null;
+  }
+  try {
+    return humanReadableFloat(raw, precision ?? 0);
+  } catch {
+    return null;
+  }
+}
+
+function applySmartcoinFiltersAndSort(list, controls, isPrivateMode) {
+  if (!list || !list.length) return [];
+  let result = [...list];
+
+  if (controls.bsrm !== "all") {
+    const method = parseInt(controls.bsrm, 10);
+    result = result.filter((row) => row.bsrm === method);
+  }
+
+  if (controls.collateral !== "all") {
+    result = result.filter((row) => row.collateralId === controls.collateral);
+  }
+
+  if (isPrivateMode && controls.issuer !== "all") {
+    result = result.filter((row) => row.issuerId === controls.issuer);
+  }
+
+  switch (controls.sort) {
+    case "id-asc":
+      result.sort((a, b) => a.assetNum - b.assetNum);
+      break;
+    case "id-desc":
+      result.sort((a, b) => b.assetNum - a.assetNum);
+      break;
+    case "mcr-asc":
+      result.sort((a, b) => a.mcr - b.mcr);
+      break;
+    case "mcr-desc":
+      result.sort((a, b) => b.mcr - a.mcr);
+      break;
+    case "mssr-asc":
+      result.sort((a, b) => a.mssr - b.mssr);
+      break;
+    case "mssr-desc":
+      result.sort((a, b) => b.mssr - a.mssr);
+      break;
+    case "icr-asc":
+      result.sort((a, b) => a.icr - b.icr);
+      break;
+    case "icr-desc":
+      result.sort((a, b) => b.icr - a.icr);
+      break;
+    case "feedQty-asc":
+      result.sort((a, b) => a.feedQty - b.feedQty);
+      break;
+    case "feedQty-desc":
+      result.sort((a, b) => b.feedQty - a.feedQty);
+      break;
+    case "supply-asc":
+      result.sort((a, b) => (a.supplyRaw ?? Infinity) - (b.supplyRaw ?? Infinity));
+      break;
+    case "supply-desc":
+      result.sort((a, b) => (b.supplyRaw ?? -1) - (a.supplyRaw ?? -1));
+      break;
+    case "minCollateral-asc":
+      result.sort((a, b) => (a.minCollateralHuman ?? Infinity) - (b.minCollateralHuman ?? Infinity));
+      break;
+    case "minCollateral-desc":
+      result.sort((a, b) => (b.minCollateralHuman ?? -1) - (a.minCollateralHuman ?? -1));
+      break;
+    default:
+      break;
+  }
+
+  return result;
+}
+
+const SmartcoinFilterRow = memo(function SmartcoinFilterRow({
+  controls,
+  onChange,
+  onClear,
+  hasActiveFilters,
+  collateralOptions,
+  issuerOptions,
+  showIssuer,
+  t,
+}) {
+  return (
+    <div className="mb-3 flex flex-wrap items-end gap-2 px-1">
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("SettlementBids:bsrmFilter")}
+        </span>
+        <Select
+          value={controls.bsrm}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, bsrm: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("SettlementBids:bsrmAll")}</SelectItem>
+            {[0, 1, 2, 3].map((method) => (
+              <SelectItem key={method} value={String(method)}>
+                {t(`SettlementBids:bsrm_${method}`)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("Smartcoins:filterCollateral")}
+        </span>
+        <Select
+          value={controls.collateral}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, collateral: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("Smartcoins:filterAll")}</SelectItem>
+            {collateralOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      {showIssuer ? (
+        <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+          <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+            {t("Smartcoins:filterIssuer")}
+          </span>
+          <Select
+            value={controls.issuer}
+            onValueChange={(v) =>
+              onChange((prev) => ({ ...prev, issuer: v }))
+            }
+          >
+            <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("Smartcoins:filterAll")}</SelectItem>
+              {issuerOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : null}
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("Smartcoins:sortLabel")}
+        </span>
+        <Select
+          value={controls.sort}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, sort: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">{t("Smartcoins:sortNone")}</SelectItem>
+            <SelectItem value="id-asc">{t("Smartcoins:sortIdAsc")}</SelectItem>
+            <SelectItem value="id-desc">{t("Smartcoins:sortIdDesc")}</SelectItem>
+            <SelectItem value="mcr-asc">{t("Smartcoins:sortMcrAsc")}</SelectItem>
+            <SelectItem value="mcr-desc">{t("Smartcoins:sortMcrDesc")}</SelectItem>
+            <SelectItem value="mssr-asc">{t("Smartcoins:sortMssrAsc")}</SelectItem>
+            <SelectItem value="mssr-desc">{t("Smartcoins:sortMssrDesc")}</SelectItem>
+            <SelectItem value="icr-asc">{t("Smartcoins:sortIcrAsc")}</SelectItem>
+            <SelectItem value="icr-desc">{t("Smartcoins:sortIcrDesc")}</SelectItem>
+            <SelectItem value="feedQty-asc">{t("Smartcoins:sortFeedQtyAsc")}</SelectItem>
+            <SelectItem value="feedQty-desc">{t("Smartcoins:sortFeedQtyDesc")}</SelectItem>
+            <SelectItem value="supply-asc">{t("Smartcoins:sortSupplyAsc")}</SelectItem>
+            <SelectItem value="supply-desc">{t("Smartcoins:sortSupplyDesc")}</SelectItem>
+            <SelectItem value="minCollateral-asc">{t("Smartcoins:sortMinCollateralAsc")}</SelectItem>
+            <SelectItem value="minCollateral-desc">{t("Smartcoins:sortMinCollateralDesc")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {hasActiveFilters ? (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onClear}
+          className="shrink-0 border-[hsl(var(--accent-1)/0.2)] bg-card/60 hover:bg-[hsl(var(--accent-1)/0.1)]"
+        >
+          {t("Smartcoins:clearFilters")}
+        </Button>
+      ) : null}
+    </div>
+  );
+});
+
 export default function Smartcoins(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore(
@@ -228,6 +475,7 @@ export default function Smartcoins(properties) {
   // never repeat work when the active set shifts.
   const fetchedAssetRef = useRef(new Set());
   const fetchedIssuerRef = useRef(new Set());
+  const fetchedDynamicRef = useRef(new Set());
 
   const normalizeLiveAsset = (o) => ({
     id: o.id,
@@ -251,6 +499,7 @@ export default function Smartcoins(properties) {
     setDiscoveryDone(false);
     fetchedAssetRef.current = new Set();
     fetchedIssuerRef.current = new Set();
+    fetchedDynamicRef.current = new Set();
     if (!_chain || !snapshotBitassets.length) {
       setDiscoveryDone(true);
       return;
@@ -598,6 +847,17 @@ export default function Smartcoins(properties) {
     return m;
   }, [assetIssuers, liveIssuers]);
 
+  // Live dynamic asset data (current supply), keyed by 2.3.x id. Fetched in
+  // the effect below, after the enrichment pass it feeds back into.
+  const [liveDynamics, setLiveDynamics] = useState({});
+  const dynamicById = useMemo(() => {
+    const m = new Map();
+    for (const id of Object.keys(liveDynamics)) {
+      m.set(id, liveDynamics[id]);
+    }
+    return m;
+  }, [liveDynamics]);
+
   // Single enrichment pass: every per-row lookup + derived value computed once.
   const enrichedAll = useMemo(() => {
     if (!activeBitassets) {
@@ -642,6 +902,28 @@ export default function Smartcoins(properties) {
         continue;
       }
 
+      // Minimum collateral locked behind the outstanding debt, in collateral
+      // units: supply (debt units) x feed price (collateral per debt) x MCR.
+      // Positions may hold far more, but this floor is what the debt holders
+      // are guaranteed if the asset settles.
+      const _supplyRaw = getDynamicSupplyRaw(
+        dynamicById.get(thisBitassetData.id.replace(/^1\.3\./, "2.3."))
+      );
+      let _minCollateralHuman = null;
+      if (_supplyRaw != null) {
+        const _mcrRatio =
+          bitasset.current_feed.maintenance_collateral_ratio / 1000;
+        const _minCollateral =
+          (_supplyRaw / 10 ** thisBitassetData.precision) *
+          _price *
+          _mcrRatio;
+        if (Number.isFinite(_minCollateral)) {
+          _minCollateralHuman = parseFloat(
+            _minCollateral.toFixed(thisCollateralAssetData.precision)
+          );
+        }
+      }
+
       out.push({
         key: bitasset.id,
         asset_id: bitasset.asset_id,
@@ -656,6 +938,13 @@ export default function Smartcoins(properties) {
         mssr: bitasset.current_feed.maximum_short_squeeze_ratio / 10,
         icr: bitasset.current_feed.initial_collateral_ratio / 10,
         feedQty,
+        bsrm: getBsrmMethod(bitasset),
+        supplyRaw: _supplyRaw,
+        supplyHuman: getDynamicSupplyHuman(
+          dynamicById.get(thisBitassetData.id.replace(/^1\.3\./, "2.3.")),
+          thisBitassetData.precision
+        ),
+        minCollateralHuman: _minCollateralHuman,
         permissions: getFlagBooleans(
           thisBitassetData.options.issuer_permissions
         ),
@@ -664,7 +953,62 @@ export default function Smartcoins(properties) {
       });
     }
     return out;
-  }, [activeBitassets, assetById, issuerById]);
+  }, [activeBitassets, assetById, issuerById, dynamicById]);
+
+  // Current supply (dynamic asset data) is fetched LAST, and only for the
+  // active set's debt assets: globally-settled / feedless "dead" assets were
+  // already filtered out of enrichedAll upstream, so we never fetch for
+  // those. Debt asset 1.3.N maps to dynamic object 2.3.N. Deltas only:
+  // fetchedDynamicRef (reset per chain) guarantees each id is fetched at
+  // most once per mount no matter how the active set shifts afterwards.
+  const enrichedDebtSig = useMemo(() => {
+    const s = new Set();
+    if (enrichedAll) {
+      for (const row of enrichedAll) {
+        if (row.asset_id) {
+          s.add(row.asset_id);
+        }
+      }
+    }
+    return [...s].sort().join(",");
+  }, [enrichedAll]);
+
+  useEffect(() => {
+    if (!discoveryDone || !_chain || !enrichedDebtSig) {
+      return;
+    }
+    const debtIds = enrichedDebtSig.split(",").filter(Boolean);
+    const dynamicIds = debtIds.map((id) => id.replace(/^1\.3\./, "2.3."));
+    const missing = dynamicIds.filter((id) => !fetchedDynamicRef.current.has(id));
+    if (!missing.length) {
+      return;
+    }
+    missing.forEach((id) => fetchedDynamicRef.current.add(id));
+    let cancelled = false;
+    const nodeUrl = currentNodeUrl || null;
+    (async () => {
+      try {
+        const objs = await getObjects(_chain, missing, nodeUrl);
+        if (cancelled || !Array.isArray(objs)) {
+          return;
+        }
+        const dMap = {};
+        for (const o of objs) {
+          if (o && o.id) {
+            dMap[o.id] = o;
+          }
+        }
+        if (Object.keys(dMap).length) {
+          setLiveDynamics((prev) => ({ ...prev, ...dMap }));
+        }
+      } catch (e) {
+        console.log("Smartcoins dynamic data error", e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [discoveryDone, enrichedDebtSig, _chain, currentNodeUrl]);
 
   // Live user balances (user-specific, can't be snapshotted).
   const [usrBalances, setUsrBalances] = useState();
@@ -850,14 +1194,102 @@ export default function Smartcoins(properties) {
     return thisResult.map((r) => r.item);
   }, [thisResult]);
 
+  const [filterControls, setFilterControls] = useState({
+    bsrm: "all",
+    collateral: "all",
+    issuer: "all",
+    sort: "none",
+  });
+
+  const isPrivateMode = mode === "privateSmartcoins";
+
+  // The issuer filter only exists on the private tab; clear it whenever the
+  // mode changes so a stale issuer can't silently empty another tab.
+  useEffect(() => {
+    setFilterControls((prev) =>
+      prev.issuer === "all" ? prev : { ...prev, issuer: "all" }
+    );
+  }, [mode]);
+
+  const collateralOptions = useMemo(() => {
+    const seen = new Map();
+    for (const row of modeFilteredBitassetData ?? []) {
+      if (row.collateralId && !seen.has(row.collateralId)) {
+        seen.set(
+          row.collateralId,
+          `${row.collateral_symbol} (${row.collateralId})`
+        );
+      }
+    }
+    return [...seen.entries()]
+      .map(([value, label]) => ({ value, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [modeFilteredBitassetData]);
+
+  const issuerOptions = useMemo(() => {
+    const seen = new Map();
+    for (const row of modeFilteredBitassetData ?? []) {
+      if (row.issuerId && !seen.has(row.issuerId)) {
+        seen.set(
+          row.issuerId,
+          row.issuerAccount
+            ? `${row.issuerAccount} (${row.issuerId})`
+            : row.issuerId
+        );
+      }
+    }
+    return [...seen.entries()]
+      .map(([value, label]) => ({ value, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [modeFilteredBitassetData]);
+
+  const displayedBitassetData = useMemo(() => {
+    return applySmartcoinFiltersAndSort(
+      modeFilteredBitassetData,
+      filterControls,
+      isPrivateMode
+    );
+  }, [modeFilteredBitassetData, filterControls, isPrivateMode]);
+
+  const displayedSearchRows = useMemo(() => {
+    return applySmartcoinFiltersAndSort(
+      searchRows,
+      filterControls,
+      isPrivateMode
+    );
+  }, [searchRows, filterControls, isPrivateMode]);
+
+  const hasActiveFilters =
+    filterControls.bsrm !== "all" ||
+    filterControls.collateral !== "all" ||
+    (isPrivateMode && filterControls.issuer !== "all") ||
+    filterControls.sort !== "none";
+
+  const clearFilterControls = useCallback(() => {
+    setFilterControls({ bsrm: "all", collateral: "all", issuer: "all", sort: "none" });
+  }, []);
+
+  const filterRowElement = (
+    <SmartcoinFilterRow
+      controls={filterControls}
+      onChange={setFilterControls}
+      onClear={clearFilterControls}
+      hasActiveFilters={hasActiveFilters}
+      collateralOptions={collateralOptions}
+      issuerOptions={issuerOptions}
+      showIssuer={isPrivateMode}
+      t={t}
+    />
+  );
+
   const bitassetRowProps = useMemo(
-    () => ({ rows: modeFilteredBitassetData, t }),
-    [modeFilteredBitassetData, t]
+    () => ({ rows: displayedBitassetData, t }),
+    [displayedBitassetData, t]
   );
 
   const searchRowProps = useMemo(
-    () => ({ rows: searchRows, t }),
-    [searchRows, t]
+    () => ({ rows: displayedSearchRows, t }),
+    [displayedSearchRows, t]
   );
 
   useEffect(() => {
@@ -1013,9 +1445,14 @@ export default function Smartcoins(properties) {
                     </div>
                     <h5 className="mb-2 text-center">
                       {t("Smartcoins:listingAllSmartcoins", {
-                        count: modeFilteredBitassetData.length,
+                        count: displayedBitassetData.length,
                       })}
+                      {hasActiveFilters &&
+                      displayedBitassetData.length !== modeFilteredBitassetData.length
+                        ? ` (${t("Smartcoins:ofFilter", { count: modeFilteredBitassetData.length })})`
+                        : ""}
                     </h5>
+                    {filterRowElement}
                     {!assetIssuers || !assetIssuers.length ? (
                       <div className="text-center mt-5">
                         {t("CreditBorrow:common.loading")}
@@ -1025,19 +1462,25 @@ export default function Smartcoins(properties) {
                         <div className="hidden md:block">
                           <List
                             rowComponent={BitassetRow}
-                            rowCount={modeFilteredBitassetData.length}
-                            rowHeight={152}
+                            rowCount={displayedBitassetData.length}
+                            rowHeight={174}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                         <div className="block md:hidden">
                           <List
                             rowComponent={BitassetRow}
-                            rowCount={modeFilteredBitassetData.length}
-                            rowHeight={165}
+                            rowCount={displayedBitassetData.length}
+                            rowHeight={195}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                       </div>
                     )}
+                    {modeFilteredBitassetData.length &&
+                    !displayedBitassetData.length ? (
+                      <div className="text-center py-8 text-muted-foreground text-sm">
+                        {t("Smartcoins:noFilterMatch")}
+                      </div>
+                    ) : null}
                   </>
                 )}
                 {activeTab === "compatible" && (
@@ -1075,9 +1518,14 @@ export default function Smartcoins(properties) {
                     </div>
                     <h5 className="mb-2 text-center">
                       {t("Smartcoins:listingCompatibleSmartcoins", {
-                        count: modeFilteredBitassetData.length,
+                        count: displayedBitassetData.length,
                       })}
+                      {hasActiveFilters &&
+                      displayedBitassetData.length !== modeFilteredBitassetData.length
+                        ? ` (${t("Smartcoins:ofFilter", { count: modeFilteredBitassetData.length })})`
+                        : ""}
                     </h5>
+                    {filterRowElement}
                     {!assetIssuers || !assetIssuers.length ? (
                       <div className="text-center mt-5">
                         {t("CreditBorrow:common.loading")}
@@ -1087,19 +1535,25 @@ export default function Smartcoins(properties) {
                         <div className="hidden md:block">
                           <List
                             rowComponent={BitassetRow}
-                            rowCount={modeFilteredBitassetData.length}
-                            rowHeight={152}
+                            rowCount={displayedBitassetData.length}
+                            rowHeight={174}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                         <div className="block md:hidden">
                           <List
                             rowComponent={BitassetRow}
-                            rowCount={modeFilteredBitassetData.length}
-                            rowHeight={165}
+                            rowCount={displayedBitassetData.length}
+                            rowHeight={195}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                       </div>
                     )}
+                    {modeFilteredBitassetData.length &&
+                    !displayedBitassetData.length ? (
+                      <div className="text-center py-8 text-muted-foreground text-sm">
+                        {t("Smartcoins:noFilterMatch")}
+                      </div>
+                    ) : null}
                   </>
                 )}
                 {activeTab === "holdings" && (
@@ -1137,11 +1591,16 @@ export default function Smartcoins(properties) {
                     </div>
                     <h5 className="mb-2 text-center">
                       {t("Smartcoins:listingHeldSmartcoins", {
-                        count: modeFilteredBitassetData
-                          ? modeFilteredBitassetData.length
+                        count: displayedBitassetData
+                          ? displayedBitassetData.length
                           : 0,
                       })}
+                      {hasActiveFilters &&
+                      displayedBitassetData.length !== modeFilteredBitassetData.length
+                        ? ` (${t("Smartcoins:ofFilter", { count: modeFilteredBitassetData.length })})`
+                        : ""}
                     </h5>
+                    {filterRowElement}
                     {!assetIssuers || !assetIssuers.length ? (
                       <div className="text-center mt-5">
                         {t("CreditBorrow:common.loading")}
@@ -1152,26 +1611,32 @@ export default function Smartcoins(properties) {
                           <List
                             rowComponent={BitassetRow}
                             rowCount={
-                              modeFilteredBitassetData
-                                ? modeFilteredBitassetData.length
+                              displayedBitassetData
+                                ? displayedBitassetData.length
                                 : 0
                             }
-                            rowHeight={152}
+                            rowHeight={174}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                         <div className="block md:hidden">
                           <List
                             rowComponent={BitassetRow}
                             rowCount={
-                              modeFilteredBitassetData
-                                ? modeFilteredBitassetData.length
+                              displayedBitassetData
+                                ? displayedBitassetData.length
                                 : 0
                             }
-                            rowHeight={165}
+                            rowHeight={195}
                             rowProps={bitassetRowProps} height={600} width="100%" />
                         </div>
                       </div>
                     )}
+                    {modeFilteredBitassetData.length &&
+                    !displayedBitassetData.length ? (
+                      <div className="text-center py-8 text-muted-foreground text-sm">
+                        {t("Smartcoins:noFilterMatch")}
+                      </div>
+                    ) : null}
                   </>
                 )}
                 {activeTab === "search" && (
@@ -1253,26 +1718,32 @@ export default function Smartcoins(properties) {
                         debouncedSetSearchInput(event);
                       }}
                     />
+                    {filterRowElement}
                     {["borrow", "collateral", "issuer"].includes(
                       activeSearch
                     ) && (
                       <>
-                        {thisResult && thisResult.length ? (
+                        {displayedSearchRows && displayedSearchRows.length ? (
                           <div className="w-full max-h-[600px] overflow-auto">
                             <div className="hidden md:block">
                               <List
                                 rowComponent={BitassetRow}
-                                rowCount={searchRows.length}
-                                rowHeight={152}
+                                rowCount={displayedSearchRows.length}
+                                rowHeight={174}
                                 rowProps={searchRowProps} height={600} width="100%" />
                             </div>
                             <div className="block md:hidden">
                               <List
                                 rowComponent={BitassetRow}
-                                rowCount={searchRows.length}
-                                rowHeight={165}
+                                rowCount={displayedSearchRows.length}
+                                rowHeight={195}
                                 rowProps={searchRowProps} height={600} width="100%" />
                             </div>
+                          </div>
+                        ) : null}
+                        {thisInput && thisResult && thisResult.length && displayedSearchRows && !displayedSearchRows.length ? (
+                          <div className="text-center py-8 text-muted-foreground text-sm">
+                            {t("Smartcoins:noFilterMatch")}
                           </div>
                         ) : null}
                         {thisInput && thisResult && !thisResult.length ? (

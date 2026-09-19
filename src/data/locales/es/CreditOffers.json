@@ -5,6 +5,26 @@
     "noResults": "No se encontraron ofertas de crédito activas.",
     "noResultsDesc": "Actualmente no tienes ofertas de crédito activas. ",
     "create": "Crear oferta de crédito",
-    "acceptedCollateral": "Colateral aceptado"
+    "acceptedCollateral": "Colateral aceptado",
+    "filterLendingAsset": "Activo de préstamo",
+    "filterCollateralAsset": "Activo en garantía",
+    "filterAll": "Todos",
+    "sortLabel": "Ordenar",
+    "sortNone": "Orden predeterminado",
+    "sortIdAsc": "ID (ascendente)",
+    "sortIdDesc": "ID (descendente)",
+    "sortAmountAsc": "Cantidad prestada (menor primero)",
+    "sortAmountDesc": "Cantidad prestada (mayor primero)",
+    "sortFeeAsc": "Monto de la tarifa (menor primero)",
+    "sortFeeDesc": "Monto de la tarifa (mayor primero)",
+    "sortRepayAsc": "Periodo de amortización (menor primero)",
+    "sortRepayDesc": "Periodo de amortización (mayor primero)",
+    "sortValidityAsc": "Validez restante (menor primero)",
+    "sortValidityDesc": "Validez restante (mayor primero)",
+    "clearFilters": "Borrar",
+    "noFilterMatch": "Ninguna oferta coincide con estos filtros.",
+    "offerSingular": "oferta",
+    "offerPlural": "ofertas",
+    "ofFilter": "de {{count}}"
   }
 }

@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useSyncExternalStore,
   useMemo,
+  useCallback,
   memo,
 } from "react";
 import { List } from "react-window";
@@ -156,6 +157,14 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Button } from "@/components/ui/button";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import {} from "@/components/ui/card";
 
 import {
@@ -184,6 +193,184 @@ function hoursTillExpiration(expirationTime) {
   var hours = Math.round(difference / 1000 / 60 / 60);
   return hours;
 }
+
+function offerIdNumber(offer) {
+  const parts = (offer.id ?? "").split(".");
+  const num = parseInt(parts[2] ?? parts[parts.length - 1] ?? "0", 10);
+  return Number.isNaN(num) ? 0 : num;
+}
+
+function normalizedLendingAmount(offer, assetById) {
+  const precision = assetById?.get(offer.asset_type)?.precision ?? 5;
+  return Number(offer.current_balance ?? 0) / Math.pow(10, precision);
+}
+
+function normalizedFeeAmount(offer, assetById) {
+  return normalizedLendingAmount(offer, assetById) * (offer.fee_rate ?? 0);
+}
+
+function applyOfferFiltersAndSort(list, controls, assetById) {
+  if (!list || !list.length) return [];
+  let result = [...list];
+
+  if (controls.lendingAsset !== "all") {
+    result = result.filter((o) => o.asset_type === controls.lendingAsset);
+  }
+
+  if (controls.collateralAsset !== "all") {
+    result = result.filter((o) =>
+      (o.acceptable_collateral ?? []).some((x) => x[0] === controls.collateralAsset)
+    );
+  }
+
+  switch (controls.sort) {
+    case "id-asc":
+      result.sort((a, b) => offerIdNumber(a) - offerIdNumber(b));
+      break;
+    case "id-desc":
+      result.sort((a, b) => offerIdNumber(b) - offerIdNumber(a));
+      break;
+    case "amount-asc":
+      result.sort(
+        (a, b) => normalizedLendingAmount(a, assetById) - normalizedLendingAmount(b, assetById)
+      );
+      break;
+    case "amount-desc":
+      result.sort(
+        (a, b) => normalizedLendingAmount(b, assetById) - normalizedLendingAmount(a, assetById)
+      );
+      break;
+    case "fee-asc":
+      result.sort(
+        (a, b) => normalizedFeeAmount(a, assetById) - normalizedFeeAmount(b, assetById)
+      );
+      break;
+    case "fee-desc":
+      result.sort(
+        (a, b) => normalizedFeeAmount(b, assetById) - normalizedFeeAmount(a, assetById)
+      );
+      break;
+    case "repay-asc":
+      result.sort((a, b) => a.max_duration_seconds - b.max_duration_seconds);
+      break;
+    case "repay-desc":
+      result.sort((a, b) => b.max_duration_seconds - a.max_duration_seconds);
+      break;
+    case "validity-asc":
+      result.sort(
+        (a, b) => hoursTillExpiration(a.auto_disable_time) - hoursTillExpiration(b.auto_disable_time)
+      );
+      break;
+    case "validity-desc":
+      result.sort(
+        (a, b) => hoursTillExpiration(b.auto_disable_time) - hoursTillExpiration(a.auto_disable_time)
+      );
+      break;
+    default:
+      break;
+  }
+
+  return result;
+}
+
+const CreditOffersFilterRow = memo(function CreditOffersFilterRow({
+  controls,
+  onChange,
+  onClear,
+  hasActiveFilters,
+  lendingAssetOptions,
+  collateralAssetOptions,
+  t,
+}) {
+  return (
+    <div className="mb-3 flex flex-wrap items-end gap-2 px-1">
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("CreditOffers:card.filterLendingAsset")}
+        </span>
+        <Select
+          value={controls.lendingAsset}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, lendingAsset: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("CreditOffers:card.filterAll")}</SelectItem>
+            {lendingAssetOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("CreditOffers:card.filterCollateralAsset")}
+        </span>
+        <Select
+          value={controls.collateralAsset}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, collateralAsset: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("CreditOffers:card.filterAll")}</SelectItem>
+            {collateralAssetOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex min-w-[150px] flex-1 flex-col gap-1">
+        <span className="px-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {t("CreditOffers:card.sortLabel")}
+        </span>
+        <Select
+          value={controls.sort}
+          onValueChange={(v) =>
+            onChange((prev) => ({ ...prev, sort: v }))
+          }
+        >
+          <SelectTrigger className="border-[hsl(var(--accent-1)/0.2)] bg-card/60 focus:ring-[hsl(var(--accent-1)/0.4)]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">{t("CreditOffers:card.sortNone")}</SelectItem>
+            <SelectItem value="id-asc">{t("CreditOffers:card.sortIdAsc")}</SelectItem>
+            <SelectItem value="id-desc">{t("CreditOffers:card.sortIdDesc")}</SelectItem>
+            <SelectItem value="amount-asc">{t("CreditOffers:card.sortAmountAsc")}</SelectItem>
+            <SelectItem value="amount-desc">{t("CreditOffers:card.sortAmountDesc")}</SelectItem>
+            <SelectItem value="fee-asc">{t("CreditOffers:card.sortFeeAsc")}</SelectItem>
+            <SelectItem value="fee-desc">{t("CreditOffers:card.sortFeeDesc")}</SelectItem>
+            <SelectItem value="repay-asc">{t("CreditOffers:card.sortRepayAsc")}</SelectItem>
+            <SelectItem value="repay-desc">{t("CreditOffers:card.sortRepayDesc")}</SelectItem>
+            <SelectItem value="validity-asc">{t("CreditOffers:card.sortValidityAsc")}</SelectItem>
+            <SelectItem value="validity-desc">{t("CreditOffers:card.sortValidityDesc")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {hasActiveFilters ? (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onClear}
+          className="shrink-0 border-[hsl(var(--accent-1)/0.2)] bg-card/60 hover:bg-[hsl(var(--accent-1)/0.1)]"
+        >
+          {t("CreditOffers:card.clearFilters")}
+        </Button>
+      ) : null}
+    </div>
+  );
+});
 
 export default function CreditOffers(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -216,6 +403,11 @@ export default function CreditOffers(properties) {
   const [allOffers, setAllOffers] = useState([]);
   const [showExpired, setShowExpired] = useState(false);
   const [deleteOfferId, setDeleteOfferId] = useState(null);
+  const [offerControls, setOfferControls] = useState({
+    lendingAsset: "all",
+    collateralAsset: "all",
+    sort: "none",
+  });
 
   useEffect(() => {
     async function fetchUserOffers() {
@@ -252,7 +444,54 @@ export default function CreditOffers(properties) {
     return [];
   }, [allOffers, _chain, showExpired]);
 
-  const creditOffersRowProps = useMemo(() => ({ offers, assets, t, usr, onDeleteRequest: setDeleteOfferId }), [offers, assets, t, usr]);
+  const assetById = useMemo(() => {
+    const m = new Map();
+    for (const a of assets || []) if (a?.id) m.set(a.id, a);
+    return m;
+  }, [assets]);
+
+  const lendingAssetOptions = useMemo(() => {
+    const ids = Array.from(
+      new Set((offers ?? []).map((o) => o.asset_type).filter(Boolean))
+    );
+    return ids
+      .map((id) => {
+        const found = assetById.get(id);
+        return { value: id, label: found ? `${found.symbol} (${id})` : id };
+      })
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [offers, assetById]);
+
+  const collateralAssetOptions = useMemo(() => {
+    const ids = Array.from(
+      new Set(
+        (offers ?? []).flatMap((o) =>
+          (o.acceptable_collateral ?? []).map((x) => x[0]).filter(Boolean)
+        )
+      )
+    );
+    return ids
+      .map((id) => {
+        const found = assetById.get(id);
+        return { value: id, label: found ? `${found.symbol} (${id})` : id };
+      })
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [offers, assetById]);
+
+  const displayedOffers = useMemo(() => {
+    return applyOfferFiltersAndSort(offers, offerControls, assetById);
+  }, [offers, offerControls, assetById]);
+
+  const hasActiveOfferFilters =
+    offerControls.sort !== "none" ||
+    offerControls.lendingAsset !== "all" ||
+    offerControls.collateralAsset !== "all";
+
+  const clearOfferControls = useCallback(() => {
+    setOfferControls({ lendingAsset: "all", collateralAsset: "all", sort: "none" });
+  }, []);
+
+  const creditOffersRowProps = useMemo(() => ({ offers: displayedOffers, assets, t, usr, onDeleteRequest: setDeleteOfferId }), [displayedOffers, assets, t, usr]);
 
   return (
     <>
@@ -304,10 +543,34 @@ export default function CreditOffers(properties) {
             <div className="p-4 pt-2">
               <>
                 {offers && offers.length ? (
+                  <>
+                    <div className="mt-3 mb-1 flex items-center gap-2 px-1">
+                      <span className="text-xs text-muted-foreground">
+                        {displayedOffers.length}{" "}
+                        {displayedOffers.length === 1
+                          ? t("CreditOffers:card.offerSingular")
+                          : t("CreditOffers:card.offerPlural")}
+                        {hasActiveOfferFilters && displayedOffers.length !== offers.length
+                          ? ` (${t("CreditOffers:card.ofFilter", { count: offers.length })})`
+                          : ""}
+                      </span>
+                    </div>
+                    <CreditOffersFilterRow
+                      controls={offerControls}
+                      onChange={setOfferControls}
+                      onClear={clearOfferControls}
+                      hasActiveFilters={hasActiveOfferFilters}
+                      lendingAssetOptions={lendingAssetOptions}
+                      collateralAssetOptions={collateralAssetOptions}
+                      t={t}
+                    />
+                  </>
+                ) : null}
+                {displayedOffers && displayedOffers.length ? (
                   <div className="w-full mt-3 h-[500px]">
                     <List
                       rowComponent={CreditOffersRow}
-                      rowCount={offers.length}
+                      rowCount={displayedOffers.length}
                       rowHeight={245}
                       rowProps={creditOffersRowProps}
                       height={500}
@@ -315,7 +578,12 @@ export default function CreditOffers(properties) {
                     />
                   </div>
                 ) : null}
-                {offers && !offers.length ? (
+                {offers && offers.length && displayedOffers && !displayedOffers.length ? (
+                  <div className="text-center py-8 text-muted-foreground text-sm">
+                    {t("CreditOffers:card.noFilterMatch")}
+                  </div>
+                ) : null}
+                {offers && !offers.length && !hasActiveOfferFilters ? (
                   <Empty>
                     <EmptyHeader>
                       <EmptyMedia variant="icon">❕</EmptyMedia>

@@ -5,6 +5,26 @@
     "noResults": "ไม่พบข้อเสนอเครดิตที่ใช้งานอยู่",
     "noResultsDesc": "ขณะนี้คุณไม่มีข้อเสนอเครดิตที่ใช้งานอยู่ ",
     "create": "สร้างข้อเสนอเครดิต",
-    "acceptedCollateral": "หลักประกันที่ยอมรับ"
+    "acceptedCollateral": "หลักประกันที่ยอมรับ",
+    "filterLendingAsset": "สินทรัพย์ที่ให้ยืม",
+    "filterCollateralAsset": "สินทรัพย์ค้ำประกัน",
+    "filterAll": "ทั้งหมด",
+    "sortLabel": "เรียงลำดับ",
+    "sortNone": "ลำดับเริ่มต้น",
+    "sortIdAsc": "ID (น้อยไปมาก)",
+    "sortIdDesc": "ID (มากไปน้อย)",
+    "sortAmountAsc": "จำนวนที่ให้ยืม (น้อยก่อน)",
+    "sortAmountDesc": "จำนวนที่ให้ยืม (มากก่อน)",
+    "sortFeeAsc": "จำนวนค่าธรรมเนียม (น้อยก่อน)",
+    "sortFeeDesc": "จำนวนค่าธรรมเนียม (มากก่อน)",
+    "sortRepayAsc": "ระยะเวลาชำระคืน (น้อยก่อน)",
+    "sortRepayDesc": "ระยะเวลาชำระคืน (มากก่อน)",
+    "sortValidityAsc": "ระยะเวลาคงเหลือ (น้อยก่อน)",
+    "sortValidityDesc": "ระยะเวลาคงเหลือ (มากก่อน)",
+    "clearFilters": "ล้าง",
+    "noFilterMatch": "ไม่มีข้อเสนอที่ตรงกับตัวกรองเหล่านี้",
+    "offerSingular": "ข้อเสนอ",
+    "offerPlural": "ข้อเสนอ",
+    "ofFilter": "จาก {{count}}"
   }
 }

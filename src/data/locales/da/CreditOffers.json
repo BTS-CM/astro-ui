@@ -5,6 +5,26 @@
     "noResults": "Ingen aktive kredittilbud fundet.",
     "noResultsDesc": "Du har i øjeblikket ingen aktive kredittilbud. ",
     "create": "Opret kredittilbud",
-    "acceptedCollateral": "Accepteret sikkerhed"
+    "acceptedCollateral": "Accepteret sikkerhed",
+    "filterLendingAsset": "Udlånsaktiv",
+    "filterCollateralAsset": "Sikkerhedsaktiv",
+    "filterAll": "Alle",
+    "sortLabel": "Sorter",
+    "sortNone": "Standardrækkefølge",
+    "sortIdAsc": "ID (stigende)",
+    "sortIdDesc": "ID (faldende)",
+    "sortAmountAsc": "Udlånsbeløb (laveste først)",
+    "sortAmountDesc": "Udlånsbeløb (højeste først)",
+    "sortFeeAsc": "Gebyrbeløb (laveste først)",
+    "sortFeeDesc": "Gebyrbeløb (højeste først)",
+    "sortRepayAsc": "Tilbagebetalingsperiode (korteste først)",
+    "sortRepayDesc": "Tilbagebetalingsperiode (længste først)",
+    "sortValidityAsc": "Resterende gyldighed (korteste først)",
+    "sortValidityDesc": "Resterende gyldighed (længste først)",
+    "clearFilters": "Ryd",
+    "noFilterMatch": "Ingen tilbud matcher disse filtre.",
+    "offerSingular": "tilbud",
+    "offerPlural": "tilbud",
+    "ofFilter": "af {{count}}"
   }
 }

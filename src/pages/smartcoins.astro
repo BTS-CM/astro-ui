@@ -39,8 +39,14 @@ function trimSnapshot(bitassets, assets, issuers) {
 				base: { amount: b.settlement_price.base.amount },
 				quote: { amount: b.settlement_price.quote.amount },
 			},
-			settlement_fund: b.settlement_fund,
-			options: { short_backing_asset: b.options.short_backing_asset },
+		settlement_fund: b.settlement_fund,
+		options: {
+			short_backing_asset: b.options.short_backing_asset,
+			extensions: {
+				// Black swan recovery method; absent predates BSRM and behaves as 0.
+				black_swan_response_method: b.options?.extensions?.black_swan_response_method ?? 0,
+			},
+		},
 		};
 	});
 

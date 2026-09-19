@@ -5,6 +5,26 @@
     "noResults": "활성 크레딧 제안이 없습니다.",
     "noResultsDesc": "현재 활성화된 크레딧 제안이 없습니다. ",
     "create": "크레딧 제안 생성",
-    "acceptedCollateral": "허용 담보"
+    "acceptedCollateral": "허용 담보",
+    "filterLendingAsset": "대출 자산",
+    "filterCollateralAsset": "담보 자산",
+    "filterAll": "전체",
+    "sortLabel": "정렬",
+    "sortNone": "기본 순서",
+    "sortIdAsc": "ID (오름차순)",
+    "sortIdDesc": "ID (내림차순)",
+    "sortAmountAsc": "대출 금액 (적은 순)",
+    "sortAmountDesc": "대출 금액 (많은 순)",
+    "sortFeeAsc": "수수료 금액 (낮은 순)",
+    "sortFeeDesc": "수수료 금액 (높은 순)",
+    "sortRepayAsc": "상환 기간 (짧은 순)",
+    "sortRepayDesc": "상환 기간 (긴 순)",
+    "sortValidityAsc": "남은 유효 기간 (짧은 순)",
+    "sortValidityDesc": "남은 유효 기간 (긴 순)",
+    "clearFilters": "초기화",
+    "noFilterMatch": "이 필터와 일치하는 제안이 없습니다.",
+    "offerSingular": "제안",
+    "offerPlural": "제안",
+    "ofFilter": "{{count}}개 중"
   }
 }

@@ -5,6 +5,26 @@
     "noResults": "有効なクレジット オファーが見つかりません。",
     "noResultsDesc": "現在、有効なクレジット オファーはありません。",
     "create": "クレジットオファーの作成",
-    "acceptedCollateral": "受け入れ担保"
+    "acceptedCollateral": "受け入れ担保",
+    "filterLendingAsset": "貸付資産",
+    "filterCollateralAsset": "担保資産",
+    "filterAll": "すべて",
+    "sortLabel": "並び替え",
+    "sortNone": "デフォルトの順序",
+    "sortIdAsc": "ID（昇順）",
+    "sortIdDesc": "ID（降順）",
+    "sortAmountAsc": "貸付金額（少ない順）",
+    "sortAmountDesc": "貸付金額（多い順）",
+    "sortFeeAsc": "手数料金額（安い順）",
+    "sortFeeDesc": "手数料金額（高い順）",
+    "sortRepayAsc": "返済期間（短い順）",
+    "sortRepayDesc": "返済期間（長い順）",
+    "sortValidityAsc": "残り有効期間（短い順）",
+    "sortValidityDesc": "残り有効期間（長い順）",
+    "clearFilters": "クリア",
+    "noFilterMatch": "これらのフィルターに一致するオファーはありません。",
+    "offerSingular": "オファー",
+    "offerPlural": "オファー",
+    "ofFilter": "{{count}}件中"
   }
 }
