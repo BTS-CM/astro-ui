@@ -1,5 +1,8 @@
 {
     "proceedToTrade": "貿易",
+  "marketLimitOrder": "指値注文（現物）",
+  "instantTrade": "インスタント取引",
+  "simpleSwap": "シンプル交換",
     "creditBorrow": "借りる",
     "creditLend": "貸す",
     "proceedToBorrow": "問題",

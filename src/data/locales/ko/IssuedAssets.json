@@ -1,5 +1,8 @@
 {
     "proceedToTrade": "거래",
+  "marketLimitOrder": "시장 지정가 주문",
+  "instantTrade": "즉시 거래",
+  "simpleSwap": "간편 스왑",
     "creditBorrow": "빌리다",
     "creditLend": "빌려주다",
     "proceedToBorrow": "문제",

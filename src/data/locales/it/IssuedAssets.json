@@ -1,5 +1,8 @@
 {
     "proceedToTrade": "Commercio",
+  "marketLimitOrder": "Ordine limite di mercato",
+  "instantTrade": "Trading istantaneo",
+  "simpleSwap": "Scambio semplice",
     "creditBorrow": "Prestito",
     "creditLend": "Prestare",
     "proceedToBorrow": "Problema",

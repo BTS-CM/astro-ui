@@ -92,59 +92,62 @@ const $favouritePairs = persistentMap<StoredPairs>(
 );
 
 function addFavouriteAsset(chain: string, asset: Asset) {
-  const assets = $favouriteAssets.get()[chain];
+  const assets = $favouriteAssets.get()[chain] ?? [];
   if (assets.find((a) => a.id === asset.id)) {
     return; // already exists
   }
-  assets.push(asset);
-  $favouriteAssets.set({ ...$favouriteAssets.get(), [chain]: assets });
+  // Copy the array: mutating in place keeps the same reference, so memoised
+  // selectors (and react-window rows) bail out and the star never updates
+  // until an unrelated re-render happens.
+  $favouriteAssets.set({ ...$favouriteAssets.get(), [chain]: [...assets, asset] });
 }
 
 function removeFavouriteAsset(chain: string, asset: Asset) {
-  const assets = $favouriteAssets.get()[chain];
-  const index = assets.findIndex((a) => a.id === asset.id);
-  if (index === -1) {
+  const assets = $favouriteAssets.get()[chain] ?? [];
+  if (!assets.some((a) => a.id === asset.id)) {
     return; // not found
   }
-  assets.splice(index, 1);
-  $favouriteAssets.set({ ...$favouriteAssets.get(), [chain]: assets });
+  $favouriteAssets.set({
+    ...$favouriteAssets.get(),
+    [chain]: assets.filter((a) => a.id !== asset.id),
+  });
 }
 
 function addFavouriteUser(chain: string, user: User) {
-  const users = $favouriteUsers.get()[chain];
+  const users = $favouriteUsers.get()[chain] ?? [];
   if (users.find((u) => u.id === user.id)) {
     return; // already exists
   }
-  users.push(user);
-  $favouriteUsers.set({ ...$favouriteUsers.get(), [chain]: users });
+  $favouriteUsers.set({ ...$favouriteUsers.get(), [chain]: [...users, user] });
 }
 
 function removeFavouriteUser(chain: string, user: User) {
-  const users = $favouriteUsers.get()[chain];
-  const index = users.findIndex((u) => u.id === user.id);
-  if (index === -1) {
+  const users = $favouriteUsers.get()[chain] ?? [];
+  if (!users.some((u) => u.id === user.id)) {
     return; // not found
   }
-  users.splice(index, 1);
-  $favouriteUsers.set({ ...$favouriteUsers.get(), [chain]: users });
+  $favouriteUsers.set({
+    ...$favouriteUsers.get(),
+    [chain]: users.filter((u) => u.id !== user.id),
+  });
 }
 
 function addFavouritePair(chain: string, pair: MarketPair) {
   if (!pair || !pair.includes("_")) return;
-  const pairs = $favouritePairs.get()[chain];
+  const pairs = $favouritePairs.get()[chain] ?? [];
   const normalized = pair.toUpperCase();
   if (pairs.includes(normalized)) return; // already exists
-  pairs.push(normalized);
-  $favouritePairs.set({ ...$favouritePairs.get(), [chain]: pairs });
+  $favouritePairs.set({ ...$favouritePairs.get(), [chain]: [...pairs, normalized] });
 }
 
 function removeFavouritePair(chain: string, pair: MarketPair) {
-  const pairs = $favouritePairs.get()[chain];
+  const pairs = $favouritePairs.get()[chain] ?? [];
   const normalized = pair.toUpperCase();
-  const index = pairs.indexOf(normalized);
-  if (index === -1) return; // not found
-  pairs.splice(index, 1);
-  $favouritePairs.set({ ...$favouritePairs.get(), [chain]: pairs });
+  if (!pairs.includes(normalized)) return; // not found
+  $favouritePairs.set({
+    ...$favouritePairs.get(),
+    [chain]: pairs.filter((p) => p !== normalized),
+  });
 }
 
 export {

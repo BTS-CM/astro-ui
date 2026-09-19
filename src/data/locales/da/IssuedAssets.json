@@ -1,5 +1,8 @@
 {
     "proceedToTrade": "Handle",
+  "marketLimitOrder": "Markeds-limitordre",
+  "instantTrade": "Øjeblikkelig handel",
+  "simpleSwap": "Simpel aktivbytte",
     "creditBorrow": "Låne",
     "creditLend": "Låne",
     "proceedToBorrow": "Spørgsmål",

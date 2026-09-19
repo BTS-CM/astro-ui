@@ -1,5 +1,8 @@
 {
     "proceedToTrade": "Kaubandus",
+  "marketLimitOrder": "Turu limiitorder",
+  "instantTrade": "Kiirkauplemine",
+  "simpleSwap": "Lihtne varavahetus",
     "creditBorrow": "Laena",
     "creditLend": "Laenama",
     "proceedToBorrow": "probleem",

@@ -1,5 +1,8 @@
 {
     "proceedToTrade": "ซื้อขาย",
+  "marketLimitOrder": "คำสั่งลิมิตตลาด",
+  "instantTrade": "การเทรดทันที",
+  "simpleSwap": "การสลับสินทรัพย์แบบง่าย",
     "creditBorrow": "ยืม",
     "creditLend": "ให้ยืม",
     "proceedToBorrow": "ปัญหา",

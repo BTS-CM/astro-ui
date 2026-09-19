@@ -164,7 +164,7 @@ function extractAssetIdNumber(assetId) {
 }
 
 
-function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain, currentUser, currentNode }) {
+function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain, currentUser, currentNode, poolBySymbol }) {
     const [viewJSON, setViewJSON] = useState(false);
     const [json, setJSON] = useState();
     const [showWarnings, setShowWarnings] = useState(false);
@@ -212,6 +212,16 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
     };
 
     const accent = getAccentColor();
+
+    const marketCounter =
+      parsedDescription && parsedDescription.market
+        ? parsedDescription.market
+        : "BTS";
+    const dexHref = `/dex.html?market=${issuedAsset.symbol}_${marketCounter}`;
+    const instantTradeHref = `/instant_trade.html?market=${issuedAsset.symbol}_${marketCounter}`;
+    const swapPoolId = poolBySymbol
+      ? poolBySymbol.get(issuedAsset.symbol) ?? null
+      : null;
 
     const issueThingsRow = (
       <div className="flex items-center gap-2 flex-wrap">
@@ -274,18 +284,26 @@ function IssuedAssetRow({ index, style, relevantAssets, dynamicData, bitassetDat
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <a
-              href={`/dex.html?market=${issuedAsset.symbol}_${
-                parsedDescription && parsedDescription.market
-                  ? parsedDescription.market
-                  : "BTS"
-              }`}
-            >
+            <a href={dexHref}>
               <DropdownMenuItem>
                 <ArrowRight className="h-3.5 w-3.5 mr-2" />
-                {t("IssuedAssets:proceedToTrade")}
+                {t("IssuedAssets:marketLimitOrder", { defaultValue: "Market limit order" })}
               </DropdownMenuItem>
             </a>
+            <a href={instantTradeHref}>
+              <DropdownMenuItem>
+                <ArrowRight className="h-3.5 w-3.5 mr-2" />
+                {t("IssuedAssets:instantTrade", { defaultValue: "Instant trade" })}
+              </DropdownMenuItem>
+            </a>
+            {swapPoolId ? (
+              <a href={`/swap.html?pool=${swapPoolId}`}>
+                <DropdownMenuItem>
+                  <ArrowRight className="h-3.5 w-3.5 mr-2" />
+                  {t("IssuedAssets:simpleSwap", { defaultValue: "Simple asset swap" })}
+                </DropdownMenuItem>
+              </a>
+            ) : null}
             <a
               href={`/borrow.html?tab=searchOffers&searchTab=borrow&searchText=${issuedAsset.symbol}`}
             >
@@ -509,7 +527,7 @@ export default function IssuedAssets(properties) {
 
   useInitCache(_chain ?? "bitshares", []);
 
-  const { _assetsBTS, _assetsTEST } = properties;
+  const { _assetsBTS, _assetsTEST, _poolsBTS, _poolsTEST } = properties;
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -517,6 +535,25 @@ export default function IssuedAssets(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
+
+  // Map asset symbol -> first liquidity pool id containing it, for the
+  // "simple asset swap" user action.
+  const poolBySymbol = useMemo(() => {
+    const pools = _chain !== "bitshares" ? _poolsTEST : _poolsBTS;
+    const map = new Map();
+    if (Array.isArray(pools)) {
+      for (const pool of pools) {
+        if (!pool || !pool.id) continue;
+        if (pool.asset_a_symbol && !map.has(pool.asset_a_symbol)) {
+          map.set(pool.asset_a_symbol, pool.id);
+        }
+        if (pool.asset_b_symbol && !map.has(pool.asset_b_symbol)) {
+          map.set(pool.asset_b_symbol, pool.id);
+        }
+      }
+    }
+    return map;
+  }, [_chain, _poolsBTS, _poolsTEST]);
 
   const [issuedAssets, setIssuedAssets] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -933,7 +970,7 @@ export default function IssuedAssets(properties) {
     activeTab,
   ]);
 
-  const assetRowProps = useMemo(() => ({ relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain: _chain, currentUser: usr, currentNode }), [relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, _chain, usr, currentNode]);
+  const assetRowProps = useMemo(() => ({ relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, chain: _chain, currentUser: usr, currentNode, poolBySymbol }), [relevantAssets, dynamicData, bitassetData, priceFeederAccounts, t, activeTab, assets, _chain, usr, currentNode, poolBySymbol]);
 
   // Force react-window rows to remount on account/chain switch so reused row
   // instances never carry the previous account's state or asset shape.

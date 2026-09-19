@@ -16,22 +16,17 @@ import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Empty,
   EmptyContent,
@@ -41,22 +36,25 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import {
-  ChevronUpIcon,
-  ChevronDownIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
   StarIcon,
   StarFilledIcon,
 } from "@radix-ui/react-icons";
 
-import { Wallet, ArrowLeftRight, Droplets } from "lucide-react";
+import { Wallet } from "lucide-react";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useAccountBalancesLive } from "@/hooks/useChainObjectsLive";
 import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
+import AssetIssuerActions from "./AssetIssuerActions.jsx";
+import ForceSettleDialog from "./common/ForceSettleDialog.jsx";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
-import { $currentNodeUrl } from "@/stores/node.ts";
+import { $currentNode, $currentNodeUrl } from "@/stores/node.ts";
 import {
   $favouriteAssets,
   addFavouriteAsset,
@@ -64,42 +62,105 @@ import {
 } from "@/stores/favourites.ts";
 
 import { humanReadableFloat } from "@/lib/common";
-import { cn } from "@/lib/utils";
 
-function RowHyperlink({
-  id,
-  share_asset_symbol,
-  asset_a_symbol,
-  asset_b_symbol,
-}) {
+function BalanceActionsSelect({ symbol, assetId, isSmartcoin, hasBalance, onForceSettle, t }) {
+  const counterSymbol = symbol === "BTS" ? "HONEST.USD" : "BTS";
+  const dexHref = `/dex.html?market=${symbol}_${counterSymbol}`;
+  const instantTradeHref = `/instant_trade.html?market=${symbol}_${counterSymbol}`;
+  const transferHref = `/transfer.html`;
+  const smartcoinHref = `/smartcoin.html?id=${assetId}`;
+
+  const itemCls =
+    "cursor-pointer transition-colors data-[highlighted]:bg-[hsl(var(--accent-1)/0.12)] data-[highlighted]:text-[hsl(var(--accent-1-fg))]";
   return (
-    <div className="grid grid-cols-10 text-foreground/70">
-      <div className="col-span-1">
-        <p>{id}</p>
-      </div>
-      <div className="col-span-3">
-        <p>{share_asset_symbol}</p>
-      </div>
-      <div className="col-span-3">
-        <p>{asset_a_symbol}</p>
-      </div>
-      <div className="col-span-3">
-        <p>{asset_b_symbol}</p>
-      </div>
-    </div>
+    <Select
+      onValueChange={(href) => {
+        if (!href) return;
+        if (href === "__force_settle__") {
+          if (onForceSettle) onForceSettle();
+          return;
+        }
+        window.location.href = href;
+      }}
+    >
+      <SelectTrigger
+        size="sm"
+        className="h-8 gap-1.5 px-3 rounded-full border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))]"
+      >
+        <SelectValue
+          placeholder={t("IssuedAssets:userActions", {
+            defaultValue: "User Actions",
+          })}
+        />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={dexHref} className={itemCls}>
+          {t("PortfolioTabs:dexLimitOrder", { defaultValue: "DEX limit order" })}
+        </SelectItem>
+        <SelectItem value={instantTradeHref} className={itemCls}>
+          {t("PortfolioTabs:instantTrade", { defaultValue: "Instant trade" })}
+        </SelectItem>
+        <SelectItem value={transferHref} className={itemCls}>
+          {t("PortfolioTabs:transferAction", { defaultValue: "Transfer" })}
+        </SelectItem>
+        {isSmartcoin ? (
+          <>
+            <SelectSeparator />
+            <SelectItem value={smartcoinHref} className={itemCls}>
+              {t("PortfolioTabs:manageDebt", { defaultValue: "Manage debt" })}
+            </SelectItem>
+            {hasBalance ? (
+              <SelectItem value="__force_settle__" className={itemCls}>
+                {t("PortfolioTabs:forceSettle", { defaultValue: "Force settle" })}
+              </SelectItem>
+            ) : null}
+          </>
+        ) : null}
+      </SelectContent>
+    </Select>
   );
 }
 
-const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, assets, chainFavourites, pools, _chain, t }) {
+const SortHeaderButton = memo(function SortHeaderButton({
+  columnKey,
+  label,
+  sortType,
+  sortDirection,
+  onSort,
+  style,
+  align = "left",
+}) {
+  const active = sortType === columnKey;
+  return (
+    <button
+      type="button"
+      onClick={() => onSort(columnKey)}
+      title={label}
+      aria-label={label}
+      className={`flex items-center gap-1 min-w-0 text-[10px] uppercase tracking-wide transition-colors cursor-pointer bg-transparent border-0 p-0 ${
+        align === "right" ? "justify-end text-right" : "text-left"
+      } ${active ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+      style={style}
+    >
+      <span className="truncate">{label}</span>
+      {active && sortDirection === "asc" ? (
+        <ArrowUpIcon className="h-3 w-3 shrink-0" />
+      ) : null}
+      {active && sortDirection === "desc" ? (
+        <ArrowDownIcon className="h-3 w-3 shrink-0" />
+      ) : null}
+    </button>
+  );
+});
+
+const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, assetMap, favouriteIds, _chain, usr, currentNode, assets, t }) {
   const rowBalance = sortedUserBalances[index];
-  const currentAsset = assets.find(
-    (asset) => asset.id === rowBalance.asset_id
-  ) || {
+  const currentAsset = assetMap.get(rowBalance.asset_id) || {
     symbol: rowBalance.asset_id,
     precision: 5,
   };
 
-  const isFavourited = currentAsset && currentAsset.id ? chainFavourites.some((a) => a.id === currentAsset.id) : false;
+  const isFavourited = currentAsset.id ? favouriteIds.has(currentAsset.id) : false;
 
   const onToggleFavourite = () => {
     if (!currentAsset || !currentAsset.id) return;
@@ -122,91 +183,127 @@ const BalanceRow = memo(function BalanceRow({ index, style, sortedUserBalances, 
     minimumFractionDigits: currentAsset.precision,
   });
 
-  const relevantPools = pools.filter(
-    (pool) =>
-      pool.asset_a_symbol === currentAsset.symbol ||
-      pool.asset_b_symbol === currentAsset.symbol
+  const humanBalance = humanReadableFloat(
+    rowBalance.amount,
+    currentAsset.precision
   );
 
   const isZeroBalance = Number(rowBalance.amount) === 0;
 
-  const rightContents = (
-    <>
-      <a
-        href={`/dex.html?market=${currentAsset.symbol}_${
-          currentAsset.symbol === "BTS" ? "HONEST.USD" : "BTS"
-        }`}
-      >
-        <Button variant="outline" className="mr-2 h-8 gap-1.5 px-3 rounded-full border border-[hsl(var(--accent-1)/0.3)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.1)] hover:text-[hsl(var(--accent-1-fg))]">
-          <ArrowLeftRight className="h-3.5 w-3.5" />
-          {t("PortfolioTabs:tradeButton")}
-        </Button>
-      </a>
-    </>
+  const isSmartcoin = Boolean(currentAsset.bitasset_data_id);
+  const isIssuer = Boolean(
+    usr && usr.id && currentAsset.issuer && usr.id === currentAsset.issuer
   );
 
-  return (
-    <div style={{ ...style, paddingBottom: "10px", overflow: "hidden" }}>
-      <Card className="py-0 gap-0 h-full overflow-hidden justify-center bg-card/60 border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all">
-        <div className="grid grid-cols-6">
-          <div className="col-span-4 md:col-span-2 text-left">
-            <CardHeader className="pt-3 pb-3">
-              <CardTitle className="flex items-center gap-2" title={`${t("PoolStake:id")}: ${currentAsset.id}`}>
-                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--accent-1)/0.3)] bg-[hsl(var(--accent-1)/0.15)] text-xs font-bold text-[hsl(var(--accent-1-fg))]">
-                  {(currentAsset.symbol || "?").charAt(0)}
-                </span>
-                <span className="font-semibold">{currentAsset.symbol}</span>
-                <span className="text-xs font-mono font-normal text-muted-foreground/50">{currentAsset.id}</span>
-              </CardTitle>
-          <CardDescription className="text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={onToggleFavourite}
-                    aria-label={isFavourited ? "Unfavourite" : "Favourite"}
-                    title={isFavourited ? "Unfavourite" : "Favourite"}
-                    className="p-0 m-0 inline-flex items-center"
-                  >
-                    {isFavourited ? (
-                      <StarFilledIcon className="h-4 w-4 text-[hsl(var(--accent-warning-fg))]" />
-                    ) : (
-                      <StarIcon className="h-4 w-4 text-muted-foreground/60" />
-                    )}
-                  </button>
+  // The balances page asset collection strips `options` (content schema),
+  // but AssetIssuerActions reads `asset.options` during render. Fetch the
+  // full asset object for issuer-owned rows only before mounting it.
+  const [fullAsset, setFullAsset] = useState(null);
+  useEffect(() => {
+    if (!isIssuer || !currentAsset.id) {
+      setFullAsset(null);
+      return;
+    }
+    let cancelled = false;
+    const store = createObjectStore([
+      _chain,
+      JSON.stringify([currentAsset.id]),
+    ]);
+    const unsubscribe = store.subscribe(({ data, error, loading }) => {
+      if (cancelled || loading || error) return;
+      if (data && data.length && data[0] && data[0].options) {
+        setFullAsset(data[0]);
+      }
+    });
+    return () => {
+      cancelled = true;
+      if (typeof unsubscribe === "function") {
+        try {
+          unsubscribe();
+        } catch {}
+      }
+    };
+  }, [isIssuer, currentAsset.id, _chain]);
 
-                  <span
-                    title={t("PortfolioTabs:liquidAmount", {
-                      amount: readableBalance,
-                    })}
-                    className={
-                      isZeroBalance
-                        ? "text-sm text-muted-foreground"
-                        : "text-sm font-semibold text-[hsl(var(--accent-1-fg))]"
-                    }
-                  >
-                    {readableBalance}
-                  </span>
-                  {relevantPools.length ? (
-                    <Badge
-                      variant="outline"
-                      title={`${relevantPools.length}`}
-                      className="border-[hsl(var(--accent-2)/0.3)] bg-[hsl(var(--accent-2)/0.1)] text-[hsl(var(--accent-2-fg))] text-[10px] px-1.5 py-0"
-                    >
-                      <Droplets className="h-3 w-3 mr-0.5" />
-                      {relevantPools.length}
-                    </Badge>
-                  ) : null}
-                </div>
-              </CardDescription>
-            </CardHeader>
+  const [showForceSettle, setShowForceSettle] = useState(false);
+
+  return (
+    <div style={{ ...style, paddingBottom: "8px", paddingRight: "2px", overflow: "hidden" }}>
+      <Card className="py-0 gap-0 h-full overflow-hidden justify-center bg-card/60 border-border hover:bg-[hsl(var(--accent-1)/0.03)] hover:border-[hsl(var(--accent-1)/0.2)] transition-all">
+        <CardContent className="p-0 h-full">
+          <div className="flex items-center gap-2 px-3 h-full min-h-[52px]">
+            <button
+              onClick={onToggleFavourite}
+              aria-label={isFavourited ? "Unfavourite" : "Favourite"}
+              title={isFavourited ? "Unfavourite" : "Favourite"}
+              className="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full hover:bg-accent/60 transition-colors"
+            >
+              {isFavourited ? (
+                <StarFilledIcon className="h-4 w-4 text-[hsl(var(--accent-warning-fg))]" />
+              ) : (
+                <StarIcon className="h-4 w-4 text-muted-foreground/60" />
+              )}
+            </button>
+            <div className="min-w-0 truncate text-left" style={{ flex: "1 1 30%" }} title={currentAsset.symbol}>
+              <span className="text-sm font-semibold truncate block text-left">{currentAsset.symbol}</span>
+            </div>
+            <div className="min-w-0 truncate text-left" style={{ flex: "1 1 25%" }} title={`${t("PoolStake:id")}: ${currentAsset.id}`}>
+              <span className="text-xs font-mono text-muted-foreground truncate block text-left">{currentAsset.id}</span>
+            </div>
+            <div className="min-w-0 truncate text-left" style={{ flex: "1 1 25%" }}>
+              <span
+                title={t("PortfolioTabs:liquidAmount", {
+                  amount: readableBalance,
+                })}
+                className={
+                  isZeroBalance
+                    ? "text-sm font-mono tabular-nums text-muted-foreground truncate block text-left"
+                    : "text-sm font-mono tabular-nums font-semibold text-[hsl(var(--accent-1-fg))] truncate block text-left"
+                }
+              >
+                {readableBalance}
+              </span>
+            </div>
+            <div className="shrink-0 flex justify-start items-center gap-2" style={{ flex: "0 0 auto" }}>
+              <BalanceActionsSelect
+                symbol={currentAsset.symbol}
+                assetId={currentAsset.id}
+                isSmartcoin={isSmartcoin}
+                hasBalance={!isZeroBalance}
+                onForceSettle={() => setShowForceSettle(true)}
+                t={t}
+              />
+              {isIssuer && fullAsset ? (
+                <AssetIssuerActions
+                  asset={fullAsset}
+                  assets={assets}
+                  chain={_chain}
+                  currentUser={usr}
+                  node={currentNode}
+                  buttonVariant="outline"
+                  buttonSize="sm"
+                  className="h-8 rounded-full border-[hsl(var(--accent-2)/0.3)] text-[hsl(var(--accent-2-fg))] hover:bg-[hsl(var(--accent-2)/0.1)] hover:text-[hsl(var(--accent-2-fg))]"
+                />
+              ) : null}
+            </div>
           </div>
-          <div className="block md:hidden text-right col-span-2 mt-4 mr-4">
-            {rightContents}
-          </div>
-          <div className="hidden md:block col-span-4 text-right mt-4">
-            {rightContents}
-          </div>
-        </div>
+        </CardContent>
       </Card>
+      {showForceSettle && isSmartcoin && !isZeroBalance ? (
+        <ForceSettleDialog
+          open={showForceSettle}
+          onClose={() => setShowForceSettle(false)}
+          assetId={currentAsset.id}
+          symbol={currentAsset.symbol}
+          precision={currentAsset.precision}
+          humanBalance={humanBalance}
+          chain={_chain}
+          accountId={usr?.id}
+          username={usr?.username}
+          assets={assets}
+          nodeUrl={currentNode?.url || null}
+        />
+      ) : null}
     </div>
   );
 });
@@ -229,9 +326,10 @@ export default function PortfolioBalances({
     () => true
   );
   const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNode = useStore($currentNode);
   const favouriteAssets = useStore($favouriteAssets);
 
-  const [sortType, setSortType] = useState("default");
+  const [sortType, setSortType] = useState("id");
   const [sortDirection, setSortDirection] = useState("asc");
 
   const handleSortClick = (type) => {
@@ -239,7 +337,7 @@ export default function PortfolioBalances({
       setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortType(type);
-      // Sensible defaults per sort: alphabetical asc, amount desc, default asc
+      // Sensible defaults: name/id asc, amount desc
       setSortDirection(type === "amount" ? "desc" : "asc");
     }
   };
@@ -260,25 +358,24 @@ export default function PortfolioBalances({
     return relevantAssets;
   }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
 
-  const pools = useMemo(() => {
-    if (!_chain || (!_poolsBTS && !_poolsTEST)) return [];
-    if (_chain !== "bitshares") return _poolsTEST;
-    const relevantPools = _poolsBTS.filter((pool) => {
-      const poolShareAsset = assets.find(
-        (asset) => asset.id === pool.share_asset_id
-      );
-      if (!poolShareAsset) return false;
-      return !blocklist.users.includes(
-        toHex(sha256(utf8ToBytes(poolShareAsset.issuer)))
-      );
-    });
-    return relevantPools;
-  }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
-
   const chainFavourites = useMemo(() => {
     if (!favouriteAssets) return [];
     return favouriteAssets[_chain] ?? [];
   }, [favouriteAssets, _chain]);
+
+  // O(1) lookups per row: the old `assets.find` + `chainFavourites.some`
+  // per row made every list render O(balances x assets).
+  const assetMap = useMemo(() => {
+    const map = new Map();
+    for (const asset of assets || []) {
+      if (asset && asset.id) map.set(asset.id, asset);
+    }
+    return map;
+  }, [assets]);
+
+  const favouriteIds = useMemo(() => {
+    return new Set((chainFavourites || []).map((a) => a.id));
+  }, [chainFavourites]);
 
   useInitCache(_chain ?? "bitshares", []);
 
@@ -341,28 +438,39 @@ export default function PortfolioBalances({
     const balancesCopy = [...balances];
 
     const extractIdNumber = (assetId) => {
-      // Expect formats like "1.3.0"; fall back gracefully
+      // Sort by the trailing number after "1.3.x"
       const parts = String(assetId).split(".");
       const maybe = parseInt(parts[2] ?? parts[parts.length - 1], 10);
       return Number.isFinite(maybe) ? maybe : 0;
     };
 
+    const assetPrecision = (assetId) => {
+      return assetMap.get(assetId)?.precision ?? 5;
+    };
+
     const cmp = (a, b) => {
       let r = 0;
-      if (sortType === "alphabetical") {
-        r = a.symbol.localeCompare(b.symbol);
+      if (sortType === "symbol") {
+        r = String(a.symbol).localeCompare(String(b.symbol), undefined, {
+          sensitivity: "base",
+        });
       } else if (sortType === "amount") {
-        r = parseInt(a.amount, 10) - parseInt(b.amount, 10);
+        const aHuman =
+          Number(a.amount) / Math.pow(10, assetPrecision(a.asset_id));
+        const bHuman =
+          Number(b.amount) / Math.pow(10, assetPrecision(b.asset_id));
+        r = aHuman - bHuman;
       } else {
+        // "id": numeric compare on the x in 1.3.x
         r = extractIdNumber(a.asset_id) - extractIdNumber(b.asset_id);
       }
       return sortDirection === "asc" ? r : -r;
     };
 
     return balancesCopy.sort(cmp);
-  }, [balances, sortType, sortDirection]);
+  }, [balances, assetMap, sortType, sortDirection]);
 
-  const balanceRowProps = useMemo(() => ({ sortedUserBalances, assets, chainFavourites, pools, _chain, t }), [sortedUserBalances, assets, chainFavourites, pools, _chain, t]);
+  const balanceRowProps = useMemo(() => ({ sortedUserBalances, assetMap, favouriteIds, _chain, usr, currentNode, assets, t }), [sortedUserBalances, assetMap, favouriteIds, _chain, usr, currentNode, assets, t]);
 
   return (
     <div className="container mx-auto mt-5 mb-5 text-foreground">
@@ -388,53 +496,6 @@ export default function PortfolioBalances({
               ) : null}
             </div>
           </div>
-          <CardHeader className="pb-3 pt-5">
-            <div className="grid grid-cols-3 gap-3 mt-2">
-                <Button
-                  onClick={() => handleSortClick("default")}
-                  variant={sortType === "default" ? "" : "outline"}
-                  className={sortType === "default" ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
-                >
-                  {t("PortfolioTabs:default")}
-                  {" (ID) "}
-                  {sortType === "default" ? (
-                    sortDirection === "asc" ? (
-                      <ChevronUpIcon className="ml-2 h-4 w-4" />
-                    ) : (
-                      <ChevronDownIcon className="ml-2 h-4 w-4" />
-                    )
-                  ) : null}
-                </Button>
-                <Button
-                  onClick={() => handleSortClick("alphabetical")}
-                  variant={sortType === "alphabetical" ? "" : "outline"}
-                  className={sortType === "alphabetical" ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
-                >
-                  {t("PortfolioTabs:alphabetical")}
-                  {sortType === "alphabetical" ? (
-                    sortDirection === "asc" ? (
-                      <ChevronUpIcon className="ml-2 h-4 w-4" />
-                    ) : (
-                      <ChevronDownIcon className="ml-2 h-4 w-4" />
-                    )
-                  ) : null}
-                </Button>
-                <Button
-                  onClick={() => handleSortClick("amount")}
-                  variant={sortType === "amount" ? "" : "outline"}
-                  className={sortType === "amount" ? "border-[hsl(var(--accent-1)/0.4)] bg-[hsl(var(--accent-1)/0.1)] text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.2)]" : "border-border text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"}
-                >
-                  {t("PortfolioTabs:amount")}
-                  {sortType === "amount" ? (
-                    sortDirection === "asc" ? (
-                      <ChevronUpIcon className="ml-2 h-4 w-4" />
-                    ) : (
-                      <ChevronDownIcon className="ml-2 h-4 w-4" />
-                    )
-                  ) : null}
-                </Button>
-            </div>
-          </CardHeader>
           <CardContent className="space-y-2 text-foreground/70">
             {balancesLoading ? (
               <div className="flex items-center gap-3 text-muted-foreground">
@@ -442,16 +503,51 @@ export default function PortfolioBalances({
                 <p className="text-muted-foreground">{t("Market:loading")}</p>
               </div>
             ) : sortedUserBalances && sortedUserBalances.length ? (
-              <div className="w-full h-[500px]">
-                <List
-                  rowComponent={BalanceRow}
-                  rowCount={sortedUserBalances.length}
-                  rowHeight={80}
-                  height={500}
-                  width="100%"
-                  rowProps={balanceRowProps}
-                />
-              </div>
+              <>
+                <div className="flex items-center gap-2 px-3 pb-2 mb-1 border-b border-border/60">
+                  <div className="shrink-0 w-7" aria-hidden="true" />
+                  <SortHeaderButton
+                    columnKey="symbol"
+                    label={t("PortfolioTabs:nameHeader", { defaultValue: "Name" })}
+                    sortType={sortType}
+                    sortDirection={sortDirection}
+                    onSort={handleSortClick}
+                    style={{ flex: "1 1 30%" }}
+                  />
+                  <SortHeaderButton
+                    columnKey="id"
+                    label={t("PortfolioTabs:idHeader", { defaultValue: "ID" })}
+                    sortType={sortType}
+                    sortDirection={sortDirection}
+                    onSort={handleSortClick}
+                    style={{ flex: "1 1 25%" }}
+                  />
+                  <SortHeaderButton
+                    columnKey="amount"
+                    label={t("PortfolioTabs:amountHeader", { defaultValue: "Amount" })}
+                    sortType={sortType}
+                    sortDirection={sortDirection}
+                    onSort={handleSortClick}
+                    style={{ flex: "1 1 25%" }}
+                  />
+                  <div
+                    className="shrink-0 text-[10px] uppercase tracking-wide text-muted-foreground text-left"
+                    style={{ flex: "0 0 auto" }}
+                  >
+                    {t("PortfolioTabs:actionsHeader")}
+                  </div>
+                </div>
+                <div className="w-full h-[500px]">
+                  <List
+                    rowComponent={BalanceRow}
+                    rowCount={sortedUserBalances.length}
+                    rowHeight={60}
+                    height={500}
+                    width="100%"
+                    rowProps={balanceRowProps}
+                  />
+                </div>
+              </>
             ) : (
               <Empty className="mt-2 border border-border/60 rounded-xl bg-[hsl(var(--accent-1)/0.04)]">
                 <EmptyHeader>

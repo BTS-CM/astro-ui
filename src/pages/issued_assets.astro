@@ -9,8 +9,13 @@ import PageFooter from '../components/PageFooter';
 const btsAllAssets = await getCollection('btsAllAssets');
 const testAllAssets = await getCollection('testAllAssets');
 
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
 const btsAssets = btsAllAssets.map(collection => collection.data);
 const testAssets = testAllAssets.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares - Issued Asset Overview">
@@ -20,6 +25,8 @@ const testAssets = testAllAssets.map(collection => collection.data);
 			client:only="react"
 			_assetsBTS={btsAssets}
 			_assetsTEST={testAssets}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/issued_assets.astro" />
 	</main>
