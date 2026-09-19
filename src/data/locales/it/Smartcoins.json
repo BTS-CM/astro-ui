@@ -65,5 +65,10 @@
   "ofFilter": "di {{count}}",
   "minimumCollateral": "Garanzia minima",
   "sortMinCollateralAsc": "Garanzia minima (crescente)",
-  "sortMinCollateralDesc": "Garanzia minima (decrescente)"
+  "sortMinCollateralDesc": "Garanzia minima (decrescente)",
+  "globallySettledBadge": "Regolato globalmente — prestito disabilitato",
+  "biddingDisabledBadge": "Offerte di garanzia disabilitate",
+  "viewSettlement": "Visualizza regolamento",
+  "showSettledTitle": "Mostra asset in regolamento globale ({{count}} nascosti)",
+  "hideSettledTitle": "Nascondi asset in regolamento globale"
 }

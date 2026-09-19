@@ -65,5 +65,10 @@
   "ofFilter": "von {{count}}",
   "minimumCollateral": "Mindestsicherheit",
   "sortMinCollateralAsc": "Mindestsicherheit (niedrigste zuerst)",
-  "sortMinCollateralDesc": "Mindestsicherheit (höchste zuerst)"
+  "sortMinCollateralDesc": "Mindestsicherheit (höchste zuerst)",
+  "globallySettledBadge": "Global abgewickelt — Ausleihen deaktiviert",
+  "biddingDisabledBadge": "Deaktivierte Sicherheitengebote",
+  "viewSettlement": "Abwicklung anzeigen",
+  "showSettledTitle": "Global abgewickelte Assets anzeigen ({{count}} ausgeblendet)",
+  "hideSettledTitle": "Global abgewickelte Assets ausblenden"
 }

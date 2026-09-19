@@ -99,5 +99,9 @@
   "reviveNotEnough": "see pakkumine üksi ei taastaks {{asset}}.",
   "marketBuyTitle": "Osta {{asset}} {{collateral}} eest",
   "bidCollateralRatio": "≈ {{ratio}}x tagatis ({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "alla nõutud tagatise"
+  "bidBelowReviveRatio": "alla nõutud tagatise",
+  "biddingDisabledTitle": "Pakkumine keelatud",
+  "biddingDisabledMessage": "{{symbol}} võlale pakkumine on vara omaniku poolt keelatud, seega ei saa uusi tagatispakkumisi teha. {{symbol}} saab taastuda ainult automaatselt — kui feed-hind tõuseb automaatsest taastumishinnast kõrgemale või kui kogu tasumata võlg on sundarveldatud.",
+  "bsrmTitle": "Musta luige taastumismeetod",
+  "holderNoBalance": "Sul ei ole {{asset}}, seega pole sundarveldus võimalik enne, kui oled neid omandanud."
 }

@@ -15,6 +15,8 @@ import {
   ChevronUp,
   ChevronDown,
   AlertTriangle,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
@@ -342,6 +344,15 @@ export default function SettlementBids() {
     selectedBsrm !== "all" ||
     selectedBidding !== "enabled";
 
+  // Header eye toggle: by default bidding-disabled assets are hidden
+  // (selectedBidding === "enabled", current behaviour). Clicking the eye
+  // reveals them (selectedBidding -> "all") without losing the fine-grained
+  // dropdown below. Rows stay badged via the existing warning line.
+  const showingDisabled = selectedBidding !== "enabled";
+  const toggleShowingDisabled = useCallback(() => {
+    setSelectedBidding((prev) => (prev !== "enabled" ? "enabled" : "all"));
+  }, []);
+
   const assetById = useMemo(() => {
     const map = new Map();
     if (assets && assets.length) {
@@ -462,6 +473,16 @@ export default function SettlementBids() {
     return result;
   }, [visibleSmartcoins, assetById, issuerById, searchQuery, selectedIssuer, selectedBsrm, selectedBidding, sortType, sortDirection]);
 
+  const hiddenDisabledCount = useMemo(() => {
+    let n = 0;
+    for (const bitasset of visibleSmartcoins ?? []) {
+      if (isCollateralBiddingDisabled(assetById.get(bitasset?.asset_id))) {
+        n += 1;
+      }
+    }
+    return n;
+  }, [visibleSmartcoins, assetById]);
+
   const rowProps = useMemo(() => ({ rows, t }), [rows, t]);
 
   // Disabled rows carry an extra warning line — size them taller while
@@ -496,18 +517,49 @@ export default function SettlementBids() {
         />
 
         <div className="relative p-5 sm:p-6">
-          <div className="flex items-start gap-3 mb-5">
-            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(var(--accent-1)/0.25)] to-[hsl(var(--accent-3)/0.25)] border border-[hsl(var(--accent-1)/0.25)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.15)]">
-              <Gavel className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" strokeWidth={2.25} />
-            </span>
-            <div className="min-w-0">
-              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
-                {t("SettlementBids:title")}
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t("SettlementBids:description")}
-              </p>
+          <div className="flex items-start justify-between gap-3 mb-5">
+            <div className="flex items-start gap-3 min-w-0">
+              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(var(--accent-1)/0.25)] to-[hsl(var(--accent-3)/0.25)] border border-[hsl(var(--accent-1)/0.25)] shadow-[0_0_18px_-2px_hsl(var(--accent-1)/0.15)]">
+                <Gavel className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" strokeWidth={2.25} />
+              </span>
+              <div className="min-w-0">
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+                  {t("SettlementBids:title")}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("SettlementBids:description")}
+                </p>
+              </div>
             </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleShowingDisabled}
+              aria-pressed={showingDisabled}
+              title={
+                showingDisabled
+                  ? t("SettlementBids:hideDisabledTitle", { defaultValue: "Hide assets with disabled collateral bidding" })
+                  : t("SettlementBids:showDisabledTitle", {
+                      defaultValue: hiddenDisabledCount > 0
+                        ? `Show assets with disabled collateral bidding (${hiddenDisabledCount} hidden)`
+                        : "Show assets with disabled collateral bidding",
+                      count: hiddenDisabledCount,
+                    })
+              }
+              aria-label={
+                showingDisabled
+                  ? t("SettlementBids:hideDisabledTitle", { defaultValue: "Hide assets with disabled collateral bidding" })
+                  : t("SettlementBids:showDisabledTitle", {
+                      defaultValue: hiddenDisabledCount > 0
+                        ? `Show assets with disabled collateral bidding (${hiddenDisabledCount} hidden)`
+                        : "Show assets with disabled collateral bidding",
+                      count: hiddenDisabledCount,
+                    })
+              }
+              className={`shrink-0 ${showingDisabled ? "border-[hsl(var(--accent-warning)/0.4)] bg-[hsl(var(--accent-warning)/0.1)] text-[hsl(var(--accent-warning-fg))]" : ""}`}
+            >
+              {showingDisabled ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+            </Button>
           </div>
 
           <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-[hsl(var(--accent-1)/0.01)] p-4 mb-5 space-y-3">

@@ -65,5 +65,10 @@
   "ofFilter": "จาก {{count}}",
   "minimumCollateral": "หลักประกันขั้นต่ำ",
   "sortMinCollateralAsc": "หลักประกันขั้นต่ำ (น้อยก่อน)",
-  "sortMinCollateralDesc": "หลักประกันขั้นต่ำ (มากก่อน)"
+  "sortMinCollateralDesc": "หลักประกันขั้นต่ำ (มากก่อน)",
+  "globallySettledBadge": "ชำระบัญชีทั่วโลกแล้ว — ปิดการยืม",
+  "biddingDisabledBadge": "การประมูลหลักประกันที่ปิดใช้งาน",
+  "viewSettlement": "ดูการชำระบัญชี",
+  "showSettledTitle": "แสดงสินทรัพย์ที่ชำระบัญชีทั่วโลกแล้ว (ซ่อนอยู่ {{count}})",
+  "hideSettledTitle": "ซ่อนสินทรัพย์ที่ชำระบัญชีทั่วโลกแล้ว"
 }

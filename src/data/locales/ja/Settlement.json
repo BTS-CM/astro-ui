@@ -99,5 +99,9 @@
   "reviveNotEnough": "この入札だけでは{{asset}}は復活しません。",
   "marketBuyTitle": "{{collateral}}で{{asset}}を購入",
   "bidCollateralRatio": "≈ {{ratio}}x 担保（{{kind}} {{required}}x）",
-  "bidBelowReviveRatio": "必要担保を下回っています"
+  "bidBelowReviveRatio": "必要担保を下回っています",
+  "biddingDisabledTitle": "入札無効",
+  "biddingDisabledMessage": "{{symbol}}の負債への入札は資産所有者により無効化されているため、新しい担保入札は行えません。{{symbol}}を復活させられるのは自動回復のみです — フィード価格が自動復活価格を上回った場合、または未返済負債のすべてが強制決済された場合です。",
+  "bsrmTitle": "ブラックスワン回復方式",
+  "holderNoBalance": "{{asset}}を保有していないため、取得するまで強制決済は利用できません。"
 }

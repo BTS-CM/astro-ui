@@ -99,5 +99,9 @@
   "reviveNotEnough": "dieses Gebot allein würde {{asset}} nicht reaktivieren.",
   "marketBuyTitle": "{{asset}} mit {{collateral}} kaufen",
   "bidCollateralRatio": "≈ {{ratio}}x Sicherheiten ({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "unter erforderlichen Sicherheiten"
+  "bidBelowReviveRatio": "unter erforderlichen Sicherheiten",
+  "biddingDisabledTitle": "Bieten deaktiviert",
+  "biddingDisabledMessage": "Das Bieten auf die Schulden von {{symbol}} ist vom Eigentümer des Assets deaktiviert, daher können keine neuen Sicherheitengebote abgegeben werden. Nur eine automatische Erholung kann {{symbol}} wiederbeleben — wenn der Feed-Preis über den automatischen Wiederbelebungspreis steigt oder sobald alle ausstehenden Schulden zwangsabgewickelt sind.",
+  "bsrmTitle": "Black-Swan-Erholungsmethode",
+  "holderNoBalance": "Du besitzt keine {{asset}}, daher ist eine Zwangsabwicklung erst möglich, wenn du welche erwirbst."
 }

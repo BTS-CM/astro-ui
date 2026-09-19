@@ -65,5 +65,10 @@
   "ofFilter": "de {{count}}",
   "minimumCollateral": "Garantia mínima",
   "sortMinCollateralAsc": "Garantia mínima (menor primeiro)",
-  "sortMinCollateralDesc": "Garantia mínima (maior primeiro)"
+  "sortMinCollateralDesc": "Garantia mínima (maior primeiro)",
+  "globallySettledBadge": "Liquidado globalmente — empréstimo desativado",
+  "biddingDisabledBadge": "Ofertas de garantia desativadas",
+  "viewSettlement": "Ver liquidação",
+  "showSettledTitle": "Mostrar ativos em liquidação global ({{count}} ocultos)",
+  "hideSettledTitle": "Ocultar ativos em liquidação global"
 }

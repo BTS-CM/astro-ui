@@ -30,5 +30,7 @@
     "biddingFilter": "Filtrer efter sikkerhedsbudgivning",
     "biddingAll": "Alle",
     "biddingDisabled": "Deaktiveret sikkerhedsbudgivning",
-    "biddingEnabled": "Aktiveret sikkerhedsbudgivning"
+    "biddingEnabled": "Aktiveret sikkerhedsbudgivning",
+  "showDisabledTitle": "Vis aktiver med deaktiveret sikkerhedsbudgivning ({{count}} skjult)",
+  "hideDisabledTitle": "Skjul aktiver med deaktiveret sikkerhedsbudgivning"
 }

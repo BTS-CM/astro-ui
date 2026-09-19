@@ -30,5 +30,7 @@
     "biddingFilter": "Filtreeri tagatispakkumiste järgi",
     "biddingAll": "Kõik",
     "biddingDisabled": "Keelatud tagatispakkumised",
-    "biddingEnabled": "Lubatud tagatispakkumised"
+    "biddingEnabled": "Lubatud tagatispakkumised",
+  "showDisabledTitle": "Näita keelatud tagatispakkumistega varasid ({{count}} peidetud)",
+  "hideDisabledTitle": "Peida keelatud tagatispakkumistega varad"
 }

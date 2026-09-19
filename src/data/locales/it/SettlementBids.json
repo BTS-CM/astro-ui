@@ -30,5 +30,7 @@
     "biddingFilter": "Filtra per offerte di garanzia",
     "biddingAll": "Tutte",
     "biddingDisabled": "Offerte di garanzia disabilitate",
-    "biddingEnabled": "Offerte di garanzia abilitate"
+    "biddingEnabled": "Offerte di garanzia abilitate",
+  "showDisabledTitle": "Mostra asset con offerte di garanzia disabilitate ({{count}} nascosti)",
+  "hideDisabledTitle": "Nascondi asset con offerte di garanzia disabilitate"
 }

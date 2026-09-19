@@ -99,5 +99,9 @@
   "reviveNotEnough": "questa offerta da sola non riattiverebbe {{asset}}.",
   "marketBuyTitle": "Acquista {{asset}} con {{collateral}}",
   "bidCollateralRatio": "≈ {{ratio}}x garanzia ({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "sotto la garanzia richiesta"
+  "bidBelowReviveRatio": "sotto la garanzia richiesta",
+  "biddingDisabledTitle": "Offerte disabilitate",
+  "biddingDisabledMessage": "Le offerte sul debito di {{symbol}} sono disabilitate dal proprietario dell'asset, quindi non è possibile presentare nuove offerte di garanzia. Solo il recupero automatico può far rivivere {{symbol}} — se il prezzo del feed supera il prezzo di rilancio automatico, o una volta che tutto il debito residuo viene regolato forzatamente.",
+  "bsrmTitle": "Metodo di recupero da cigno nero",
+  "holderNoBalance": "Non possiedi alcun {{asset}}, quindi il regolamento forzato non è disponibile finché non ne acquisisci."
 }

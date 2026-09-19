@@ -99,5 +99,9 @@
   "reviveNotEnough": "cette offre à elle seule ne relancerait pas {{asset}}.",
   "marketBuyTitle": "Acheter {{asset}} avec {{collateral}}",
   "bidCollateralRatio": "≈ {{ratio}}x de garantie ({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "en dessous de la garantie requise"
+  "bidBelowReviveRatio": "en dessous de la garantie requise",
+  "biddingDisabledTitle": "Enchères désactivées",
+  "biddingDisabledMessage": "Les offres sur la dette de {{symbol}} sont désactivées par le propriétaire de l'actif, donc aucune nouvelle offre de garantie ne peut être placée. Seule une reprise automatique peut relancer {{symbol}} — si le prix du feed dépasse le prix de relance automatique, ou une fois que toute la dette en cours est réglée de force.",
+  "bsrmTitle": "Méthode de reprise après cygne noir",
+  "holderNoBalance": "Vous ne détenez aucun {{asset}}, le règlement forcé est donc indisponible jusqu'à ce que vous en acquériez."
 }

@@ -99,5 +99,9 @@
   "reviveNotEnough": "이 입찰만으로는 {{asset}}가 부활하지 않습니다.",
   "marketBuyTitle": "{{collateral}}로 {{asset}} 매수",
   "bidCollateralRatio": "≈ {{ratio}}x 담보({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "필요 담보 미달"
+  "bidBelowReviveRatio": "필요 담보 미달",
+  "biddingDisabledTitle": "입찰 비활성화됨",
+  "biddingDisabledMessage": "{{symbol}} 부채에 대한 입찰은 자산 소유자가 비활성화했으므로 새로운 담보 입찰을 할 수 없습니다. {{symbol}}은 자동 복구로만 회생할 수 있습니다 — 피드 가격이 자동 회생 가격을 초과하거나, 모든 미상환 부채가 강제 청산된 경우입니다.",
+  "bsrmTitle": "블랙스완 복구 방식",
+  "holderNoBalance": "{{asset}}를 보유하고 있지 않으므로, 취득하기 전까지 강제 청산은 이용할 수 없습니다."
 }

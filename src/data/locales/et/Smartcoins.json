@@ -65,5 +65,10 @@
   "ofFilter": "kokku {{count}}",
   "minimumCollateral": "Miinimumtagatis",
   "sortMinCollateralAsc": "Miinimumtagatis (väikseim enne)",
-  "sortMinCollateralDesc": "Miinimumtagatis (suurim enne)"
+  "sortMinCollateralDesc": "Miinimumtagatis (suurim enne)",
+  "globallySettledBadge": "Globaalselt arveldatud — laenamine keelatud",
+  "biddingDisabledBadge": "Keelatud tagatispakkumised",
+  "viewSettlement": "Vaata arveldust",
+  "showSettledTitle": "Näita globaalselt arveldatud varasid ({{count}} peidetud)",
+  "hideSettledTitle": "Peida globaalselt arveldatud varad"
 }

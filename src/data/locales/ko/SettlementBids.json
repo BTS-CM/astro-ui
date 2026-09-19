@@ -30,5 +30,7 @@
     "biddingFilter": "담보 입찰별 필터",
     "biddingAll": "전체",
     "biddingDisabled": "비활성화된 담보 입찰",
-    "biddingEnabled": "활성화된 담보 입찰"
+    "biddingEnabled": "활성화된 담보 입찰",
+  "showDisabledTitle": "담보 입찰이 비활성화된 자산 표시 ({{count}}개 숨겨짐)",
+  "hideDisabledTitle": "담보 입찰이 비활성화된 자산 숨기기"
 }

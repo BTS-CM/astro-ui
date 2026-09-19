@@ -30,5 +30,7 @@
   "biddingFilter": "Filter by collateral bidding",
   "biddingAll": "All",
   "biddingDisabled": "Disabled collateral bidding",
-  "biddingEnabled": "Enabled collateral bidding"
+  "biddingEnabled": "Enabled collateral bidding",
+  "showDisabledTitle": "Show assets with disabled collateral bidding ({{count}} hidden)",
+  "hideDisabledTitle": "Hide assets with disabled collateral bidding"
 }

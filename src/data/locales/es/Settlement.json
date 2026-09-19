@@ -99,5 +99,9 @@
   "reviveNotEnough": "esta oferta por sí sola no reactivaría {{asset}}.",
   "marketBuyTitle": "Comprar {{asset}} con {{collateral}}",
   "bidCollateralRatio": "≈ {{ratio}}x garantía ({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "por debajo de la garantía requerida"
+  "bidBelowReviveRatio": "por debajo de la garantía requerida",
+  "biddingDisabledTitle": "Ofertas deshabilitadas",
+  "biddingDisabledMessage": "Las ofertas sobre la deuda de {{symbol}} están deshabilitadas por el propietario del activo, por lo que no se pueden realizar nuevas ofertas de garantía. Solo la recuperación automática puede revivir {{symbol}}: si el precio del feed supera el precio de reactivación automática, o una vez que toda la deuda pendiente sea liquidada forzosamente.",
+  "bsrmTitle": "Método de recuperación ante cisne negro",
+  "holderNoBalance": "No tienes ningún {{asset}}, por lo que la liquidación forzosa no está disponible hasta que adquieras algunos."
 }

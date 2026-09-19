@@ -65,5 +65,10 @@
   "ofFilter": "{{count}}件中",
   "minimumCollateral": "最小担保",
   "sortMinCollateralAsc": "最小担保（少ない順）",
-  "sortMinCollateralDesc": "最小担保（多い順）"
+  "sortMinCollateralDesc": "最小担保（多い順）",
+  "globallySettledBadge": "グローバル決済済み — 借入無効",
+  "biddingDisabledBadge": "無効な担保入札",
+  "viewSettlement": "決済を表示",
+  "showSettledTitle": "グローバル決済済み資産を表示（{{count}}件非表示）",
+  "hideSettledTitle": "グローバル決済済み資産を非表示"
 }

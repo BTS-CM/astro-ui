@@ -65,5 +65,10 @@
   "ofFilter": "sur {{count}}",
   "minimumCollateral": "Garantie minimale",
   "sortMinCollateralAsc": "Garantie minimale (croissante)",
-  "sortMinCollateralDesc": "Garantie minimale (décroissante)"
+  "sortMinCollateralDesc": "Garantie minimale (décroissante)",
+  "globallySettledBadge": "Réglé globalement — emprunt désactivé",
+  "biddingDisabledBadge": "Offres de garantie désactivées",
+  "viewSettlement": "Voir le règlement",
+  "showSettledTitle": "Afficher les actifs en règlement global ({{count}} masqués)",
+  "hideSettledTitle": "Masquer les actifs en règlement global"
 }

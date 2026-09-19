@@ -65,5 +65,10 @@
   "ofFilter": "{{count}}개 중",
   "minimumCollateral": "최소 담보",
   "sortMinCollateralAsc": "최소 담보 (적은 순)",
-  "sortMinCollateralDesc": "최소 담보 (많은 순)"
+  "sortMinCollateralDesc": "최소 담보 (많은 순)",
+  "globallySettledBadge": "글로벌 청산됨 — 대출 비활성화",
+  "biddingDisabledBadge": "비활성화된 담보 입찰",
+  "viewSettlement": "청산 보기",
+  "showSettledTitle": "글로벌 청산 자산 표시 ({{count}}개 숨겨짐)",
+  "hideSettledTitle": "글로벌 청산 자산 숨기기"
 }

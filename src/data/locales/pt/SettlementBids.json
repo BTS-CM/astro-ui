@@ -30,5 +30,7 @@
     "biddingFilter": "Filtrar por ofertas de garantia",
     "biddingAll": "Todas",
     "biddingDisabled": "Ofertas de garantia desativadas",
-    "biddingEnabled": "Ofertas de garantia ativadas"
+    "biddingEnabled": "Ofertas de garantia ativadas",
+  "showDisabledTitle": "Mostrar ativos com ofertas de garantia desativadas ({{count}} ocultos)",
+  "hideDisabledTitle": "Ocultar ativos com ofertas de garantia desativadas"
 }

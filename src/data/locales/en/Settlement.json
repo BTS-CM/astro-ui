@@ -99,5 +99,9 @@
   "reviveNeedsDebt": "covers debt but ~{{amount}} {{asset}} still uncovered — increase debt covered to revive.",
   "reviveNotEnough": "this bid alone would not revive {{asset}}.",
   "marketBuyTitle": "Buy {{asset}} with {{collateral}}",
-  "marketBuyDescription": "Buy it on the open market and force settle it — every settled debt brings the asset closer to automatic revival."
+  "marketBuyDescription": "Buy it on the open market and force settle it — every settled debt brings the asset closer to automatic revival.",
+  "biddingDisabledTitle": "Bidding disabled",
+  "biddingDisabledMessage": "Bidding on {{symbol}}'s debt is disabled by the asset owner, so new collateral bids cannot be placed. Only automatic recovery can revive {{symbol}} — if the feed price rises above the auto revive price, or once all outstanding debt is force settled.",
+  "bsrmTitle": "Black swan recovery method",
+  "holderNoBalance": "You don't hold any {{asset}}, so force settlement is unavailable until you acquire some."
 }

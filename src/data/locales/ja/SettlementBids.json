@@ -30,5 +30,7 @@
     "biddingFilter": "担保入札で絞り込む",
     "biddingAll": "すべて",
     "biddingDisabled": "無効な担保入札",
-    "biddingEnabled": "有効な担保入札"
+    "biddingEnabled": "有効な担保入札",
+  "showDisabledTitle": "担保入札が無効な資産を表示（{{count}}件非表示）",
+  "hideDisabledTitle": "担保入札が無効な資産を非表示"
 }

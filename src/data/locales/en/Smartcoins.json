@@ -65,5 +65,10 @@
   "ofFilter": "of {{count}}",
   "minimumCollateral": "Minimum collateral",
   "sortMinCollateralAsc": "Minimum collateral (lowest first)",
-  "sortMinCollateralDesc": "Minimum collateral (highest first)"
+  "sortMinCollateralDesc": "Minimum collateral (highest first)",
+  "globallySettledBadge": "Globally settled — borrowing disabled",
+  "biddingDisabledBadge": "Collateral bidding disabled",
+  "viewSettlement": "View settlement",
+  "showSettledTitle": "Show globally settled assets ({{count}} hidden)",
+  "hideSettledTitle": "Hide globally settled assets"
 }

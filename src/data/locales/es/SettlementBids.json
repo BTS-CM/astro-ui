@@ -30,5 +30,7 @@
     "biddingFilter": "Filtrar por ofertas de garantía",
     "biddingAll": "Todas",
     "biddingDisabled": "Ofertas de garantía deshabilitadas",
-    "biddingEnabled": "Ofertas de garantía habilitadas"
+    "biddingEnabled": "Ofertas de garantía habilitadas",
+  "showDisabledTitle": "Mostrar activos con ofertas de garantía deshabilitadas ({{count}} ocultos)",
+  "hideDisabledTitle": "Ocultar activos con ofertas de garantía deshabilitadas"
 }

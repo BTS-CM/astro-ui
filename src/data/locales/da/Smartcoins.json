@@ -65,5 +65,10 @@
   "ofFilter": "af {{count}}",
   "minimumCollateral": "Minimum sikkerhed",
   "sortMinCollateralAsc": "Minimum sikkerhed (laveste først)",
-  "sortMinCollateralDesc": "Minimum sikkerhed (højeste først)"
+  "sortMinCollateralDesc": "Minimum sikkerhed (højeste først)",
+  "globallySettledBadge": "Globalt afviklet — udlån deaktiveret",
+  "biddingDisabledBadge": "Deaktiveret sikkerhedsbudgivning",
+  "viewSettlement": "Vis afvikling",
+  "showSettledTitle": "Vis globalt afviklede aktiver ({{count}} skjult)",
+  "hideSettledTitle": "Skjul globalt afviklede aktiver"
 }

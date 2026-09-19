@@ -99,5 +99,9 @@
   "reviveNotEnough": "dette bud alene ville ikke genoplive {{asset}}.",
   "marketBuyTitle": "Køb {{asset}} med {{collateral}}",
   "bidCollateralRatio": "≈ {{ratio}}x sikkerhed ({{kind}} {{required}}x)",
-  "bidBelowReviveRatio": "under krævet sikkerhed"
+  "bidBelowReviveRatio": "under krævet sikkerhed",
+  "biddingDisabledTitle": "Budgivning deaktiveret",
+  "biddingDisabledMessage": "Budgivning på {{symbol}}s gæld er deaktiveret af aktivets ejer, så nye sikkerhedsbud kan ikke afgives. Kun automatisk genopretning kan genoplive {{symbol}} — hvis feedprisen stiger over den automatiske genoplivningspris, eller når al udestående gæld er tvangsafviklet.",
+  "bsrmTitle": "Black swan-genopretningsmetode",
+  "holderNoBalance": "Du ejer ingen {{asset}}, så tvungen afvikling er ikke mulig, før du anskaffer dig nogle."
 }

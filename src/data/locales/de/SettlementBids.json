@@ -30,5 +30,7 @@
     "biddingFilter": "Nach Sicherheitengeboten filtern",
     "biddingAll": "Alle",
     "biddingDisabled": "Deaktivierte Sicherheitengebote",
-    "biddingEnabled": "Aktivierte Sicherheitengebote"
+    "biddingEnabled": "Aktivierte Sicherheitengebote",
+  "showDisabledTitle": "Assets mit deaktivierten Sicherheitengeboten anzeigen ({{count}} ausgeblendet)",
+  "hideDisabledTitle": "Assets mit deaktivierten Sicherheitengeboten ausblenden"
 }

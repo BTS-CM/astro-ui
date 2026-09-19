@@ -1092,6 +1092,35 @@ export default function Settlement(properties) {
     }
   }, [finalAsset]);
 
+  // Configured black swan recovery method (BSRM): 0 global / 1 none /
+  // 2 individual-to-fund / 3 individual-to-order. Absent extension predates
+  // BSRM, behaves as 0.
+  const bsrmMethod = useMemo(() => {
+    const raw =
+      finalBitasset?.options?.extensions?.black_swan_response_method;
+    const parsed =
+      typeof raw === "number" ? raw : parseInt(raw ?? "0", 10);
+    return [0, 1, 2, 3].includes(parsed) ? parsed : 0;
+  }, [finalBitasset]);
+
+  const bsrmNameKey = useMemo(() => {
+    return [
+      "Smartcoin:globalSettlement",
+      "Smartcoin:noSettlement",
+      "Smartcoin:individualSettlementToFund",
+      "Smartcoin:individualSettlementToOrder",
+    ][bsrmMethod];
+  }, [bsrmMethod]);
+
+  const bsrmDetailKey = useMemo(() => {
+    return [
+      "Smartcoin:globalSettlementDetail",
+      "Smartcoin:noSettlementDetail",
+      "Smartcoin:individualSettlementToFundDetail",
+      "Smartcoin:individualSettlementToOrderDetail",
+    ][bsrmMethod];
+  }, [bsrmMethod]);
+
   // Force settling is available unless the issuer set disable_force_settle.
   const forceSettleAllowed = useMemo(() => {
     if (!finalAsset) {
@@ -1785,6 +1814,7 @@ export default function Settlement(properties) {
                   </Field>
 
                   {settlementFund && settlementFund.finalSettlementFund ? (
+                    <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-[hsl(var(--accent-1)/0.01)] p-4 space-y-3">
                           <div className="flex items-center gap-2">
@@ -1918,9 +1948,33 @@ export default function Settlement(properties) {
                           </div>
                         </div>
                     </div>
+                    <div className="rounded-2xl border border-border bg-gradient-to-br from-[hsl(var(--accent-1)/0.03)] to-transparent p-4 space-y-1.5">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-1)/0.1)] shrink-0">
+                          <Info className="h-4 w-4 text-[hsl(var(--accent-1-fg))]" />
+                        </span>
+                        <span className="text-sm font-semibold text-[hsl(var(--accent-1-fg))]">
+                          {t("Settlement:bsrmTitle", {
+                            defaultValue: "Black swan recovery method",
+                          })}
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] text-[hsl(var(--accent-1-fg))] text-[11px] font-mono"
+                        >
+                          {t(bsrmNameKey)}
+                        </Badge>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        {t(bsrmDetailKey)}
+                      </p>
+                    </div>
+                    </>
                   ) : null}
 
-                  {settlementFund && settlementFund.finalSettlementFund ? (
+                  {settlementFund &&
+                  settlementFund.finalSettlementFund &&
+                  !collateralBiddingDisabled ? (
                     <>
                     <div className="rounded-2xl border border-[hsl(var(--accent-1)/0.12)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.04)] to-[hsl(var(--accent-1)/0.01)] p-4 space-y-4">
                       <Field>
@@ -2687,6 +2741,30 @@ export default function Settlement(properties) {
                     </>
                   ) : null}
 
+                  {settlementFund &&
+                  settlementFund.finalSettlementFund &&
+                  collateralBiddingDisabled ? (
+                    <div className="rounded-2xl border border-[hsl(var(--accent-warning)/0.3)] bg-[hsl(var(--accent-warning)/0.06)] p-4 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent-warning)/0.15)] shrink-0">
+                          <AlertTriangle className="h-4 w-4 text-[hsl(var(--accent-warning-fg))]" />
+                        </span>
+                        <span className="text-sm font-semibold text-[hsl(var(--accent-warning-fg))]">
+                          {t("Settlement:biddingDisabledTitle", {
+                            defaultValue: "Bidding disabled",
+                          })}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {t("Settlement:biddingDisabledMessage", {
+                          defaultValue:
+                            "Bidding on {{symbol}}'s debt is disabled by the asset owner, so new collateral bids cannot be placed. Only automatic recovery can revive {{symbol}} — if the feed price rises above the auto revive price, or once all outstanding debt is force settled.",
+                          symbol: parsedAsset.s,
+                        })}
+                      </p>
+                    </div>
+                  ) : null}
+
                   {individualSettlementFund &&
                   (individualSettlementFund._debt ||
                     individualSettlementFund._fund) ? (
@@ -2952,6 +3030,7 @@ export default function Settlement(properties) {
                     </>
                   ) : null}
 
+                  {!(isBidPath && collateralBiddingDisabled) ? (
                   <div>
                     <div className="flex items-center justify-between px-1">
                       <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground inline-flex items-center gap-1">
@@ -2979,16 +3058,19 @@ export default function Settlement(properties) {
                       </div>
                     ) : null}
                   </div>
+                  ) : null}
 
-                  <Button
-                    className="group w-full h-14 text-base font-semibold rounded-2xl bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-3))] to-[hsl(var(--accent-3))] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-3))] hover:to-[hsl(var(--accent-3))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_32px_-12px_hsl(var(--accent-3)/0.35)] hover:shadow-[0_12px_40px_-12px_hsl(var(--accent-3)/0.5)] transition-all"
-                    type="submit"
-                    disabled={!canSubmit}
-                  >
-                    {t("Settlement:submit")}
-                  </Button>
+                  {!(isBidPath && collateralBiddingDisabled) ? (
+                    <Button
+                      className="group w-full h-14 text-base font-semibold rounded-2xl bg-gradient-to-r from-[hsl(var(--accent-1))] via-[hsl(var(--accent-3))] to-[hsl(var(--accent-3))] hover:from-[hsl(var(--accent-1))] hover:via-[hsl(var(--accent-3))] hover:to-[hsl(var(--accent-3))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_8px_32px_-12px_hsl(var(--accent-3)/0.35)] hover:shadow-[0_12px_40px_-12px_hsl(var(--accent-3)/0.5)] transition-all"
+                      type="submit"
+                      disabled={!canSubmit}
+                    >
+                      {t("Settlement:submit")}
+                    </Button>
+                  ) : null}
 
-                  {collateralBiddingDisabled ? (
+                  {collateralBiddingDisabled && !isBidPath ? (
                     <div className="rounded-2xl border border-[hsl(var(--accent-warning)/0.3)] bg-[hsl(var(--accent-warning)/0.08)] p-3 text-xs text-muted-foreground leading-relaxed">
                       {t("Settlement:collateralBiddingDisabled")}
                     </div>
@@ -3017,7 +3099,6 @@ export default function Settlement(properties) {
           {settlementFund &&
           settlementFund.finalSettlementFund &&
           forceSettleAllowed &&
-          (holderBalance ?? 0) > 0 &&
           parsedAsset &&
           parsedCollateralAsset ? (
             <div className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35),inset_0_1px_0_0_rgba(255,255,255,0.04)]">
@@ -3057,32 +3138,34 @@ export default function Settlement(properties) {
                         </FieldLabel>
                         <span className="flex items-center gap-1.5 shrink-0 font-normal">
                           <span className="text-[11px] tabular-nums text-muted-foreground">
-                            {holderBalance.toLocaleString(undefined, {
+                            {(holderBalance ?? 0).toLocaleString(undefined, {
                               maximumFractionDigits: parsedAsset.p,
                             })}{" "}
                             {parsedAsset.s}
                           </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setHolderSettleAmount(String(holderBalance));
-                              const rate = settlementFund.settlementRate;
-                              setHolderReceiving(
-                                Number.isFinite(rate) && rate > 0
-                                  ? parseFloat(
-                                      (holderBalance * rate).toFixed(
-                                        parsedCollateralAsset.p
+                          {(holderBalance ?? 0) > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setHolderSettleAmount(String(holderBalance));
+                                const rate = settlementFund.settlementRate;
+                                setHolderReceiving(
+                                  Number.isFinite(rate) && rate > 0
+                                    ? parseFloat(
+                                        (holderBalance * rate).toFixed(
+                                          parsedCollateralAsset.p
+                                        )
                                       )
-                                    )
-                                  : 0
-                              );
-                            }}
-                            className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
-                          >
-                            {t("Settlement:maxButton", {
-                              defaultValue: "Max",
-                            })}
-                          </button>
+                                    : 0
+                                );
+                              }}
+                              className="rounded-md border border-[hsl(var(--accent-1)/0.25)] bg-[hsl(var(--accent-1)/0.08)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--accent-1-fg))] hover:bg-[hsl(var(--accent-1)/0.12)] transition-colors"
+                            >
+                              {t("Settlement:maxButton", {
+                                defaultValue: "Max",
+                              })}
+                            </button>
+                          ) : null}
                         </span>
                       </div>
                       <FieldContent>
@@ -3122,7 +3205,8 @@ export default function Settlement(properties) {
                           }}
                         />
                       </FieldContent>
-                      {holderSettleAmount > holderBalance ? (
+                      {holderBalance !== null &&
+                      holderSettleAmount > holderBalance ? (
                         <FieldError
                           errors={[
                             {
@@ -3157,6 +3241,15 @@ export default function Settlement(properties) {
                     </Field>
                     </div>
                   </div>
+                  {holderBalance !== null && !(holderBalance > 0) ? (
+                    <p className="text-[11px] text-muted-foreground leading-relaxed px-1">
+                      {t("Settlement:holderNoBalance", {
+                        defaultValue:
+                          "You don't hold any {{asset}}, so force settlement is unavailable until you acquire some.",
+                        asset: parsedAsset.s,
+                      })}
+                    </p>
+                  ) : null}
                   <div>
                     <div className="flex items-center justify-between px-1">
                       <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground inline-flex items-center gap-1">

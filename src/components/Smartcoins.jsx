@@ -11,7 +11,7 @@ import { List } from "react-window";
 import Fuse from "fuse.js";
 import { useStore } from "@nanostores/react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { User, Coins, Tag, Activity, CircleDollarSign, Gavel, Package, ShieldCheck } from "lucide-react";
+import { User, Coins, Tag, Activity, CircleDollarSign, Gavel, Package, ShieldCheck, Eye, EyeOff, TriangleAlert } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -64,11 +64,11 @@ const SmartcoinCard = memo(function SmartcoinCard({ style, row, t }) {
 
   return (
     <div style={{ ...style, paddingBottom: 8, overflow: "hidden" }} key={`acard-${row.asset_id}`}>
-      <div className="ml-2 mr-2 overflow-hidden rounded-xl border border-border bg-card/60 backdrop-blur-sm shadow-[0_0_20px_-5px] shadow-[color:hsl(var(--accent-1)/0.1)] hover:border-[hsl(var(--accent-1)/0.25)] hover:shadow-[0_0_25px_-5px] shadow-[color:hsl(var(--accent-1)/0.15)] transition-all duration-300">
+      <div className={`ml-2 mr-2 overflow-hidden rounded-xl border bg-card/60 backdrop-blur-sm shadow-[0_0_20px_-5px] shadow-[color:hsl(var(--accent-1)/0.1)] hover:shadow-[0_0_25px_-5px] shadow-[color:hsl(var(--accent-1)/0.15)] transition-all duration-300 ${row.isGloballySettled ? "border-[hsl(var(--accent-warning)/0.4)] opacity-90" : "border-border hover:border-[hsl(var(--accent-1)/0.25)]"}`}>
         <div className="h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-1)/0.4)] to-transparent" />
         <div className="p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold tracking-tight">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-lg font-bold tracking-tight min-w-0">
               <span className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent">
                 {row.offer_symbol}
               </span>
@@ -76,7 +76,13 @@ const SmartcoinCard = memo(function SmartcoinCard({ style, row, t }) {
                 ({row.asset_id})
               </span>
             </h3>
-            {row.price > 0 ? (
+            {row.isGloballySettled ? (
+              <a href={`/settlement.html?id=${row.asset_id}`} className="shrink-0">
+                <Button variant="outline" className="h-7 px-3 text-xs border-[hsl(var(--accent-warning)/0.4)] text-[hsl(var(--accent-warning-fg))] hover:bg-[hsl(var(--accent-warning)/0.1)] cursor-pointer">
+                  {t("Smartcoins:viewSettlement", { defaultValue: "View settlement" })}
+                </Button>
+              </a>
+            ) : row.price > 0 ? (
               <a href={`/smartcoin.html?id=${row.asset_id}`} className="shrink-0">
                 <Button className="h-7 px-3 text-xs bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_0_10px_-3px] shadow-[color:hsl(var(--accent-1)/0.4)] border-0 font-semibold hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] hover:shadow-[0_0_18px_-3px] hover:shadow-[color:hsl(var(--accent-1)/0.6)] active:scale-95 transition-all duration-200 cursor-pointer">
                   {t("Smartcoins:proceedToBorrow", { asset: row.s })}
@@ -135,6 +141,18 @@ const SmartcoinCard = memo(function SmartcoinCard({ style, row, t }) {
               <Activity className="h-3 w-3 mr-1 text-[hsl(var(--accent-2-fg)/0.7)]" />
               {t("Smartcoins:feedQty", { qty: row.feedQty ?? 0 })}
             </Badge>
+            {row.isGloballySettled ? (
+              <Badge variant="outline" className="border-[hsl(var(--accent-warning)/0.4)] bg-[hsl(var(--accent-warning)/0.1)] text-[hsl(var(--accent-warning-fg))] text-xs font-semibold">
+                <TriangleAlert className="h-3 w-3 mr-1" />
+                {t("Smartcoins:globallySettledBadge", { defaultValue: "Globally settled — borrowing disabled" })}
+              </Badge>
+            ) : null}
+            {row.biddingDisabled ? (
+              <Badge variant="outline" className="border-[hsl(var(--accent-warning)/0.4)] bg-[hsl(var(--accent-warning)/0.08)] text-[hsl(var(--accent-warning-fg))] text-xs">
+                <TriangleAlert className="h-3 w-3 mr-1" />
+                {t("Smartcoins:biddingDisabledBadge", { defaultValue: "Collateral bidding disabled" })}
+              </Badge>
+            ) : null}
             {row.permissions && Object.keys(row.permissions).length > 0 ? (
               <Dialog>
                 <DialogTrigger asChild>
@@ -197,6 +215,36 @@ function getBsrmMethod(bitasset) {
   const raw = bitasset?.options?.extensions?.black_swan_response_method;
   const parsed = typeof raw === "number" ? raw : parseInt(raw ?? "0", 10);
   return [0, 1, 2, 3].includes(parsed) ? parsed : 0;
+}
+
+function isGloballySettled(bitasset) {
+  // Mirrors core `is_globally_settled()`: settlement_price set AND fund held.
+  // The borrow list treats (price==0 OR fund==0) as borrowable, so settled is
+  // the exact inverse: base!=0 && quote!=0 && fund!=0.
+  try {
+    return (
+      parseInt(bitasset?.settlement_price?.base?.amount ?? "0", 10) !== 0 &&
+      parseInt(bitasset?.settlement_price?.quote?.amount ?? "0", 10) !== 0 &&
+      parseInt(bitasset?.settlement_fund ?? "0", 10) !== 0
+    );
+  } catch {
+    return false;
+  }
+}
+
+function isCollateralBiddingDisabledByFlags(flags) {
+  // disable_collateral_bidding (0x8000) on the 1.3.x asset: bid_collateral rejected.
+  const n = Number(flags);
+  if (!Number.isFinite(n)) {
+    return false;
+  }
+  try {
+    return Object.keys(getFlagBooleans(n)).includes(
+      "disable_collateral_bidding"
+    );
+  } catch {
+    return false;
+  }
 }
 
 function getDynamicSupplyRaw(dynamicEntry) {
@@ -717,23 +765,42 @@ export default function Smartcoins(properties) {
     return next;
   }, [allBitassets, liveBitassetMap]);
 
-  // Valid-feed + not-globally-settled filter, on merged (live-preferred) data.
+  // Valid-feed filter, on merged (live-preferred) data.
   // Handles both the trimmed snapshot shape (feedsCount) and full live objects.
+  // Globally-settled assets are hidden by default (borrow impossible) but
+  // revealable via the header eye toggle — never unfindable.
+  const [showSettled, setShowSettled] = useState(false);
   const activeBitassets = useMemo(() => {
     if (!mergedBitassets) {
       return [];
     }
     return mergedBitassets.filter((x) => {
       const feedCount = x.feeds ? x.feeds.length : (x.feedsCount ?? 0);
-      return (
+      const hasValidFeed =
         parseInt(x.current_feed.settlement_price.base.amount) !== 0 &&
         parseInt(x.current_feed.settlement_price.quote.amount) !== 0 &&
-        feedCount &&
-        (parseInt(x.settlement_price.base.amount) === 0 ||
-          parseInt(x.settlement_price.quote.amount) === 0 ||
-          parseInt(x.settlement_fund) === 0)
-      );
+        feedCount;
+      if (!hasValidFeed) {
+        return false;
+      }
+      if (showSettled) {
+        return true;
+      }
+      return !isGloballySettled(x);
     });
+  }, [mergedBitassets, showSettled]);
+
+  const hiddenSettledCount = useMemo(() => {
+    if (!mergedBitassets) {
+      return 0;
+    }
+    return mergedBitassets.filter(
+      (x) =>
+        parseInt(x.current_feed?.settlement_price?.base?.amount ?? "0", 10) !== 0 &&
+        parseInt(x.current_feed?.settlement_price?.quote?.amount ?? "0", 10) !== 0 &&
+        (x.feeds ? x.feeds.length : (x.feedsCount ?? 0)) &&
+        isGloballySettled(x)
+    ).length;
   }, [mergedBitassets]);
 
   // Display-asset config refresh: one background pass over the active set's
@@ -950,6 +1017,10 @@ export default function Smartcoins(properties) {
         ),
         flags: getFlagBooleans(thisBitassetData.options.flags),
         bitasset_data_id: bitasset.bitasset_data_id,
+        isGloballySettled: isGloballySettled(bitasset),
+        biddingDisabled: isCollateralBiddingDisabledByFlags(
+          thisBitassetData.options.flags
+        ),
       });
     }
     return out;
@@ -1331,18 +1402,49 @@ export default function Smartcoins(properties) {
             <div className="pointer-events-none absolute -left-20 -top-20 h-40 w-40 rounded-full bg-[hsl(var(--accent-1)/0.1)] blur-3xl" />
             <div className="pointer-events-none absolute -right-20 -bottom-20 h-40 w-40 rounded-full bg-[hsl(var(--accent-2)/0.1)] blur-3xl" />
             <div className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-gradFg))] dark:text-[hsl(var(--accent-1-gradFg))]">
-                  <CircleDollarSign className="h-4.5 w-4.5" strokeWidth={2.25} />
-                </span>
-                <div>
-                  <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent">
-                    {t("Smartcoins:selectBorrowableAsset")}
-                  </h2>
-                  <p className="text-xs text-muted-foreground/70 mt-0.5">
-                    {t("Smartcoins:smartcoinDescription")}
-                  </p>
+              <div className="flex items-start justify-between gap-3 mb-6">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[hsl(var(--accent-1)/0.3)] bg-gradient-to-br from-[hsl(var(--accent-1)/0.2)] to-[hsl(var(--accent-2)/0.2)] text-[hsl(var(--accent-1-gradFg))] dark:text-[hsl(var(--accent-1-gradFg))]">
+                    <CircleDollarSign className="h-4.5 w-4.5" strokeWidth={2.25} />
+                  </span>
+                  <div>
+                    <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] bg-clip-text text-transparent">
+                      {t("Smartcoins:selectBorrowableAsset")}
+                    </h2>
+                    <p className="text-xs text-muted-foreground/70 mt-0.5">
+                      {t("Smartcoins:smartcoinDescription")}
+                    </p>
+                  </div>
                 </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowSettled((v) => !v)}
+                  aria-pressed={showSettled}
+                  title={
+                    showSettled
+                      ? t("Smartcoins:hideSettledTitle", { defaultValue: "Hide globally settled assets" })
+                      : t("Smartcoins:showSettledTitle", {
+                          defaultValue: hiddenSettledCount > 0
+                            ? `Show globally settled assets (${hiddenSettledCount} hidden)`
+                            : "Show globally settled assets",
+                          count: hiddenSettledCount,
+                        })
+                  }
+                  aria-label={
+                    showSettled
+                      ? t("Smartcoins:hideSettledTitle", { defaultValue: "Hide globally settled assets" })
+                      : t("Smartcoins:showSettledTitle", {
+                          defaultValue: hiddenSettledCount > 0
+                            ? `Show globally settled assets (${hiddenSettledCount} hidden)`
+                            : "Show globally settled assets",
+                          count: hiddenSettledCount,
+                        })
+                  }
+                  className={`shrink-0 ${showSettled ? "border-[hsl(var(--accent-warning)/0.4)] bg-[hsl(var(--accent-warning)/0.1)] text-[hsl(var(--accent-warning-fg))]" : ""}`}
+                >
+                  {showSettled ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                </Button>
               </div>
               <div className="w-full">
                 <div className="grid w-full grid-cols-1 md:grid-cols-4 gap-2 mb-3">
