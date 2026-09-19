@@ -24,11 +24,6 @@ import {
 
 const SUB_BATCH_TIME = 500; // ms, matches bitshares-ui subBatchTime
 
-export interface OrderBook {
-  bids: any[];
-  asks: any[];
-}
-
 export interface LiveMarketData {
   bids: any[];
   asks: any[];
@@ -38,31 +33,6 @@ export interface LiveMarketData {
   usrTrades: any[];
   ticker: any;
   historyAvailable: boolean;
-}
-
-async function fetchOrderBook(
-  chain: string,
-  base: string,
-  quote: string,
-  limit: number = 50,
-  specificNode?: string | null
-): Promise<OrderBook> {
-  const node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
-  const api = await Apis.instance(
-    node,
-    true,
-    4000,
-    { enableDatabase: true },
-    (error: Error) => console.log({ error })
-  );
-  try {
-    const result = await api.db_api().exec("get_order_book", [base, quote, limit]);
-    return result as OrderBook;
-  } finally {
-    try {
-      await api.close();
-    } catch {}
-  }
 }
 
 /**
@@ -384,7 +354,22 @@ async function subscribeMarketOrderBookDirect(
     try {
       await api.db_api().exec("unsubscribe_from_market", [marketCallback, baseId, quoteId]);
     } catch (e) {
-      console.log("unsubscribe_from_market error", e);
+      // Expected during page teardown / sibling reconnect: the shared socket
+      // was already idle-closed, destroyed, or mid-close (readyState 2), so
+      // _db is gone or calls are rejected. Same db API succeeds elsewhere
+      // while connected — downgrade teardown signatures to debug so console
+      // noise doesn't mask real subscription failures.
+      const msg = (e as any)?.message ?? String(e);
+      if (
+        msg.includes("_db API not available") ||
+        msg.includes("connection closed") ||
+        msg.includes("websocket state error") ||
+        msg.includes("websocket is not connected")
+      ) {
+        console.debug("unsubscribe_from_market skipped (socket already torn down)", msg);
+      } else {
+        console.log("unsubscribe_from_market error", e);
+      }
     } finally {
       try { await api.close(); } catch {}
     }
@@ -392,5 +377,3 @@ async function subscribeMarketOrderBookDirect(
 
   return unsubscribe;
 }
-
-export { fetchOrderBook };

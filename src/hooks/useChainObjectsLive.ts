@@ -48,6 +48,7 @@ const BATCH_TIME = 500;
 
 async function seedObjectsIntoCache(api: any, ids: string[], chain: string) {
   const CHUNK = chain === "bitshares" ? 50 : 10;
+  let seeded = 0;
   for (let i = 0; i < ids.length; i += CHUNK) {
     const chunk = ids.slice(i, i + CHUNK);
     try {
@@ -57,14 +58,22 @@ async function seedObjectsIntoCache(api: any, ids: string[], chain: string) {
           if (o && o.id) {
             try {
               chain_store._updateObject(o);
+              seeded += 1;
             } catch {}
           }
         }
       }
     } catch (e) {
       console.log("useChainObjectsLive seed chunk error", e);
+      // Transient singleton teardown (sibling idle-close/destroy) surfaces
+      // here as "_db API not available" / "connection closed" while the same
+      // db API succeeds elsewhere on the page. Abort remaining chunks so we
+      // don't burn N more doomed WS calls; the caller surfaces the error and
+      // the subscription guard retries with backoff.
+      throw e;
     }
   }
+  return seeded;
 }
 
 export interface UseChainObjectsLiveOptions {
@@ -100,7 +109,6 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [lastFetchAt, setLastFetchAt] = useState<number | null>(null);
   const [blockNumber, setBlockNumber] = useState<number | null>(null);
-  const [connectionStatus, setConnectionStatus] = useState<string>("unknown");
   const { reconnectNonce, attemptReconnect } = useReconnect();
 
   const unsubRef = useRef<(() => void) | null>(null);
@@ -126,9 +134,7 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
       setIsSubscribed(false);
       failureCountRef.current += 1;
     },
-    onOnline: () => setConnectionStatus("open"),
     onOffline: () => {
-      setConnectionStatus("closed");
       setIsSubscribed(false);
     },
     onConnectionError: () => {
@@ -255,7 +261,6 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
         setLoading(false);
         setError(null);
         failureCountRef.current = 0;
-        setConnectionStatus("open");
       }
     };
 
@@ -291,53 +296,94 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
       // Acquire a connection token for this effect's lifetime; released in
       // cleanup so refcounts stay balanced and the socket can idle close.
       let releaseToken: (() => void) | null = null;
-      try {
-        releaseToken = await acquireChainStore(chain, specificNode);
-        if (cancelled) {
-          releaseToken();
-          return;
-        }
+      const sleep = (ms: number) =>
+        new Promise<void>((res) => {
+          const id = setTimeout(res, ms);
+          if (cancelled) {
+            clearTimeout(id);
+            res();
+          }
+        });
+      // Local retry for transient teardown races ("connection closed" while
+      // a sibling reconnects): re-acquire and re-seed with backoff instead
+      // of surfacing immediately. No Apis.destroy() here — nuking the shared
+      // socket would kill siblings' healthy subscriptions.
+      const MAX_ATTEMPTS = 3;
+      let attempt = 0;
+      let lastError: any = null;
+      while (attempt < MAX_ATTEMPTS && !cancelled) {
+        attempt += 1;
+        try {
+          releaseToken = await acquireChainStore(chain, specificNode);
+          if (cancelled) {
+            releaseToken();
+            releaseToken = null;
+            return;
+          }
 
-        const node = nodeUrlFor(chain, specificNode);
-        const api = await Apis.instance(
-          node,
-          true,
-          4000,
-          { enableDatabase: true },
-          () => {}
-        );
-        if (cancelled) return;
+          const node = nodeUrlFor(chain, specificNode);
+          // Reuse the connection already acquired above (pure retain, no
+          // reconnect). A second instance(node, true) here would risk tearing
+          // the shared singleton socket down when the resolved node differs
+          // between mounts, and it overwrites the singleton closeCb slot.
+          const api = await Apis.instance(node, false);
+          if (cancelled) {
+            try { await api.close(); } catch {}
+            releaseToken();
+            releaseToken = null;
+            return;
+          }
 
-        // seed cache in batches so pushes flow for these objects
-        await seedObjectsIntoCache(api, parsedIds, chain);
-        try { await api.close(); } catch {}
-        if (cancelled) return;
-
-        ready = true;
-        chain_store.subscribe(batchedCallback);
-        unsubRef.current = () => {
+          // seed cache in batches so pushes flow for these objects.
+          // Transport failures (teardown races) throw out of the seeder and
+          // are retried below; all-null responses (unknown/deleted ids)
+          // resolve and still subscribe so ChainStore per-id fetches
+          // and later pushes resolve them individually.
           try {
-            chain_store.unsubscribe(batchedCallback);
-          } catch {}
+            await seedObjectsIntoCache(api, parsedIds, chain);
+          } finally {
+            try { await api.close(); } catch {}
+          }
+          if (cancelled) return;
+          lastError = null;
+          break;
+        } catch (e) {
+          lastError = e;
           if (releaseToken) {
             try { releaseToken(); } catch {}
             releaseToken = null;
           }
-        };
-        pushUpdate();
-        blockCallback();
-      } catch (e) {
+          if (attempt < MAX_ATTEMPTS && !cancelled) {
+            console.log(
+              `useChainObjectsLive seed attempt ${attempt}/${MAX_ATTEMPTS} failed, retrying`,
+              e
+            );
+            await sleep(1000 * attempt);
+          }
+        }
+      }
+      if (cancelled) return;
+      if (lastError) {
+        console.log("useChainObjectsLive error", lastError);
+        setError(lastError);
+        setLoading(false);
+        failureCountRef.current += 1;
+        return;
+      }
+
+      ready = true;
+      chain_store.subscribe(batchedCallback);
+      unsubRef.current = () => {
+        try {
+          chain_store.unsubscribe(batchedCallback);
+        } catch {}
         if (releaseToken) {
           try { releaseToken(); } catch {}
           releaseToken = null;
         }
-        console.log("useChainObjectsLive error", e);
-        if (!cancelled) {
-          setError(e);
-          setLoading(false);
-          failureCountRef.current += 1;
-        }
-      }
+      };
+      pushUpdate();
+      blockCallback();
     })();
 
     return () => {
@@ -362,7 +408,6 @@ export function useChainObjectsLive(options: UseChainObjectsLiveOptions) {
     isSubscribed,
     lastFetchAt,
     blockNumber,
-    connectionStatus,
   };
 }
 

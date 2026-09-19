@@ -4,6 +4,7 @@ import React, {
   useSyncExternalStore,
   useMemo,
   useCallback,
+  useRef,
 } from "react";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
@@ -42,10 +43,6 @@ import {
 } from "@/nanoeffects/FullSmartcoin.ts";
 import { useDexOrderBookLive } from "@/hooks/useDexLiveSubscriptions";
 import DepthChart from "./InstantTrade/DepthChart.jsx";
-import {
-  useChainObjectsLive,
-  useAccountBalancesLive,
-} from "@/hooks/useChainObjectsLive";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
@@ -311,7 +308,7 @@ export default function Smartcoin(properties) {
           ? parsedCollateralBitasset.id
           : "",
         usr.id,
-        currentNodeUrl || "",
+        matchedNodeUrl,
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
@@ -337,13 +334,17 @@ export default function Smartcoin(properties) {
     return () => {
       if (unsub) unsub();
     };
-  }, [parsedAsset, parsedBitasset, usr]);
+  }, [parsedAsset, parsedBitasset, usr, matchedNodeUrl]);
 
-  // ---- Live ChainStore layer (mainnet bitshares only) ----
-  // The snapshot above seeds first paint + serves testnet. Each slice below
-  // overlays live push data when present (live wins, snapshot otherwise).
+  // ---- Data policy for this page ----
+  // One-shot snapshot above (single serial fetch on page load, serves both
+  // mainnet and testnet). The ONLY live subscription kept here is the market
+  // order book below. Bitasset objects, user balances and margin/call/settle
+  // lists are refreshed on page load + the manual refresh button — no
+  // ChainStore push subscriptions, so this page holds exactly one WS
+  // subscription and cannot cascade-teardown its own socket.
 
-  // 1. Order book: same pair + orientation as the snapshot
+  // 1. Order book (live): same pair + orientation as the snapshot
   //    (asks -> buyOrders, bids -> sellOrders), limit 50 like instant trade.
   const liveBook = useDexOrderBookLive({
     chain: usr ? usr.chain : "",
@@ -360,114 +361,43 @@ export default function Smartcoin(properties) {
   useEffect(() => {
     if (liveBook.bids) setSellOrders(liveBook.bids);
   }, [liveBook.bids]);
-
-  // 2. Bitasset objects: live feeds, settlement fund + ratios.
-  const bitassetObjectIds = useMemo(() => {
-    const ids = [];
-    if (parsedBitasset && parsedBitasset.id) ids.push(parsedBitasset.id);
-    if (parsedCollateralBitasset && parsedCollateralBitasset.id) {
-      ids.push(parsedCollateralBitasset.id);
-    }
-    return ids;
-  }, [parsedBitasset, parsedCollateralBitasset]);
-  const liveBitassetObjects = useChainObjectsLive({
-    chain: usr ? usr.chain : "",
-    ids: bitassetObjectIds,
-    specificNode: matchedNodeUrl,
-    enabled: isMainnet && bitassetObjectIds.length > 0,
-  });
-  const mergeLive = (prev, live) => {
-    if (!live) return prev;
-    if (!prev) return live;
-    for (const k of Object.keys(live)) {
-      if (prev[k] !== live[k]) return { ...prev, ...live };
-    }
-    return prev;
-  };
+  // Balances piggybacked on every orderbook push (instant-trade pattern):
+  // fills move balances and emit market notices, so pair balances stay fresh
+  // with zero extra subscriptions. Merged (not replaced) so snapshot entries
+  // for other assets are preserved.
   useEffect(() => {
-    if (!liveBitassetObjects.objects) return;
-    if (parsedBitasset && liveBitassetObjects.objects[parsedBitasset.id]) {
-      const live = liveBitassetObjects.objects[parsedBitasset.id];
-      setFinalBitasset((prev) => mergeLive(prev, live));
+    if (!liveBook.balances || !liveBook.balances.length) return;
+    const liveByAsset = new Map();
+    for (const b of liveBook.balances) {
+      if (b && b.asset_id) liveByAsset.set(b.asset_id, b);
     }
-    if (
-      parsedCollateralBitasset &&
-      liveBitassetObjects.objects[parsedCollateralBitasset.id]
-    ) {
-      const live = liveBitassetObjects.objects[parsedCollateralBitasset.id];
-      setFinalCollateralBitasset((prev) => mergeLive(prev, live));
-    }
-  }, [liveBitassetObjects.objects, parsedBitasset, parsedCollateralBitasset]);
-
-  // 3. User balances (same asset filter as the snapshot).
-  const liveBalances = useAccountBalancesLive({
-    chain: usr ? usr.chain : "",
-    accountId: usr ? usr.id : null,
-    specificNode: matchedNodeUrl,
-    enabled: isMainnet && !!(usr && usr.id),
-  });
-  useEffect(() => {
-    if (liveBalances.balances && assets && assets.length) {
-      const filteredData = liveBalances.balances.filter((balance) =>
-        assets.find((x) => x.id === balance.asset_id)
-      );
-      setUsrBalances(filteredData);
-    }
-  }, [liveBalances.balances, assets]);
-
-  // 4. Margin positions + call/settle rows: subscribe to every listed object
-  //    id for push updates (fills, TCR edits). Entries without ids are
-  //    skipped; brand-new rows arrive via the manual refresh below.
-  const positionOrderIds = useMemo(() => {
-    const ids = [];
-    const pushIds = (list) => {
-      if (Array.isArray(list)) {
-        for (const x of list) {
-          if (x && x.id) ids.push(x.id);
-        }
+    if (!liveByAsset.size) return;
+    setUsrBalances((prev) => {
+      if (!Array.isArray(prev) || !prev.length) {
+        return [...liveByAsset.values()];
       }
-    };
-    pushIds(usrMarginPositions);
-    pushIds(assetCallOrders);
-    pushIds(assetSettleOrders);
-    return [...new Set(ids)];
-  }, [usrMarginPositions, assetCallOrders, assetSettleOrders]);
-  const livePositionOrders = useChainObjectsLive({
-    chain: usr ? usr.chain : "",
-    ids: positionOrderIds,
-    specificNode: matchedNodeUrl,
-    enabled: isMainnet && positionOrderIds.length > 0,
-  });
-  useEffect(() => {
-    if (!livePositionOrders.objects) return;
-    const overlay = (list) => {
-      if (!Array.isArray(list) || !list.length) return list;
       let changed = false;
-      const merged = list.map((entry) => {
+      const merged = prev.map((entry) => {
         const live =
-          entry && entry.id ? livePositionOrders.objects[entry.id] : null;
-        if (!live) return entry;
-        let differs = false;
-        for (const k of Object.keys(live)) {
-          if (entry[k] !== live[k]) {
-            differs = true;
-            break;
-          }
-        }
-        if (differs) {
+          entry && entry.asset_id ? liveByAsset.get(entry.asset_id) : null;
+        if (live && live.amount !== entry.amount) {
           changed = true;
           return { ...entry, ...live };
         }
         return entry;
       });
-      return changed ? merged : list;
-    };
-    setUsrMarginPositions((prev) => overlay(prev));
-    setAssetCallOrders((prev) => overlay(prev));
-    setAssetSettleOrders((prev) => overlay(prev));
-  }, [livePositionOrders.objects]);
+      for (const [assetId, live] of liveByAsset) {
+        if (!merged.some((x) => x && x.asset_id === assetId)) {
+          merged.push(live);
+          changed = true;
+        }
+      }
+      return changed ? merged : prev;
+    });
+  }, [liveBook.balances]);
 
-  // Manual refresh for brand-new rows (push covers state, not membership).
+  // Manual refresh for position/order lists (balances arrive via orderbook
+  // pushes above, feeds are one-shot on page load).
   const [listsRefreshing, setListsRefreshing] = useState(false);
   const refreshPositionLists = useCallback(async () => {
     if (!isMainnet || !parsedAsset || !usr || !usr.id) return;
@@ -663,6 +593,17 @@ export default function Smartcoin(properties) {
 
   const [activeOrderTab, setActiveOrderTab] = useState("buy");
   const [showDialog, setShowDialog] = useState(false);
+
+  // After a borrow/adjust tx dialog closes, re-fetch position lists once
+  // (serial one-shot) so the new debt shows without a hard reload. Balances
+  // arrive via orderbook pushes; feeds are one-shot on page load.
+  const wasDialogOpen = useRef(false);
+  useEffect(() => {
+    if (wasDialogOpen.current && !showDialog) {
+      refreshPositionLists();
+    }
+    wasDialogOpen.current = showDialog;
+  }, [showDialog, refreshPositionLists]);
 
   const [debtLock, setDebtLock] = useState("editable");
   const [collateralLock, setCollateralLock] = useState("editable");

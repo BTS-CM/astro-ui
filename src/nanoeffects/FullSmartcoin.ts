@@ -31,32 +31,45 @@ function getFullSmartcoin(
       return;
     }
 
+    // Serial queries over the single shared API handle: one request at a
+    // time avoids piling parallel calls onto the socket (public nodes drop
+    // connections under parallel bursts) and keeps ordering deterministic.
+    // Slightly higher wall-time than Promise.all, far gentler on the node.
+    let userBalances;
+    let smartcoinData;
+    let marginPositions;
+    let assetCallOrders;
+    let assetSettleOrders;
+    let assetLimitOrders;
     try {
-      const [
-        userBalances,
-        smartcoinData,
-        marginPositions,
-        assetCallOrders,
-        assetSettleOrders,
-        assetLimitOrders,
-      ] = await Promise.all([
-        currentAPI.db_api().exec("get_account_balances", [userID, []]),
-        currentAPI
-          .db_api()
-          .exec("get_objects", [
-            collateralBitassetID && collateralBitassetID.length
-              ? [assetID, collateralAssetID, bitassetID, collateralBitassetID]
-              : [assetID, collateralAssetID, bitassetID],
-            false,
-          ]),
-        currentAPI.db_api().exec("get_margin_positions", [userID]),
-        currentAPI.db_api().exec("get_call_orders", [assetID, 100]),
-        currentAPI.db_api().exec("get_settle_orders", [assetID, 100]),
-        currentAPI
-          .db_api()
-          .exec("get_order_book", [assetID, collateralAssetID, 10]),
+      userBalances = await currentAPI
+        .db_api()
+        .exec("get_account_balances", [userID, []]);
+      smartcoinData = await currentAPI.db_api().exec("get_objects", [
+        collateralBitassetID && collateralBitassetID.length
+          ? [assetID, collateralAssetID, bitassetID, collateralBitassetID]
+          : [assetID, collateralAssetID, bitassetID],
+        false,
       ]);
+      marginPositions = await currentAPI
+        .db_api()
+        .exec("get_margin_positions", [userID]);
+      assetCallOrders = await currentAPI
+        .db_api()
+        .exec("get_call_orders", [assetID, 100]);
+      assetSettleOrders = await currentAPI
+        .db_api()
+        .exec("get_settle_orders", [assetID, 100]);
+      assetLimitOrders = await currentAPI
+        .db_api()
+        .exec("get_order_book", [assetID, collateralAssetID, 10]);
+    } catch (error) {
+      console.log({ error });
+      currentAPI.close();
+      return reject(error);
+    }
 
+    try {
       currentAPI.close();
 
       if (smartcoinData && smartcoinData.length) {
@@ -127,7 +140,7 @@ const [createFullSmartcoinStore] = nanoquery({
   },
 });
 
-export { createFullSmartcoinStore, getFullSmartcoin };
+export { createFullSmartcoinStore };
 
 // Lightweight manual refresh for the position/order lists only (used by the
 // manual refresh buttons on the debt page). Opens its own connection and
@@ -156,13 +169,17 @@ export async function fetchMarginCallSettleLists(
     return;
   }
 
+  // Serial over the single shared handle (see getFullSmartcoin above).
   try {
-    const [marginPositions, assetCallOrders, assetSettleOrders] =
-      await Promise.all([
-        currentAPI.db_api().exec("get_margin_positions", [userID]),
-        currentAPI.db_api().exec("get_call_orders", [assetID, 100]),
-        currentAPI.db_api().exec("get_settle_orders", [assetID, 100]),
-      ]);
+    const marginPositions = await currentAPI
+      .db_api()
+      .exec("get_margin_positions", [userID]);
+    const assetCallOrders = await currentAPI
+      .db_api()
+      .exec("get_call_orders", [assetID, 100]);
+    const assetSettleOrders = await currentAPI
+      .db_api()
+      .exec("get_settle_orders", [assetID, 100]);
 
     currentAPI.close();
 

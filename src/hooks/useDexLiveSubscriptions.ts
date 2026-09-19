@@ -60,7 +60,6 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [lastFetchAt, setLastFetchAt] = useState<number | null>(null);
   const [blockNumber, setBlockNumber] = useState<number | null>(null);
-  const [connectionStatus, setConnectionStatus] = useState<string>("unknown");
   // market slice setters - declared before effects so onUpdate can reference them
   const [balances, setBalancesSafe] = useState<any[] | null>(null);
   const [marketHistory, setMarketHistorySafe] = useState<any[] | null>(null);
@@ -72,7 +71,6 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
   const unsubRef = useRef<(() => Promise<void>) | null>(null);
   const blockUnsubRef = useRef<(() => void) | null>(null);
   const failureCountRef = useRef(0);
-  const lastBookRef = useRef<any>(null);
   const blockNumberRef = useRef<number | null>(null);
   const lastFetchAtRef = useRef<number | null>(null);
   const isSubscribedRef = useRef(false);
@@ -107,11 +105,9 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
       handleFailure(new Error("stale: no block/orderbook for 10s"));
     },
     onOnline: () => {
-      setConnectionStatus("open");
       attemptReconnect();
     },
     onOffline: () => {
-      setConnectionStatus("closed");
       handleFailure(new Error("offline: wifi/network lost"));
     },
     onConnectionError: (status) => {
@@ -144,7 +140,6 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
     }
 
     let cancelled = false;
-    let batchTimer: any = null;
     setLoading(true);
     setError(null);
     failureCountRef.current = 0;
@@ -153,7 +148,6 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
     const onUpdate = (data: any) => {
       if (cancelled) return;
       const now = Date.now();
-      lastBookRef.current = data;
       setBids(data.bids ?? []);
       setAsks(data.asks ?? []);
       // live market slices - each independent; history slices empty when node lacks plugin
@@ -170,8 +164,6 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
       setIsSubscribed(true);
       setError(null);
       failureCountRef.current = 0;
-      // also reset connection status to open on successful fetch
-      setConnectionStatus("open");
     };
 
     const onError = (e: any) => {
@@ -231,28 +223,27 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
             return;
           }
           releaseToken = release;
+          // Subscribe only once the shared ChainStore connection is held, so
+          // callbacks never fire against a torn-down socket and cleanup
+          // always has a matching unsubscribe + release pair.
+          try {
+            chain_store.subscribe(blockCallback);
+            blockUnsubRef.current = () => {
+              try { if (blockCallback) chain_store.unsubscribe(blockCallback); } catch {}
+            };
+          } catch (e) {
+            console.log("block subscription error", e);
+          }
           if (blockCallback) blockCallback();
         })
         .catch((e) => {
           console.log("block subscription error", e);
           handleFailure(e);
         });
-      try {
-        chain_store.subscribe(blockCallback);
-        blockUnsubRef.current = () => {
-          try { if (blockCallback) chain_store.unsubscribe(blockCallback); } catch {}
-        };
-      } catch (e) {
-        console.log("block subscription error", e);
-      }
     }
 
     return () => {
       cancelled = true;
-      if (batchTimer) {
-        clearTimeout(batchTimer);
-        batchTimer = null;
-      }
       if (blockUnsubRef.current) {
         try { blockUnsubRef.current(); } catch {}
         blockUnsubRef.current = null;
@@ -288,7 +279,6 @@ export function useDexOrderBookLive(options: UseDexLiveOptions) {
     isSubscribed,
     lastFetchAt,
     blockNumber,
-    connectionStatus,
     balances,
     marketHistory,
     usrLimitOrders,

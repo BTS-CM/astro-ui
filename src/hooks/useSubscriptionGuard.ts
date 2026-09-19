@@ -50,12 +50,32 @@ type GuardEntry = {
   staleMs: number;
   optionsRef: React.MutableRefObject<SubscriptionGuardOptions>;
   mounted: boolean;
+  registeredAt: number;
+  lastReconnectAt: number;
 };
 
 const guardEntries = new Set<GuardEntry>();
 let guardBackendStarted = false;
 let guardStaleId: any = null;
 let guardUnsub: (() => void) | null = null;
+
+// Initial-connect grace: destroying the shared socket while a hook's first
+// acquire/seed is still in flight (navigation focus/pageshow storms) kills
+// sibling hooks' in-flight calls with "connection closed" and starts a
+// destroy/re-init cascade. Reconnects are rate-limited for the same reason:
+// a stale socket needs seconds to re-establish; nuking it every 2s tick
+// guarantees it never recovers (the "Nx synced and subscribed" loop).
+const CONNECT_GRACE_MS = 15000;
+const RECONNECT_MIN_INTERVAL_MS = 15000;
+
+function requestReconnect(entry: GuardEntry) {
+  const now = Date.now();
+  if (now - entry.lastReconnectAt < RECONNECT_MIN_INTERVAL_MS) return;
+  entry.lastReconnectAt = now;
+  try {
+    entry.optionsRef.current.onReconnectNeeded?.();
+  } catch {}
+}
 
 function guardCheckEntry(entry: GuardEntry) {
   if (!entry.mounted) return;
@@ -65,6 +85,10 @@ function guardCheckEntry(entry: GuardEntry) {
   ) {
     return;
   }
+  // Never-connected hooks inside their grace window are still establishing
+  // their first connection — there is nothing to resume yet, and a destroy
+  // here aborts their in-flight seed.
+  if (Date.now() - entry.registeredAt < CONNECT_GRACE_MS) return;
   const opts = entry.optionsRef.current;
   const last = opts.lastFetchAtRef.current;
   const stale = !last || Date.now() - last > entry.staleMs;
@@ -72,7 +96,7 @@ function guardCheckEntry(entry: GuardEntry) {
     (stale || !opts.isSubscribedRef.current) &&
     (typeof navigator === "undefined" || navigator.onLine)
   ) {
-    if (opts.onReconnectNeeded) opts.onReconnectNeeded();
+    requestReconnect(entry);
   }
 }
 
@@ -91,9 +115,7 @@ function guardTickStale() {
       try {
         if (opts.onStale) opts.onStale();
       } catch {}
-      try {
-        if (opts.onReconnectNeeded) opts.onReconnectNeeded();
-      } catch {}
+      requestReconnect(entry);
     }
   }
 }
@@ -160,7 +182,13 @@ function ensureSharedGuard(
 ) {
   ensureGuardBackend();
 
-  const entry: GuardEntry = { staleMs, optionsRef, mounted: true };
+  const entry: GuardEntry = {
+    staleMs,
+    optionsRef,
+    mounted: true,
+    registeredAt: Date.now(),
+    lastReconnectAt: 0,
+  };
   guardEntries.add(entry);
 
   return () => {
