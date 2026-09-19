@@ -128,3 +128,48 @@ const [createFullSmartcoinStore] = nanoquery({
 });
 
 export { createFullSmartcoinStore, getFullSmartcoin };
+
+// Lightweight manual refresh for the position/order lists only (used by the
+// manual refresh buttons on the debt page). Opens its own connection and
+// closes it — no subscriptions, no timers.
+export async function fetchMarginCallSettleLists(
+  chain: string,
+  assetID: string,
+  userID: string,
+  specificNode?: string | null
+) {
+  let node = specificNode
+    ? specificNode
+    : (chains as any)[chain].nodeList[0].url;
+
+  let currentAPI;
+  try {
+    currentAPI = await Apis.instance(
+      node,
+      true,
+      4000,
+      { enableDatabase: true },
+      (error: Error) => console.log({ error })
+    );
+  } catch (error) {
+    console.log({ error });
+    return;
+  }
+
+  try {
+    const [marginPositions, assetCallOrders, assetSettleOrders] =
+      await Promise.all([
+        currentAPI.db_api().exec("get_margin_positions", [userID]),
+        currentAPI.db_api().exec("get_call_orders", [assetID, 100]),
+        currentAPI.db_api().exec("get_settle_orders", [assetID, 100]),
+      ]);
+
+    currentAPI.close();
+
+    return { marginPositions, callOrders: assetCallOrders, settleOrders: assetSettleOrders };
+  } catch (error) {
+    console.log({ error });
+    currentAPI.close();
+    return;
+  }
+}

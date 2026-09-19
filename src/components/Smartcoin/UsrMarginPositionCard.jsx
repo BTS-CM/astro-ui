@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { Wallet, TrendingUp } from "lucide-react";
+import { Wallet, TrendingUp, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,8 @@ export default function UsrMarginPositionCard({
   debtAssetHoldings,
   usr,
   exitJSON,
+  onRefreshLists,
+  listsRefreshing,
 }) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   const [showClosePositionDialog, setShowClosePositionDialog] = useState(false);
@@ -96,6 +98,18 @@ export default function UsrMarginPositionCard({
               {t("Smartcoin:ongoingMarginPosition")}
             </p>
           </div>
+          {onRefreshLists ? (
+            <button
+              type="button"
+              onClick={onRefreshLists}
+              disabled={listsRefreshing}
+              title={t("Smartcoin:refreshOrderLists", "Refresh lists")}
+              aria-label={t("Smartcoin:refreshOrderLists", "Refresh lists")}
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground disabled:opacity-50 ml-auto"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${listsRefreshing ? "animate-spin" : ""}`} />
+            </button>
+          ) : null}
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">

@@ -36,10 +36,21 @@ import {
 } from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
+import {
+  createFullSmartcoinStore,
+  fetchMarginCallSettleLists,
+} from "@/nanoeffects/FullSmartcoin.ts";
+import { useDexOrderBookLive } from "@/hooks/useDexLiveSubscriptions";
+import DepthChart from "./InstantTrade/DepthChart.jsx";
+import {
+  useChainObjectsLive,
+  useAccountBalancesLive,
+} from "@/hooks/useChainObjectsLive";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNodeUrl } from "@/stores/node.ts";
+import { $currentNodeUrl, $currentNodeChain } from "@/stores/node.ts";
+
+import DexLiveFooterCard from "./DexLiveFooterCard.jsx";
 
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import EmptyRow from "./common/EmptyRow.jsx";
@@ -68,6 +79,7 @@ export default function Smartcoin(properties) {
     },
   });
   const currentNodeUrl = useStore($currentNodeUrl);
+  const currentNodeChain = useStore($currentNodeChain);
 
   const tips = {
     charge_market_fee: t("Smartcoin:chargeMarketFee"),
@@ -97,6 +109,8 @@ export default function Smartcoin(properties) {
     _marketSearchTEST,
     _globalParamsBTS,
     _globalParamsTEST,
+    _poolsBTS,
+    _poolsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -105,6 +119,18 @@ export default function Smartcoin(properties) {
     }
     return "bitshares";
   }, [usr]);
+
+  // Live ChainStore subscriptions are mainnet-bitshares only; testnet keeps
+  // the one-shot snapshot path below (hooks fall back to polling there, so
+  // they stay disabled on testnet).
+  const isMainnet = _chain === "bitshares";
+
+  // Chain-matched node URL (never look up on a mismatched node after store
+  // rehydration); null falls back to the chain default inside the fetchers.
+  const matchedNodeUrl =
+    currentNodeChain === (usr ? usr.chain : "") && currentNodeUrl
+      ? currentNodeUrl
+      : null;
 
   useInitCache(_chain ?? "bitshares", []);
 
@@ -237,6 +263,30 @@ export default function Smartcoin(properties) {
     }
   }, [parsedCollateralAsset, bitAssetData]);
 
+  const pools = useMemo(() => {
+    if (_chain && (_poolsBTS || _poolsTEST)) {
+      return _chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    }
+    return [];
+  }, [_poolsBTS, _poolsTEST, _chain]);
+
+  // Liquidity pool covering this debt/collateral pair (either direction),
+  // for the simple-swap dropdown entry. Null when no pool exists.
+  const swapPool = useMemo(() => {
+    if (!pools || !pools.length || !parsedAsset || !parsedCollateralAsset) {
+      return null;
+    }
+    return (
+      pools.find(
+        (p) =>
+          (p.asset_a_symbol === parsedAsset.s &&
+            p.asset_b_symbol === parsedCollateralAsset.s) ||
+          (p.asset_a_symbol === parsedCollateralAsset.s &&
+            p.asset_b_symbol === parsedAsset.s)
+      ) ?? null
+    );
+  }, [pools, parsedAsset, parsedCollateralAsset]);
+
   const [usrBalances, setUsrBalances] = useState();
   const [finalAsset, setFinalAsset] = useState();
   const [finalBitasset, setFinalBitasset] = useState();
@@ -288,6 +338,163 @@ export default function Smartcoin(properties) {
       if (unsub) unsub();
     };
   }, [parsedAsset, parsedBitasset, usr]);
+
+  // ---- Live ChainStore layer (mainnet bitshares only) ----
+  // The snapshot above seeds first paint + serves testnet. Each slice below
+  // overlays live push data when present (live wins, snapshot otherwise).
+
+  // 1. Order book: same pair + orientation as the snapshot
+  //    (asks -> buyOrders, bids -> sellOrders), limit 50 like instant trade.
+  const liveBook = useDexOrderBookLive({
+    chain: usr ? usr.chain : "",
+    baseId: parsedAsset ? parsedAsset.id : null,
+    quoteId: parsedCollateralAsset ? parsedCollateralAsset.id : null,
+    accountId: usr ? usr.id : null,
+    limit: 50,
+    specificNode: matchedNodeUrl,
+    enabled: isMainnet && !!parsedAsset && !!parsedCollateralAsset,
+  });
+  useEffect(() => {
+    if (liveBook.asks) setBuyOrders(liveBook.asks);
+  }, [liveBook.asks]);
+  useEffect(() => {
+    if (liveBook.bids) setSellOrders(liveBook.bids);
+  }, [liveBook.bids]);
+
+  // 2. Bitasset objects: live feeds, settlement fund + ratios.
+  const bitassetObjectIds = useMemo(() => {
+    const ids = [];
+    if (parsedBitasset && parsedBitasset.id) ids.push(parsedBitasset.id);
+    if (parsedCollateralBitasset && parsedCollateralBitasset.id) {
+      ids.push(parsedCollateralBitasset.id);
+    }
+    return ids;
+  }, [parsedBitasset, parsedCollateralBitasset]);
+  const liveBitassetObjects = useChainObjectsLive({
+    chain: usr ? usr.chain : "",
+    ids: bitassetObjectIds,
+    specificNode: matchedNodeUrl,
+    enabled: isMainnet && bitassetObjectIds.length > 0,
+  });
+  const mergeLive = (prev, live) => {
+    if (!live) return prev;
+    if (!prev) return live;
+    for (const k of Object.keys(live)) {
+      if (prev[k] !== live[k]) return { ...prev, ...live };
+    }
+    return prev;
+  };
+  useEffect(() => {
+    if (!liveBitassetObjects.objects) return;
+    if (parsedBitasset && liveBitassetObjects.objects[parsedBitasset.id]) {
+      const live = liveBitassetObjects.objects[parsedBitasset.id];
+      setFinalBitasset((prev) => mergeLive(prev, live));
+    }
+    if (
+      parsedCollateralBitasset &&
+      liveBitassetObjects.objects[parsedCollateralBitasset.id]
+    ) {
+      const live = liveBitassetObjects.objects[parsedCollateralBitasset.id];
+      setFinalCollateralBitasset((prev) => mergeLive(prev, live));
+    }
+  }, [liveBitassetObjects.objects, parsedBitasset, parsedCollateralBitasset]);
+
+  // 3. User balances (same asset filter as the snapshot).
+  const liveBalances = useAccountBalancesLive({
+    chain: usr ? usr.chain : "",
+    accountId: usr ? usr.id : null,
+    specificNode: matchedNodeUrl,
+    enabled: isMainnet && !!(usr && usr.id),
+  });
+  useEffect(() => {
+    if (liveBalances.balances && assets && assets.length) {
+      const filteredData = liveBalances.balances.filter((balance) =>
+        assets.find((x) => x.id === balance.asset_id)
+      );
+      setUsrBalances(filteredData);
+    }
+  }, [liveBalances.balances, assets]);
+
+  // 4. Margin positions + call/settle rows: subscribe to every listed object
+  //    id for push updates (fills, TCR edits). Entries without ids are
+  //    skipped; brand-new rows arrive via the manual refresh below.
+  const positionOrderIds = useMemo(() => {
+    const ids = [];
+    const pushIds = (list) => {
+      if (Array.isArray(list)) {
+        for (const x of list) {
+          if (x && x.id) ids.push(x.id);
+        }
+      }
+    };
+    pushIds(usrMarginPositions);
+    pushIds(assetCallOrders);
+    pushIds(assetSettleOrders);
+    return [...new Set(ids)];
+  }, [usrMarginPositions, assetCallOrders, assetSettleOrders]);
+  const livePositionOrders = useChainObjectsLive({
+    chain: usr ? usr.chain : "",
+    ids: positionOrderIds,
+    specificNode: matchedNodeUrl,
+    enabled: isMainnet && positionOrderIds.length > 0,
+  });
+  useEffect(() => {
+    if (!livePositionOrders.objects) return;
+    const overlay = (list) => {
+      if (!Array.isArray(list) || !list.length) return list;
+      let changed = false;
+      const merged = list.map((entry) => {
+        const live =
+          entry && entry.id ? livePositionOrders.objects[entry.id] : null;
+        if (!live) return entry;
+        let differs = false;
+        for (const k of Object.keys(live)) {
+          if (entry[k] !== live[k]) {
+            differs = true;
+            break;
+          }
+        }
+        if (differs) {
+          changed = true;
+          return { ...entry, ...live };
+        }
+        return entry;
+      });
+      return changed ? merged : list;
+    };
+    setUsrMarginPositions((prev) => overlay(prev));
+    setAssetCallOrders((prev) => overlay(prev));
+    setAssetSettleOrders((prev) => overlay(prev));
+  }, [livePositionOrders.objects]);
+
+  // Manual refresh for brand-new rows (push covers state, not membership).
+  const [listsRefreshing, setListsRefreshing] = useState(false);
+  const refreshPositionLists = useCallback(async () => {
+    if (!isMainnet || !parsedAsset || !usr || !usr.id) return;
+    setListsRefreshing(true);
+    try {
+      const res = await fetchMarginCallSettleLists(
+        _chain,
+        parsedAsset.id,
+        usr.id,
+        matchedNodeUrl
+      );
+      if (res) {
+        setUsrMarginPositions(
+          (res.marginPositions || []).filter(
+            (x) =>
+              x.call_price && x.call_price.quote.asset_id === parsedAsset.id
+          )
+        );
+        setAssetCallOrders(res.callOrders || []);
+        setAssetSettleOrders(res.settleOrders || []);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setListsRefreshing(false);
+    }
+  }, [isMainnet, parsedAsset, usr, _chain, matchedNodeUrl]);
 
   const settlementFund = useMemo(() => {
     if (finalAsset && parsedAsset && parsedCollateralAsset) {
@@ -1033,6 +1240,8 @@ export default function Smartcoin(properties) {
             debtAssetHoldings={debtAssetHoldings}
             usr={usr}
             exitJSON={exitJSON}
+            onRefreshLists={refreshPositionLists}
+            listsRefreshing={listsRefreshing}
           />
         ) : null}
 
@@ -1212,7 +1421,23 @@ export default function Smartcoin(properties) {
           setActiveOrderTab={setActiveOrderTab}
           buyOrders={buyOrders}
           sellOrders={sellOrders}
+          swapPool={swapPool}
         />
+      ) : null}
+
+      {!invalidUrlParams && parsedAsset && parsedCollateralAsset ? (
+        <div className="grid grid-cols-1 mt-5">
+          {/* Page orientation quirk (matches the order book above):
+              this page stores asks in buyOrders and bids in sellOrders,
+              so depth bids come from sellOrders and asks from buyOrders. */}
+          <DepthChart
+            bids={sellOrders ?? []}
+            asks={buyOrders ?? []}
+            baseSymbol={parsedAsset.s}
+            quoteSymbol={parsedCollateralAsset.s}
+            loading={!buyOrders && !sellOrders}
+          />
+        </div>
       ) : null}
 
       {!invalidUrlParams && parsedAsset && parsedCollateralAsset ? (
@@ -1221,6 +1446,8 @@ export default function Smartcoin(properties) {
           parsedCollateralAsset={parsedCollateralAsset}
           assetCallOrders={assetCallOrders}
           currentFeedSettlementPrice={currentFeedSettlementPrice}
+          onRefreshLists={refreshPositionLists}
+          listsRefreshing={listsRefreshing}
         />
       ) : null}
 
@@ -1229,6 +1456,8 @@ export default function Smartcoin(properties) {
           parsedAsset={parsedAsset}
           parsedCollateralAsset={parsedCollateralAsset}
           assetSettleOrders={assetSettleOrders}
+          onRefreshLists={refreshPositionLists}
+          listsRefreshing={listsRefreshing}
         />
       ) : null}
 
@@ -1241,6 +1470,15 @@ export default function Smartcoin(properties) {
       ) : null}
 
       <RisksCard />
+
+      <DexLiveFooterCard
+        lastFetchAt={liveBook.lastFetchAt}
+        isSubscribed={liveBook.isSubscribed}
+        blockNumber={liveBook.blockNumber}
+        nodeUrl={matchedNodeUrl}
+        warningThresholdSec={10}
+        chain={usr?.chain}
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { BookOpen, BarChart3, AlertTriangle, Radio } from "lucide-react";
+import { BookOpen, BarChart3, AlertTriangle, Radio, RefreshCw, ArrowLeftRight, Zap, ArrowDownUp, ChevronDown } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 import {
@@ -18,6 +24,21 @@ import {
   PriceFeedRow,
 } from "@/components/Smartcoin/SmartcoinRows.jsx";
 
+function RefreshButton({ onRefresh, refreshing, label }) {
+  return (
+    <button
+      type="button"
+      onClick={onRefresh}
+      disabled={refreshing}
+      title={label}
+      aria-label={label}
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground disabled:opacity-50 ml-auto"
+    >
+      <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+    </button>
+  );
+}
+
 export function OrderBookCard({
   parsedAsset,
   parsedCollateralAsset,
@@ -25,8 +46,19 @@ export function OrderBookCard({
   setActiveOrderTab,
   buyOrders,
   sellOrders,
+  swapPool,
 }) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
+
+  const marketPair =
+    parsedAsset && parsedCollateralAsset
+      ? `${parsedAsset.s}_${parsedCollateralAsset.s}`
+      : null;
+  const dexHref = marketPair ? `/dex.html?market=${marketPair}` : "/dex.html";
+  const instantTradeHref = marketPair
+    ? `/instant_trade.html?market=${marketPair}`
+    : "/instant_trade.html";
+  const swapHref = swapPool ? `/swap.html?pool=${swapPool.id}` : null;
 
   return (
     <div className="grid grid-cols-1 mt-5">
@@ -53,17 +85,36 @@ export function OrderBookCard({
               </p>
             </div>
           </div>
-          <a
-            href={
-              parsedAsset && parsedCollateralAsset
-                ? `/dex.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`
-                : ""
-            }
-          >
-            <Button className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_4px_14px_-4px_rgba(99,102,241,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(99,102,241,0.6)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] transition-all text-xs">
-              {t("Smartcoin:goToMarket")}
-            </Button>
-          </a>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-gradient-to-r from-[hsl(var(--accent-1))] to-[hsl(var(--accent-2))] text-[hsl(var(--accent-1-gradFg))] shadow-[0_4px_14px_-4px_rgba(99,102,241,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(99,102,241,0.6)] hover:from-[hsl(var(--accent-1))] hover:to-[hsl(var(--accent-2))] transition-all text-xs">
+                {t("Smartcoin:goToMarket")}
+                <ChevronDown className="h-3.5 w-3.5 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-card border-border">
+              <DropdownMenuItem asChild>
+                <a href={dexHref} className="flex items-center gap-2 cursor-pointer">
+                  <ArrowLeftRight className="h-3.5 w-3.5 text-muted-foreground" />
+                  {t("Smartcoin:tradeLimitOrders", "DEX limit orders")}
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <a href={instantTradeHref} className="flex items-center gap-2 cursor-pointer">
+                  <Zap className="h-3.5 w-3.5 text-muted-foreground" />
+                  {t("Smartcoin:tradeInstantTrade", "Instant trade")}
+                </a>
+              </DropdownMenuItem>
+              {swapHref ? (
+                <DropdownMenuItem asChild>
+                  <a href={swapHref} className="flex items-center gap-2 cursor-pointer">
+                    <ArrowDownUp className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("Smartcoin:tradeSimpleSwap", "Simple swap")}
+                  </a>
+                </DropdownMenuItem>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <Tabs defaultValue="buy" className="w-full">
           <div className="inline-flex rounded-xl border border-border bg-card/40 p-1 gap-1 mb-3 w-full">
@@ -185,6 +236,8 @@ export function CallOrdersCard({
   parsedCollateralAsset,
   assetCallOrders,
   currentFeedSettlementPrice,
+  onRefreshLists,
+  listsRefreshing,
 }) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
@@ -211,6 +264,13 @@ export function CallOrdersCard({
               {t("Smartcoin:checkMarginPositions")}
             </p>
           </div>
+          {onRefreshLists ? (
+            <RefreshButton
+              onRefresh={onRefreshLists}
+              refreshing={listsRefreshing}
+              label={t("Smartcoin:refreshOrderLists", "Refresh lists")}
+            />
+          ) : null}
         </div>
         {assetCallOrders && assetCallOrders.length ? (
           <>
@@ -265,6 +325,8 @@ export function SettleOrdersCard({
   parsedAsset,
   parsedCollateralAsset,
   assetSettleOrders,
+  onRefreshLists,
+  listsRefreshing,
 }) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
 
@@ -288,6 +350,13 @@ export function SettleOrdersCard({
               {t("Smartcoin:checkSettleOrders")}
             </p>
           </div>
+          {onRefreshLists ? (
+            <RefreshButton
+              onRefresh={onRefreshLists}
+              refreshing={listsRefreshing}
+              label={t("Smartcoin:refreshOrderLists", "Refresh lists")}
+            />
+          ) : null}
         </div>
         {assetSettleOrders && assetSettleOrders.length ? (
           <>
