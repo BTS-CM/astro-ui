@@ -1,4 +1,4 @@
-<img width="1905" height="4551" alt="image" src="https://github.com/user-attachments/assets/637e54ee-cae0-478c-af2c-13aec5379736" />
+<img width="1905" height="4568" alt="image" src="https://github.com/user-attachments/assets/73c81913-bc3a-433a-b137-d081d5566f39" />
 
 # Bitshares astro UI
 
